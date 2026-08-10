@@ -27,12 +27,13 @@ from pygments.util import ClassNotFound
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
-CODE = ROOT / "code"
 DOCS = ROOT / "docs"
+CODE = DOCS / "assets" / "code"     # copie unique, servie telle quelle par le site
 ASSETS_SRC = Path(__file__).resolve().parent / "assets"
 
 UPSTREAM = "https://github.com/microsoft/generative-ai-for-beginners"
 UPSTREAM_FR = f"{UPSTREAM}/blob/main/translations/fr"
+APPS_UPSTREAM = "https://github.com/Shubhamsaboo/awesome-llm-apps"
 
 LANG_BY_EXT = {
     ".py": "python", ".ts": "typescript", ".js": "javascript", ".cs": "csharp",
@@ -114,10 +115,20 @@ def code_block(code: str, lang: str, label: str | None = None) -> str:
 
 # ------------------------------------------------------------------ le modèle
 
+def read_json(path: Path, default=None):
+    if not path.is_file():
+        return default
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 class Site:
     def __init__(self) -> None:
         self.meta = json.loads((CONTENT / "_meta.json").read_text(encoding="utf-8"))
         self.ingest = json.loads((CONTENT / "_ingest.json").read_text(encoding="utf-8"))
+        self.apps = read_json(CONTENT / "_apps.json", {"categories": {}, "projects": {}})
+        self.apps_meta = read_json(CONTENT / "_apps_meta.json", {"categories": {}, "projects": {}})
+        self.services = read_json(CONTENT / "_services.json", {"categories": {}, "services": {}})
+        self.tagdef = self.meta.get("tags", {"groups": {}, "values": {}})
         self.tracks = self.meta["tracks"]
         self.lesson_meta = self.meta["lessons"]
         self.annexe_meta = self.meta["annexes"]
@@ -128,6 +139,16 @@ class Site:
         self.flat: list[dict] = []                  # ordre de lecture complet
         self.search: list[dict] = []
         self.warnings: list[str] = []
+        # Ateliers : catégories triées, projets, et détection de services par page.
+        self.cat_order: list[str] = sorted(
+            self.apps["categories"],
+            key=lambda c: (self.apps_meta["categories"].get(c, {}).get("order", 99), c),
+        )
+        self.app_order: list[str] = [p for c in self.cat_order
+                                     for p in self.apps["categories"][c]["projects"]]
+        self.app_subpages: dict[str, list[dict]] = {}
+        self.services_of: dict[str, list[str]] = {}   # id de page -> ids de services
+        self.tags_of: dict[str, list[str]] = {}       # id de page -> tags résolus
         # Les notebooks référencent les images anglaises : on les retrouve par leur nom
         # de base parmi celles déjà publiées (la variante traduite porte le même nom).
         img_dir = DOCS / "assets" / "images"
@@ -138,31 +159,164 @@ class Site:
     # -- code -------------------------------------------------------------
 
     def scan_code(self) -> None:
-        for slug in self.order:
-            files = self.ingest["lessons"].get(slug, {}).get("code", [])
+        """Indexe le code des leçons et des ateliers sous un identifiant commun :
+        `<slug de leçon>` ou `ateliers/<catégorie>/<projet>`."""
+        sources = [(slug, self.ingest["lessons"].get(slug, {}).get("code", []))
+                   for slug in self.order]
+        sources += [(f"ateliers/{pid}", self.apps["projects"][pid]["code"])
+                    for pid in self.app_order]
+        for owner, files in sources:
             entries = []
             for rel in files:
-                path = CODE / slug / rel
+                path = CODE / owner / rel
                 if not path.is_file():
-                    self.warnings.append(f"fichier de code manquant : {slug}/{rel}")
+                    self.warnings.append(f"fichier de code manquant : {owner}/{rel}")
                     continue
-                group = rel.split("/")[0] if "/" in rel else ""
                 entries.append({
                     "rel": rel,
-                    "group": group if group in GROUP_LABELS else group,
+                    "group": rel.split("/")[0] if "/" in rel else "",
                     "size": path.stat().st_size,
                     "anchor": path_anchor(rel),
                     "path": path,
                 })
-            self.code_index[slug] = entries
+            self.code_index[owner] = entries
 
-    def code_groups(self, slug: str) -> list[tuple[str, list[dict]]]:
+    def code_groups(self, owner: str) -> list[tuple[str, list[dict]]]:
         groups: dict[str, list[dict]] = {}
-        for e in self.code_index.get(slug, []):
+        for e in self.code_index.get(owner, []):
             groups.setdefault(e["group"], []).append(e)
         return sorted(groups.items(), key=lambda kv: (kv[0] == "", kv[0]))
 
+    # -- services et tags --------------------------------------------------
+
+    def scan_services(self) -> None:
+        """Repère, pour chaque page, les services externes réellement exigés.
+
+        Les motifs de `_services.json` visent les identifiants à obtenir (variables
+        d'environnement, paquets), pas les simples mentions dans le texte : c'est ce qui
+        conditionne vraiment la possibilité d'exécuter l'exercice.
+        """
+        defs = self.services["services"]
+        compiled = {sid: [re.compile(p, re.MULTILINE) for p in s["detect"]]
+                    for sid, s in defs.items()}
+
+        def scan(owner: str, md_dir: Path) -> None:
+            chunks: list[str] = []
+            for md in sorted(md_dir.rglob("*.md")):
+                chunks.append(md.read_text(encoding="utf-8", errors="replace"))
+            for entry in self.code_index.get(owner, []):
+                try:
+                    chunks.append(entry["path"].read_text(encoding="utf-8"))
+                except (UnicodeDecodeError, OSError):
+                    pass
+            blob = "\n".join(chunks)
+            self.services_of[owner] = [sid for sid, pats in compiled.items()
+                                       if any(p.search(blob) for p in pats)]
+
+        for slug in self.order:
+            scan(slug, CONTENT / slug)
+        for pid in self.app_order:
+            scan(f"ateliers/{pid}", CONTENT / "ateliers" / pid)
+
+    def cost_tag(self, owner: str) -> str:
+        costs = {self.services["services"][s]["cost"] for s in self.services_of.get(owner, [])}
+        if "payant" in costs:
+            return "payant"
+        if "freemium" in costs:
+            return "palier-gratuit"
+        return "gratuit"
+
+    def group_of(self, tag: str) -> str:
+        return self.tagdef["values"].get(tag, {}).get("group", "")
+
+    def sort_tags(self, tags: list[str]) -> list[str]:
+        groups = self.tagdef["groups"]
+        return sorted(
+            dict.fromkeys(t for t in tags if t in self.tagdef["values"]),
+            key=lambda t: groups.get(self.group_of(t), {}).get("order", 99),
+        )
+
+    def scan_tags(self) -> None:
+        for slug in self.order:
+            tags = list(self.lesson_meta[slug].get("tags", []))
+            self.tags_of[slug] = self.sort_tags(tags + [self.cost_tag(slug)])
+
+        for pid in self.app_order:
+            cat = self.apps["projects"][pid]["category"]
+            defaults = self.apps_meta["categories"].get(cat, {}).get("defaults", {})
+            chosen = {g: t for g, t in
+                      ((self.group_of(t), t) for t in defaults.values()) if g}
+            for t in self.apps_meta["projects"].get(pid, {}).get("tags", []):
+                g = self.group_of(t)
+                if g:
+                    chosen[g] = t          # le tag du projet l'emporte sur celui de sa catégorie
+            owner = f"ateliers/{pid}"
+            chosen["nature"] = chosen.get("nature", "pratique")
+            chosen["cout"] = self.cost_tag(owner)
+            self.tags_of[owner] = self.sort_tags(list(chosen.values()))
+
+        unknown = {t for tags in self.tags_of.values() for t in tags} - set(self.tagdef["values"])
+        for t in sorted(unknown):
+            self.warnings.append(f"tag absent du vocabulaire : {t}")
+
+    # -- ateliers ----------------------------------------------------------
+
+    def app(self, pid: str) -> dict:
+        """Vue fusionnée d'un atelier : données extraites + habillage français."""
+        raw = self.apps["projects"][pid]
+        fr = self.apps_meta["projects"].get(pid, {})
+        summary = fr.get("summary")
+        if not summary:
+            feats = raw.get("features") or []
+            summary = (feats[0] if feats else "Projet importé du dépôt awesome-llm-apps.")
+        return {
+            "id": pid,
+            "cat": raw["category"],
+            "slug": raw["slug"],
+            "path": raw["path"],
+            "title": fr.get("title") or raw["title_en"],
+            "title_en": raw["title_en"],
+            "summary": summary,
+            "features": raw.get("features") or [],
+            "code": raw["code"],
+            "skipped": raw.get("skipped", []),
+            "tags": self.tags_of.get(f"ateliers/{pid}", []),
+            "services": self.services_of.get(f"ateliers/{pid}", []),
+            "url": f"ateliers/{pid}/index.html",
+        }
+
+    def category(self, cat: str) -> dict:
+        fr = self.apps_meta["categories"].get(cat, {})
+        return {
+            "id": cat,
+            "title": fr.get("title") or cat.replace("-", " ").capitalize(),
+            "summary": fr.get("summary", ""),
+            "icon": fr.get("icon", "🧰"),
+            "lessons": [s for s in fr.get("lessons", []) if s in self.lesson_meta],
+            "projects": self.apps["categories"][cat]["projects"],
+            "url": f"ateliers/{cat}/index.html",
+        }
+
+    def categories_for_lesson(self, slug: str) -> list[dict]:
+        return [self.category(c) for c in self.cat_order
+                if slug in self.apps_meta["categories"].get(c, {}).get("lessons", [])]
+
     # -- pages ------------------------------------------------------------
+
+    def scan_app_pages(self) -> None:
+        for pid in self.app_order:
+            subs = []
+            for rel in self.apps["projects"][pid]["pages"]:
+                if rel == "README.md":
+                    continue
+                md = (CONTENT / "ateliers" / pid / rel).read_text(encoding="utf-8")
+                subs.append({
+                    "slug": page_slug(rel),
+                    "rel": rel,
+                    "title": first_heading(md) or page_slug(rel).replace("-", " ").capitalize(),
+                })
+            subs.sort(key=lambda p: p["rel"])
+            self.app_subpages[pid] = subs
 
     def scan_pages(self) -> None:
         for slug in self.order:
@@ -223,6 +377,22 @@ class Site:
         if token.startswith("@code/"):
             slug, _, rel = token[6:].partition("/")
             return base + f"lecons/{slug}/index.html#{path_anchor(rel)}"
+        if token == "@apps":
+            return base + "ateliers/index.html" + frag
+        if token.startswith("@app/"):
+            return base + f"ateliers/{token[5:]}/index.html" + frag
+        if token.startswith("@apppage/"):
+            parts = token[9:].split("/")
+            if len(parts) == 3:
+                cat, proj, page = parts
+                return base + f"ateliers/{cat}/{proj}/{page}/index.html" + frag
+        if token.startswith("@appcode/"):
+            parts = token[9:].split("/", 2)
+            if len(parts) == 3:
+                cat, proj, rel = parts
+                return base + f"ateliers/{cat}/{proj}/index.html#{path_anchor(rel)}"
+        if token == "@tags":
+            return base + "tags/index.html" + frag
         return token + frag
 
 
@@ -398,6 +568,23 @@ def notebook_link_hook(site: "Site", slug: str, nb_rel: str, base: str, anchor: 
     return hook
 
 
+def app_notebook_link_hook(site: "Site", owner: str, anchor: str):
+    """Liens relatifs dans les notebooks d'ateliers : ils désignent des fichiers voisins
+    du dépôt source, qu'on ne republie pas tous — on renvoie donc vers l'original."""
+    pid = owner[len("ateliers/"):]
+    path = site.apps["projects"][pid]["path"]
+
+    def hook(target: str) -> str:
+        t = target.strip()
+        if not t or t.startswith(("http://", "https://", "mailto:", "data:", "//")):
+            return t
+        if t.startswith("#"):
+            return f"#{anchor}"
+        return f"{APPS_UPSTREAM}/blob/main/{path}/{t.split('#')[0]}"
+
+    return hook
+
+
 def render_notebook(path: Path, renderer: Renderer, base: str, hook=None) -> str:
     try:
         nb = json.loads(path.read_text(encoding="utf-8"))
@@ -497,7 +684,8 @@ def layout(*, site: Site, base: str, title: str, description: str, body: str,
 """
 
 
-def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | None = None) -> str:
+def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | None = None,
+                 current_cat: str | None = None) -> str:
     out = ['<nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner">']
     out.append(f'<a class="sidebar__home" href="{base}index.html">Accueil du cours</a>')
     for track in site.tracks:
@@ -530,13 +718,134 @@ def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | 
                 out.append("</ul>")
             out.append("</li>")
         out.append("</ul></section>")
+    if site.cat_order:
+        out.append('<section class="sidebar__track sidebar__track--apps">')
+        out.append(
+            f'<h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span>'
+            f'<a href="{base}ateliers/index.html">Ateliers pratiques</a></h2>'
+        )
+        out.append('<ul class="sidebar__list">')
+        for cat in site.cat_order:
+            c = site.category(cat)
+            active = " is-active" if cat == current_cat else ""
+            out.append(
+                f'<li class="sidebar__item sidebar__item--cat{active}">'
+                f'<a href="{base}{c["url"]}">'
+                f'<span class="sidebar__num" aria-hidden="true">{c["icon"]}</span>'
+                f'<span class="sidebar__label">{esc(c["title"])}</span>'
+                f'<span class="sidebar__count">{len(c["projects"])}</span></a></li>'
+            )
+        out.append("</ul></section>")
     out.append(
         f'<section class="sidebar__track"><h2 class="sidebar__track-title">'
         f'<span class="sidebar__icon" aria-hidden="true">📎</span>'
-        f'<a href="{base}annexes/index.html">Annexes</a></h2></section>'
+        f'<a href="{base}annexes/index.html">Annexes</a></h2>'
+        f'<ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat">'
+        f'<a href="{base}annexes/alternatives-gratuites/index.html">'
+        f'<span class="sidebar__num" aria-hidden="true">🆓</span>'
+        f'<span class="sidebar__label">Alternatives gratuites</span></a></li>'
+        f'<li class="sidebar__item sidebar__item--cat"><a href="{base}tags/index.html">'
+        f'<span class="sidebar__num" aria-hidden="true">🏷️</span>'
+        f'<span class="sidebar__label">Légende des tags</span></a></li></ul></section>'
     )
     out.append("</div></nav>")
     return "".join(out)
+
+
+def tag_chips(site: Site, tags: list[str], base: str = "", *, link: bool = False) -> str:
+    """Puces de tags. `link` renvoie vers la légende, pour les en-têtes de page."""
+    if not tags:
+        return ""
+    out = []
+    for t in tags:
+        v = site.tagdef["values"].get(t)
+        if not v:
+            continue
+        inner = (f'<span class="tag__icon" aria-hidden="true">{v["icon"]}</span>'
+                 f'<span class="tag__label">{esc(v["label"])}</span>')
+        title = esc(v["desc"])
+        if link:
+            out.append(f'<li class="tag tag--{v["group"]}">'
+                       f'<a href="{base}tags/index.html#{t}" title="{title}">{inner}</a></li>')
+        else:
+            out.append(f'<li class="tag tag--{v["group"]}" title="{title}">{inner}</li>')
+    return f'<ul class="tags">{"".join(out)}</ul>'
+
+
+def tag_attr(tags: list[str]) -> str:
+    return " ".join(tags)
+
+
+def filter_bar(site: Site, base: str, *, target: str, noun: str) -> str:
+    """Barre de filtrage par tag. Le filtrage se fait côté client sur `target`."""
+    groups = sorted(site.tagdef["groups"].items(), key=lambda kv: kv[1]["order"])
+    blocks = []
+    for gid, g in groups:
+        values = [(t, v) for t, v in site.tagdef["values"].items() if v["group"] == gid]
+        if not values:
+            continue
+        btns = "".join(
+            f'<button class="filters__tag tag tag--{gid}" type="button" data-tag="{t}" '
+            f'aria-pressed="false" title="{esc(v["desc"])}">'
+            f'<span class="tag__icon" aria-hidden="true">{v["icon"]}</span>'
+            f'<span class="tag__label">{esc(v["label"])}</span></button>'
+            for t, v in values
+        )
+        blocks.append(f'<div class="filters__group"><span class="filters__legend">'
+                      f'{esc(g["title"])}</span><div class="filters__row">{btns}</div></div>')
+    return (
+        f'<section class="filters" data-filter-target="{target}" data-filter-noun="{noun}">'
+        f'<div class="filters__head"><h2 class="filters__title">Filtrer</h2>'
+        f'<p class="filters__hint">Cumulez les filtres pour cibler ce qui vous intéresse. '
+        f'<a href="{base}tags/index.html">Que veulent dire ces tags ?</a></p></div>'
+        f'{"".join(blocks)}'
+        f'<p class="filters__status" role="status" aria-live="polite"></p>'
+        f'<button class="filters__reset" type="button" hidden>Tout afficher</button>'
+        f'</section>'
+    )
+
+
+def alternatives_box(site: Site, owner: str, base: str) -> str:
+    """Encadré listant les services exigés par la page et leurs substituts gratuits."""
+    sids = site.services_of.get(owner, [])
+    if not sids:
+        return ""
+    defs = site.services["services"]
+    billed = [s for s in sids if defs[s]["cost"] != "gratuit" and defs[s]["free"]]
+    free_only = [s for s in sids if defs[s]["cost"] == "gratuit"]
+    if not billed:
+        if not free_only:
+            return ""
+        names = ", ".join(esc(defs[s]["name"]) for s in sorted(free_only))
+        return (f'<aside class="alts alts--free"><p class="alts__lead">'
+                f'<span aria-hidden="true">🆓</span> Rien à payer ici : {names}. '
+                f'<a href="{base}annexes/alternatives-gratuites/index.html">'
+                f'Voir toutes les alternatives gratuites</a>.</p></aside>')
+
+    rows = []
+    for sid in sorted(billed, key=lambda s: defs[s]["name"]):
+        s = defs[sid]
+        cost = site.services["cost_labels"].get(s["cost"], s["cost"])
+        subs = "".join(
+            f'<li><a href="{esc(f["url"])}" target="_blank" rel="noopener noreferrer">'
+            f'{esc(f["name"])}</a> — {esc(f["note"])}</li>' for f in s["free"]
+        )
+        rows.append(
+            f'<div class="alts__item"><p class="alts__service">'
+            f'<a href="{esc(s["url"])}" target="_blank" rel="noopener noreferrer">{esc(s["name"])}</a>'
+            f'<span class="alts__cost">{esc(cost)}</span></p>'
+            f'<p class="alts__note">{esc(s.get("note", ""))}</p>'
+            f'<ul class="alts__list">{subs}</ul></div>'
+        )
+    return (
+        '<aside class="alts">'
+        '<p class="alts__lead"><span aria-hidden="true">💳</span> '
+        'Cette page s\'appuie sur des services facturés. Voici par quoi les remplacer '
+        'sans dépenser :</p>'
+        f'{"".join(rows)}'
+        f'<p class="alts__more"><a href="{base}annexes/alternatives-gratuites/index.html">'
+        'Table complète des alternatives gratuites</a></p></aside>'
+    )
 
 
 def toc_html(toc: list[dict]) -> str:
@@ -550,17 +859,21 @@ def toc_html(toc: list[dict]) -> str:
             f'<p class="toc__title">Sur cette page</p><ul class="toc__list">{items}</ul></div></aside>')
 
 
-def code_section(site: Site, slug: str, renderer: Renderer, base: str) -> str:
-    entries = site.code_index.get(slug, [])
-    skipped = site.ingest["lessons"].get(slug, {}).get("skipped", [])
+def code_section(site: Site, owner: str, renderer: Renderer, base: str, *,
+                 title: str = "Code de la leçon", intro: str | None = None,
+                 skipped: list[dict] | None = None, upstream_tree: str | None = None) -> str:
+    entries = site.code_index.get(owner, [])
+    if skipped is None:
+        skipped = site.ingest["lessons"].get(owner, {}).get("skipped", [])
     if not entries:
         return ""
-    groups = site.code_groups(slug)
+    groups = site.code_groups(owner)
+    intro = intro or ("Tous les fichiers d'exemple de cette leçon, copiés depuis le dépôt "
+                      "d'origine. Chaque fichier est lisible ici et téléchargeable.")
     out = ['<section class="codepanel" id="code">',
-           '<h2 id="code-de-la-lecon">Code de la leçon'
+           f'<h2 id="code-de-la-lecon">{esc(title)}'
            '<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2>',
-           '<p class="codepanel__intro">Tous les fichiers d\'exemple de cette leçon, copiés depuis le dépôt '
-           'd\'origine. Chaque fichier est lisible ici et téléchargeable.</p>']
+           f'<p class="codepanel__intro">{esc(intro)}</p>']
     if len(groups) > 1:
         out.append('<div class="tabs" role="tablist">')
         for i, (g, _files) in enumerate(groups):
@@ -574,26 +887,27 @@ def code_section(site: Site, slug: str, renderer: Renderer, base: str) -> str:
         hidden = "" if i == 0 or len(groups) == 1 else " hidden"
         out.append(f'<div class="tabs__panel" data-tab="{slugify(g or "fichiers")}"{hidden}>')
         for f in files:
-            out.append(render_code_file(f, slug, renderer, base))
+            out.append(render_code_file(f, owner, renderer, base))
         out.append("</div>")
     if skipped:
         items = "".join(
             f'<li><code>{esc(s["path"])}</code> — {esc(s["reason"])} ({human_size(s["size"])})</li>'
             for s in skipped
         )
+        tree = upstream_tree or f"{UPSTREAM}/tree/main/{owner}"
         out.append(
-            '<details class="codepanel__skipped"><summary>Fichiers volumineux non embarqués '
+            '<details class="codepanel__skipped"><summary>Fichiers non embarqués '
             f'({len(skipped)})</summary><ul>{items}</ul>'
-            f'<p>Ils restent disponibles dans le <a href="{UPSTREAM}/tree/main/{slug}" '
+            f'<p>Ils restent disponibles dans le <a href="{tree}" '
             'target="_blank" rel="noopener noreferrer">dépôt d\'origine</a>.</p></details>'
         )
     out.append("</section>")
     return "".join(out)
 
 
-def render_code_file(entry: dict, slug: str, renderer: Renderer, base: str) -> str:
+def render_code_file(entry: dict, owner: str, renderer: Renderer, base: str) -> str:
     rel, path = entry["rel"], entry["path"]
-    dl = f"{base}assets/code/{slug}/{rel}"
+    dl = f"{base}assets/code/{owner}/{rel}"
     head = (
         f'<summary class="codefile__head"><span class="codefile__name">{esc(rel)}</span>'
         f'<span class="codefile__size">{human_size(entry["size"])}</span></summary>'
@@ -603,7 +917,10 @@ def render_code_file(entry: dict, slug: str, renderer: Renderer, base: str) -> s
     if NO_RENDER.search(rel) or entry["size"] > MAX_RENDER_BYTES:
         body = ('<p class="note">Fichier généré ou volumineux : il n\'est pas affiché ici.</p>' + actions)
     elif rel.endswith(".ipynb"):
-        hook = notebook_link_hook(renderer.site, slug, rel, base, entry["anchor"])
+        if owner.startswith("ateliers/"):
+            hook = app_notebook_link_hook(renderer.site, owner, entry["anchor"])
+        else:
+            hook = notebook_link_hook(renderer.site, owner, rel, base, entry["anchor"])
         body = render_notebook(path, renderer, base, hook) + actions
     else:
         try:
@@ -670,12 +987,6 @@ class Builder:
             encoding="utf-8",
         )
 
-        dest = DOCS / "assets" / "code"
-        if dest.exists():
-            shutil.rmtree(dest)
-        if CODE.exists():
-            shutil.copytree(CODE, dest)
-
     # -- pages ------------------------------------------------------------
 
     def build_home(self) -> None:
@@ -684,11 +995,13 @@ class Builder:
         cards = []
         for track in s.tracks:
             items = "".join(
-                f'<li class="tcard__lesson" data-lesson="{slug}">'
+                f'<li class="tcard__lesson" data-lesson="{slug}" '
+                f'data-tags="{tag_attr(s.tags_of.get(slug, []))}">'
                 f'<a href="lecons/{slug}/index.html">'
                 f'<span class="tcard__num">{s.lesson_meta[slug]["num"]}</span>'
                 f'<span class="tcard__label">{esc(s.lesson_meta[slug]["title"])}</span>'
-                f'<span class="sidebar__check" aria-hidden="true"></span></a></li>'
+                f'<span class="sidebar__check" aria-hidden="true"></span></a>'
+                f'{tag_chips(s, s.tags_of.get(slug, []))}</li>'
                 for slug in track["lessons"]
             )
             mins = sum(s.lesson_meta[x]["minutes"] for x in track["lessons"])
@@ -704,9 +1017,21 @@ class Builder:
                 f'<span class="tcard__progress" data-track-progress="{track["id"]}"></span></p>'
                 "</article>"
             )
+        app_cats = "".join(
+            f'<a class="chipcat" href="{s.category(c)["url"]}">'
+            f'<span aria-hidden="true">{s.category(c)["icon"]}</span> {esc(s.category(c)["title"])}'
+            f'<span class="chipcat__count">{len(s.category(c)["projects"])}</span></a>'
+            for c in s.cat_order
+        )
+        n_rag = len(s.apps["categories"].get("rag-tutorials", {}).get("projects", []))
         annexes = "".join(
             f'<li><a href="annexes/{k}/index.html">{esc(v["title"])}</a> — {esc(v["summary"])}</li>'
             for k, v in s.annexe_meta["pages"].items()
+        ) + (
+            '<li><a href="annexes/alternatives-gratuites/index.html">Alternatives gratuites aux '
+            'outils payants</a> — par quoi remplacer chaque service facturé du cours.</li>'
+            '<li><a href="tags/index.html">Légende des tags</a> — ce que signifient '
+            'intérêt, difficulté, coût et nature.</li>'
         )
         body = f"""
 <div class="hero">
@@ -728,8 +1053,20 @@ class Builder:
 <section class="section">
   <h2 class="section__title">Les {len(s.tracks)} parcours</h2>
   <p class="section__intro">Suivez-les dans l'ordre : chaque parcours s'appuie sur le précédent.
-     Vous pouvez aussi piocher directement la leçon qui vous intéresse.</p>
+     Vous pouvez aussi piocher directement la leçon qui vous intéresse — les tags indiquent
+     où le temps investi rapporte le plus.</p>
+  {filter_bar(s, "", target=".tcard__lesson", noun="leçon")}
   <div class="tcards">{"".join(cards)}</div>
+</section>
+
+<section class="section">
+  <h2 class="section__title">{len(s.app_order)} ateliers pratiques</h2>
+  <p class="section__intro">Le cours explique ; ces projets font construire. Applications
+     complètes issues du dépôt <em>awesome-llm-apps</em>, code compris — dont
+     {n_rag} implémentations du RAG.</p>
+  <div class="chipcats">{app_cats}</div>
+  <p><a class="btn btn--primary" href="ateliers/index.html">Parcourir les ateliers</a>
+     <a class="btn" href="annexes/alternatives-gratuites/index.html">Alternatives gratuites aux outils payants</a></p>
 </section>
 
 <section class="section">
@@ -776,7 +1113,7 @@ class Builder:
                 f'<p class="lcard__summary">{esc(lm["summary"])}</p></a>'
                 f'<p class="lcard__meta">≈ {lm["minutes"]} min'
                 + (f' · {ncode} fichier(s) de code' if ncode else "") + "</p>"
-                + extra + "</article>"
+                + tag_chips(s, s.tags_of.get(slug, [])) + extra + "</article>"
             )
         idx = s.tracks.index(track)
         prev = s.tracks[idx - 1] if idx > 0 else None
@@ -800,6 +1137,7 @@ class Builder:
   <h1 class="pagehead__title">{esc(track["title"])}</h1>
   <p class="pagehead__summary">{esc(track["summary"])}</p>
 </header>
+{filter_bar(s, base, target=".lcards > .lcard", noun="leçon")}
 <div class="lcards">{"".join(cards)}</div>
 {nav}
 """
@@ -834,6 +1172,22 @@ class Builder:
         if code:
             toc = toc + [{"id": "code-de-la-lecon", "text": "Code de la leçon", "level": 2}]
 
+        cats = s.categories_for_lesson(slug)
+        practice = ""
+        if cats:
+            blocks = "".join(
+                f'<li><a href="{base}{c["url"]}">'
+                f'<span aria-hidden="true">{c["icon"]}</span> {esc(c["title"])}</a>'
+                f'<span class="practice__count">{len(c["projects"])} atelier(s)</span>'
+                f'<span class="practice__summary">{esc(c["summary"])}</span></li>'
+                for c in cats)
+            practice = (
+                '<section class="practice"><h2 id="mettez-le-en-pratique">Mettez-le en pratique'
+                '<a class="anchor" href="#mettez-le-en-pratique" aria-label="Lien vers cette section">#</a></h2>'
+                '<p class="practice__intro">Des applications complètes qui mettent en œuvre ce que '
+                'cette leçon explique :</p>'
+                f'<ul class="practice__list">{blocks}</ul></section>')
+
         url = f"lecons/{slug}/index.html"
         body = f"""
 <nav class="crumbs" aria-label="Fil d'Ariane">
@@ -844,12 +1198,15 @@ class Builder:
 <header class="pagehead">
   <p class="pagehead__eyebrow">Leçon {lm["num"]} · {esc(track["title"])} · ≈ {lm["minutes"]} min</p>
   <p class="pagehead__summary">{esc(lm["summary"])}</p>
+  {tag_chips(s, s.tags_of.get(slug, []), base, link=True)}
 </header>
+{alternatives_box(s, slug, base)}
 <article class="prose">
 {body_html}
 </article>
 {subs_html}
 {code}
+{practice}
 <section class="done" data-lesson-toggle="{slug}">
   <label class="done__label">
     <input class="done__box" type="checkbox">
@@ -966,6 +1323,365 @@ class Builder:
             self.index_search(url=f"annexes/{key}/index.html", title=info["title"], kind="Annexe",
                               context="Annexes", summary=info["summary"], md_text=md_text, toc=toc)
 
+    # -- ateliers ---------------------------------------------------------
+
+    def app_card(self, pid: str, base: str) -> str:
+        a = self.site.app(pid)
+        ncode = len(a["code"])
+        return (
+            f'<article class="lcard" data-item="atelier:{pid}" data-tags="{tag_attr(a["tags"])}">'
+            f'<a class="lcard__link" href="{base}{a["url"]}">'
+            f'<h3 class="lcard__title">{esc(a["title"])}'
+            f'<span class="sidebar__check" aria-hidden="true"></span></h3>'
+            f'<p class="lcard__summary">{esc(a["summary"])}</p></a>'
+            f'{tag_chips(self.site, a["tags"])}'
+            f'<p class="lcard__meta">{ncode} fichier(s) de code</p></article>'
+        )
+
+    def build_apps_index(self) -> None:
+        s, base = self.site, "../"
+        sec = s.apps_meta.get("section", {})
+        cards = "".join(self.app_card(pid, base) for pid in s.app_order)
+        cats = "".join(
+            f'<a class="chipcat" href="{base}{s.category(c)["url"]}">'
+            f'<span aria-hidden="true">{s.category(c)["icon"]}</span> {esc(s.category(c)["title"])}'
+            f'<span class="chipcat__count">{len(s.category(c)["projects"])}</span></a>'
+            for c in s.cat_order
+        )
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span><span>Ateliers pratiques</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🧪</span> Ateliers pratiques</p>
+  <h1 class="pagehead__title">{esc(sec.get("title", "Ateliers pratiques"))}</h1>
+  <p class="pagehead__summary">{esc(sec.get("tagline", ""))}</p>
+  <p class="pagehead__intro">{sec.get("intro", "")}</p>
+</header>
+<nav class="chipcats" aria-label="Catégories d'ateliers">{cats}</nav>
+{filter_bar(s, base, target=".lcards > .lcard", noun="atelier")}
+<div class="lcards">{cards}</div>
+"""
+        self.write("ateliers/index.html", layout(
+            site=s, base=base, title="Ateliers pratiques — IA Générative",
+            description=sec.get("tagline", "Applications d'IA à lire et à exécuter."),
+            body=body, sidebar=sidebar_html(s, base, None), body_class="page-track",
+        ))
+        self.index_search(url="ateliers/index.html", title="Ateliers pratiques", kind="Ateliers",
+                          context="", summary=sec.get("tagline", ""),
+                          md_text=sec.get("tagline", ""), toc=[])
+
+    def build_app_category(self, cat: str) -> None:
+        s, base = self.site, "../../"
+        c = s.category(cat)
+        cards = "".join(self.app_card(pid, base) for pid in c["projects"])
+        lessons = "".join(
+            f'<li><a href="{base}lecons/{sl}/index.html">'
+            f'{s.lesson_meta[sl]["num"]} · {esc(s.lesson_meta[sl]["title"])}</a></li>'
+            for sl in c["lessons"]
+        )
+        theory = (f'<section class="linkback"><h2>La théorie correspondante</h2>'
+                  f'<ul class="linklist">{lessons}</ul></section>') if lessons else ""
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="{base}ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <span>{esc(c["title"])}</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">{c["icon"]}</span> Catégorie d'ateliers</p>
+  <h1 class="pagehead__title">{esc(c["title"])}</h1>
+  <p class="pagehead__summary">{esc(c["summary"])}</p>
+</header>
+{filter_bar(s, base, target=".lcards > .lcard", noun="atelier")}
+<div class="lcards">{cards}</div>
+{theory}
+"""
+        self.write(c["url"], layout(
+            site=s, base=base, title=f'{c["title"]} — ateliers',
+            description=c["summary"], body=body,
+            sidebar=sidebar_html(s, base, None, current_cat=cat), body_class="page-track",
+        ))
+        self.index_search(url=c["url"], title=c["title"], kind="Catégorie d'ateliers",
+                          context="Ateliers pratiques", summary=c["summary"],
+                          md_text=c["summary"], toc=[])
+
+    def build_app(self, pid: str) -> None:
+        s, base = self.site, "../../../"
+        a, c = s.app(pid), s.category(s.apps["projects"][pid]["category"])
+        owner = f"ateliers/{pid}"
+        md_text = (CONTENT / "ateliers" / pid / "README.md").read_text(encoding="utf-8")
+        body_html, toc = self.renderer.render(md_text, base)
+        if not re.search(r"<h1[ >]", body_html):
+            body_html = f'<h1 id="titre">{esc(a["title_en"])}</h1>' + body_html
+
+        subs = s.app_subpages.get(pid, [])
+        subs_html = ""
+        if subs:
+            items = "".join(
+                f'<li><a href="{base}ateliers/{pid}/{x["slug"]}/index.html">{esc(x["title"])}</a></li>'
+                for x in subs)
+            subs_html = ('<section class="subpages"><h2 id="pages-de-l-atelier">Pages de cet atelier'
+                         '<a class="anchor" href="#pages-de-l-atelier" aria-label="Lien vers cette section">#</a></h2>'
+                         f'<ul class="linklist">{items}</ul></section>')
+
+        code = code_section(
+            s, owner, self.renderer, base,
+            title="Code de l'atelier",
+            intro="Tous les fichiers du projet, copiés depuis le dépôt d'origine. "
+                  "Lisibles ici, et téléchargeables un par un.",
+            skipped=a["skipped"],
+            upstream_tree=f'{APPS_UPSTREAM}/tree/main/{a["path"]}',
+        )
+        if code:
+            toc = toc + [{"id": "code-de-la-lecon", "text": "Code de l'atelier", "level": 2}]
+
+        feats = ""
+        if a["features"]:
+            items = "".join(f"<li>{esc(f)}</li>" for f in a["features"])
+            feats = ('<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier'
+                     '<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2>'
+                     '<p class="feats__note">Extrait de la section « Features » du README d\'origine.</p>'
+                     f'<ul>{items}</ul></section>')
+
+        lessons = "".join(
+            f'<li><a href="{base}lecons/{sl}/index.html">'
+            f'{s.lesson_meta[sl]["num"]} · {esc(s.lesson_meta[sl]["title"])}</a></li>'
+            for sl in c["lessons"])
+        theory = (f'<section class="linkback"><h2 id="la-theorie">La théorie correspondante'
+                  f'<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2>'
+                  f'<ul class="linklist">{lessons}</ul></section>') if lessons else ""
+
+        idx = s.app_order.index(pid)
+        prev = s.app_order[idx - 1] if idx > 0 else None
+        nxt = s.app_order[idx + 1] if idx + 1 < len(s.app_order) else None
+        left = (f'<a class="prevnext__link prevnext__prev" href="{base}ateliers/{prev}/index.html">'
+                f'<span class="prevnext__dir">← Atelier précédent</span>'
+                f'<span class="prevnext__title">{esc(s.app(prev)["title"])}</span></a>'
+                ) if prev else "<span></span>"
+        right = (f'<a class="prevnext__link prevnext__next" href="{base}ateliers/{nxt}/index.html">'
+                 f'<span class="prevnext__dir">Atelier suivant →</span>'
+                 f'<span class="prevnext__title">{esc(s.app(nxt)["title"])}</span></a>'
+                 ) if nxt else "<span></span>"
+
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="{base}ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="{base}{c["url"]}">{esc(c["title"])}</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">{c["icon"]}</span> {esc(c["title"])}</p>
+  <h1 class="pagehead__title">{esc(a["title"])}</h1>
+  <p class="pagehead__summary">{esc(a["summary"])}</p>
+  {tag_chips(s, a["tags"], base, link=True)}
+</header>
+{alternatives_box(s, owner, base)}
+{feats}
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+{body_html}
+</article>
+{subs_html}
+{code}
+{theory}
+<section class="done" data-lesson-toggle="atelier:{pid}">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers">{left}{right}</nav>
+<p class="sourcelink">Source :
+  <a href="{APPS_UPSTREAM}/tree/main/{a["path"]}" target="_blank" rel="noopener noreferrer">
+    {esc(a["path"])}</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+"""
+        self.write(a["url"], layout(
+            site=s, base=base, title=f'{a["title"]} — atelier',
+            description=a["summary"], body=body,
+            sidebar=sidebar_html(s, base, None, current_cat=c["id"]),
+            toc=toc_html(toc), body_class="page-lesson",
+        ))
+        self.index_search(url=a["url"], title=a["title"], kind="Atelier",
+                          context=c["title"], summary=a["summary"], md_text=md_text, toc=toc)
+
+        for sub in subs:
+            self.build_app_subpage(pid, sub)
+
+    def build_app_subpage(self, pid: str, sub: dict) -> None:
+        s, base = self.site, "../../../../"
+        a, c = s.app(pid), s.category(s.apps["projects"][pid]["category"])
+        md_text = (CONTENT / "ateliers" / pid / sub["rel"]).read_text(encoding="utf-8")
+        body_html, toc = self.renderer.render(md_text, base)
+        if not re.search(r"<h1[ >]", body_html):
+            body_html = f'<h1 id="titre">{esc(sub["title"])}</h1>' + body_html
+        url = f'ateliers/{pid}/{sub["slug"]}/index.html'
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="{base}ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="{base}{c["url"]}">{esc(c["title"])}</a> <span aria-hidden="true">›</span>
+  <a href="{base}{a["url"]}">{esc(a["title"])}</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page de l'atelier {esc(a["title"])}</p>
+</header>
+<article class="prose">
+{body_html}
+</article>
+<p class="sourcelink">Source :
+  <a href="{APPS_UPSTREAM}/blob/main/{a["path"]}/{sub["rel"]}" target="_blank" rel="noopener noreferrer">
+    {esc(a["path"])}/{esc(sub["rel"])}</a></p>
+"""
+        self.write(url, layout(
+            site=s, base=base, title=f'{sub["title"]} — {a["title"]}',
+            description=f'{sub["title"]} — page de l\'atelier {a["title"]}.',
+            body=body, sidebar=sidebar_html(s, base, None, current_cat=c["id"]),
+            toc=toc_html(toc), body_class="page-lesson",
+        ))
+        self.index_search(url=url, title=sub["title"], kind="Page d'atelier",
+                          context=a["title"], summary="", md_text=md_text, toc=toc)
+
+    # -- tags et alternatives ---------------------------------------------
+
+    def build_tags_page(self) -> None:
+        s, base = self.site, "../"
+        groups = sorted(s.tagdef["groups"].items(), key=lambda kv: kv[1]["order"])
+        blocks = []
+        for gid, g in groups:
+            rows = "".join(
+                f'<li class="legend__row" id="{t}">'
+                f'<span class="tag tag--{gid}"><span class="tag__icon" aria-hidden="true">{v["icon"]}</span>'
+                f'<span class="tag__label">{esc(v["label"])}</span></span>'
+                f'<span class="legend__desc">{esc(v["desc"])}</span></li>'
+                for t, v in s.tagdef["values"].items() if v["group"] == gid
+            )
+            blocks.append(
+                f'<section class="legend"><h2 id="{gid}">{esc(g["title"])}'
+                f'<a class="anchor" href="#{gid}" aria-label="Lien vers cette section">#</a></h2>'
+                f'<p class="legend__help">{esc(g["help"])}</p>'
+                f'<ul class="legend__list">{rows}</ul></section>'
+            )
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span><span>Légende des tags</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🏷️</span> Repères</p>
+  <h1 class="pagehead__title">Que veulent dire les tags ?</h1>
+  <p class="pagehead__summary">Chaque leçon et chaque atelier porte quelques tags, pour vous
+     aider à choisir quoi faire ensuite. Ils sont filtrables depuis l'accueil et le catalogue
+     des ateliers.</p>
+</header>
+<aside class="alts alts--free"><p class="alts__lead"><span aria-hidden="true">ℹ️</span>
+  Les tags d'intérêt, de difficulté et de nature sont un avis pédagogique — utile comme
+  point de départ, pas comme verdict. Le tag de coût, lui, est calculé automatiquement à
+  partir des services que la page exige réellement.</p></aside>
+{"".join(blocks)}
+"""
+        self.write("tags/index.html", layout(
+            site=s, base=base, title="Légende des tags — IA Générative",
+            description="Ce que signifient les tags d'intérêt, de difficulté, de coût et de nature.",
+            body=body, sidebar=sidebar_html(s, base, None), body_class="page-track",
+        ))
+        self.index_search(url="tags/index.html", title="Légende des tags", kind="Repères",
+                          context="", summary="Intérêt, difficulté, coût, nature.",
+                          md_text=" ".join(v["label"] + " " + v["desc"]
+                                           for v in s.tagdef["values"].values()), toc=[])
+
+    def build_alternatives_page(self) -> None:
+        s, base = self.site, "../../"
+        defs = s.services["services"]
+        users: dict[str, list[tuple[str, str]]] = {}
+        for slug in s.order:
+            for sid in s.services_of.get(slug, []):
+                users.setdefault(sid, []).append(
+                    (f'{base}lecons/{slug}/index.html',
+                     f'Leçon {s.lesson_meta[slug]["num"]} — {s.lesson_meta[slug]["title"]}'))
+        for pid in s.app_order:
+            for sid in s.services_of.get(f"ateliers/{pid}", []):
+                users.setdefault(sid, []).append((f'{base}ateliers/{pid}/index.html',
+                                                  s.app(pid)["title"]))
+
+        cats = sorted(s.services["categories"].items(), key=lambda kv: kv[1]["order"])
+        blocks, toc = [], []
+        for cid, cat in cats:
+            services = [(sid, sv) for sid, sv in defs.items() if sv["category"] == cid]
+            if not services:
+                continue
+            toc.append({"id": cid, "text": cat["title"], "level": 2})
+            rows = []
+            for sid, sv in sorted(services, key=lambda kv: kv[1]["name"]):
+                used = users.get(sid, [])
+                if not sv["free"] and sv["cost"] == "gratuit":
+                    subs = '<em>Déjà gratuit — c\'est lui, l\'alternative.</em>'
+                else:
+                    subs = "<ul>" + "".join(
+                        f'<li><a href="{esc(f["url"])}" target="_blank" rel="noopener noreferrer">'
+                        f'{esc(f["name"])}</a> — {esc(f["note"])}</li>' for f in sv["free"]
+                    ) + "</ul>"
+                pages = ""
+                if used:
+                    shown = "".join(f'<li><a href="{u}">{esc(t)}</a></li>' for u, t in used[:8])
+                    more = (f'<li class="alttable__more">et {len(used) - 8} autre(s)</li>'
+                            if len(used) > 8 else "")
+                    pages = f'<ul class="alttable__pages">{shown}{more}</ul>'
+                else:
+                    pages = '<span class="alttable__none">—</span>'
+                rows.append(
+                    f'<tr id="service-{sid}"><td><a href="{esc(sv["url"])}" target="_blank" '
+                    f'rel="noopener noreferrer">{esc(sv["name"])}</a>'
+                    f'<span class="alttable__cost alttable__cost--{sv["cost"]}">'
+                    f'{esc(s.services["cost_labels"].get(sv["cost"], sv["cost"]))}</span>'
+                    f'<span class="alttable__note">{esc(sv.get("note", ""))}</span></td>'
+                    f'<td>{subs}</td><td>{pages}</td></tr>'
+                )
+            blocks.append(
+                f'<section class="alttable"><h2 id="{cid}">'
+                f'<span aria-hidden="true">{cat["icon"]}</span> {esc(cat["title"])}'
+                f'<a class="anchor" href="#{cid}" aria-label="Lien vers cette section">#</a></h2>'
+                f'<table><thead><tr><th>Service</th><th>Alternatives gratuites</th>'
+                f'<th>Où il apparaît</th></tr></thead><tbody>{"".join(rows)}</tbody></table></section>'
+            )
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="{base}annexes/index.html">Annexes</a> <span aria-hidden="true">›</span>
+  <span>Alternatives gratuites</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🆓</span> Apprendre sans dépenser</p>
+  <h1 class="pagehead__title">Alternatives gratuites aux outils payants</h1>
+  <p class="pagehead__summary">Le cours et les ateliers s'appuient sur des services souvent
+     facturés. Pour chacun, voici ce qui le remplace gratuitement, et les pages du site où
+     il intervient. Cette table est aussi ce qui calcule le tag de coût de chaque page.</p>
+</header>
+<aside class="alts alts--free"><p class="alts__lead"><span aria-hidden="true">💡</span>
+  <strong>Le plus court chemin :</strong> un compte GitHub donne accès à
+  <a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a>
+  gratuitement, et <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a>
+  fait tourner les modèles ouverts sur votre machine. À eux deux, ils couvrent la quasi-totalité
+  du cours sans carte bancaire.</p></aside>
+{"".join(blocks)}
+"""
+        self.write("annexes/alternatives-gratuites/index.html", layout(
+            site=s, base=base, title="Alternatives gratuites — IA Générative",
+            description="Pour chaque service payant utilisé par le cours et les ateliers, "
+                        "les substituts gratuits et les pages concernées.",
+            body=body, sidebar=sidebar_html(s, base, None),
+            toc=toc_html(toc), body_class="page-lesson",
+        ))
+        self.index_search(
+            url="annexes/alternatives-gratuites/index.html",
+            title="Alternatives gratuites aux outils payants", kind="Annexe", context="Annexes",
+            summary="Substituts gratuits aux services facturés du cours et des ateliers.",
+            md_text=" ".join(
+                f'{sv["name"]} ' + " ".join(f["name"] + " " + f["note"] for f in sv["free"])
+                for sv in defs.values()),
+            toc=toc)
+
     def build_404(self) -> None:
         body = """
 <div class="hero">
@@ -978,16 +1694,44 @@ class Builder:
         self.write("404.html", layout(site=self.site, base="", title="Page introuvable — IA Générative",
                                       description="Page introuvable.", body=body, body_class="page-home"))
 
+    def prune_images(self) -> int:
+        """Supprime les images plus référencées par aucune page.
+
+        Les deux scripts d'ingestion alimentent le même dossier `assets/images/` ; aucun
+        des deux ne peut donc le vider sans effacer le travail de l'autre. C'est ici,
+        une fois toutes les pages écrites, qu'on sait ce qui sert encore.
+        """
+        img_dir = DOCS / "assets" / "images"
+        if not img_dir.is_dir():
+            return 0
+        used: set[str] = set()
+        for page in DOCS.rglob("*.html"):
+            if "assets" in page.relative_to(DOCS).parts:
+                continue
+            for m in re.finditer(r'assets/images/([^"\'\s>)]+)', page.read_text(encoding="utf-8")):
+                used.add(m.group(1))
+        removed = 0
+        for img in img_dir.iterdir():
+            if img.is_file() and img.name not in used:
+                img.unlink()
+                removed += 1
+        return removed
+
     def run(self) -> None:
         s = self.site
         s.scan_code()
         s.scan_pages()
+        s.scan_app_pages()
+        s.scan_services()
+        s.scan_tags()
 
         if DOCS.exists():
             for child in DOCS.iterdir():
                 if child.name == "assets":
+                    # images/ et code/ sont produits par l'ingestion, pas par ce script :
+                    # les effacer obligerait à tout réimporter à chaque génération.
                     for a in child.iterdir():
-                        if a.name != "images":
+                        if a.name not in ("images", "code"):
                             shutil.rmtree(a) if a.is_dir() else a.unlink()
                     continue
                 shutil.rmtree(child) if child.is_dir() else child.unlink()
@@ -1000,8 +1744,18 @@ class Builder:
             self.build_lesson(slug)
             for sub in s.subpages.get(slug, []):
                 self.build_subpage(slug, sub)
+        if s.app_order:
+            self.build_apps_index()
+            for cat in s.cat_order:
+                self.build_app_category(cat)
+            for pid in s.app_order:
+                self.build_app(pid)
         self.build_annexes()
+        self.build_alternatives_page()
+        self.build_tags_page()
         self.build_404()
+
+        pruned = self.prune_images()
 
         # Chargé par une balise <script> plutôt que par fetch() : la recherche
         # fonctionne ainsi même quand le site est ouvert depuis le disque (file://).
@@ -1012,10 +1766,19 @@ class Builder:
             encoding="utf-8",
         )
 
-        pages = len(list(DOCS.rglob("index.html"))) + 1
-        print(f"✓ {pages} pages HTML générées dans docs/ "
-              f"({len(s.order)} leçons, {sum(len(v) for v in s.subpages.values())} pages annexes de leçon, "
-              f"{len(s.search)} entrées de recherche)")
+        # Ne compter que les pages du site : `assets/code/` contient des .html
+        # appartenant aux projets copiés.
+        pages = sum(1 for p in DOCS.rglob("*.html")
+                    if "assets" not in p.relative_to(DOCS).parts)
+        paid = sum(1 for o in s.tags_of if "payant" in s.tags_of[o])
+        print(f"✓ {pages} pages HTML générées dans docs/")
+        print(f"  {len(s.order)} leçons + {sum(len(v) for v in s.subpages.values())} pages annexes")
+        print(f"  {len(s.app_order)} ateliers dans {len(s.cat_order)} catégories "
+              f"+ {sum(len(v) for v in s.app_subpages.values())} pages d'atelier")
+        print(f"  {len(s.search)} entrées de recherche · {paid} pages exigeant un service payant "
+              f"(alternatives affichées)")
+        if pruned:
+            print(f"  {pruned} image(s) orpheline(s) supprimée(s)")
         for w in s.warnings:
             print(f"⚠ {w}")
 

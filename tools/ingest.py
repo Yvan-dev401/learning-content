@@ -29,10 +29,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-CONTENT = ROOT / "content"
-CODE = ROOT / "code"
-IMAGES = ROOT / "docs" / "assets" / "images"
+from common import (CODE, CONTENT, HASHED_NAME_RE, HTML_SRC_RE, IMAGE_EXT, IMAGES,
+                    MD_LINK_RE, ROOT, ImagePool, copy_code_tree, log)
 
 UPSTREAM_URL = "https://github.com/microsoft/generative-ai-for-beginners.git"
 DEFAULT_UPSTREAM = Path(
@@ -49,25 +47,12 @@ SPARSE = [
     "!/presentations/*",
 ]
 
-IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".bmp"}
-CODE_SKIP_DIRS = {"node_modules", "bin", "obj", ".venv", "__pycache__", ".vscode", "images", "img", ".git"}
-MAX_CODE_BYTES = 1_000_000
-
-# `[texte](cible)` et `<img src="cible">` — on ne réécrit que si la cible résout
-# vers un fichier existant du dépôt source, ce qui écarte les data: URI des blocs de code.
-MD_LINK_RE = re.compile(r"(!?\[[^\]]*\]\()([^)\s]+)((?:\s+\"[^\"]*\")?\))")
-HTML_SRC_RE = re.compile(r"""(<img\b[^>]*?\bsrc=)(["'])([^"']+)\2""", re.IGNORECASE)
 TRACKING_RE = re.compile(r"[?&]WT\.mc_id=[^)\s\"'#]*")
-HASHED_NAME_RE = re.compile(r"^(?P<stem>.+)\.[0-9a-f]{12,20}(?P<ext>\.[A-Za-z0-9]+)$")
 # Encart ajouté automatiquement en pied de page par Co-op Translator.
 DISCLAIMER_RE = re.compile(
     r"\n---\s*\n+\*\*(?:Avertissement|Clause de non-responsabilité)\*\*\s*:?.*\Z",
     re.DOTALL,
 )
-
-
-def log(msg: str) -> None:
-    print(msg, flush=True)
 
 
 def ensure_upstream(path: Path) -> Path:
@@ -97,33 +82,12 @@ class Ingest:
         self.annexes: dict[str, dict] = meta["annexes"]["pages"]
         # source du fichier annexe -> clé d'annexe, pour réécrire les liens vers eux
         self.annexe_by_src = {v["source"]: k for k, v in self.annexes.items()}
-        self.image_names: dict[Path, str] = {}   # source absolue -> nom de sortie
-        self.used_names: set[str] = set()
+        self.images = ImagePool()
         self.__originals: dict[str, Path] | None = None
         self.manifest: dict = {"lessons": {}, "annexes": {}, "images": 0, "skipped": []}
         self.warnings: list[str] = []
 
     # ---------------------------------------------------------------- images
-
-    def image_target(self, src: Path, slug: str) -> str:
-        """Nom de sortie stable pour une image, hash Co-op Translator retiré."""
-        if src in self.image_names:
-            return self.image_names[src]
-        m = HASHED_NAME_RE.match(src.name)
-        base = (m.group("stem") + m.group("ext")) if m else src.name
-        name = base
-        if name in self.used_names:
-            name = f"{slug}-{base}"
-            n = 2
-            while name in self.used_names:
-                name = f"{slug}-{n}-{base}"
-                n += 1
-        self.used_names.add(name)
-        self.image_names[src] = name
-        IMAGES.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, IMAGES / name)
-        self.manifest["images"] += 1
-        return name
 
     def find_original_image(self, missing: Path) -> Path | None:
         """Repli sur l'image anglaise d'origine quand la variante traduite manque.
@@ -192,7 +156,11 @@ class Ingest:
             if found is None:
                 self.warnings.append(f"image absente du dépôt source : {target} (dans {md_file.name})")
                 return "@missing"
-            return "@img/" + self.image_target(found, slug)
+            name = self.images.target(found, slug)
+            if name is None:   # image trop lourde : on pointe vers le dépôt d'origine
+                rel = found.relative_to(self.up.resolve()).as_posix()
+                return f"https://raw.githubusercontent.com/microsoft/generative-ai-for-beginners/main/{rel}"
+            return "@img/" + name
 
         # Documents transverses (CONTRIBUTING.md, SECURITY.md…) devenus des annexes
         key = self.annexe_by_src.get("/".join(parts))
@@ -260,40 +228,21 @@ class Ingest:
 
     def ingest_code(self, slug: str) -> tuple[list[str], list[dict]]:
         """Copie les fichiers de code de la leçon (le code n'est pas traduit)."""
-        src_dir = self.up / slug
-        kept: list[str] = []
-        skipped: list[dict] = []
-        if not src_dir.is_dir():
-            return kept, skipped
-        for path in sorted(src_dir.rglob("*")):
-            if not path.is_file():
-                continue
-            rel = path.relative_to(src_dir)
-            if set(rel.parts[:-1]) & CODE_SKIP_DIRS:
-                continue
-            if rel.suffix.lower() == ".md" or rel.name == "README.md":
-                continue
-            if rel.suffix.lower() in IMAGE_EXT:
-                skipped.append({"path": str(rel), "reason": "image", "size": path.stat().st_size})
-                continue
-            size = path.stat().st_size
-            if size > MAX_CODE_BYTES:
-                skipped.append({"path": str(rel), "reason": "trop volumineux", "size": size})
-                continue
-            dest = CODE / slug / rel
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(path, dest)
-            kept.append(str(rel).replace(os.sep, "/"))
-        return kept, skipped
+        return copy_code_tree(self.up / slug, CODE / slug)
 
     # ------------------------------------------------------------------- run
 
     def run(self) -> None:
-        for d in (CONTENT, CODE, IMAGES):
-            for child in sorted(d.glob("*")) if d.exists() else []:
-                if child.name == "_meta.json":
-                    continue
-                shutil.rmtree(child) if child.is_dir() else child.unlink()
+        # N'effacer que ce que ce script produit. `content/` héberge aussi les métadonnées
+        # rédigées à la main et les ateliers, qu'un nettoyage large emporterait.
+        # Les images sont dans un pool partagé avec `ingest_apps.py` : les orphelines
+        # sont élaguées par `build.py`, une fois qu'il sait lesquelles sont référencées.
+        for slug in self.lessons:
+            for d in (CONTENT / slug, CODE / slug):
+                if d.exists():
+                    shutil.rmtree(d)
+        if (CONTENT / "_annexes").exists():
+            shutil.rmtree(CONTENT / "_annexes")
 
         for slug in self.lessons:
             fr_dir = self.fr / slug
@@ -328,6 +277,7 @@ class Ingest:
                 self.manifest["annexes"][key] = {"source": info["source"]}
                 log(f"  annexe {key:<38} ← {info['source']}")
 
+        self.manifest["images"] = self.images.count
         (CONTENT / "_ingest.json").write_text(
             json.dumps(self.manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
         )

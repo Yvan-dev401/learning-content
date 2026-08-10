@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scope Creep Detector — Détecteur de dérive de périmètre</title>
+<meta name="description" content="Scope Creep Detector — page de l&#x27;atelier Détecteur de dérive de périmètre.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<link rel="stylesheet" href="../../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/agent-skills/index.html">Compétences d&#x27;agent</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/agent-skills/scope-creep-detector/index.html">Détecteur de dérive de périmètre</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page de l'atelier Détecteur de dérive de périmètre</p>
+</header>
+<article class="prose">
+<hr />
+<h2 id="name-scope-creep-detector-description-analyzes-git-diffs-against-a-stated-intent-to-detect-scope-creep-unrelated-files-broad-pull-requests-changes-that-grew-beyond-a-fix-dependency-additions-public-api-renames-config-or-ci-edits-oversized-hunks-and-formatting-only-files-use-when-the-user-asks-whether-a-change-grew-beyond-the-fix-a-pr-is-too-broad-or-what-unrelated-stuff-they-touched-and-wants-keep-split-or-justify-guidance-operates-locally-and-offline-license-apache-20-metadata-author-matt-van-horn-version-100-source-httpsgithubcomshubhamsabooawesome-llm-apps">name: scope-creep-detector
+description: &gt;-
+Analyzes git diffs against a stated intent to detect scope creep, unrelated
+files, broad pull requests, changes that grew beyond a fix, dependency
+additions, public API renames, config or CI edits, oversized hunks, and
+formatting-only files. Use when the user asks whether a change grew beyond
+the fix, a PR is too broad, or what unrelated stuff they touched, and wants
+keep, split, or justify guidance. Operates locally and offline.
+license: Apache-2.0
+metadata:
+author: &quot;Matt Van Horn&quot;
+version: &quot;1.0.0&quot;
+source: &quot;https://github.com/Shubhamsaboo/awesome-llm-apps&quot;<a class="anchor" href="#name-scope-creep-detector-description-analyzes-git-diffs-against-a-stated-intent-to-detect-scope-creep-unrelated-files-broad-pull-requests-changes-that-grew-beyond-a-fix-dependency-additions-public-api-renames-config-or-ci-edits-oversized-hunks-and-formatting-only-files-use-when-the-user-asks-whether-a-change-grew-beyond-the-fix-a-pr-is-too-broad-or-what-unrelated-stuff-they-touched-and-wants-keep-split-or-justify-guidance-operates-locally-and-offline-license-apache-20-metadata-author-matt-van-horn-version-100-source-httpsgithubcomshubhamsabooawesome-llm-apps" aria-label="Lien vers cette section">#</a></h2>
+<h1 id="scope-creep-detector">Scope Creep Detector<a class="anchor" href="#scope-creep-detector" aria-label="Lien vers cette section">#</a></h1>
+<p>A one-line fix should not require a reviewer to reverse-engineer fourteen files
+across three subsystems. This skill compares a git diff with its stated intent,
+surfaces scope signals, and turns them into keep, split, or justify decisions.</p>
+<p>Everything runs locally. The script makes no network calls and does not change
+the working tree, index, commits, or branches.</p>
+<h2 id="when-to-use">When to use<a class="anchor" href="#when-to-use" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Before opening a pull request whose diff may have grown beyond its intent</li>
+<li>When a bug fix touches unexpected files or subsystems</li>
+<li>When the user asks whether staged changes are too broad</li>
+<li>When a diff includes dependency, public API, config, CI, or build changes</li>
+<li>When the user wants a concrete split plan for a mixed change</li>
+</ul>
+<h2 id="when-not-to-use">When not to use<a class="anchor" href="#when-not-to-use" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Formatting code, running a linter, or writing a commit message</li>
+<li>Reviewing correctness, security, or test quality inside an agreed scope</li>
+<li>Measuring historical project growth across many commits</li>
+<li>Editing or reverting files without the user's approval</li>
+</ul>
+<h2 id="establish-the-intent">Establish the intent<a class="anchor" href="#establish-the-intent" aria-label="Lien vers cette section">#</a></h2>
+<p>Use the user's one-line intent when available. Keep it concrete, such as
+<code>fix null dereference in parser</code> or <code>add retry limit to webhook delivery</code>.</p>
+<p>If no intent was given, the script falls back to the current branch name. If
+that name is generic, detached, or unrelated to the work, ask for one line of
+intent before treating relatedness as meaningful.</p>
+<h2 id="run-the-classifier">Run the classifier<a class="anchor" href="#run-the-classifier" aria-label="Lien vers cette section">#</a></h2>
+<p>Run from this skill directory and point <code>--repo</code> at the target repository.</p>
+<p>Working tree diff:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python3<span class="w"> </span>scripts/scope_creep.py<span class="w"> </span>--repo<span class="w"> </span>/path/to/repo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--intent<span class="w"> </span><span class="s2">&quot;fix null dereference in parser&quot;</span><span class="w"> </span>--json
+</pre></div>
+</div><p>Staged diff:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python3<span class="w"> </span>scripts/scope_creep.py<span class="w"> </span>--repo<span class="w"> </span>/path/to/repo<span class="w"> </span>--staged<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--intent<span class="w"> </span><span class="s2">&quot;fix null dereference in parser&quot;</span><span class="w"> </span>--json
+</pre></div>
+</div><p>Branch diff against a merge base:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python3<span class="w"> </span>scripts/scope_creep.py<span class="w"> </span>--repo<span class="w"> </span>/path/to/repo<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--intent<span class="w"> </span><span class="s2">&quot;fix null dereference in parser&quot;</span><span class="w"> </span>--json
+</pre></div>
+</div><p>Saved diff or stdin:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python3<span class="w"> </span>scripts/scope_creep.py<span class="w"> </span>--diff<span class="w"> </span>change.diff<span class="w"> </span>--intent<span class="w"> </span><span class="s2">&quot;parser fix&quot;</span><span class="w"> </span>--json
+git<span class="w"> </span>diff<span class="w"> </span>--staged<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>scripts/scope_creep.py<span class="w"> </span>--diff<span class="w"> </span>-<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--intent<span class="w"> </span><span class="s2">&quot;parser fix&quot;</span><span class="w"> </span>--json
+</pre></div>
+</div><p>Use <code>--hunk-threshold</code> only when the repository has a documented reason to
+change the default churn threshold. Do not tune the threshold merely to make a
+warning disappear.</p>
+<h2 id="interpret-the-json">Interpret the JSON<a class="anchor" href="#interpret-the-json" aria-label="Lien vers cette section">#</a></h2>
+<p>Read <a href="../../../../ateliers/agent-skills/scope-creep-detector/references-scope-signals/index.html">references/scope-signals.md</a> before making a
+recommendation. Treat the classifier as triage evidence, not proof of authorial
+intent.</p>
+<ul>
+<li><code>in_scope</code>: file paths with at least one intent/path keyword overlap</li>
+<li><code>likely_creep</code>: paths without overlap, with the reason and detected signals</li>
+<li><code>new_deps</code>: dependencies introduced in supported manifest formats</li>
+<li><code>api_renames</code>: nearby removed and added public function or class declarations</li>
+<li><code>config_edits</code>: CI, container, build, YAML, and TOML changes</li>
+<li><code>stats</code>: churn, subsystem counts, oversized hunks, and formatting-only files</li>
+</ul>
+<p>Empty arrays are evidence too. Say that no signal was detected, not that the
+diff is guaranteed to be in scope.</p>
+<h2 id="recommend-keep-split-or-justify">Recommend keep, split, or justify<a class="anchor" href="#recommend-keep-split-or-justify" aria-label="Lien vers cette section">#</a></h2>
+<p>Give every item in <code>likely_creep</code> one disposition:</p>
+<ol>
+<li><strong>Keep</strong> when the path is necessary for the stated intent and the connection
+is direct. Explain the connection in one sentence.</li>
+<li><strong>Split</strong> when it can land independently, belongs to another subsystem, or
+introduces a dependency, API rename, config edit, or large hunk that is not
+required for the intent. Name the files or hunks for the follow-up change.</li>
+<li><strong>Justify</strong> when a cross-cutting edit cannot be separated safely. State the
+invariant or build constraint that requires it and call out reviewer risk.</li>
+</ol>
+<p>Prefer split when evidence is ambiguous. Never claim that a zero overlap score
+proves a file is unrelated. Path vocabulary is a cheap, deterministic proxy.</p>
+<h2 id="write-the-scope-report">Write the scope report<a class="anchor" href="#write-the-scope-report" aria-label="Lien vers cette section">#</a></h2>
+<p>Use this compact structure:</p>
+<ol>
+<li>Intent and diff source</li>
+<li>Files and subsystems touched, with total additions and deletions</li>
+<li>In-scope changes</li>
+<li>Likely creep with signal evidence</li>
+<li>Keep, split, or justify table</li>
+<li>Proposed follow-up grouping, if any</li>
+</ol>
+<p>Name file paths and hunk headers. For an oversized mixed hunk, explain that the
+script cannot split it automatically and describe the smallest coherent edit.
+Ask before applying any split, revert, staging, or commit operation.</p>
+<h2 id="files">Files<a class="anchor" href="#files" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><code>scripts/scope_creep.py</code>: deterministic unified-diff parser and classifier</li>
+<li><code>references/scope-signals.md</code>: signal definitions, thresholds, and limits</li>
+</ul>
+
+</article>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/blob/main/agent_skills/scope-creep-detector/SKILL.md" target="_blank" rel="noopener noreferrer">
+    agent_skills/scope-creep-detector/SKILL.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#name-scope-creep-detector-description-analyzes-git-diffs-against-a-stated-intent-to-detect-scope-creep-unrelated-files-broad-pull-requests-changes-that-grew-beyond-a-fix-dependency-additions-public-api-renames-config-or-ci-edits-oversized-hunks-and-formatting-only-files-use-when-the-user-asks-whether-a-change-grew-beyond-the-fix-a-pr-is-too-broad-or-what-unrelated-stuff-they-touched-and-wants-keep-split-or-justify-guidance-operates-locally-and-offline-license-apache-20-metadata-author-matt-van-horn-version-100-source-httpsgithubcomshubhamsabooawesome-llm-apps">name: scope-creep-detector
+description: &gt;-
+  Analyzes git diffs against a stated intent to detect scope creep, unrelated
+  files, broad pull requests, changes that grew beyond a fix, dependency
+  additions, public API renames, config or CI edits, oversized hunks, and
+  formatting-only files. Use when the user asks whether a change grew beyond
+  the fix, a PR is too broad, or what unrelated stuff they touched, and wants
+  keep, split, or justify guidance. Operates locally and offline.
+license: Apache-2.0
+metadata:
+  author: &quot;Matt Van Horn&quot;
+  version: &quot;1.0.0&quot;
+  source: &quot;https://github.com/Shubhamsaboo/awesome-llm-apps&quot;</a></li><li class="toc__item toc__item--h2"><a href="#when-to-use">When to use</a></li><li class="toc__item toc__item--h2"><a href="#when-not-to-use">When not to use</a></li><li class="toc__item toc__item--h2"><a href="#establish-the-intent">Establish the intent</a></li><li class="toc__item toc__item--h2"><a href="#run-the-classifier">Run the classifier</a></li><li class="toc__item toc__item--h2"><a href="#interpret-the-json">Interpret the JSON</a></li><li class="toc__item toc__item--h2"><a href="#recommend-keep-split-or-justify">Recommend keep, split, or justify</a></li><li class="toc__item toc__item--h2"><a href="#write-the-scope-report">Write the scope report</a></li><li class="toc__item toc__item--h2"><a href="#files">Files</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

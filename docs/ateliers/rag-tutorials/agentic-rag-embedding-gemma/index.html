@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG agentique avec EmbeddingGemma — atelier</title>
+<meta name="description" content="Des embeddings locaux et légers signés Google, sans service payant.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/rag-tutorials/index.html">RAG — ancrer le modèle dans vos données</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">📚</span> RAG — ancrer le modèle dans vos données</p>
+  <h1 class="pagehead__title">RAG agentique avec EmbeddingGemma</h1>
+  <p class="pagehead__summary">Des embeddings locaux et légers signés Google, sans service payant.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#incontournable" title="Le socle : sans ça, la suite ne tient pas."><span class="tag__icon" aria-hidden="true">⭐</span><span class="tag__label">Incontournable</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#gratuit" title="Rien à payer : tout est local ou couvert par un service gratuit."><span class="tag__icon" aria-hidden="true">🆓</span><span class="tag__label">100 % gratuit</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts alts--free"><p class="alts__lead"><span aria-hidden="true">🆓</span> Rien à payer ici : Ollama. <a href="../../../annexes/alternatives-gratuites/index.html">Voir toutes les alternatives gratuites</a>.</p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Local AI Models: Uses EmbeddingGemma for vector embeddings and Llama 3.2 for text generation</li><li>PDF Knowledge Base: Dynamically add PDF URLs to build a knowledge base</li><li>Vector Search: Efficient similarity search using LanceDB</li><li>Interactive UI: Beautiful Streamlit interface for adding sources and querying</li><li>Streaming Responses: Real-time response generation with tool call visibility</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="titre">Agentic Rag Embedding Gemma</h1><h2 id="agentic-rag-with-embeddinggemma">🔥 Agentic RAG with EmbeddingGemma<a class="anchor" href="#agentic-rag-with-embeddinggemma" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial<a class="anchor" href="#free-step-by-step-tutorial" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>👉 <a href="https://www.theunwindai.com/p/build-a-local-agentic-rag-app-with-google-embeddinggemma" target="_blank" rel="noopener noreferrer">Click here to follow our complete step-by-step tutorial</a> and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.</strong></p>
+<p>This Streamlit app demonstrates an agentic Retrieval-Augmented Generation (RAG) Agent using Google's EmbeddingGemma for embeddings and Llama 3.2 as the language model, all running locally via Ollama.</p>
+<h3 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Local AI Models</strong>: Uses EmbeddingGemma for vector embeddings and Llama 3.2 for text generation</li>
+<li><strong>PDF Knowledge Base</strong>: Dynamically add PDF URLs to build a knowledge base</li>
+<li><strong>Vector Search</strong>: Efficient similarity search using LanceDB</li>
+<li><strong>Interactive UI</strong>: Beautiful Streamlit interface for adding sources and querying</li>
+<li><strong>Streaming Responses</strong>: Real-time response generation with tool call visibility</li>
+</ul>
+<h3 id="how-to-get-started">How to Get Started?<a class="anchor" href="#how-to-get-started" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>Clone the GitHub repository</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>awesome-llm-apps/rag_tutorials/agentic_rag_embedding_gemma
+</pre></div>
+</div><ol start="2">
+<li>Install the required dependencies:</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div><ol start="3">
+<li>
+<p>Ensure Ollama is installed and running with the required models:</p>
+<ul>
+<li>Pull the models: <code>ollama pull embeddinggemma:latest</code> and <code>ollama pull llama3.2:latest</code></li>
+<li>Start Ollama server if not running</li>
+</ul>
+</li>
+<li>
+<p>Run the Streamlit app:</p>
+</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>agentic_rag_embeddinggemma.py
+</pre></div>
+</div><p>(Note: The app file is in the root directory)</p>
+<ol start="5">
+<li>Open your web browser to the URL provided (usually http://localhost:8501) to interact with the RAG agent.</li>
+</ol>
+<h3 id="how-it-works">How It Works?<a class="anchor" href="#how-it-works" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li><strong>Knowledge Base Setup</strong>: Add PDF URLs in the sidebar to load and index documents.</li>
+<li><strong>Embedding Generation</strong>: EmbeddingGemma creates vector embeddings for semantic search.</li>
+<li><strong>Query Processing</strong>: User queries are embedded and searched against the knowledge base.</li>
+<li><strong>Response Generation</strong>: Llama 3.2 generates answers based on retrieved context.</li>
+<li><strong>Tool Integration</strong>: The agent uses search tools to fetch relevant information.</li>
+</ol>
+<h3 id="requirements">Requirements<a class="anchor" href="#requirements" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Python 3.8+</li>
+<li>Ollama installed and running</li>
+<li>Required models: <code>embeddinggemma:latest</code>, <code>llama3.2:latest</code></li>
+</ul>
+<h3 id="technologies-used">Technologies Used<a class="anchor" href="#technologies-used" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Agno</strong>: Framework for building AI agents</li>
+<li><strong>Streamlit</strong>: Web app framework</li>
+<li><strong>LanceDB</strong>: Vector database</li>
+<li><strong>Ollama</strong>: Local LLM server</li>
+<li><strong>EmbeddingGemma</strong>: Google's embedding model</li>
+<li><strong>Llama 3.2</strong>: Meta's language model</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-agentic-rag-embeddinggemma-py"><summary class="codefile__head"><span class="codefile__name">agentic_rag_embeddinggemma.py</span><span class="codefile__size">5 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.knowledge.embedder.ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaEmbedder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.knowledge.knowledge</span><span class="w"> </span><span class="kn">import</span> <span class="n">Knowledge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.models.ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ollama</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.vectordb.lancedb</span><span class="w"> </span><span class="kn">import</span> <span class="n">LanceDb</span><span class="p">,</span> <span class="n">SearchType</span>
+
+<span class="c1"># Page configuration</span>
+<span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span>
+    <span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;Agentic RAG with Google&#39;s EmbeddingGemma&quot;</span><span class="p">,</span>
+    <span class="n">page_icon</span><span class="o">=</span><span class="s2">&quot;🔥&quot;</span><span class="p">,</span>
+    <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span>
+<span class="p">)</span>
+
+<span class="nd">@st</span><span class="o">.</span><span class="n">cache_resource</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_knowledge_base</span><span class="p">():</span>
+    <span class="n">knowledge_base</span> <span class="o">=</span> <span class="n">Knowledge</span><span class="p">(</span>
+        <span class="n">vector_db</span><span class="o">=</span><span class="n">LanceDb</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;recipes&quot;</span><span class="p">,</span>
+            <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;tmp/lancedb&quot;</span><span class="p">,</span>
+            <span class="n">search_type</span><span class="o">=</span><span class="n">SearchType</span><span class="o">.</span><span class="n">vector</span><span class="p">,</span>
+            <span class="n">embedder</span><span class="o">=</span><span class="n">OllamaEmbedder</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;embeddinggemma:latest&quot;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="mi">768</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">knowledge_base</span>
+
+<span class="c1"># Initialize URLs in session state</span>
+<span class="k">if</span> <span class="s1">&#39;urls&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">if</span> <span class="s1">&#39;urls_loaded&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls_loaded</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+<span class="n">kb</span> <span class="o">=</span> <span class="n">load_knowledge_base</span><span class="p">()</span>
+
+<span class="c1"># Load initial URLs if any (only load once per URL)</span>
+<span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">url</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls_loaded</span><span class="p">:</span>
+        <span class="n">kb</span><span class="o">.</span><span class="n">add_content</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls_loaded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">Ollama</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;llama3.2:latest&quot;</span><span class="p">),</span>
+    <span class="n">knowledge</span><span class="o">=</span><span class="n">kb</span><span class="p">,</span>
+    <span class="n">instructions</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;Search the knowledge base for relevant information and base your answers on it.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Be clear, and generate well-structured answers.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Use clear headings, bullet points, or numbered lists where appropriate.&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">search_knowledge</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">debug_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Sidebar for adding knowledge sources</span>
+<span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+    <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="s2">&quot;google.png&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="s2">&quot;ollama.png&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="s2">&quot;agno.png&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;🌐 Add Knowledge Sources&quot;</span><span class="p">)</span>
+    <span class="n">new_url</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+        <span class="s2">&quot;Add URL&quot;</span><span class="p">,</span>
+        <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;https://example.com/sample.pdf&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter a PDF URL to add to the knowledge base&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;➕ Add URL&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">new_url</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">new_url</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_url</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;📥 Adding new URL...&quot;</span><span class="p">):</span>
+                    <span class="n">kb</span><span class="o">.</span><span class="n">add_content</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">new_url</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls_loaded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_url</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Added: </span><span class="si">{</span><span class="n">new_url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;This URL has already been added.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please enter a URL&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Display current URLs</span>
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📚 Current Knowledge Sources&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">urls</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Main title and description</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🔥 Agentic RAG with EmbeddingGemma (100</span><span class="si">% lo</span><span class="s2">cal)&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This app demonstrates an agentic RAG system using local models via [Ollama](https://ollama.com/):</span>
+
+<span class="sd">- **EmbeddingGemma** for creating vector embeddings</span>
+<span class="sd">- **LanceDB** as the local vector database</span>
+
+<span class="sd">Add PDF URLs in the sidebar to start and ask questions about the content.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="p">)</span>
+                
+<span class="n">query</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Enter your question:&quot;</span><span class="p">)</span>
+
+<span class="c1"># Simple answer generation</span>
+<span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🚀 Get Answer&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">query</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please enter a question&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### 💡 Answer&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🔍 Searching knowledge and generating answer...&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">resp_container</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+                <span class="n">gen</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">resp_chunk</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
+                    <span class="c1"># Display response</span>
+                    <span class="k">if</span> <span class="n">resp_chunk</span><span class="o">.</span><span class="n">content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">response</span> <span class="o">+=</span> <span class="n">resp_chunk</span><span class="o">.</span><span class="n">content</span>
+                        <span class="n">resp_container</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;📖 How This Works&quot;</span><span class="p">):</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">**This app uses the Agno framework to create an intelligent Q&amp;A system:**</span>
+
+<span class="sd">1. **Knowledge Loading**: PDF URLs are processed and stored in LanceDB vector database</span>
+<span class="sd">2. **EmbeddingGemma as Embedder**: EmbeddingGemma generates local embeddings for semantic search</span>
+<span class="sd">3. **Llama 3.2**: The Llama 3.2 model generates answers based on retrieved context</span>
+
+<span class="sd">**Key Components:**</span>
+<span class="sd">- `EmbeddingGemma` as the embedder</span>
+<span class="sd">- `LanceDB` as the vector database</span>
+<span class="sd">- `Knowledge`: Manages document loading from PDF URLs</span>
+<span class="sd">- `OllamaEmbedder`: Uses EmbeddingGemma for embeddings</span>
+<span class="sd">- `Agno Agent`: Orchestrates everything to answer questions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-embedding-gemma/agentic_rag_embeddinggemma.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">43 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit
+agno&gt;=2.2.10
+lancedb
+ollama
+pypdf
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-embedding-gemma/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div><details class="codepanel__skipped"><summary>Fichiers non embarqués (3)</summary><ul><li><code>agno.png</code> — image (8 ko)</li><li><code>google.png</code> — image (40 ko)</li><li><code>ollama.png</code> — image (8 ko)</li></ul><p>Ils restent disponibles dans le <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/rag_tutorials/agentic_rag_embedding_gemma" target="_blank" rel="noopener noreferrer">dépôt d'origine</a>.</p></details></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/15-rag-and-vector-databases/index.html">15 · RAG et bases de données vectorielles</a></li><li><a href="../../../lecons/08-building-search-applications/index.html">08 · Construire des applications de recherche (embeddings)</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:rag-tutorials/agentic-rag-embedding-gemma">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/starter-ai-agents/xai-finance-agent/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Agent financier (xAI Grok)</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/rag-tutorials/agentic-rag-gpt5/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">RAG agentique avec GPT-5</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/rag_tutorials/agentic_rag_embedding_gemma" target="_blank" rel="noopener noreferrer">
+    rag_tutorials/agentic_rag_embedding_gemma</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#agentic-rag-with-embeddinggemma">🔥 Agentic RAG with EmbeddingGemma</a></li><li class="toc__item toc__item--h3"><a href="#free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial</a></li><li class="toc__item toc__item--h3"><a href="#features">Features</a></li><li class="toc__item toc__item--h3"><a href="#how-to-get-started">How to Get Started?</a></li><li class="toc__item toc__item--h3"><a href="#how-it-works">How It Works?</a></li><li class="toc__item toc__item--h3"><a href="#requirements">Requirements</a></li><li class="toc__item toc__item--h3"><a href="#technologies-used">Technologies Used</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

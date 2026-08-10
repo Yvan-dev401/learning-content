@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vision RAG (Cohere Embed-4) — atelier</title>
+<meta name="description" content="Recherche directement dans des images et des documents scannés, sans passer par l&#x27;OCR.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/rag-tutorials/index.html">RAG — ancrer le modèle dans vos données</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">📚</span> RAG — ancrer le modèle dans vos données</p>
+  <h1 class="pagehead__title">Vision RAG (Cohere Embed-4)</h1>
+  <p class="pagehead__summary">Recherche directement dans des images et des documents scannés, sans passer par l&#x27;OCR.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#incontournable" title="Le socle : sans ça, la suite ne tient pas."><span class="tag__icon" aria-hidden="true">⭐</span><span class="tag__label">Incontournable</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#palier-gratuit" title="Des comptes sont nécessaires, mais leur offre gratuite couvre l&#x27;exercice."><span class="tag__icon" aria-hidden="true">🧪</span><span class="tag__label">Palier gratuit suffisant</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://dashboard.cohere.com" target="_blank" rel="noopener noreferrer">Cohere</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Clé d&#x27;essai gratuite, limitée en débit mais sans expiration.</p><ul class="alts__list"><li><a href="https://dashboard.cohere.com/api-keys" target="_blank" rel="noopener noreferrer">La clé d&#x27;essai suffit</a> — Le débit limité convient à un atelier.</li><li><a href="https://sbert.net" target="_blank" rel="noopener noreferrer">sentence-transformers</a> — Embeddings locaux de bonne qualité, gratuits.</li><li><a href="https://ai.google.dev/gemma" target="_blank" rel="noopener noreferrer">EmbeddingGemma</a> — Embeddings légers de Google, exécutables en local.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio / Gemini</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Palier gratuit confortable, sans carte bancaire. Convient à la quasi-totalité des ateliers.</p><ul class="alts__list"><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Le palier gratuit suffit</a> — Créez la clé dans AI Studio : aucune carte n&#x27;est demandée.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Si vous dépassez le quota, un modèle local prend le relais.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Multimodal Search: Leverages Cohere Embed-4 to find the most semantically relevant image (or PDF page image) for a given text question.</li><li>Visual Question Answering: Employs Google Gemini 2.5 Flash to analyze the content of the retrieved image/page and generate accurate, context-aware answers.</li><li>Flexible Content Sources:</li><li>Use pre-loaded sample financial charts and infographics.</li><li>Upload your own custom images (PNG, JPG, JPEG).</li><li>Upload PDF documents: Automatically extracts pages as images for analysis.</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="vision-rag-with-cohere-embed-4">Vision RAG with Cohere Embed-4 🖼️<a class="anchor" href="#vision-rag-with-cohere-embed-4" aria-label="Lien vers cette section">#</a></h1>
+<p>A powerful visual Retrieval-Augmented Generation (RAG) system that utilizes Cohere's state-of-the-art Embed-4 model for multimodal embedding and Google's efficient Gemini 2.5 Flash model for answering questions about images and PDF pages.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Multimodal Search</strong>: Leverages Cohere Embed-4 to find the most semantically relevant image (or PDF page image) for a given text question.</li>
+<li><strong>Visual Question Answering</strong>: Employs Google Gemini 2.5 Flash to analyze the content of the retrieved image/page and generate accurate, context-aware answers.</li>
+<li><strong>Flexible Content Sources</strong>:
+<ul>
+<li>Use pre-loaded sample financial charts and infographics.</li>
+<li>Upload your own custom images (PNG, JPG, JPEG).</li>
+<li><strong>Upload PDF documents</strong>: Automatically extracts pages as images for analysis.</li>
+</ul>
+</li>
+<li><strong>No OCR Required</strong>: Directly processes complex images and visual elements within PDF pages without needing separate text extraction steps.</li>
+<li><strong>Interactive UI</strong>: Built with Streamlit for easy interaction, including content loading, question input, and result display.</li>
+<li><strong>Session Management</strong>: Remembers loaded/uploaded content (images and processed PDF pages) within a session.</li>
+</ul>
+<h2 id="requirements">Requirements<a class="anchor" href="#requirements" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Python 3.8+</li>
+<li>Cohere API key</li>
+<li>Google Gemini API key</li>
+</ul>
+<h2 id="how-to-run">How to Run<a class="anchor" href="#how-to-run" aria-label="Lien vers cette section">#</a></h2>
+<p>Follow these steps to set up and run the application:</p>
+<ol>
+<li>
+<p><strong>Clone and Navigate to Directory</strong> :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>awesome-llm-apps/rag_tutorials/vision_rag
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install Dependencies</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div><p><em>(Ensure you have the latest <code>PyMuPDF</code> installed along with other requirements)</em></p>
+</li>
+<li>
+<p><strong>Set up your API keys</strong>:</p>
+<ul>
+<li>Get a Cohere API key from: <a href="https://dashboard.cohere.com/api-keys" target="_blank" rel="noopener noreferrer">https://dashboard.cohere.com/api-keys</a></li>
+<li>Get a Google API key from: <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">https://aistudio.google.com/app/apikey</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Run the Streamlit app</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>vision_rag.py
+</pre></div>
+</div></li>
+<li>
+<p><strong>Access the Web Interface</strong>:</p>
+<ul>
+<li>Streamlit will provide a local URL (usually <code>http://localhost:8501</code>) in your terminal.</li>
+<li>Open this URL in your web browser.</li>
+</ul>
+</li>
+</ol>
+<h2 id="how-it-works">How It Works<a class="anchor" href="#how-it-works" aria-label="Lien vers cette section">#</a></h2>
+<p>The application follows a two-stage RAG process:</p>
+<ol>
+<li>
+<p><strong>Retrieval</strong>:</p>
+<ul>
+<li>When you load sample images or upload your own images/PDFs:
+<ul>
+<li>Regular images are converted to base64 strings.</li>
+<li><strong>PDFs are processed page by page</strong>: Each page is rendered as an image, saved temporarily, and converted to a base64 string.</li>
+</ul>
+</li>
+<li>Cohere's <code>embed-v4.0</code> model (with <code>input_type=&quot;search_document&quot;</code>) is used to generate a dense vector embedding for each image or PDF page image.</li>
+<li>When you ask a question, the text query is embedded using the same <code>embed-v4.0</code> model (with <code>input_type=&quot;search_query&quot;</code>).</li>
+<li>Cosine similarity is calculated between the question embedding and all image embeddings.</li>
+<li>The image with the highest similarity score (which could be a regular image or a specific PDF page image) is retrieved as the most relevant context.</li>
+</ul>
+</li>
+<li>
+<p><strong>Generation</strong>:</p>
+<ul>
+<li>The original text question and the retrieved image/page image are passed as input to the Google <code>gemini-2.5-flash-preview-04-17</code> model.</li>
+<li>Gemini analyzes the image content in the context of the question and generates a textual answer.</li>
+</ul>
+</li>
+</ol>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>Enter your Cohere and Google API keys in the sidebar.</li>
+<li>Load content:
+<ul>
+<li>Click <strong>&quot;Load Sample Images&quot;</strong> to download and process the built-in examples.</li>
+<li><em>OR/AND</em> Use the <strong>&quot;Upload Your Images or PDFs&quot;</strong> section to upload your own image or PDF files.</li>
+</ul>
+</li>
+<li>Once content is loaded and processed (embeddings generated), the <strong>&quot;Ask a Question&quot;</strong> section will be enabled.</li>
+<li>Optionally, expand <strong>&quot;View Loaded Images&quot;</strong> to see thumbnails of all images and processed PDF pages currently in the session.</li>
+<li>Type your question about the loaded content into the text input field.</li>
+<li>Click <strong>&quot;Run Vision RAG&quot;</strong>.</li>
+<li>View the results:
+<ul>
+<li>The <strong>Retrieved Image/Page</strong> deemed most relevant to your question (caption indicates source PDF and page number if applicable).</li>
+<li>The <strong>Generated Answer</strong> from Gemini based on the image and question.</li>
+</ul>
+</li>
+</ol>
+<h2 id="use-cases">Use Cases<a class="anchor" href="#use-cases" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Analyze financial charts and extract key figures or trends.</li>
+<li>Answer specific questions about diagrams, flowcharts, or infographics within images or PDFs.</li>
+<li>Extract information from tables or text within screenshots or PDF pages without explicit OCR.</li>
+<li>Build and query visual knowledge bases (from images and PDFs) using natural language.</li>
+<li>Understand the content of various complex visual documents, including multi-page reports.</li>
+</ul>
+<h2 id="note">Note<a class="anchor" href="#note" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Image and PDF processing (page rendering + embedding) can take time, especially for many items or large files. Sample images are cached after the first load; PDF processing currently happens on each upload within a session.</li>
+<li>Ensure your API keys have the necessary permissions and quotas for the Cohere and Gemini models used.</li>
+<li>The quality of the answer depends on both the relevance of the retrieved image and the capability of the Gemini model to interpret the image based on the question.</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">133 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit&gt;=1.32.0
+cohere&gt;=5.0.0
+google-generativeai&gt;=0.3.0
+Pillow&gt;=10.0.0
+requests&gt;=2.31.0
+numpy&gt;=1.24.0
+tqdm&gt;=4.66.0
+PyMuPDF&gt;=1.23.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/vision-rag/requirements.txt" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-vision-rag-py"><summary class="codefile__head"><span class="codefile__name">vision_rag.py</span><span class="codefile__size">26 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">PIL</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cohere</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google</span><span class="w"> </span><span class="kn">import</span> <span class="n">genai</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fitz</span> <span class="c1"># PyMuPDF</span>
+
+<span class="c1"># --- Streamlit App Configuration ---</span>
+<span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">,</span> <span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;Vision RAG with Cohere Embed-4&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Vision RAG with Cohere Embed-4 🖼️&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- API Key Input ---</span>
+<span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;🔑 API Keys&quot;</span><span class="p">)</span>
+    <span class="n">cohere_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Cohere API Key&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;cohere_key&quot;</span><span class="p">)</span>
+    <span class="n">google_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Google API Key (Gemini)&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;google_key&quot;</span><span class="p">)</span>
+    <span class="s2">&quot;[Get a Cohere API key](https://dashboard.cohere.com/api-keys)&quot;</span>
+    <span class="s2">&quot;[Get a Google API key](https://aistudio.google.com/app/apikey)&quot;</span>
+
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cohere_api_key</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please enter your Cohere API key to proceed.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">google_api_key</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please enter your Google API key to proceed.&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># --- Initialize API Clients ---</span>
+<span class="n">co</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">genai_client</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="c1"># Initialize Session State for embeddings and paths</span>
+<span class="k">if</span> <span class="s1">&#39;image_paths&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">if</span> <span class="s1">&#39;doc_embeddings&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">if</span> <span class="n">cohere_api_key</span> <span class="ow">and</span> <span class="n">google_api_key</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">co</span> <span class="o">=</span> <span class="n">cohere</span><span class="o">.</span><span class="n">ClientV2</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">cohere_api_key</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Cohere Client Initialized!&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cohere Initialization Failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">genai_client</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">google_api_key</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Gemini Client Initialized!&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gemini Initialization Failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Enter your API keys in the sidebar to start.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Information about the models</span>
+<span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;ℹ️ About the models used&quot;</span><span class="p">):</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    ### Cohere Embed-4</span>
+<span class="s2">    </span>
+<span class="s2">    Cohere&#39;s Embed-4 is a state-of-the-art multimodal embedding model designed for enterprise search and retrieval. </span>
+<span class="s2">    It enables:</span>
+<span class="s2">    </span>
+<span class="s2">    - **Multimodal search**: Search text and images together seamlessly</span>
+<span class="s2">    - **High accuracy**: State-of-the-art performance for retrieval tasks</span>
+<span class="s2">    - **Efficient embedding**: Process complex images like charts, graphs, and infographics</span>
+<span class="s2">    </span>
+<span class="s2">    The model processes images without requiring complex OCR pre-processing and maintains the connection between visual elements and text.</span>
+<span class="s2">    </span>
+<span class="s2">    ### Google Gemini 2.5 Flash</span>
+<span class="s2">    </span>
+<span class="s2">    Gemini 2.5 Flash is Google&#39;s efficient multimodal model that can process text and image inputs to generate high-quality responses.</span>
+<span class="s2">    It&#39;s designed for fast inference while maintaining high accuracy, making it ideal for real-time applications like this RAG system.</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- Helper functions ---</span>
+<span class="c1"># Some helper functions to resize images and to convert them to base64 format</span>
+<span class="n">max_pixels</span> <span class="o">=</span> <span class="mi">1568</span><span class="o">*</span><span class="mi">1568</span>  <span class="c1">#Max resolution for images</span>
+
+<span class="c1"># Resize too large images</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">resize_image</span><span class="p">(</span><span class="n">pil_image</span><span class="p">:</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resizes the image in-place if it exceeds max_pixels.&quot;&quot;&quot;</span>
+    <span class="n">org_width</span><span class="p">,</span> <span class="n">org_height</span> <span class="o">=</span> <span class="n">pil_image</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="c1"># Resize image if too large</span>
+    <span class="k">if</span> <span class="n">org_width</span> <span class="o">*</span> <span class="n">org_height</span> <span class="o">&gt;</span> <span class="n">max_pixels</span><span class="p">:</span>
+        <span class="n">scale_factor</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_pixels</span> <span class="o">/</span> <span class="p">(</span><span class="n">org_width</span> <span class="o">*</span> <span class="n">org_height</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
+        <span class="n">new_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">org_width</span> <span class="o">*</span> <span class="n">scale_factor</span><span class="p">)</span>
+        <span class="n">new_height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">org_height</span> <span class="o">*</span> <span class="n">scale_factor</span><span class="p">)</span>
+        <span class="n">pil_image</span><span class="o">.</span><span class="n">thumbnail</span><span class="p">((</span><span class="n">new_width</span><span class="p">,</span> <span class="n">new_height</span><span class="p">))</span>
+
+<span class="c1"># Convert images to a base64 string before sending it to the API</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">base64_from_image</span><span class="p">(</span><span class="n">img_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts an image file to a base64 encoded string.&quot;&quot;&quot;</span>
+    <span class="n">pil_image</span> <span class="o">=</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+    <span class="n">img_format</span> <span class="o">=</span> <span class="n">pil_image</span><span class="o">.</span><span class="n">format</span> <span class="k">if</span> <span class="n">pil_image</span><span class="o">.</span><span class="n">format</span> <span class="k">else</span> <span class="s2">&quot;PNG&quot;</span>
+
+    <span class="n">resize_image</span><span class="p">(</span><span class="n">pil_image</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span> <span class="k">as</span> <span class="n">img_buffer</span><span class="p">:</span>
+        <span class="n">pil_image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">img_buffer</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">img_format</span><span class="p">)</span>
+        <span class="n">img_buffer</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">img_data</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;data:image/</span><span class="si">{</span><span class="n">img_format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">;base64,&quot;</span><span class="o">+</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">img_buffer</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">img_data</span>
+
+<span class="c1"># Convert PIL image to base64 string</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pil_to_base64</span><span class="p">(</span><span class="n">pil_image</span><span class="p">:</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a PIL image to a base64 encoded string.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">pil_image</span><span class="o">.</span><span class="n">format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">img_format</span> <span class="o">=</span> <span class="s2">&quot;PNG&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">img_format</span> <span class="o">=</span> <span class="n">pil_image</span><span class="o">.</span><span class="n">format</span>
+    
+    <span class="n">resize_image</span><span class="p">(</span><span class="n">pil_image</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span> <span class="k">as</span> <span class="n">img_buffer</span><span class="p">:</span>
+        <span class="n">pil_image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">img_buffer</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">img_format</span><span class="p">)</span>
+        <span class="n">img_buffer</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">img_data</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;data:image/</span><span class="si">{</span><span class="n">img_format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">;base64,&quot;</span><span class="o">+</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">img_buffer</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">img_data</span>
+
+<span class="c1"># Compute embedding for an image</span>
+<span class="nd">@st</span><span class="o">.</span><span class="n">cache_data</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="n">show_spinner</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_image_embedding</span><span class="p">(</span><span class="n">base64_img</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_cohere_client</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes an embedding for an image using Cohere&#39;s Embed-4 model.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">api_response</span> <span class="o">=</span> <span class="n">_cohere_client</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;embed-v4.0&quot;</span><span class="p">,</span>
+            <span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;search_document&quot;</span><span class="p">,</span>
+            <span class="n">embedding_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;float&quot;</span><span class="p">],</span>
+            <span class="n">images</span><span class="o">=</span><span class="p">[</span><span class="n">base64_img</span><span class="p">],</span>
+        <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">api_response</span><span class="o">.</span><span class="n">embeddings</span> <span class="ow">and</span> <span class="n">api_response</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">float_</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">api_response</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">float_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Could not get embedding. API response might be empty.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error computing embedding: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<span class="c1"># Process a PDF file: extract pages as images and embed them</span>
+<span class="c1"># Note: Caching PDF processing might be complex due to potential large file sizes and streams</span>
+<span class="c1"># We will process it directly for now, but show progress.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_pdf_file</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">,</span> <span class="n">cohere_client</span><span class="p">,</span> <span class="n">base_output_folder</span><span class="o">=</span><span class="s2">&quot;pdf_pages&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts pages from a PDF as images, embeds them, and saves them.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pdf_file: UploadedFile object from Streamlit.</span>
+<span class="sd">        cohere_client: Initialized Cohere client.</span>
+<span class="sd">        base_output_folder: Directory to save page images.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple containing: </span>
+<span class="sd">          - list of paths to the saved page images.</span>
+<span class="sd">          - list of numpy array embeddings for each page, or None if embedding fails.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">page_image_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">page_embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">pdf_file</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_output_folder</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Open PDF from stream</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">pdf_file</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">filetype</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing PDF: </span><span class="si">{</span><span class="n">pdf_filename</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span><span class="si">}</span><span class="s2"> pages)&quot;</span><span class="p">)</span>
+        <span class="n">pdf_progress</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">page</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">pages</span><span class="p">()):</span>
+            <span class="n">page_num</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">page_img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;page_</span><span class="si">{</span><span class="n">page_num</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">)</span>
+            <span class="n">page_image_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">page_img_path</span><span class="p">)</span>
+
+            <span class="c1"># Render page to pixmap (image)</span>
+            <span class="n">pix</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">get_pixmap</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span> <span class="c1"># Adjust DPI as needed for quality/performance</span>
+            <span class="n">pil_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">frombytes</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">pix</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">pix</span><span class="o">.</span><span class="n">height</span><span class="p">],</span> <span class="n">pix</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+            
+            <span class="c1"># Save the page image temporarily</span>
+            <span class="n">pil_image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">page_img_path</span><span class="p">,</span> <span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Convert PIL image to base64</span>
+            <span class="n">base64_img</span> <span class="o">=</span> <span class="n">pil_to_base64</span><span class="p">(</span><span class="n">pil_image</span><span class="p">)</span>
+            
+            <span class="c1"># Compute embedding for the page image</span>
+            <span class="n">emb</span> <span class="o">=</span> <span class="n">compute_image_embedding</span><span class="p">(</span><span class="n">base64_img</span><span class="p">,</span> <span class="n">_cohere_client</span><span class="o">=</span><span class="n">cohere_client</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">emb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">page_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not embed page </span><span class="si">{</span><span class="n">page_num</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">pdf_filename</span><span class="si">}</span><span class="s2">. Skipping.&quot;</span><span class="p">)</span>
+                <span class="c1"># Add a placeholder to keep lists aligned, will be filtered later</span>
+                <span class="n">page_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+            <span class="c1"># Update progress</span>
+            <span class="n">pdf_progress</span><span class="o">.</span><span class="n">progress</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">))</span>
+
+        <span class="n">doc</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">pdf_progress</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span> <span class="c1"># Remove progress bar after completion</span>
+        
+        <span class="c1"># Filter out pages where embedding failed</span>
+        <span class="n">valid_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">page_image_paths</span><span class="p">)</span> <span class="k">if</span> <span class="n">page_embeddings</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">valid_embeddings</span> <span class="o">=</span> <span class="p">[</span><span class="n">emb</span> <span class="k">for</span> <span class="n">emb</span> <span class="ow">in</span> <span class="n">page_embeddings</span> <span class="k">if</span> <span class="n">emb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_embeddings</span><span class="p">:</span>
+             <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to generate any embeddings for </span><span class="si">{</span><span class="n">pdf_filename</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+             <span class="k">return</span> <span class="p">[],</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">valid_paths</span><span class="p">,</span> <span class="n">valid_embeddings</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing PDF </span><span class="si">{</span><span class="n">pdf_filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[],</span> <span class="kc">None</span>
+
+<span class="c1"># Download and embed sample images</span>
+<span class="nd">@st</span><span class="o">.</span><span class="n">cache_data</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="n">show_spinner</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_and_embed_sample_images</span><span class="p">(</span><span class="n">_cohere_client</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Downloads sample images and computes their embeddings using Cohere&#39;s Embed-4 model.&quot;&quot;&quot;</span>
+    <span class="c1"># Several images from https://www.appeconomyinsights.com/</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;tesla.png&quot;</span><span class="p">:</span> <span class="s2">&quot;https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A</span><span class="si">%2F%2F</span><span class="s2">substack-post-media.s3.amazonaws.com</span><span class="si">%2F</span><span class="s2">public</span><span class="si">%2F</span><span class="s2">images</span><span class="si">%2F</span><span class="s2">bef936e6-3efa-43b3-88d7-7ec620cdb33b_2744x1539.png&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;netflix.png&quot;</span><span class="p">:</span> <span class="s2">&quot;https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A</span><span class="si">%2F%2F</span><span class="s2">substack-post-media.s3.amazonaws.com</span><span class="si">%2F</span><span class="s2">public</span><span class="si">%2F</span><span class="s2">images</span><span class="si">%2F</span><span class="s2">23bd84c9-5b62-4526-b467-3088e27e4193_2744x1539.png&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nike.png&quot;</span><span class="p">:</span> <span class="s2">&quot;https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A</span><span class="si">%2F%2F</span><span class="s2">substack-post-media.s3.amazonaws.com</span><span class="si">%2F</span><span class="s2">public</span><span class="si">%2F</span><span class="s2">images</span><span class="si">%2F</span><span class="s2">a5cd33ba-ae1a-42a8-a254-d85e690d9870_2741x1541.png&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;google.png&quot;</span><span class="p">:</span> <span class="s2">&quot;https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A</span><span class="si">%2F%2F</span><span class="s2">substack-post-media.s3.amazonaws.com</span><span class="si">%2F</span><span class="s2">public</span><span class="si">%2F</span><span class="s2">images</span><span class="si">%2F</span><span class="s2">395dd3b9-b38e-4d1f-91bc-d37b642ee920_2741x1541.png&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;accenture.png&quot;</span><span class="p">:</span> <span class="s2">&quot;https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A</span><span class="si">%2F%2F</span><span class="s2">substack-post-media.s3.amazonaws.com</span><span class="si">%2F</span><span class="s2">public</span><span class="si">%2F</span><span class="s2">images</span><span class="si">%2F</span><span class="s2">08b2227c-7dc8-49f7-b3c5-13cab5443ba6_2741x1541.png&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tecent.png&quot;</span><span class="p">:</span> <span class="s2">&quot;https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A</span><span class="si">%2F%2F</span><span class="s2">substack-post-media.s3.amazonaws.com</span><span class="si">%2F</span><span class="s2">public</span><span class="si">%2F</span><span class="s2">images</span><span class="si">%2F</span><span class="s2">0ec8448c-c4d1-4aab-a8e9-2ddebe0c95fd_2741x1541.png&quot;</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Prepare folders</span>
+    <span class="n">img_folder</span> <span class="o">=</span> <span class="s2">&quot;img&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">img_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">img_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">doc_embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># Wrap TQDM with st.spinner for better UI integration</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Downloading and embedding sample images...&quot;</span><span class="p">):</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Processing sample images&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+            <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">img_folder</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="c1"># Don&#39;t re-append if already processed (useful if function called multiple times)</span>
+            <span class="k">if</span> <span class="n">img_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">img_paths</span><span class="p">:</span>
+                <span class="n">img_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+
+                <span class="c1"># Download the image</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">img_path</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+                        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fOut</span><span class="p">:</span>
+                            <span class="n">fOut</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to download </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="c1"># Optionally remove the path if download failed</span>
+                        <span class="n">img_paths</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                        <span class="k">continue</span> <span class="c1"># Skip if download fails</span>
+
+            <span class="c1"># Get embedding for the image if it exists and we haven&#39;t computed one yet</span>
+            <span class="c1"># Find index corresponding to this path</span>
+            <span class="n">current_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">current_index</span> <span class="o">=</span> <span class="n">img_paths</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">continue</span> <span class="c1"># Should not happen if append logic is correct</span>
+
+            <span class="c1"># Check if embedding already exists for this index</span>
+            <span class="k">if</span> <span class="n">current_index</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_embeddings</span><span class="p">):</span>
+                 <span class="k">try</span><span class="p">:</span>
+                     <span class="c1"># Ensure file exists before trying to embed</span>
+                     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">img_path</span><span class="p">):</span>
+                         <span class="n">base64_img</span> <span class="o">=</span> <span class="n">base64_from_image</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+                         <span class="n">emb</span> <span class="o">=</span> <span class="n">compute_image_embedding</span><span class="p">(</span><span class="n">base64_img</span><span class="p">,</span> <span class="n">_cohere_client</span><span class="o">=</span><span class="n">_cohere_client</span><span class="p">)</span>
+                         <span class="k">if</span> <span class="n">emb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                             <span class="c1"># Placeholder to ensure list length matches paths before vstack</span>
+                             <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_embeddings</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">current_index</span><span class="p">:</span>
+                                 <span class="n">doc_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="c1"># Append placeholder if needed</span>
+                             <span class="n">doc_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+                     <span class="k">else</span><span class="p">:</span>
+                         <span class="c1"># If file doesn&#39;t exist (maybe failed download), add placeholder</span>
+                         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_embeddings</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">current_index</span><span class="p">:</span>
+                                 <span class="n">doc_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                         <span class="n">doc_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                     <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to embed </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                     <span class="c1"># Add placeholder on error</span>
+                     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_embeddings</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">current_index</span><span class="p">:</span>
+                             <span class="n">doc_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                     <span class="n">doc_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    
+    <span class="c1"># Filter out None embeddings and corresponding paths before stacking</span>
+    <span class="n">filtered_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">img_paths</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_embeddings</span><span class="p">)</span> <span class="ow">and</span> <span class="n">doc_embeddings</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">filtered_embeddings</span> <span class="o">=</span> <span class="p">[</span><span class="n">emb</span> <span class="k">for</span> <span class="n">emb</span> <span class="ow">in</span> <span class="n">doc_embeddings</span> <span class="k">if</span> <span class="n">emb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">filtered_embeddings</span><span class="p">:</span>
+        <span class="n">doc_embeddings_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">filtered_embeddings</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filtered_paths</span><span class="p">,</span> <span class="n">doc_embeddings_array</span>
+        
+    <span class="k">return</span> <span class="p">[],</span> <span class="kc">None</span>
+
+<span class="c1"># Search function</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">co_client</span><span class="p">:</span> <span class="n">cohere</span><span class="o">.</span><span class="n">Client</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">image_paths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">max_img_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">800</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Finds the most relevant image path for a given question.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">co_client</span> <span class="ow">or</span> <span class="n">embeddings</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">image_paths</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Search prerequisites not met (client, embeddings, or paths missing/empty).&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_paths</span><span class="p">):</span>
+         <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mismatch between embeddings count (</span><span class="si">{</span><span class="n">embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">) and image paths count (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">image_paths</span><span class="p">)</span><span class="si">}</span><span class="s2">). Cannot perform search.&quot;</span><span class="p">)</span>
+         <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Compute the embedding for the query</span>
+        <span class="n">api_response</span> <span class="o">=</span> <span class="n">co_client</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;embed-v4.0&quot;</span><span class="p">,</span>
+            <span class="n">input_type</span><span class="o">=</span><span class="s2">&quot;search_query&quot;</span><span class="p">,</span>
+            <span class="n">embedding_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;float&quot;</span><span class="p">],</span>
+            <span class="n">texts</span><span class="o">=</span><span class="p">[</span><span class="n">question</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">api_response</span><span class="o">.</span><span class="n">embeddings</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">api_response</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">float_</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to get query embedding.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">query_emb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">api_response</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">float_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># Ensure query embedding has the correct shape for dot product</span>
+        <span class="k">if</span> <span class="n">query_emb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query embedding dimension (</span><span class="si">{</span><span class="n">query_emb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">) does not match document embedding dimension (</span><span class="si">{</span><span class="n">embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># Compute cosine similarities</span>
+        <span class="n">cos_sim_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">query_emb</span><span class="p">,</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+        <span class="c1"># Get the most relevant image</span>
+        <span class="n">top_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cos_sim_scores</span><span class="p">)</span>
+        <span class="n">hit_img_path</span> <span class="o">=</span> <span class="n">image_paths</span><span class="p">[</span><span class="n">top_idx</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Question: </span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Keep for debugging</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Most relevant image: </span><span class="si">{</span><span class="n">hit_img_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Keep for debugging</span>
+
+        <span class="k">return</span> <span class="n">hit_img_path</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during search: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<span class="c1"># Answer function</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">answer</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">img_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gemini_client</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Answers the question based on the provided image using Gemini.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gemini_client</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">img_path</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">img_path</span><span class="p">):</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">gemini_client</span><span class="p">:</span> <span class="n">missing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Gemini client&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">img_path</span><span class="p">:</span> <span class="n">missing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Image path&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">img_path</span><span class="p">):</span> <span class="n">missing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file at </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Answering prerequisites not met (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2"> missing or invalid).&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;Answer the question based on the following image. Be as elaborate as possible giving extra relevant information.</span>
+<span class="s2">Don&#39;t use markdown formatting in the response.</span>
+<span class="s2">Please provide enough context for your answer.</span>
+
+<span class="s2">Question: </span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">img</span><span class="p">]</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">gemini_client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
+            <span class="n">contents</span><span class="o">=</span><span class="n">prompt</span>
+        <span class="p">)</span>
+
+        <span class="n">llm_answer</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LLM Answer:&quot;</span><span class="p">,</span> <span class="n">llm_answer</span><span class="p">)</span> <span class="c1"># Keep for debugging</span>
+        <span class="k">return</span> <span class="n">llm_answer</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during answer generation: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Failed to generate answer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># --- Main UI Setup ---</span>
+<span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Load Sample Images&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">cohere_api_key</span> <span class="ow">and</span> <span class="n">co</span><span class="p">:</span>
+    <span class="c1"># If button clicked, load sample images into session state</span>
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Load Sample Images&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;load_sample_button&quot;</span><span class="p">):</span>
+        <span class="n">sample_img_paths</span><span class="p">,</span> <span class="n">sample_doc_embeddings</span> <span class="o">=</span> <span class="n">download_and_embed_sample_images</span><span class="p">(</span><span class="n">_cohere_client</span><span class="o">=</span><span class="n">co</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sample_img_paths</span> <span class="ow">and</span> <span class="n">sample_doc_embeddings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Append sample images to session state (avoid duplicates if clicked again)</span>
+            <span class="n">current_paths</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">)</span>
+            <span class="n">new_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">sample_img_paths</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">current_paths</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="n">new_paths</span><span class="p">:</span>
+                <span class="n">new_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sample_img_paths</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">new_paths</span><span class="p">]</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_paths</span><span class="p">)</span>
+                <span class="n">new_embeddings_to_add</span> <span class="o">=</span> <span class="n">sample_doc_embeddings</span><span class="p">[[</span><span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sample_img_paths</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">new_paths</span><span class="p">]]</span>
+                
+                <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="o">=</span> <span class="n">new_embeddings_to_add</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span><span class="p">,</span> <span class="n">new_embeddings_to_add</span><span class="p">))</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_paths</span><span class="p">)</span><span class="si">}</span><span class="s2"> sample images.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                 <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sample images already loaded.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+             <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to load sample images. Check console for errors.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+     <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Enter API keys to enable loading sample images.&quot;</span><span class="p">)</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;--- &quot;</span><span class="p">)</span>
+<span class="c1"># --- File Uploader (Main UI) ---</span>
+<span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📤 Upload Your Images&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Or, upload your own images or PDFs. The RAG process will search across all loaded content.&quot;</span><span class="p">)</span>
+
+<span class="c1"># File uploader</span>
+<span class="n">uploaded_files</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">file_uploader</span><span class="p">(</span><span class="s2">&quot;Upload images (PNG, JPG, JPEG) or PDFs&quot;</span><span class="p">,</span> 
+                                <span class="nb">type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">],</span> 
+                                <span class="n">accept_multiple_files</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;image_uploader&quot;</span><span class="p">,</span>
+                                <span class="n">label_visibility</span><span class="o">=</span><span class="s2">&quot;collapsed&quot;</span><span class="p">)</span>
+
+<span class="c1"># Process uploaded images</span>
+<span class="k">if</span> <span class="n">uploaded_files</span> <span class="ow">and</span> <span class="n">co</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">uploaded_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> uploaded images...&quot;</span><span class="p">)</span>
+    <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Create a temporary directory for uploaded images</span>
+    <span class="n">upload_folder</span> <span class="o">=</span> <span class="s2">&quot;uploaded_img&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">upload_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="n">newly_uploaded_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">newly_uploaded_embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">uploaded_file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">uploaded_files</span><span class="p">):</span>
+        <span class="c1"># Check if already processed this session (simple name check)</span>
+        <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">upload_folder</span><span class="p">,</span> <span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">img_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Check file type</span>
+                <span class="n">file_type</span> <span class="o">=</span> <span class="n">uploaded_file</span><span class="o">.</span><span class="n">type</span>
+                <span class="k">if</span> <span class="n">file_type</span> <span class="o">==</span> <span class="s2">&quot;application/pdf&quot;</span><span class="p">:</span>
+                    <span class="c1"># Process PDF - returns list of paths and list of embeddings</span>
+                    <span class="n">pdf_page_paths</span><span class="p">,</span> <span class="n">pdf_page_embeddings</span> <span class="o">=</span> <span class="n">process_pdf_file</span><span class="p">(</span><span class="n">uploaded_file</span><span class="p">,</span> <span class="n">cohere_client</span><span class="o">=</span><span class="n">co</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">pdf_page_paths</span> <span class="ow">and</span> <span class="n">pdf_page_embeddings</span><span class="p">:</span>
+                         <span class="c1"># Add only paths/embeddings not already in session state</span>
+                         <span class="n">current_paths_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">)</span>
+                         <span class="n">unique_new_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pdf_page_paths</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">current_paths_set</span><span class="p">]</span>
+                         <span class="k">if</span> <span class="n">unique_new_paths</span><span class="p">:</span>
+                             <span class="n">indices_to_add</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pdf_page_paths</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">unique_new_paths</span><span class="p">]</span>
+                             <span class="n">newly_uploaded_paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">unique_new_paths</span><span class="p">)</span>
+                             <span class="n">newly_uploaded_embeddings</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">pdf_page_embeddings</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">indices_to_add</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">file_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;image/png&quot;</span><span class="p">,</span> <span class="s2">&quot;image/jpeg&quot;</span><span class="p">]:</span>
+                    <span class="c1"># Process regular image</span>
+                    <span class="c1"># Save the uploaded file</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">getbuffer</span><span class="p">())</span>
+                    
+                    <span class="c1"># Get embedding</span>
+                    <span class="n">base64_img</span> <span class="o">=</span> <span class="n">base64_from_image</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+                    <span class="n">emb</span> <span class="o">=</span> <span class="n">compute_image_embedding</span><span class="p">(</span><span class="n">base64_img</span><span class="p">,</span> <span class="n">_cohere_client</span><span class="o">=</span><span class="n">co</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="n">emb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">newly_uploaded_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+                        <span class="n">newly_uploaded_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                     <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported file type skipped: </span><span class="si">{</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">file_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing </span><span class="si">{</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Update progress regardless of processing status for user feedback</span>
+        <span class="n">progress_bar</span><span class="o">.</span><span class="n">progress</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">uploaded_files</span><span class="p">))</span>
+
+    <span class="c1"># Add newly processed files to session state</span>
+    <span class="k">if</span> <span class="n">newly_uploaded_paths</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">newly_uploaded_paths</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">newly_uploaded_embeddings</span><span class="p">:</span>
+            <span class="n">new_embeddings_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">newly_uploaded_embeddings</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="o">=</span> <span class="n">new_embeddings_array</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span><span class="p">,</span> <span class="n">new_embeddings_array</span><span class="p">))</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully processed and added </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">newly_uploaded_paths</span><span class="p">)</span><span class="si">}</span><span class="s2"> new images.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+             <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Failed to generate embeddings for newly uploaded images.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">uploaded_files</span><span class="p">:</span> <span class="c1"># If files were selected but none were new</span>
+         <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Selected images already seem to be processed.&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- Vision RAG Section (Main UI) ---</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;❓ Ask a Question&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please load sample images or upload your own images first.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ready to answer questions about </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">)</span><span class="si">}</span><span class="s2"> images.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Display thumbnails of all loaded images (optional)</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;View Loaded Images&quot;</span><span class="p">,</span> <span class="n">expanded</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">:</span>
+            <span class="n">num_images_to_show</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">)</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Show 5 thumbnails per row</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_images_to_show</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">cols</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="mi">5</span><span class="p">]:</span>
+                    <span class="c1"># Add try-except for missing files during display</span>
+                    <span class="k">try</span><span class="p">:</span>
+                         <span class="c1"># Display PDF pages differently? For now, just show the image</span>
+                         <span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;No images loaded yet.&quot;</span><span class="p">)</span>
+
+<span class="n">question</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Ask a question about the loaded images:&quot;</span><span class="p">,</span> 
+                          <span class="n">key</span><span class="o">=</span><span class="s2">&quot;main_question_input&quot;</span><span class="p">,</span>
+                          <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;E.g., What is Nike&#39;s net profit?&quot;</span><span class="p">,</span>
+                          <span class="n">disabled</span><span class="o">=</span><span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">)</span>
+
+<span class="n">run_button</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Run Vision RAG&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;main_run_button&quot;</span><span class="p">,</span> 
+                      <span class="n">disabled</span><span class="o">=</span><span class="ow">not</span> <span class="p">(</span><span class="n">cohere_api_key</span> <span class="ow">and</span> <span class="n">google_api_key</span> <span class="ow">and</span> <span class="n">question</span> <span class="ow">and</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span> <span class="ow">and</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="c1"># Output Area</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Results&quot;</span><span class="p">)</span>
+<span class="n">retrieved_image_placeholder</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+<span class="n">answer_placeholder</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+
+<span class="c1"># Run search and answer logic</span>
+<span class="k">if</span> <span class="n">run_button</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">co</span> <span class="ow">and</span> <span class="n">genai_client</span> <span class="ow">and</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+         <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Finding relevant image...&quot;</span><span class="p">):</span>
+            <span class="c1"># Ensure embeddings and paths match before search</span>
+             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">)</span> <span class="o">!=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                 <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error: Mismatch between number of images and embeddings. Cannot proceed.&quot;</span><span class="p">)</span>
+             <span class="k">else</span><span class="p">:</span>
+                <span class="n">top_image_path</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">co</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_embeddings</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">image_paths</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">top_image_path</span><span class="p">:</span>
+                    <span class="n">caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Retrieved content for: &#39;</span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">&#39; (Source: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">top_image_path</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+                    <span class="c1"># Add source PDF name if it&#39;s a page image</span>
+                    <span class="k">if</span> <span class="n">top_image_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;pdf_pages/&quot;</span><span class="p">):</span>
+                         <span class="n">parts</span> <span class="o">=</span> <span class="n">top_image_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+                             <span class="n">pdf_name</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                             <span class="n">page_name</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                             <span class="n">caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Retrieved content for: &#39;</span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">&#39; (Source: </span><span class="si">{</span><span class="n">pdf_name</span><span class="si">}</span><span class="s2">.pdf, </span><span class="si">{</span><span class="n">page_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+                    <span class="n">retrieved_image_placeholder</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">top_image_path</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Generating answer...&quot;</span><span class="p">):</span>
+                        <span class="n">final_answer</span> <span class="o">=</span> <span class="n">answer</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">top_image_path</span><span class="p">,</span> <span class="n">genai_client</span><span class="p">)</span>
+                        <span class="n">answer_placeholder</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Answer:**</span><span class="se">\n</span><span class="si">{</span><span class="n">final_answer</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">retrieved_image_placeholder</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Could not find a relevant image for your question.&quot;</span><span class="p">)</span>
+                    <span class="n">answer_placeholder</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="c1"># Clear answer placeholder</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># This case should ideally be prevented by the disabled state of the button</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cannot run RAG. Check API clients and ensure images are loaded with embeddings.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Footer</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">&quot;Vision RAG with Cohere Embed-4 | Built with Streamlit, Cohere Embed-4, and Google Gemini 2.5 Flash&quot;</span><span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/vision-rag/vision_rag.py" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/15-rag-and-vector-databases/index.html">15 · RAG et bases de données vectorielles</a></li><li><a href="../../../lecons/08-building-search-applications/index.html">08 · Construire des applications de recherche (embeddings)</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:rag-tutorials/vision-rag">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/rag-tutorials/rag-failure-diagnostics-clinic/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Diagnostic des pannes de RAG</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-single-agent-apps/ai-agent-governance/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Gouvernance d&#x27;agent (bac à sable)</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/rag_tutorials/vision_rag" target="_blank" rel="noopener noreferrer">
+    rag_tutorials/vision_rag</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#requirements">Requirements</a></li><li class="toc__item toc__item--h2"><a href="#how-to-run">How to Run</a></li><li class="toc__item toc__item--h2"><a href="#how-it-works">How It Works</a></li><li class="toc__item toc__item--h2"><a href="#usage">Usage</a></li><li class="toc__item toc__item--h2"><a href="#use-cases">Use Cases</a></li><li class="toc__item toc__item--h2"><a href="#note">Note</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

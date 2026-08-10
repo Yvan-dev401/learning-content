@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent de planification de repas — atelier</title>
+<meta name="description" content="Menus de la semaine et liste de courses à partir de contraintes alimentaires.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html">Agents avancés (agent unique)</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🤖</span> Agents avancés (agent unique)</p>
+  <h1 class="pagehead__title">Agent de planification de repas</h1>
+  <p class="pagehead__summary">Menus de la semaine et liste de courses à partir de contraintes alimentaires.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#tres-demande" title="Compétence fréquemment attendue sur les offres d&#x27;emploi en IA."><span class="tag__icon" aria-hidden="true">🔥</span><span class="tag__label">Très demandé</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://spoonacular.com/food-api" target="_blank" rel="noopener noreferrer">Spoonacular</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">150 requêtes gratuites par jour.</p><ul class="alts__list"><li><a href="https://world.openfoodfacts.org/data" target="_blank" rel="noopener noreferrer">Open Food Facts</a> — Base ouverte, sans clé ni quota.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Find recipes based on available ingredients</li><li>Support for dietary restrictions (vegetarian, vegan, keto, paleo, etc.)</li><li>Ingredient substitution suggestions</li><li>Detailed cooking instructions and timing</li><li>Comprehensive nutritional breakdown per serving</li><li>User-friendly health assessments</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="ai-recipe-meal-planning-agent">🍽️ AI Recipe &amp; Meal Planning Agent<a class="anchor" href="#ai-recipe-meal-planning-agent" aria-label="Lien vers cette section">#</a></h1>
+<p>An intelligent meal planning agent built with Agno that helps you discover recipes, analyze nutrition, estimate costs, and create weekly meal plans based on your ingredients and dietary preferences.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<p>🔍 <strong>Recipe Discovery</strong></p>
+<ul>
+<li>Find recipes based on available ingredients</li>
+<li>Support for dietary restrictions (vegetarian, vegan, keto, paleo, etc.)</li>
+<li>Ingredient substitution suggestions</li>
+<li>Detailed cooking instructions and timing</li>
+</ul>
+<p>📊 <strong>Nutrition Analysis</strong></p>
+<ul>
+<li>Comprehensive nutritional breakdown per serving</li>
+<li>User-friendly health assessments</li>
+<li>Calorie, protein, carb, and fat tracking</li>
+<li>Sodium and fiber content analysis</li>
+</ul>
+<p>💰 <strong>Cost Estimation</strong></p>
+<ul>
+<li>Grocery cost estimation for ingredients</li>
+<li>Budget-friendly meal suggestions</li>
+<li>Cost per serving calculations</li>
+</ul>
+<p>📅 <strong>Weekly Meal Planning</strong></p>
+<ul>
+<li>Balanced meal plans for any household size</li>
+<li>Dietary preference accommodation</li>
+<li>Shopping list optimization</li>
+<li>Budget-conscious planning</li>
+</ul>
+<p>🧠 <strong>Session-Based Conversations</strong></p>
+<ul>
+<li>Remembers context during your current browser session</li>
+<li>Preferences are not persisted after restart (no long-term storage)</li>
+</ul>
+<h3 id="how-to-get-started">How to get Started?<a class="anchor" href="#how-to-get-started" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>Clone the GitHub repository</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>advanced_ai_agents/single_agent_apps/ai_recipe_meal_planning_agent
+</pre></div>
+</div><ol start="2">
+<li>Install the required dependencies:</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div><ol start="3">
+<li>Get your OpenAI API Key</li>
+</ol>
+<ul>
+<li>Sign up for an <a href="https://platform.openai.com/" target="_blank" rel="noopener noreferrer">OpenAI account</a> and obtain your API key.</li>
+</ul>
+<ol start="4">
+<li>Get your Spoonacular API Key</li>
+</ol>
+<ul>
+<li>Sign up for a <a href="https://spoonacular.com/food-api" target="_blank" rel="noopener noreferrer">Spoonacular account</a> and obtain your API key (free tier ~50 requests/day).</li>
+</ul>
+<ol start="5">
+<li>Create a <code>.env</code> file in this folder</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Required</span>
+<span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your_openai_api_key_here
+
+<span class="c1"># Optional but recommended for full recipe &amp; nutrition functionality</span>
+<span class="nv">SPOONACULAR_API_KEY</span><span class="o">=</span>your_spoonacular_api_key_here
+</pre></div>
+</div><ol start="6">
+<li>Run the Streamlit App</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>ai_recipe_meal_planning_agent.py
+</pre></div>
+</div><ol start="7">
+<li>Open your browser at <code>http://localhost:8501</code></li>
+</ol>
+<h2 id="example-interactions">Example Interactions<a class="anchor" href="#example-interactions" aria-label="Lien vers cette section">#</a></h2>
+<p><strong>Recipe Discovery:</strong></p>
+<ul>
+<li>&quot;I have chicken, broccoli, and rice. What can I make?&quot;</li>
+<li>&quot;Find me vegan recipes using lentils&quot;</li>
+<li>&quot;Show me quick 30-minute dinner ideas&quot;</li>
+</ul>
+<p><strong>Nutrition Analysis:</strong></p>
+<ul>
+<li>&quot;What's the nutritional content of this recipe?&quot;</li>
+<li>&quot;Is this meal high in protein?&quot;</li>
+<li>&quot;How many calories per serving?&quot;</li>
+</ul>
+<p><strong>Meal Planning:</strong></p>
+<ul>
+<li>&quot;Create a week's worth of vegetarian meals for 2 people&quot;</li>
+<li>&quot;I need a low-sodium meal plan&quot;</li>
+<li>&quot;Plan budget-friendly meals for a family of 4&quot;</li>
+</ul>
+<p><strong>Cost Estimation:</strong></p>
+<ul>
+<li>&quot;How much will these ingredients cost?&quot;</li>
+<li>&quot;What's the most budget-friendly option?&quot;</li>
+<li>&quot;Estimate weekly grocery costs for this meal plan&quot;</li>
+</ul>
+<h2 id="application-architecture">Application Architecture<a class="anchor" href="#application-architecture" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="built-with-agno-framework">Built with Agno Framework<a class="anchor" href="#built-with-agno-framework" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Agent</strong>: OpenAI GPT-5 mini powered meal planning agent</li>
+<li><strong>Memory</strong>: Conversation memory for personalized recommendations</li>
+<li><strong>Tools</strong>: Custom tools for recipe search and analysis + DuckDuckGo web search</li>
+<li><strong>Interface</strong>: Streamlit web application</li>
+</ul>
+<h3 id="custom-tools">Custom Tools<a class="anchor" href="#custom-tools" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li><code>search_recipes(ingredients, diet_type=None)</code> - Recipe discovery via Spoonacular API with detailed instructions</li>
+<li><code>analyze_nutrition(recipe_name)</code> - Detailed nutritional analysis via Spoonacular</li>
+<li><code>estimate_costs(ingredients, servings=4)</code> - Budget planning and cost estimation</li>
+<li><code>create_meal_plan(dietary_preference=&quot;balanced&quot;, people=2, days=7, budget=&quot;moderate&quot;)</code> - Comprehensive weekly meal planning with shopping list</li>
+<li><code>DuckDuckGoTools</code> - Web search for additional context</li>
+</ol>
+<h3 id="key-technologies">Key Technologies<a class="anchor" href="#key-technologies" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Agno</strong>: AI agent framework</li>
+<li><strong>Streamlit</strong>: Web interface and user interaction</li>
+<li><strong>Spoonacular API</strong>: Recipe and nutrition data</li>
+<li><strong>OpenAI GPT-5 mini</strong>: Natural language understanding and generation</li>
+</ul>
+<h2 id="customization">Customization<a class="anchor" href="#customization" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="adding-new-dietary-preferences">Adding New Dietary Preferences<a class="anchor" href="#adding-new-dietary-preferences" aria-label="Lien vers cette section">#</a></h3>
+<p>Modify the <code>search_recipes</code> tool to include additional diet types supported by Spoonacular API.</p>
+<h3 id="extending-cost-database">Extending Cost Database<a class="anchor" href="#extending-cost-database" aria-label="Lien vers cette section">#</a></h3>
+<p>Update the <code>ingredient_costs</code> dictionary in <code>estimate_grocery_costs()</code> with local pricing.</p>
+<h3 id="custom-meal-categories">Custom Meal Categories<a class="anchor" href="#custom-meal-categories" aria-label="Lien vers cette section">#</a></h3>
+<p>Edit the <code>meal_categories</code> in <code>create_weekly_meal_plan()</code> to match your preferences.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="anchor" href="#troubleshooting" aria-label="Lien vers cette section">#</a></h2>
+<p><strong>API Key Issues:</strong></p>
+<ul>
+<li>Ensure your <code>.env</code> file is in the correct directory</li>
+<li>Verify API keys are valid and have sufficient credits</li>
+<li>Check API key format (no extra spaces or quotes)</li>
+<li>Note: Without <code>SPOONACULAR_API_KEY</code>, recipe search and nutrition tools will return an error; other features will still load.</li>
+</ul>
+<p><strong>Recipe Search Not Working:</strong></p>
+<ul>
+<li>Verify Spoonacular API key is set correctly</li>
+<li>Check your API usage limits (150 requests/day for free tier)</li>
+<li>Try simpler ingredient searches</li>
+</ul>
+<p><strong>Memory Issues:</strong></p>
+<ul>
+<li>The agent uses conversation memory to remember preferences</li>
+<li>Clear browser cache if experiencing persistent issues</li>
+<li>Restart the application to reset conversation history</li>
+</ul>
+<h2 id="contributing">Contributing<a class="anchor" href="#contributing" aria-label="Lien vers cette section">#</a></h2>
+<p>Feel free to contribute by:</p>
+<ul>
+<li>Adding new recipe sources or APIs</li>
+<li>Improving nutrition analysis algorithms</li>
+<li>Enhancing cost estimation accuracy</li>
+<li>Adding new meal planning features</li>
+</ul>
+<h2 id="license">License<a class="anchor" href="#license" aria-label="Lien vers cette section">#</a></h2>
+<p>This project is open source. Please check the main repository for license details.</p>
+<h2 id="support">Support<a class="anchor" href="#support" aria-label="Lien vers cette section">#</a></h2>
+<p>For issues and questions:</p>
+<ul>
+<li>Check the troubleshooting section above</li>
+<li>Review the Agno documentation</li>
+<li>Open an issue in the main repository</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-ai-recipe-meal-planning-agent-py"><summary class="codefile__head"><span class="codefile__name">ai_recipe_meal_planning_agent.py</span><span class="codefile__size">14 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">dedent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.run.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.models.openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIChat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tool</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.tools.duckduckgo</span><span class="w"> </span><span class="kn">import</span> <span class="n">DuckDuckGoTools</span>   
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">SPOONACULAR_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SPOONACULAR_API_KEY&quot;</span><span class="p">)</span>
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">)</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">search_recipes</span><span class="p">(</span><span class="n">ingredients</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">diet_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search for detailed recipes with cooking instructions.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">SPOONACULAR_API_KEY</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Spoonacular API key not found&quot;</span><span class="p">}</span>
+    
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.spoonacular.com/recipes/findByIngredients&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;apiKey&quot;</span><span class="p">:</span> <span class="n">SPOONACULAR_API_KEY</span><span class="p">,</span>
+        <span class="s2">&quot;ingredients&quot;</span><span class="p">:</span> <span class="n">ingredients</span><span class="p">,</span>
+        <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;ranking&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;ignorePantry&quot;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">diet_type</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;diet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diet_type</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">recipes</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        
+        <span class="n">detailed_recipes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">recipe</span> <span class="ow">in</span> <span class="n">recipes</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="n">detail_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://api.spoonacular.com/recipes/</span><span class="si">{</span><span class="n">recipe</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/information&quot;</span>
+            <span class="n">detail_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">detail_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;apiKey&quot;</span><span class="p">:</span> <span class="n">SPOONACULAR_API_KEY</span><span class="p">},</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">detail_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">detail_data</span> <span class="o">=</span> <span class="n">detail_response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                <span class="n">detailed_recipes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">recipe</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">recipe</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+                    <span class="s2">&quot;ready_in_minutes&quot;</span><span class="p">:</span> <span class="n">detail_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;readyInMinutes&#39;</span><span class="p">,</span> <span class="s1">&#39;N/A&#39;</span><span class="p">),</span>
+                    <span class="s2">&quot;servings&quot;</span><span class="p">:</span> <span class="n">detail_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;servings&#39;</span><span class="p">,</span> <span class="s1">&#39;N/A&#39;</span><span class="p">),</span>
+                    <span class="s2">&quot;health_score&quot;</span><span class="p">:</span> <span class="n">detail_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;healthScore&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                    <span class="s2">&quot;used_ingredients&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">recipe</span><span class="p">[</span><span class="s1">&#39;usedIngredients&#39;</span><span class="p">]],</span>
+                    <span class="s2">&quot;missing_ingredients&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">recipe</span><span class="p">[</span><span class="s1">&#39;missedIngredients&#39;</span><span class="p">]],</span>
+                    <span class="s2">&quot;instructions&quot;</span><span class="p">:</span> <span class="n">detail_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;instructions&#39;</span><span class="p">,</span> <span class="s1">&#39;Instructions not available&#39;</span><span class="p">)</span>
+                <span class="p">})</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;recipes&quot;</span><span class="p">:</span> <span class="n">detailed_recipes</span><span class="p">,</span>
+            <span class="s2">&quot;total_found&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">recipes</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Recipe search failed&quot;</span><span class="p">}</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_nutrition</span><span class="p">(</span><span class="n">recipe_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get nutrition analysis for a recipe by searching for it.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">SPOONACULAR_API_KEY</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;API key not found&quot;</span><span class="p">}</span>
+    
+    <span class="c1"># First search for the recipe</span>
+    <span class="n">search_url</span> <span class="o">=</span> <span class="s2">&quot;https://api.spoonacular.com/recipes/complexSearch&quot;</span>
+    <span class="n">search_params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;apiKey&quot;</span><span class="p">:</span> <span class="n">SPOONACULAR_API_KEY</span><span class="p">,</span>
+        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">recipe_name</span><span class="p">,</span>
+        <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;addRecipeInformation&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;addRecipeNutrition&quot;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">search_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">search_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">search_params</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">search_response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">search_data</span> <span class="o">=</span> <span class="n">search_response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">search_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;No recipe found for &#39;</span><span class="si">{</span><span class="n">recipe_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">}</span>
+        
+        <span class="n">recipe</span> <span class="o">=</span> <span class="n">search_data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;nutrition&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">recipe</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No nutrition data available for this recipe&quot;</span><span class="p">}</span>
+        
+        <span class="n">nutrients</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span> <span class="n">n</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">recipe</span><span class="p">[</span><span class="s1">&#39;nutrition&#39;</span><span class="p">][</span><span class="s1">&#39;nutrients&#39;</span><span class="p">]}</span>
+        <span class="n">calories</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">nutrients</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Calories&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">protein</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">nutrients</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Protein&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">carbs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">nutrients</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Carbohydrates&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">fat</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">nutrients</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Fat&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">fiber</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">nutrients</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Fiber&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sodium</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">nutrients</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Sodium&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Health insights</span>
+        <span class="n">health_insights</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">protein</span> <span class="o">&gt;</span> <span class="mi">25</span><span class="p">:</span>
+            <span class="n">health_insights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;✅ High protein - great for muscle building&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fiber</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">health_insights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;✅ High fiber - supports digestive health&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sodium</span> <span class="o">&lt;</span> <span class="mi">600</span><span class="p">:</span>
+            <span class="n">health_insights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;✅ Low sodium - heart-friendly&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">calories</span> <span class="o">&lt;</span> <span class="mi">400</span><span class="p">:</span>
+            <span class="n">health_insights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;✅ Low calorie - good for weight management&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;recipe_title&quot;</span><span class="p">:</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;Recipe&#39;</span><span class="p">),</span>
+            <span class="s2">&quot;servings&quot;</span><span class="p">:</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;servings&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;ready_in_minutes&quot;</span><span class="p">:</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;readyInMinutes&#39;</span><span class="p">,</span> <span class="s1">&#39;N/A&#39;</span><span class="p">),</span>
+            <span class="s2">&quot;health_score&quot;</span><span class="p">:</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;healthScore&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="n">calories</span><span class="p">,</span>
+            <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="n">protein</span><span class="p">,</span>
+            <span class="s2">&quot;carbs&quot;</span><span class="p">:</span> <span class="n">carbs</span><span class="p">,</span>
+            <span class="s2">&quot;fat&quot;</span><span class="p">:</span> <span class="n">fat</span><span class="p">,</span>
+            <span class="s2">&quot;fiber&quot;</span><span class="p">:</span> <span class="n">fiber</span><span class="p">,</span>
+            <span class="s2">&quot;sodium&quot;</span><span class="p">:</span> <span class="n">sodium</span><span class="p">,</span>
+            <span class="s2">&quot;health_insights&quot;</span><span class="p">:</span> <span class="n">health_insights</span>
+        <span class="p">}</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Nutrition analysis failed&quot;</span><span class="p">}</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">estimate_costs</span><span class="p">(</span><span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">servings</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Detailed cost estimation with budget tips.&quot;&quot;&quot;</span>
+    <span class="n">prices</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;chicken breast&quot;</span><span class="p">:</span> <span class="mf">6.99</span><span class="p">,</span> <span class="s2">&quot;ground beef&quot;</span><span class="p">:</span> <span class="mf">5.99</span><span class="p">,</span> <span class="s2">&quot;salmon&quot;</span><span class="p">:</span> <span class="mf">12.99</span><span class="p">,</span>
+        <span class="s2">&quot;rice&quot;</span><span class="p">:</span> <span class="mf">2.99</span><span class="p">,</span> <span class="s2">&quot;pasta&quot;</span><span class="p">:</span> <span class="mf">1.99</span><span class="p">,</span> <span class="s2">&quot;broccoli&quot;</span><span class="p">:</span> <span class="mf">2.99</span><span class="p">,</span> <span class="s2">&quot;tomatoes&quot;</span><span class="p">:</span> <span class="mf">3.99</span><span class="p">,</span>
+        <span class="s2">&quot;cheese&quot;</span><span class="p">:</span> <span class="mf">5.99</span><span class="p">,</span> <span class="s2">&quot;onion&quot;</span><span class="p">:</span> <span class="mf">1.49</span><span class="p">,</span> <span class="s2">&quot;garlic&quot;</span><span class="p">:</span> <span class="mf">2.99</span><span class="p">,</span> <span class="s2">&quot;olive oil&quot;</span><span class="p">:</span> <span class="mf">7.99</span>
+    <span class="p">}</span>
+    
+    <span class="n">cost_breakdown</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">total_cost</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">for</span> <span class="n">ingredient</span> <span class="ow">in</span> <span class="n">ingredients</span><span class="p">:</span>
+        <span class="n">ingredient_lower</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="mf">3.99</span>  <span class="c1"># default</span>
+        
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">price</span> <span class="ow">in</span> <span class="n">prices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ingredient_lower</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="n">word</span> <span class="ow">in</span> <span class="n">ingredient_lower</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">()):</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="n">price</span>
+                <span class="k">break</span>
+        
+        <span class="n">adjusted_cost</span> <span class="o">=</span> <span class="p">(</span><span class="n">cost</span> <span class="o">*</span> <span class="n">servings</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span>
+        <span class="n">total_cost</span> <span class="o">+=</span> <span class="n">adjusted_cost</span>
+        <span class="n">cost_breakdown</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span>
+            <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">adjusted_cost</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="p">})</span>
+    
+    <span class="c1"># Budget tips</span>
+    <span class="n">budget_tips</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">total_cost</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="n">budget_tips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;💡 Consider buying in bulk for better prices&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">total_cost</span> <span class="o">&gt;</span> <span class="mi">40</span><span class="p">:</span>
+        <span class="n">budget_tips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;💡 Look for seasonal alternatives to reduce costs&quot;</span><span class="p">)</span>
+    <span class="n">budget_tips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;💡 Shop at local markets for fresher, cheaper produce&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;total_cost&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_cost</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s2">&quot;cost_per_serving&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_cost</span> <span class="o">/</span> <span class="n">servings</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s2">&quot;servings&quot;</span><span class="p">:</span> <span class="n">servings</span><span class="p">,</span>
+        <span class="s2">&quot;breakdown&quot;</span><span class="p">:</span> <span class="n">cost_breakdown</span><span class="p">,</span>
+        <span class="s2">&quot;budget_tips&quot;</span><span class="p">:</span> <span class="n">budget_tips</span>
+    <span class="p">}</span>
+
+<span class="nd">@tool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_meal_plan</span><span class="p">(</span><span class="n">dietary_preference</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;balanced&quot;</span><span class="p">,</span> <span class="n">people</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">budget</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;moderate&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create comprehensive weekly meal plan with nutrition and shopping list.&quot;&quot;&quot;</span>
+    
+    <span class="n">meals</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;breakfast&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Overnight Oats with Berries&quot;</span><span class="p">,</span> <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="mf">2.50</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Veggie Scramble with Toast&quot;</span><span class="p">,</span> <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="mi">280</span><span class="p">,</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="mf">3.20</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Greek Yogurt Parfait&quot;</span><span class="p">,</span> <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="mi">250</span><span class="p">,</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="mf">2.80</span><span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;lunch&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Quinoa Buddha Bowl&quot;</span><span class="p">,</span> <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="mi">420</span><span class="p">,</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="mf">4.50</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Chicken Caesar Wrap&quot;</span><span class="p">,</span> <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="mi">380</span><span class="p">,</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="mf">5.20</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Lentil Vegetable Soup&quot;</span><span class="p">,</span> <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="mi">340</span><span class="p">,</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="mf">3.80</span><span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;dinner&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Grilled Salmon with Vegetables&quot;</span><span class="p">,</span> <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="mi">520</span><span class="p">,</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="mf">8.90</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Chicken Stir Fry with Brown Rice&quot;</span><span class="p">,</span> <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="mf">6.50</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Vegetable Curry with Quinoa&quot;</span><span class="p">,</span> <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="mi">450</span><span class="p">,</span> <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="mf">5.20</span><span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+    
+    <span class="n">budget_multipliers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span> <span class="s2">&quot;moderate&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="mf">1.3</span><span class="p">}</span>
+    <span class="n">multiplier</span> <span class="o">=</span> <span class="n">budget_multipliers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">budget</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span>
+    
+    <span class="n">weekly_plan</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">shopping_list</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">total_weekly_cost</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_weekly_calories</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_weekly_protein</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">day_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Monday&quot;</span><span class="p">,</span> <span class="s2">&quot;Tuesday&quot;</span><span class="p">,</span> <span class="s2">&quot;Wednesday&quot;</span><span class="p">,</span> <span class="s2">&quot;Thursday&quot;</span><span class="p">,</span> <span class="s2">&quot;Friday&quot;</span><span class="p">,</span> <span class="s2">&quot;Saturday&quot;</span><span class="p">,</span> <span class="s2">&quot;Sunday&quot;</span><span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">day_names</span><span class="p">[:</span><span class="n">days</span><span class="p">]:</span>
+        <span class="n">daily_meals</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">daily_calories</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">daily_protein</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">daily_cost</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="k">for</span> <span class="n">meal_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;breakfast&quot;</span><span class="p">,</span> <span class="s2">&quot;lunch&quot;</span><span class="p">,</span> <span class="s2">&quot;dinner&quot;</span><span class="p">]:</span>
+            <span class="n">selected_meal</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">meals</span><span class="p">[</span><span class="n">meal_type</span><span class="p">])</span>
+            <span class="n">daily_meals</span><span class="p">[</span><span class="n">meal_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;calories&quot;</span><span class="p">:</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;calories&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;protein&quot;</span><span class="p">:</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;protein&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+            
+            <span class="n">meal_cost</span> <span class="o">=</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">people</span> <span class="o">*</span> <span class="n">multiplier</span>
+            <span class="n">daily_calories</span> <span class="o">+=</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;calories&quot;</span><span class="p">]</span>
+            <span class="n">daily_protein</span> <span class="o">+=</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;protein&quot;</span><span class="p">]</span>
+            <span class="n">daily_cost</span> <span class="o">+=</span> <span class="n">meal_cost</span>
+            
+            <span class="c1"># Add to shopping list</span>
+            <span class="k">if</span> <span class="s2">&quot;chicken&quot;</span> <span class="ow">in</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">shopping_list</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Chicken breast&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;salmon&quot;</span> <span class="ow">in</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">shopping_list</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Salmon fillets&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;vegetable&quot;</span> <span class="ow">in</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">shopping_list</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="s2">&quot;Mixed vegetables&quot;</span><span class="p">,</span> <span class="s2">&quot;Onions&quot;</span><span class="p">,</span> <span class="s2">&quot;Garlic&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s2">&quot;quinoa&quot;</span> <span class="ow">in</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">shopping_list</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Quinoa&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;oats&quot;</span> <span class="ow">in</span> <span class="n">selected_meal</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">shopping_list</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Rolled oats&quot;</span><span class="p">)</span>
+        
+        <span class="n">weekly_plan</span><span class="p">[</span><span class="n">day</span><span class="p">]</span> <span class="o">=</span> <span class="n">daily_meals</span>
+        <span class="n">total_weekly_cost</span> <span class="o">+=</span> <span class="n">daily_cost</span>
+        <span class="n">total_weekly_calories</span> <span class="o">+=</span> <span class="n">daily_calories</span>
+        <span class="n">total_weekly_protein</span> <span class="o">+=</span> <span class="n">daily_protein</span>
+    
+    <span class="c1"># Generate insights</span>
+    <span class="n">avg_daily_calories</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_weekly_calories</span> <span class="o">/</span> <span class="n">days</span><span class="p">)</span>
+    <span class="n">avg_daily_protein</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_weekly_protein</span> <span class="o">/</span> <span class="n">days</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">insights</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">avg_daily_calories</span> <span class="o">&lt;</span> <span class="mi">1800</span><span class="p">:</span>
+        <span class="n">insights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;⚠️ Consider adding healthy snacks to meet calorie needs&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">avg_daily_calories</span> <span class="o">&gt;</span> <span class="mi">2200</span><span class="p">:</span>
+        <span class="n">insights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;💡 Calorie-dense meals - great for active lifestyles&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">avg_daily_protein</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">:</span>
+        <span class="n">insights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;✅ Excellent protein intake for muscle maintenance&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">avg_daily_protein</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
+        <span class="n">insights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;💡 Consider adding more protein sources&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;meal_plan&quot;</span><span class="p">:</span> <span class="n">weekly_plan</span><span class="p">,</span>
+        <span class="s2">&quot;total_weekly_cost&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_weekly_cost</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s2">&quot;cost_per_person_per_day&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_weekly_cost</span> <span class="o">/</span> <span class="p">(</span><span class="n">people</span> <span class="o">*</span> <span class="n">days</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s2">&quot;avg_daily_calories&quot;</span><span class="p">:</span> <span class="n">avg_daily_calories</span><span class="p">,</span>
+        <span class="s2">&quot;avg_daily_protein&quot;</span><span class="p">:</span> <span class="n">avg_daily_protein</span><span class="p">,</span>
+        <span class="s2">&quot;dietary_preference&quot;</span><span class="p">:</span> <span class="n">dietary_preference</span><span class="p">,</span>
+        <span class="s2">&quot;serves&quot;</span><span class="p">:</span> <span class="n">people</span><span class="p">,</span>
+        <span class="s2">&quot;days&quot;</span><span class="p">:</span> <span class="n">days</span><span class="p">,</span>
+        <span class="s2">&quot;shopping_list&quot;</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">shopping_list</span><span class="p">)),</span>
+        <span class="s2">&quot;insights&quot;</span><span class="p">:</span> <span class="n">insights</span>
+    <span class="p">}</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_agent</span><span class="p">():</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MealPlanningExpert&quot;</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;gpt-5-mini&quot;</span><span class="p">),</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">search_recipes</span><span class="p">,</span> <span class="n">analyze_nutrition</span><span class="p">,</span> <span class="n">estimate_costs</span><span class="p">,</span> <span class="n">create_meal_plan</span><span class="p">,</span> <span class="n">DuckDuckGoTools</span><span class="p">()],</span>
+        <span class="n">instructions</span><span class="o">=</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">            You are an expert meal planning assistant. Provide detailed, helpful responses:</span>
+<span class="s2">            </span>
+<span class="s2">            🔍 **Recipe Searches**: Include cooking time, health scores, ingredient lists, and instructions</span>
+<span class="s2">            📊 **Nutrition Analysis**: Provide health insights, nutritional breakdowns, and dietary advice</span>
+<span class="s2">            💰 **Cost Estimation**: Include budget tips and cost per serving breakdowns</span>
+<span class="s2">            📅 **Meal Planning**: Create detailed weekly plans with nutritional balance and shopping lists</span>
+<span class="s2">            </span>
+<span class="s2">            **Always**:</span>
+<span class="s2">            - Use clear headings and bullet points</span>
+<span class="s2">            - Include practical cooking tips</span>
+<span class="s2">            - Consider dietary restrictions and budgets</span>
+<span class="s2">            - Provide actionable next steps</span>
+<span class="s2">            - Be encouraging and supportive</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">),</span>
+        <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">debug_mode</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">agent</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;AI Meal Planning Agent&quot;</span><span class="p">,</span> <span class="n">page_icon</span><span class="o">=</span><span class="s2">&quot;🍽️&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🍽️ AI Meal Planning Agent&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;*Your intelligent companion for recipes, nutrition, and meal planning*&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">OPENAI_API_KEY</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please add OPENAI_API_KEY to your .env file&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+    
+    <span class="c1"># Initialize agent</span>
+    <span class="k">if</span> <span class="s2">&quot;agent&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Initializing agent...&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+                <span class="n">asyncio</span><span class="o">.</span><span class="n">set_event_loop</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">agent</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">create_agent</span><span class="p">())</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize agent: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+    
+    <span class="c1"># Initialize messages</span>
+    <span class="k">if</span> <span class="s2">&quot;messages&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="p">[{</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;👋 **Welcome! I&#39;m your AI Meal Planning Expert.**</span>
+
+<span class="s2">I can help you with:</span>
+<span class="s2">- 🔍 **Recipe Discovery** - Find recipes based on your ingredients</span>
+<span class="s2">- 📊 **Nutrition Analysis** - Get detailed nutritional insights</span>
+<span class="s2">- 💰 **Cost Estimation** - Smart budget planning with money-saving tips</span>
+<span class="s2">- 📅 **Meal Planning** - Complete weekly meal plans with shopping lists</span>
+
+<span class="s2">**Try asking:**</span>
+<span class="s2">- &quot;Find healthy chicken recipes for dinner&quot;</span>
+<span class="s2">- &quot;What&#39;s the nutrition info for chicken teriyaki?&quot;</span>
+<span class="s2">- &quot;Create a vegetarian meal plan for 2 people for one week&quot;</span>
+<span class="s2">- &quot;Estimate costs for pasta, tomatoes, cheese, and basil for 4 servings&quot;</span>
+
+<span class="s2">What would you like to explore? 🍽️&quot;&quot;&quot;</span>
+        <span class="p">}]</span>
+    
+    <span class="c1"># Chat interface</span>
+    <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">]):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+    
+    <span class="c1"># Chat input</span>
+    <span class="k">if</span> <span class="n">user_input</span> <span class="o">:=</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_input</span><span class="p">(</span><span class="s2">&quot;Ask about recipes, nutrition, meal planning, or costs...&quot;</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">user_input</span><span class="p">})</span>
+        
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="s2">&quot;assistant&quot;</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Thinking...&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+                    <span class="n">asyncio</span><span class="o">.</span><span class="n">set_event_loop</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+                    <span class="n">response</span><span class="p">:</span> <span class="n">RunOutput</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">arun</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> 
+                        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+                    <span class="p">})</span>
+                    
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">error_msg</span>
+                    <span class="p">})</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-single-agent-apps/ai-recipe-meal-planning-agent/ai_recipe_meal_planning_agent.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">63 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit
+agno&gt;=2.2.10
+python-dotenv
+requests
+duckduckgo-search
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-single-agent-apps/ai-recipe-meal-planning-agent/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li><li><a href="../../../lecons/11-integrating-with-function-calling/index.html">11 · Intégrer des services externes avec l&#x27;appel de fonctions</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-single-agent-apps/ai-recipe-meal-planning-agent">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-single-agent-apps/ai-personal-finance-agent/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Agent de finances personnelles</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-single-agent-apps/ai-startup-insight-fire1-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Analyse de startup avec Firecrawl FIRE-1</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/single_agent_apps/ai_recipe_meal_planning_agent" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/single_agent_apps/ai_recipe_meal_planning_agent</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h3"><a href="#how-to-get-started">How to get Started?</a></li><li class="toc__item toc__item--h2"><a href="#example-interactions">Example Interactions</a></li><li class="toc__item toc__item--h2"><a href="#application-architecture">Application Architecture</a></li><li class="toc__item toc__item--h3"><a href="#built-with-agno-framework">Built with Agno Framework</a></li><li class="toc__item toc__item--h3"><a href="#custom-tools">Custom Tools</a></li><li class="toc__item toc__item--h3"><a href="#key-technologies">Key Technologies</a></li><li class="toc__item toc__item--h2"><a href="#customization">Customization</a></li><li class="toc__item toc__item--h3"><a href="#adding-new-dietary-preferences">Adding New Dietary Preferences</a></li><li class="toc__item toc__item--h3"><a href="#extending-cost-database">Extending Cost Database</a></li><li class="toc__item toc__item--h3"><a href="#custom-meal-categories">Custom Meal Categories</a></li><li class="toc__item toc__item--h2"><a href="#troubleshooting">Troubleshooting</a></li><li class="toc__item toc__item--h2"><a href="#contributing">Contributing</a></li><li class="toc__item toc__item--h2"><a href="#license">License</a></li><li class="toc__item toc__item--h2"><a href="#support">Support</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

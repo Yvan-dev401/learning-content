@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🎯 Tutorial 2: Structured Output Agent — Cours intensif OpenAI Agents SDK</title>
+<meta name="description" content="🎯 Tutorial 2: Structured Output Agent — page de l&#x27;atelier Cours intensif OpenAI Agents SDK.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<link rel="stylesheet" href="../../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/index.html">Cours intensifs sur les frameworks</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/index.html">Cours intensif OpenAI Agents SDK</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page de l'atelier Cours intensif OpenAI Agents SDK</p>
+</header>
+<article class="prose">
+<h1 id="tutorial-2-structured-output-agent">🎯 Tutorial 2: Structured Output Agent<a class="anchor" href="#tutorial-2-structured-output-agent" aria-label="Lien vers cette section">#</a></h1>
+<p>Learn how to create agents that return <strong>type-safe, structured data</strong> using Pydantic models. This tutorial teaches you how to ensure your agents return consistent, validated JSON responses that your applications can reliably process.</p>
+<h2 id="what-youll-learn">🎯 What You'll Learn<a class="anchor" href="#what-youll-learn" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Structured Outputs</strong>: Using Pydantic models to define response schemas</li>
+<li><strong>Type Safety</strong>: Ensuring consistent data types and validation</li>
+<li><strong>JSON Schema Generation</strong>: Automatic schema creation from Python classes</li>
+<li><strong>Output Validation</strong>: Built-in validation and error handling</li>
+</ul>
+<h2 id="core-concept-why-structured-outputs">🧠 Core Concept: Why Structured Outputs?<a class="anchor" href="#core-concept-why-structured-outputs" aria-label="Lien vers cette section">#</a></h2>
+<p>Traditional AI responses are unstructured text, making them difficult to process programmatically. Structured outputs solve this by:</p>
+<ul>
+<li><strong>Consistency</strong>: Always return the same data structure</li>
+<li><strong>Validation</strong>: Automatic type checking and data validation</li>
+<li><strong>Integration</strong>: Easy to integrate with databases, APIs, and applications</li>
+<li><strong>Reliability</strong>: Reduce parsing errors and improve application stability</li>
+</ul>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│                    UNSTRUCTURED vs STRUCTURED               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  UNSTRUCTURED OUTPUT:                                       │
+│  &quot;The customer John Doe submitted a high priority           │
+│   billing issue about charges on January 15th...&quot;           │
+│                                                             │
+│  STRUCTURED OUTPUT:                                         │
+│  {                                                          │
+│    &quot;customer_name&quot;: &quot;John Doe&quot;,                             │
+│    &quot;issue_type&quot;: &quot;billing&quot;,                                 │
+│    &quot;priority&quot;: &quot;high&quot;,                                      │
+│    &quot;date_submitted&quot;: &quot;2024-01-15&quot;,                          │
+│    &quot;description&quot;: &quot;Incorrect charges on account&quot;            │
+│  }                                                          │
+└─────────────────────────────────────────────────────────────┘
+</pre></div>
+</div><h2 id="tutorial-overview">🚀 Tutorial Overview<a class="anchor" href="#tutorial-overview" aria-label="Lien vers cette section">#</a></h2>
+<p>This tutorial includes <strong>three focused structured output examples</strong>:</p>
+<h3 id="1-support-ticket-agent-2-1-support-ticket-agent"><strong>1. Support Ticket Agent</strong> (<code>2_1_support_ticket_agent/</code>)<a class="anchor" href="#1-support-ticket-agent-2-1-support-ticket-agent" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Basic structured output with enums</li>
+<li>Required and optional fields</li>
+<li>Business validation patterns</li>
+</ul>
+<h3 id="2-product-review-agent-2-2-product-review-agent"><strong>2. Product Review Agent</strong> (<code>2_2_product_review_agent/</code>)<a class="anchor" href="#2-product-review-agent-2-2-product-review-agent" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Complex sentiment analysis schema</li>
+<li>List fields and nested validation</li>
+<li>Rating classification logic</li>
+</ul>
+<h3 id="3-email-generator-agent-2-3-email-generator-agent"><strong>3. Email Generator Agent</strong> (<code>2_3_email_generator_agent/</code>)<a class="anchor" href="#3-email-generator-agent-2-3-email-generator-agent" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Simple two-field structure</li>
+<li>Enum validation for tone</li>
+<li>Content formatting patterns</li>
+</ul>
+<h2 id="project-structure">📁 Project Structure<a class="anchor" href="#project-structure" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>2_structured_output_agent/
+├── README.md                    # This file - concept explanation
+├── requirements.txt             # Dependencies
+├── 2_1_support_ticket_agent/    # Basic structured output
+│   ├── __init__.py
+│   └── agent.py                # Support ticket schema (35 lines)
+├── 2_2_product_review_agent/    # Complex structured output
+│   ├── __init__.py
+│   └── agent.py                # Product review analysis (45 lines)
+├── 2_3_email_generator_agent/   # Simple structured output
+│   ├── __init__.py
+│   └── agent.py                # Email content generation (30 lines)
+├── app.py                      # Streamlit web interface (optional)
+└── env.example                 # Environment variables template
+</pre></div>
+</div><h2 id="learning-objectives">🎯 Learning Objectives<a class="anchor" href="#learning-objectives" aria-label="Lien vers cette section">#</a></h2>
+<p>By the end of this tutorial, you'll understand:</p>
+<ul>
+<li>✅ How to define Pydantic models for agent outputs</li>
+<li>✅ Using the <code>output_type</code> parameter in agents</li>
+<li>✅ Complex data structures with nested models</li>
+<li>✅ Enum validation for controlled vocabularies</li>
+<li>✅ Optional fields and default values</li>
+<li>✅ Custom validation methods</li>
+</ul>
+<h2 id="getting-started">🚀 Getting Started<a class="anchor" href="#getting-started" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p><strong>Install OpenAI Agents SDK</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>openai-agents
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install dependencies</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Set up environment variables</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>cp<span class="w"> </span>env.example<span class="w"> </span>.env
+<span class="c1"># Edit .env and add your OpenAI API key</span>
+</pre></div>
+</div></li>
+<li>
+<p><strong>Test the support ticket agent</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python<span class="w"> </span>support_ticket_agent.py
+</pre></div>
+</div></li>
+<li>
+<p><strong>Test the product review agent</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python<span class="w"> </span>product_review_agent.py
+</pre></div>
+</div></li>
+<li>
+<p><strong>Run the interactive web interface</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>app.py
+</pre></div>
+</div></li>
+</ol>
+<h2 id="sample-use-cases">🧪 Sample Use Cases<a class="anchor" href="#sample-use-cases" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="support-ticket-agent">Support Ticket Agent<a class="anchor" href="#support-ticket-agent" aria-label="Lien vers cette section">#</a></h3>
+<p>Try these customer complaints:</p>
+<ul>
+<li>&quot;My billing statement shows duplicate charges for last month's subscription&quot;</li>
+<li>&quot;I can't log into my account and need immediate help&quot;</li>
+<li>&quot;The app keeps crashing when I try to upload files&quot;</li>
+</ul>
+<h3 id="product-review-agent">Product Review Agent<a class="anchor" href="#product-review-agent" aria-label="Lien vers cette section">#</a></h3>
+<p>Try these product reviews:</p>
+<ul>
+<li>&quot;This laptop is amazing! Great battery life and super fast. Would definitely recommend. 5 stars!&quot;</li>
+<li>&quot;The phone camera quality is poor and battery drains quickly. Not worth the price.&quot;</li>
+<li>&quot;Decent product but shipping took forever. Customer service was helpful though.&quot;</li>
+</ul>
+<h2 id="key-pydantic-patterns">🔧 Key Pydantic Patterns<a class="anchor" href="#key-pydantic-patterns" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="1-basic-model-with-enums">1. <strong>Basic Model with Enums</strong><a class="anchor" href="#1-basic-model-with-enums" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Priority</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+    <span class="n">LOW</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>
+    <span class="n">MEDIUM</span> <span class="o">=</span> <span class="s2">&quot;medium&quot;</span>
+    <span class="n">HIGH</span> <span class="o">=</span> <span class="s2">&quot;high&quot;</span>
+    <span class="n">CRITICAL</span> <span class="o">=</span> <span class="s2">&quot;critical&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SupportTicket</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">priority</span><span class="p">:</span> <span class="n">Priority</span>
+    <span class="n">category</span><span class="p">:</span> <span class="nb">str</span>
+</pre></div>
+</div><h3 id="2-optional-fields-with-defaults">2. <strong>Optional Fields with Defaults</strong><a class="anchor" href="#2-optional-fields-with-defaults" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Review</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">rating</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">sentiment</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">recommend</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div><h3 id="3-complex-nested-structures">3. <strong>Complex Nested Structures</strong><a class="anchor" href="#3-complex-nested-structures" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ProductReview</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">product_info</span><span class="p">:</span> <span class="n">ProductInfo</span>
+    <span class="n">review_data</span><span class="p">:</span> <span class="n">ReviewData</span>
+    <span class="n">analysis</span><span class="p">:</span> <span class="n">ReviewAnalysis</span>
+</pre></div>
+</div><h2 id="next-steps">🔗 Next Steps<a class="anchor" href="#next-steps" aria-label="Lien vers cette section">#</a></h2>
+<p>After completing this tutorial, you'll be ready for:</p>
+<ul>
+<li><strong><a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/3-tool-using-agent/index.html">Tutorial 3: Tool Using Agent</a></strong> - Add custom tools and functions</li>
+<li><strong><a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/4-running-agents/index.html">Tutorial 4: Runner Execution Methods</a></strong> - Master different execution patterns</li>
+<li><strong><a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/5-context-management/index.html">Tutorial 5: Context Management</a></strong> - Manage state across interactions</li>
+</ul>
+<h2 id="pro-tips">💡 Pro Tips<a class="anchor" href="#pro-tips" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Design Schemas First</strong>: Plan your data structure before implementing</li>
+<li><strong>Use Descriptive Fields</strong>: Clear field descriptions improve agent accuracy</li>
+<li><strong>Validate Constraints</strong>: Use Pydantic validators for business rules</li>
+<li><strong>Handle Optionals</strong>: Plan for missing or uncertain data</li>
+<li><strong>Test Edge Cases</strong>: Try incomplete or ambiguous inputs</li>
+</ul>
+<h2 id="troubleshooting">🚨 Troubleshooting<a class="anchor" href="#troubleshooting" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Validation Errors</strong>: Check that your Pydantic model matches expected output</li>
+<li><strong>Missing Fields</strong>: Ensure all required fields are included in the schema</li>
+<li><strong>Type Mismatches</strong>: Verify field types match the data being returned</li>
+<li><strong>Enum Errors</strong>: Make sure enum values match exactly (case-sensitive)</li>
+</ul>
+
+</article>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/blob/main/ai_agent_framework_crash_course/openai_sdk_crash_course/2_structured_output_agent/README.md" target="_blank" rel="noopener noreferrer">
+    ai_agent_framework_crash_course/openai_sdk_crash_course/2_structured_output_agent/README.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#what-youll-learn">🎯 What You&#x27;ll Learn</a></li><li class="toc__item toc__item--h2"><a href="#core-concept-why-structured-outputs">🧠 Core Concept: Why Structured Outputs?</a></li><li class="toc__item toc__item--h2"><a href="#tutorial-overview">🚀 Tutorial Overview</a></li><li class="toc__item toc__item--h3"><a href="#1-support-ticket-agent-2-1-support-ticket-agent">**1. Support Ticket Agent** (`2_1_support_ticket_agent/`)</a></li><li class="toc__item toc__item--h3"><a href="#2-product-review-agent-2-2-product-review-agent">**2. Product Review Agent** (`2_2_product_review_agent/`)</a></li><li class="toc__item toc__item--h3"><a href="#3-email-generator-agent-2-3-email-generator-agent">**3. Email Generator Agent** (`2_3_email_generator_agent/`)</a></li><li class="toc__item toc__item--h2"><a href="#project-structure">📁 Project Structure</a></li><li class="toc__item toc__item--h2"><a href="#learning-objectives">🎯 Learning Objectives</a></li><li class="toc__item toc__item--h2"><a href="#getting-started">🚀 Getting Started</a></li><li class="toc__item toc__item--h2"><a href="#sample-use-cases">🧪 Sample Use Cases</a></li><li class="toc__item toc__item--h3"><a href="#support-ticket-agent">Support Ticket Agent</a></li><li class="toc__item toc__item--h3"><a href="#product-review-agent">Product Review Agent</a></li><li class="toc__item toc__item--h2"><a href="#key-pydantic-patterns">🔧 Key Pydantic Patterns</a></li><li class="toc__item toc__item--h3"><a href="#1-basic-model-with-enums">1. **Basic Model with Enums**</a></li><li class="toc__item toc__item--h3"><a href="#2-optional-fields-with-defaults">2. **Optional Fields with Defaults**</a></li><li class="toc__item toc__item--h3"><a href="#3-complex-nested-structures">3. **Complex Nested Structures**</a></li><li class="toc__item toc__item--h2"><a href="#next-steps">🔗 Next Steps</a></li><li class="toc__item toc__item--h2"><a href="#pro-tips">💡 Pro Tips</a></li><li class="toc__item toc__item--h2"><a href="#troubleshooting">🚨 Troubleshooting</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Équipe de recrutement — atelier</title>
+<meta name="description" content="Tri des candidatures, entretien préliminaire et compte rendu.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html">Équipes d&#x27;agents par métier</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">👥</span> Équipes d&#x27;agents par métier</p>
+  <h1 class="pagehead__title">Équipe de recrutement</h1>
+  <p class="pagehead__summary">Tri des candidatures, entretien préliminaire et compte rendu.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#emploi" title="Se retrouve tel quel dans des projets professionnels."><span class="tag__icon" aria-hidden="true">💼</span><span class="tag__label">Orienté emploi</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Technical Recruiter Agent: Analyzes resumes and evaluates technical skills</li><li>Communication Agent: Handles professional email correspondence</li><li>Scheduling Coordinator Agent: Manages interview scheduling and coordination</li><li>Each agent has specific expertise and collaborates for comprehensive recruitment</li><li>Automated resume screening and analysis</li><li>Role-specific technical evaluation</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="ai-recruitment-agent-team">💼 AI Recruitment Agent Team<a class="anchor" href="#ai-recruitment-agent-team" aria-label="Lien vers cette section">#</a></h1>
+<p>A Streamlit application that simulates a full-service recruitment team using multiple AI agents to automate and streamline the hiring process. Each agent represents a different recruitment specialist role - from resume analysis and candidate evaluation to interview scheduling and communication - working together to provide comprehensive hiring solutions. The system combines the expertise of technical recruiters, HR coordinators, and scheduling specialists into a cohesive automated workflow.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<h4 id="specialized-ai-agents">Specialized AI Agents<a class="anchor" href="#specialized-ai-agents" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>Technical Recruiter Agent: Analyzes resumes and evaluates technical skills</li>
+<li>Communication Agent: Handles professional email correspondence</li>
+<li>Scheduling Coordinator Agent: Manages interview scheduling and coordination</li>
+<li>Each agent has specific expertise and collaborates for comprehensive recruitment</li>
+</ul>
+<h4 id="end-to-end-recruitment-process">End-to-End Recruitment Process<a class="anchor" href="#end-to-end-recruitment-process" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>Automated resume screening and analysis</li>
+<li>Role-specific technical evaluation</li>
+<li>Professional candidate communication</li>
+<li>Automated interview scheduling</li>
+<li>Integrated feedback system</li>
+</ul>
+<h2 id="important-things-to-do-before-running-the-application">Important Things to do before running the application<a class="anchor" href="#important-things-to-do-before-running-the-application" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Create/Use a new Gmail account for the recruiter</li>
+<li>Enable 2-Step Verification and generate an App Password for the Gmail account</li>
+<li>The App Password is a 16 digit code (use without spaces) that should be generated here - <a href="https://support.google.com/accounts/answer/185833?hl=en" target="_blank" rel="noopener noreferrer">Google App Password</a> Please go through the steps to generate the password - it will of the format - 'afec wejf awoj fwrv' (remove the spaces and enter it in the streamlit app)</li>
+<li>Create/ Use a Zoom account and go to the Zoom App Marketplace to get the API credentials :
+<a href="https://marketplace.zoom.us" target="_blank" rel="noopener noreferrer">Zoom Marketplace</a></li>
+<li>Go to Developer Dashboard and create a new app - Select Server to Server OAuth and get the credentials, You see 3 credentials - Client ID, Client Secret and Account ID</li>
+<li>After that, you need to add a few scopes to the app - so that the zoom link of the candidate is sent and created through the mail.</li>
+<li>The Scopes are meeting:write:invite_links:admin, meeting:write:meeting:admin, meeting:write:meeting:master, meeting:write:invite_links:master, meeting:write:open_app:admin, user:read:email:admin, user:read:list_users:admin, billing:read:user_entitlement:admin, dashboard:read:list_meeting_participants:admin [last 3 are optional]</li>
+</ul>
+<h2 id="how-to-run">How to Run<a class="anchor" href="#how-to-run" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p><strong>Setup Environment</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Clone the repository</span>
+<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>advanced_ai_agents/multi_agent_apps/agent_teams/ai_recruitment_agent_team
+<span class="w"> </span>
+<span class="c1"># Install dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Configure API Keys</strong></p>
+<ul>
+<li>OpenAI API key for GPT-4o access</li>
+<li>Zoom API credentials (Account ID, Client ID, Client Secret)</li>
+<li>Email App Password of Recruiter's Email</li>
+</ul>
+</li>
+<li>
+<p><strong>Run the Application</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>ai_recruitment_agent_team.py
+</pre></div>
+</div></li>
+</ol>
+<h2 id="system-components">System Components<a class="anchor" href="#system-components" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>
+<p><strong>Resume Analyzer Agent</strong></p>
+<ul>
+<li>Skills matching algorithm</li>
+<li>Experience verification</li>
+<li>Technical assessment</li>
+<li>Selection decision making</li>
+</ul>
+</li>
+<li>
+<p><strong>Email Communication Agent</strong></p>
+<ul>
+<li>Professional email drafting</li>
+<li>Automated notifications</li>
+<li>Feedback communication</li>
+<li>Follow-up management</li>
+</ul>
+</li>
+<li>
+<p><strong>Interview Scheduler Agent</strong></p>
+<ul>
+<li>Zoom meeting coordination</li>
+<li>Calendar management</li>
+<li>Timezone handling</li>
+<li>Reminder system</li>
+</ul>
+</li>
+<li>
+<p><strong>Candidate Experience</strong></p>
+<ul>
+<li>Simple upload interface</li>
+<li>Real-time feedback</li>
+<li>Clear communication</li>
+<li>Streamlined process</li>
+</ul>
+</li>
+</ul>
+<h2 id="technical-stack">Technical Stack<a class="anchor" href="#technical-stack" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Framework</strong>: Phidata</li>
+<li><strong>Model</strong>: OpenAI GPT-4o</li>
+<li><strong>Integration</strong>: Zoom API, EmailTools Tool from Phidata</li>
+<li><strong>PDF Processing</strong>: PyPDF2</li>
+<li><strong>Time Management</strong>: pytz</li>
+<li><strong>State Management</strong>: Streamlit Session State</li>
+</ul>
+<h2 id="disclaimer">Disclaimer<a class="anchor" href="#disclaimer" aria-label="Lien vers cette section">#</a></h2>
+<p>This tool is designed to assist in the recruitment process but should not completely replace human judgment in hiring decisions. All automated decisions should be reviewed by human recruiters for final approval.</p>
+<h2 id="future-enhancements">Future Enhancements<a class="anchor" href="#future-enhancements" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Integration with ATS systems</li>
+<li>Advanced candidate scoring</li>
+<li>Video interview capabilities</li>
+<li>Skills assessment integration</li>
+<li>Multi-language support</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-ai-recruitment-agent-team-py"><summary class="codefile__head"><span class="codefile__name">ai_recruitment_agent_team.py</span><span class="codefile__size">22 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">PyPDF2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytz</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.run.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.models.openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIChat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.tools.email</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmailTools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phi.tools.zoom</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZoomTool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phi.utils.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">streamlit_pdf_viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">pdf_viewer</span>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomZoomTool</span><span class="p">(</span><span class="n">ZoomTool</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">client_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">client_secret</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;zoom_tool&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="n">account_id</span><span class="p">,</span> <span class="n">client_id</span><span class="o">=</span><span class="n">client_id</span><span class="p">,</span> <span class="n">client_secret</span><span class="o">=</span><span class="n">client_secret</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_url</span> <span class="o">=</span> <span class="s2">&quot;https://zoom.us/oauth/token&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_expires_at</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_access_token</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="ow">and</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_expires_at</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">)</span>
+            
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">}</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;grant_type&quot;</span><span class="p">:</span> <span class="s2">&quot;account_credentials&quot;</span><span class="p">,</span> <span class="s2">&quot;account_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_id</span><span class="p">}</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_secret</span><span class="p">))</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+            <span class="n">token_info</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">token_info</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span>
+            <span class="n">expires_in</span> <span class="o">=</span> <span class="n">token_info</span><span class="p">[</span><span class="s2">&quot;expires_in&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token_expires_at</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">expires_in</span> <span class="o">-</span> <span class="mi">60</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_parent_token</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error fetching access token: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_parent_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper method to set the token in the parent ZoomTool class&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ZoomTool__access_token</span> <span class="o">=</span> <span class="n">token</span>
+
+
+<span class="c1"># Role requirements as a constant dictionary</span>
+<span class="n">ROLE_REQUIREMENTS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ai_ml_engineer&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Required Skills:</span>
+<span class="s2">        - Python, PyTorch/TensorFlow</span>
+<span class="s2">        - Machine Learning algorithms and frameworks</span>
+<span class="s2">        - Deep Learning and Neural Networks</span>
+<span class="s2">        - Data preprocessing and analysis</span>
+<span class="s2">        - MLOps and model deployment</span>
+<span class="s2">        - RAG, LLM, Finetuning and Prompt Engineering</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;frontend_engineer&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Required Skills:</span>
+<span class="s2">        - React/Vue.js/Angular</span>
+<span class="s2">        - HTML5, CSS3, JavaScript/TypeScript</span>
+<span class="s2">        - Responsive design</span>
+<span class="s2">        - State management</span>
+<span class="s2">        - Frontend testing</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+
+    <span class="s2">&quot;backend_engineer&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Required Skills:</span>
+<span class="s2">        - Python/Java/Node.js</span>
+<span class="s2">        - REST APIs</span>
+<span class="s2">        - Database design and management</span>
+<span class="s2">        - System architecture</span>
+<span class="s2">        - Cloud services (AWS/GCP/Azure)</span>
+<span class="s2">        - Kubernetes, Docker, CI/CD</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">init_session_state</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize only necessary session state variables.&quot;&quot;&quot;</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;candidate_email&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;openai_api_key&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;resume_text&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;analysis_complete&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s1">&#39;is_selected&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;zoom_account_id&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;zoom_client_id&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;zoom_client_secret&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;email_sender&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;email_passkey&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;company_name&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;current_pdf&#39;</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_resume_analyzer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates and returns a resume analysis agent.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please enter your OpenAI API key first.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span>
+        <span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;You are an expert technical recruiter who analyzes resumes.&quot;</span><span class="p">,</span>
+        <span class="n">instructions</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;Analyze the resume against the provided job requirements&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Be lenient with AI/ML candidates who show strong potential&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Consider project experience as valid experience&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Value hands-on experience with key technologies&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Return a JSON response with selection decision and feedback&quot;</span>
+        <span class="p">],</span>
+        <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_email_agent</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span>
+        <span class="p">),</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">EmailTools</span><span class="p">(</span>
+            <span class="n">receiver_email</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">candidate_email</span><span class="p">,</span>
+            <span class="n">sender_email</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">email_sender</span><span class="p">,</span>
+            <span class="n">sender_name</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">company_name</span><span class="p">,</span>
+            <span class="n">sender_passkey</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">email_passkey</span>
+        <span class="p">)],</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;You are a professional recruitment coordinator handling email communications.&quot;</span><span class="p">,</span>
+        <span class="n">instructions</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;Draft and send professional recruitment emails&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Act like a human writing an email and use all lowercase letters&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Maintain a friendly yet professional tone&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Always end emails with exactly: &#39;best,</span><span class="se">\n</span><span class="s2">the ai recruiting team&#39;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Never include the sender&#39;s or receiver&#39;s name in the signature&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;The name of the company is &#39;</span><span class="si">{</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">company_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+        <span class="p">],</span>
+        <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">debug_mode</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_scheduler_agent</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
+    <span class="n">zoom_tools</span> <span class="o">=</span> <span class="n">CustomZoomTool</span><span class="p">(</span>
+        <span class="n">account_id</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_account_id</span><span class="p">,</span>
+        <span class="n">client_id</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_client_id</span><span class="p">,</span>
+        <span class="n">client_secret</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_client_secret</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Interview Scheduler&quot;</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span>
+        <span class="p">),</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">zoom_tools</span><span class="p">],</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;You are an interview scheduling coordinator.&quot;</span><span class="p">,</span>
+        <span class="n">instructions</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;You are an expert at scheduling technical interviews using Zoom.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Schedule interviews during business hours (9 AM - 5 PM EST)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Create meetings with proper titles and descriptions&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ensure all meeting details are included in responses&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Use ISO 8601 format for dates&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Handle scheduling errors gracefully&quot;</span>
+        <span class="p">],</span>
+        <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">debug_mode</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_text_from_pdf</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">pdf_reader</span> <span class="o">=</span> <span class="n">PyPDF2</span><span class="o">.</span><span class="n">PdfReader</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">pdf_reader</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="n">page</span><span class="o">.</span><span class="n">extract_text</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">text</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error extracting PDF text: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_resume</span><span class="p">(</span>
+    <span class="n">resume_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">role</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;ai_ml_engineer&quot;</span><span class="p">,</span> <span class="s2">&quot;frontend_engineer&quot;</span><span class="p">,</span> <span class="s2">&quot;backend_engineer&quot;</span><span class="p">],</span>
+    <span class="n">analyzer</span><span class="p">:</span> <span class="n">Agent</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span><span class="p">:</span> <span class="n">RunOutput</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Please analyze this resume against the following requirements and provide your response in valid JSON format:</span>
+<span class="s2">            Role Requirements:</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">ROLE_REQUIREMENTS</span><span class="p">[</span><span class="n">role</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">            Resume Text:</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">resume_text</span><span class="si">}</span>
+<span class="s2">            Your response must be a valid JSON object like this:</span>
+<span class="s2">            </span><span class="se">{{</span>
+<span class="s2">                &quot;selected&quot;: true/false,</span>
+<span class="s2">                &quot;feedback&quot;: &quot;Detailed feedback explaining the decision&quot;,</span>
+<span class="s2">                &quot;matching_skills&quot;: [&quot;skill1&quot;, &quot;skill2&quot;],</span>
+<span class="s2">                &quot;missing_skills&quot;: [&quot;skill3&quot;, &quot;skill4&quot;],</span>
+<span class="s2">                &quot;experience_level&quot;: &quot;junior/mid/senior&quot;</span>
+<span class="s2">            </span><span class="se">}}</span>
+<span class="s2">            Evaluation criteria:</span>
+<span class="s2">            1. Match at least 70% of required skills</span>
+<span class="s2">            2. Consider both theoretical knowledge and practical experience</span>
+<span class="s2">            3. Value project experience and real-world applications</span>
+<span class="s2">            4. Consider transferable skills from similar technologies</span>
+<span class="s2">            5. Look for evidence of continuous learning and adaptability</span>
+<span class="s2">            Important: Return ONLY the JSON object without any markdown formatting or backticks.</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">assistant_message</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">msg</span><span class="o">.</span><span class="n">content</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">messages</span> <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="s1">&#39;assistant&#39;</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">assistant_message</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No assistant message found in response.&quot;</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">assistant_message</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="n">result</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;selected&quot;</span><span class="p">,</span> <span class="s2">&quot;feedback&quot;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid response format&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;selected&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;feedback&quot;</span><span class="p">]</span>
+
+    <span class="k">except</span> <span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing response: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error analyzing resume: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_selection_email</span><span class="p">(</span><span class="n">email_agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">to_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">email_agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Send an email to </span><span class="si">{</span><span class="n">to_email</span><span class="si">}</span><span class="s2"> regarding their selection for the </span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2"> position.</span>
+<span class="s2">        The email should:</span>
+<span class="s2">        1. Congratulate them on being selected</span>
+<span class="s2">        2. Explain the next steps in the process</span>
+<span class="s2">        3. Mention that they will receive interview details shortly</span>
+<span class="s2">        4. The name of the company is &#39;AI Recruiting Team&#39;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_rejection_email</span><span class="p">(</span><span class="n">email_agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">to_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">feedback</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Send a rejection email with constructive feedback.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">email_agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Send an email to </span><span class="si">{</span><span class="n">to_email</span><span class="si">}</span><span class="s2"> regarding their application for the </span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2"> position.</span>
+<span class="s2">        Use this specific style:</span>
+<span class="s2">        1. use all lowercase letters</span>
+<span class="s2">        2. be empathetic and human</span>
+<span class="s2">        3. mention specific feedback from: </span><span class="si">{</span><span class="n">feedback</span><span class="si">}</span>
+<span class="s2">        4. encourage them to upskill and try again</span>
+<span class="s2">        5. suggest some learning resources based on missing skills</span>
+<span class="s2">        6. end the email with exactly:</span>
+<span class="s2">           best,</span>
+<span class="s2">           the ai recruiting team</span>
+<span class="s2">        </span>
+<span class="s2">        Do not include any names in the signature.</span>
+<span class="s2">        The tone should be like a human writing a quick but thoughtful email.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">schedule_interview</span><span class="p">(</span><span class="n">scheduler</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">candidate_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">email_agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Schedule interviews during business hours (9 AM - 5 PM IST).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Get current time in IST</span>
+        <span class="n">ist_tz</span> <span class="o">=</span> <span class="n">pytz</span><span class="o">.</span><span class="n">timezone</span><span class="p">(</span><span class="s1">&#39;Asia/Kolkata&#39;</span><span class="p">)</span>
+        <span class="n">current_time_ist</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">ist_tz</span><span class="p">)</span>
+
+        <span class="n">tomorrow_ist</span> <span class="o">=</span> <span class="n">current_time_ist</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">interview_time</span> <span class="o">=</span> <span class="n">tomorrow_ist</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">formatted_time</span> <span class="o">=</span> <span class="n">interview_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S&#39;</span><span class="p">)</span>
+
+        <span class="n">meeting_response</span> <span class="o">=</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Schedule a 60-minute technical interview with these specifications:</span>
+<span class="s2">            - Title: &#39;</span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2"> Technical Interview&#39;</span>
+<span class="s2">            - Date: </span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}</span>
+<span class="s2">            - Timezone: IST (India Standard Time)</span>
+<span class="s2">            - Attendee: </span><span class="si">{</span><span class="n">candidate_email</span><span class="si">}</span>
+<span class="s2">            </span>
+<span class="s2">            Important Notes:</span>
+<span class="s2">            - The meeting must be between 9 AM - 5 PM IST</span>
+<span class="s2">            - Use IST (UTC+5:30) timezone for all communications</span>
+<span class="s2">            - Include timezone information in the meeting details</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">email_agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Send an interview confirmation email with these details:</span>
+<span class="s2">            - Role: </span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2"> position</span>
+<span class="s2">            - Meeting Details: </span><span class="si">{</span><span class="n">meeting_response</span><span class="si">}</span>
+<span class="s2">            </span>
+<span class="s2">            Important:</span>
+<span class="s2">            - Clearly specify that the time is in IST (India Standard Time)</span>
+<span class="s2">            - Ask the candidate to join 5 minutes early</span>
+<span class="s2">            - Include timezone conversion link if possible</span>
+<span class="s2">            - Ask him to be confident and not so nervous and prepare well for the interview</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Interview scheduled successfully! Check your email for details.&quot;</span><span class="p">)</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error scheduling interview: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unable to schedule interview. Please try again.&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AI Recruitment System&quot;</span><span class="p">)</span>
+
+    <span class="n">init_session_state</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Configuration&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># OpenAI Configuration</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;OpenAI Settings&quot;</span><span class="p">)</span>
+        <span class="n">api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;OpenAI API Key&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Get your API key from platform.openai.com&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">api_key</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span> <span class="o">=</span> <span class="n">api_key</span>
+
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Zoom Settings&quot;</span><span class="p">)</span>
+        <span class="n">zoom_account_id</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Zoom Account ID&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_account_id</span><span class="p">)</span>
+        <span class="n">zoom_client_id</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Zoom Client ID&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_client_id</span><span class="p">)</span>
+        <span class="n">zoom_client_secret</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Zoom Client Secret&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_client_secret</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Email Settings&quot;</span><span class="p">)</span>
+        <span class="n">email_sender</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Sender Email&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">email_sender</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Email address to send from&quot;</span><span class="p">)</span>
+        <span class="n">email_passkey</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Email App Password&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">email_passkey</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;App-specific password for email&quot;</span><span class="p">)</span>
+        <span class="n">company_name</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Company Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">company_name</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name to use in email communications&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">zoom_account_id</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_account_id</span> <span class="o">=</span> <span class="n">zoom_account_id</span>
+        <span class="k">if</span> <span class="n">zoom_client_id</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_client_id</span> <span class="o">=</span> <span class="n">zoom_client_id</span>
+        <span class="k">if</span> <span class="n">zoom_client_secret</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_client_secret</span> <span class="o">=</span> <span class="n">zoom_client_secret</span>
+        <span class="k">if</span> <span class="n">email_sender</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">email_sender</span> <span class="o">=</span> <span class="n">email_sender</span>
+        <span class="k">if</span> <span class="n">email_passkey</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">email_passkey</span> <span class="o">=</span> <span class="n">email_passkey</span>
+        <span class="k">if</span> <span class="n">company_name</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">company_name</span> <span class="o">=</span> <span class="n">company_name</span>
+
+        <span class="n">required_configs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;OpenAI API Key&#39;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span><span class="p">,</span> <span class="s1">&#39;Zoom Account ID&#39;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_account_id</span><span class="p">,</span>
+                          <span class="s1">&#39;Zoom Client ID&#39;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_client_id</span><span class="p">,</span> <span class="s1">&#39;Zoom Client Secret&#39;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">zoom_client_secret</span><span class="p">,</span>
+                          <span class="s1">&#39;Email Sender&#39;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">email_sender</span><span class="p">,</span> <span class="s1">&#39;Email Password&#39;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">email_passkey</span><span class="p">,</span>
+                          <span class="s1">&#39;Company Name&#39;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">company_name</span><span class="p">}</span>
+
+    <span class="n">missing_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">required_configs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing_configs</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please configure the following in the sidebar: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_configs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please enter your OpenAI API key in the sidebar to continue.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">role</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&quot;Select the role you&#39;re applying for:&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;ai_ml_engineer&quot;</span><span class="p">,</span> <span class="s2">&quot;frontend_engineer&quot;</span><span class="p">,</span> <span class="s2">&quot;backend_engineer&quot;</span><span class="p">])</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;View Required Skills&quot;</span><span class="p">,</span> <span class="n">expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">ROLE_REQUIREMENTS</span><span class="p">[</span><span class="n">role</span><span class="p">])</span>
+
+    <span class="c1"># Add a &quot;New Application&quot; button before the resume upload</span>
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;📝 New Application&quot;</span><span class="p">):</span>
+        <span class="c1"># Clear only the application-related states</span>
+        <span class="n">keys_to_clear</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;resume_text&#39;</span><span class="p">,</span> <span class="s1">&#39;analysis_complete&#39;</span><span class="p">,</span> <span class="s1">&#39;is_selected&#39;</span><span class="p">,</span> <span class="s1">&#39;candidate_email&#39;</span><span class="p">,</span> <span class="s1">&#39;current_pdf&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys_to_clear</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;current_pdf&#39;</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+
+    <span class="n">resume_file</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">file_uploader</span><span class="p">(</span><span class="s2">&quot;Upload your resume (PDF)&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pdf&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;resume_uploader&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">resume_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">resume_file</span> <span class="o">!=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;current_pdf&#39;</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">current_pdf</span> <span class="o">=</span> <span class="n">resume_file</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">resume_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">analysis_complete</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">is_selected</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">resume_file</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Uploaded Resume&quot;</span><span class="p">)</span>
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.pdf&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp_file</span><span class="p">:</span>
+                <span class="n">tmp_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">resume_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                <span class="n">tmp_file_path</span> <span class="o">=</span> <span class="n">tmp_file</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">resume_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span> <span class="n">pdf_viewer</span><span class="p">(</span><span class="n">tmp_file_path</span><span class="p">)</span>
+            <span class="k">finally</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">tmp_file_path</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">download_button</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;📥 Download&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">resume_file</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="n">resume_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">mime</span><span class="o">=</span><span class="s2">&quot;application/pdf&quot;</span><span class="p">)</span>
+        <span class="c1"># Process the resume text</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">resume_text</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Processing your resume...&quot;</span><span class="p">):</span>
+                <span class="n">resume_text</span> <span class="o">=</span> <span class="n">extract_text_from_pdf</span><span class="p">(</span><span class="n">resume_file</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">resume_text</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">resume_text</span> <span class="o">=</span> <span class="n">resume_text</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Resume processed successfully!&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not process the PDF. Please try again.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Email input with session state</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+        <span class="s2">&quot;Candidate&#39;s email address&quot;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">candidate_email</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;email_input&quot;</span>
+    <span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">candidate_email</span> <span class="o">=</span> <span class="n">email</span>
+
+    <span class="c1"># Analysis and next steps</span>
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">resume_text</span> <span class="ow">and</span> <span class="n">email</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">analysis_complete</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Analyze Resume&quot;</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Analyzing your resume...&quot;</span><span class="p">):</span>
+                <span class="n">resume_analyzer</span> <span class="o">=</span> <span class="n">create_resume_analyzer</span><span class="p">()</span>
+                <span class="n">email_agent</span> <span class="o">=</span> <span class="n">create_email_agent</span><span class="p">()</span>  <span class="c1"># Create email agent here</span>
+                
+                <span class="k">if</span> <span class="n">resume_analyzer</span> <span class="ow">and</span> <span class="n">email_agent</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DEBUG: Starting resume analysis&quot;</span><span class="p">)</span>
+                    <span class="n">is_selected</span><span class="p">,</span> <span class="n">feedback</span> <span class="o">=</span> <span class="n">analyze_resume</span><span class="p">(</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">resume_text</span><span class="p">,</span>
+                        <span class="n">role</span><span class="p">,</span>
+                        <span class="n">resume_analyzer</span>
+                    <span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DEBUG: Analysis complete - Selected: </span><span class="si">{</span><span class="n">is_selected</span><span class="si">}</span><span class="s2">, Feedback: </span><span class="si">{</span><span class="n">feedback</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">is_selected</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Congratulations! Your skills match our requirements.&quot;</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">analysis_complete</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">is_selected</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Unfortunately, your skills don&#39;t match our requirements.&quot;</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feedback: </span><span class="si">{</span><span class="n">feedback</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        
+                        <span class="c1"># Send rejection email</span>
+                        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Sending feedback email...&quot;</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">send_rejection_email</span><span class="p">(</span>
+                                    <span class="n">email_agent</span><span class="o">=</span><span class="n">email_agent</span><span class="p">,</span>
+                                    <span class="n">to_email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span>
+                                    <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span>
+                                    <span class="n">feedback</span><span class="o">=</span><span class="n">feedback</span>
+                                <span class="p">)</span>
+                                <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;We&#39;ve sent you an email with detailed feedback.&quot;</span><span class="p">)</span>
+                            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error sending rejection email: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not send feedback email. Please try again.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;analysis_complete&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;is_selected&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Congratulations! Your skills match our requirements.&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Click &#39;Proceed with Application&#39; to continue with the interview process.&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Proceed with Application&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;proceed_button&quot;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DEBUG: Proceed button clicked&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🔄 Processing your application...&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DEBUG: Creating email agent&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                    <span class="n">email_agent</span> <span class="o">=</span> <span class="n">create_email_agent</span><span class="p">()</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DEBUG: Email agent created: </span><span class="si">{</span><span class="n">email_agent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                    
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DEBUG: Creating scheduler agent&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                    <span class="n">scheduler_agent</span> <span class="o">=</span> <span class="n">create_scheduler_agent</span><span class="p">()</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DEBUG: Scheduler agent created: </span><span class="si">{</span><span class="n">scheduler_agent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+
+                    <span class="c1"># 3. Send selection email</span>
+                    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="s2">&quot;📧 Sending confirmation email...&quot;</span><span class="p">,</span> <span class="n">expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">status</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DEBUG: Attempting to send email to </span><span class="si">{</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">candidate_email</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                        <span class="n">send_selection_email</span><span class="p">(</span>
+                            <span class="n">email_agent</span><span class="p">,</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">candidate_email</span><span class="p">,</span>
+                            <span class="n">role</span>
+                        <span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DEBUG: Email sent successfully&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                        <span class="n">status</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;✅ Confirmation email sent!&quot;</span><span class="p">)</span>
+
+                    <span class="c1"># 4. Schedule interview</span>
+                    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="s2">&quot;📅 Scheduling interview...&quot;</span><span class="p">,</span> <span class="n">expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">status</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DEBUG: Attempting to schedule interview&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                        <span class="n">schedule_interview</span><span class="p">(</span>
+                            <span class="n">scheduler_agent</span><span class="p">,</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">candidate_email</span><span class="p">,</span>
+                            <span class="n">email_agent</span><span class="p">,</span>
+                            <span class="n">role</span>
+                        <span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DEBUG: Interview scheduled successfully&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                        <span class="n">status</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;✅ Interview scheduled!&quot;</span><span class="p">)</span>
+
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DEBUG: All processes completed successfully&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        🎉 Application Successfully Processed!</span>
+<span class="s2">                        </span>
+<span class="s2">                        Please check your email for:</span>
+<span class="s2">                        1. Selection confirmation ✅</span>
+<span class="s2">                        2. Interview details with Zoom link 🔗</span>
+<span class="s2">                        </span>
+<span class="s2">                        Next steps:</span>
+<span class="s2">                        1. Review the role requirements</span>
+<span class="s2">                        2. Prepare for your technical interview</span>
+<span class="s2">                        3. Join the interview 5 minutes early</span>
+<span class="s2">                    &quot;&quot;&quot;</span><span class="p">)</span>
+
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DEBUG: Error occurred: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DEBUG: Error type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                    <span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DEBUG: Full traceback: </span><span class="si">{</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Debug</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please try again or contact support.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Reset button</span>
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Reset Application&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s1">&#39;openai_api_key&#39;</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-recruitment-agent-team/ai_recruitment_agent_team.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">257 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span># Core dependencies
+agno&gt;=2.2.10
+streamlit==1.40.2
+PyPDF2==3.0.1
+streamlit-pdf-viewer==0.0.19
+requests==2.32.3
+pytz==2023.4
+typing-extensions&gt;=4.9.0
+
+# Optional but recommended
+black&gt;=24.1.1  # for code formatting
+python-dateutil&gt;=2.8.2  # for date parsing
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-recruitment-agent-team/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li><li><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html">12 · Concevoir l&#x27;UX des applications d&#x27;IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-multi-agent-apps-agent-teams/ai-recruitment-agent-team">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-real-estate-agent-team/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Équipe immobilière</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-sales-intelligence-agent-team/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Équipe d&#x27;intelligence commerciale</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/multi_agent_apps/agent_teams/ai_recruitment_agent_team" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/multi_agent_apps/agent_teams/ai_recruitment_agent_team</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#important-things-to-do-before-running-the-application">Important Things to do before running the application</a></li><li class="toc__item toc__item--h2"><a href="#how-to-run">How to Run</a></li><li class="toc__item toc__item--h2"><a href="#system-components">System Components</a></li><li class="toc__item toc__item--h2"><a href="#technical-stack">Technical Stack</a></li><li class="toc__item toc__item--h2"><a href="#disclaimer">Disclaimer</a></li><li class="toc__item toc__item--h2"><a href="#future-enhancements">Future Enhancements</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

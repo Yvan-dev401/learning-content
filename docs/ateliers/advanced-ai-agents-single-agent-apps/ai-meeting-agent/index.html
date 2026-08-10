@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent de préparation de réunion — atelier</title>
+<meta name="description" content="Prépare l&#x27;ordre du jour et le dossier de fond d&#x27;une réunion.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html">Agents avancés (agent unique)</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🤖</span> Agents avancés (agent unique)</p>
+  <h1 class="pagehead__title">Agent de préparation de réunion</h1>
+  <p class="pagehead__summary">Prépare l&#x27;ordre du jour et le dossier de fond d&#x27;une réunion.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#tres-demande" title="Compétence fréquemment attendue sur les offres d&#x27;emploi en IA."><span class="tag__icon" aria-hidden="true">🔥</span><span class="tag__label">Très demandé</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://console.anthropic.com" target="_blank" rel="noopener noreferrer">Anthropic (Claude)</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Facturation à l&#x27;usage, sans palier gratuit sur l&#x27;API.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Modèles de niveau comparable, gratuitement.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit, bon en raisonnement et sur les longs contextes.</li><li><a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer">OpenRouter</a> — Quelques modèles ouverts y sont proposés gratuitement.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://serpapi.com" target="_blank" rel="noopener noreferrer">SerpAPI / Serper</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Une centaine de recherches gratuites par mois.</p><ul class="alts__list"><li><a href="https://pypi.org/project/duckduckgo-search/" target="_blank" rel="noopener noreferrer">DuckDuckGo Search</a> — Le remplacement le plus simple : ni clé, ni quota.</li><li><a href="https://docs.searxng.org" target="_blank" rel="noopener noreferrer">SearXNG</a> — Si vous voulez agréger plusieurs moteurs vous-même.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Multi-agent AI system for thorough meeting preparation</li><li>Utilizes OpenAI&#x27;s GPT-4 and Anthropic&#x27;s Claude models</li><li>Web search capability using Serper API</li><li>Generates detailed context analysis, industry insights, meeting strategies, and executive briefings</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="titre">Ai Meeting Agent</h1><h2 id="ai-meeting-preparation-agent">📝 AI Meeting Preparation Agent<a class="anchor" href="#ai-meeting-preparation-agent" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial<a class="anchor" href="#free-step-by-step-tutorial" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>👉 <a href="https://www.theunwindai.com/p/build-multi-agent-ai-meeting-preparation-assistant" target="_blank" rel="noopener noreferrer">Click here to follow our complete step-by-step tutorial</a> and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.</strong></p>
+<p>This Streamlit application leverages multiple AI agents to create comprehensive meeting preparation materials. It uses OpenAI's GPT-4, Anthropic's Claude, and the Serper API for web searches to generate context analysis, industry insights, meeting strategies, and executive briefings.</p>
+<h3 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Multi-agent AI system for thorough meeting preparation</li>
+<li>Utilizes OpenAI's GPT-4 and Anthropic's Claude models</li>
+<li>Web search capability using Serper API</li>
+<li>Generates detailed context analysis, industry insights, meeting strategies, and executive briefings</li>
+</ul>
+<h3 id="how-to-get-started">How to get Started?<a class="anchor" href="#how-to-get-started" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>Clone the GitHub repository</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>advanced_ai_agents/single_agent_apps/ai_meeting_agent
+</pre></div>
+</div><ol start="2">
+<li>Install the required dependencies:</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div><ol start="3">
+<li>Get your Anthropic API Key</li>
+</ol>
+<ul>
+<li>Sign up for an <a href="https://console.anthropic.com" target="_blank" rel="noopener noreferrer">Anthropic account</a> (or the LLM provider of your choice) and obtain your API key.</li>
+</ul>
+<ol start="4">
+<li>Get your SerpAPI Key</li>
+</ol>
+<ul>
+<li>Sign up for an <a href="https://serper.dev/" target="_blank" rel="noopener noreferrer">Serper API account</a> and obtain your API key.</li>
+</ul>
+<ol start="5">
+<li>Get your OpenAI API Key</li>
+</ol>
+<ul>
+<li>Sign up for an <a href="https://platform.openai.com/" target="_blank" rel="noopener noreferrer">OpenAI account</a> (or the LLM provider of your choice) and obtain your API key.</li>
+</ul>
+<ol start="6">
+<li>Run the Streamlit App</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>meeting_agent.py
+</pre></div>
+</div>
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-meeting-agent-py"><summary class="codefile__head"><span class="codefile__name">meeting_agent.py</span><span class="codefile__size">9 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">crewai</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="n">Crew</span><span class="p">,</span> <span class="n">LLM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">crewai.process</span><span class="w"> </span><span class="kn">import</span> <span class="n">Process</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">crewai_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">SerperDevTool</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Streamlit app setup</span>
+<span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;AI Meeting Agent 📝&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AI Meeting Preparation Agent 📝&quot;</span><span class="p">)</span>
+
+<span class="c1"># Sidebar for API keys</span>
+<span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;API Keys&quot;</span><span class="p">)</span>
+<span class="n">anthropic_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Anthropic API Key&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+<span class="n">serper_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Serper API Key&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+
+<span class="c1"># Check if all API keys are set</span>
+<span class="k">if</span> <span class="n">anthropic_api_key</span> <span class="ow">and</span> <span class="n">serper_api_key</span><span class="p">:</span>
+    <span class="c1"># # Set API keys as environment variables</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">anthropic_api_key</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SERPER_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">serper_api_key</span>
+
+    <span class="n">claude</span> <span class="o">=</span> <span class="n">LLM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-3-5-sonnet-20240620&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">anthropic_api_key</span><span class="p">)</span>
+    <span class="n">search_tool</span> <span class="o">=</span> <span class="n">SerperDevTool</span><span class="p">()</span>
+
+    <span class="c1"># Input fields</span>
+    <span class="n">company_name</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Enter the company name:&quot;</span><span class="p">)</span>
+    <span class="n">meeting_objective</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Enter the meeting objective:&quot;</span><span class="p">)</span>
+    <span class="n">attendees</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span><span class="s2">&quot;Enter the attendees and their roles (one per line):&quot;</span><span class="p">)</span>
+    <span class="n">meeting_duration</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Enter the meeting duration (in minutes):&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">focus_areas</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Enter any specific areas of focus or concerns:&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Define the agents</span>
+    <span class="n">context_analyzer</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">role</span><span class="o">=</span><span class="s1">&#39;Meeting Context Specialist&#39;</span><span class="p">,</span>
+        <span class="n">goal</span><span class="o">=</span><span class="s1">&#39;Analyze and summarize key background information for the meeting&#39;</span><span class="p">,</span>
+        <span class="n">backstory</span><span class="o">=</span><span class="s1">&#39;You are an expert at quickly understanding complex business contexts and identifying critical information.&#39;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allow_delegation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">llm</span><span class="o">=</span><span class="n">claude</span><span class="p">,</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">search_tool</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">industry_insights_generator</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">role</span><span class="o">=</span><span class="s1">&#39;Industry Expert&#39;</span><span class="p">,</span>
+        <span class="n">goal</span><span class="o">=</span><span class="s1">&#39;Provide in-depth industry analysis and identify key trends&#39;</span><span class="p">,</span>
+        <span class="n">backstory</span><span class="o">=</span><span class="s1">&#39;You are a seasoned industry analyst with a knack for spotting emerging trends and opportunities.&#39;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allow_delegation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">llm</span><span class="o">=</span><span class="n">claude</span><span class="p">,</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">search_tool</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">strategy_formulator</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">role</span><span class="o">=</span><span class="s1">&#39;Meeting Strategist&#39;</span><span class="p">,</span>
+        <span class="n">goal</span><span class="o">=</span><span class="s1">&#39;Develop a tailored meeting strategy and detailed agenda&#39;</span><span class="p">,</span>
+        <span class="n">backstory</span><span class="o">=</span><span class="s1">&#39;You are a master meeting planner, known for creating highly effective strategies and agendas.&#39;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allow_delegation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">llm</span><span class="o">=</span><span class="n">claude</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">executive_briefing_creator</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">role</span><span class="o">=</span><span class="s1">&#39;Communication Specialist&#39;</span><span class="p">,</span>
+        <span class="n">goal</span><span class="o">=</span><span class="s1">&#39;Synthesize information into concise and impactful briefings&#39;</span><span class="p">,</span>
+        <span class="n">backstory</span><span class="o">=</span><span class="s1">&#39;You are an expert communicator, skilled at distilling complex information into clear, actionable insights.&#39;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allow_delegation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">llm</span><span class="o">=</span><span class="n">claude</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Define the tasks</span>
+    <span class="n">context_analysis_task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Analyze the context for the meeting with </span><span class="si">{</span><span class="n">company_name</span><span class="si">}</span><span class="s2">, considering:</span>
+<span class="s2">        1. The meeting objective: </span><span class="si">{</span><span class="n">meeting_objective</span><span class="si">}</span>
+<span class="s2">        2. The attendees: </span><span class="si">{</span><span class="n">attendees</span><span class="si">}</span>
+<span class="s2">        3. The meeting duration: </span><span class="si">{</span><span class="n">meeting_duration</span><span class="si">}</span><span class="s2"> minutes</span>
+<span class="s2">        4. Specific focus areas or concerns: </span><span class="si">{</span><span class="n">focus_areas</span><span class="si">}</span>
+
+<span class="s2">        Research </span><span class="si">{</span><span class="n">company_name</span><span class="si">}</span><span class="s2"> thoroughly, including:</span>
+<span class="s2">        1. Recent news and press releases</span>
+<span class="s2">        2. Key products or services</span>
+<span class="s2">        3. Major competitors</span>
+
+<span class="s2">        Provide a comprehensive summary of your findings, highlighting the most relevant information for the meeting context.</span>
+<span class="s2">        Format your output using markdown with appropriate headings and subheadings.</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">agent</span><span class="o">=</span><span class="n">context_analyzer</span><span class="p">,</span>
+        <span class="n">expected_output</span><span class="o">=</span><span class="s2">&quot;A detailed analysis of the meeting context and company background, including recent developments, financial performance, and relevance to the meeting objective, formatted in markdown with headings and subheadings.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">industry_analysis_task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Based on the context analysis for </span><span class="si">{</span><span class="n">company_name</span><span class="si">}</span><span class="s2"> and the meeting objective: </span><span class="si">{</span><span class="n">meeting_objective</span><span class="si">}</span><span class="s2">, provide an in-depth industry analysis:</span>
+<span class="s2">        1. Identify key trends and developments in the industry</span>
+<span class="s2">        2. Analyze the competitive landscape</span>
+<span class="s2">        3. Highlight potential opportunities and threats</span>
+<span class="s2">        4. Provide insights on market positioning</span>
+
+<span class="s2">        Ensure the analysis is relevant to the meeting objective and attendees&#39; roles.</span>
+<span class="s2">        Format your output using markdown with appropriate headings and subheadings.</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">agent</span><span class="o">=</span><span class="n">industry_insights_generator</span><span class="p">,</span>
+        <span class="n">expected_output</span><span class="o">=</span><span class="s2">&quot;A comprehensive industry analysis report, including trends, competitive landscape, opportunities, threats, and relevant insights for the meeting objective, formatted in markdown with headings and subheadings.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">strategy_development_task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Using the context analysis and industry insights, develop a tailored meeting strategy and detailed agenda for the </span><span class="si">{</span><span class="n">meeting_duration</span><span class="si">}</span><span class="s2">-minute meeting with </span><span class="si">{</span><span class="n">company_name</span><span class="si">}</span><span class="s2">. Include:</span>
+<span class="s2">        1. A time-boxed agenda with clear objectives for each section</span>
+<span class="s2">        2. Key talking points for each agenda item</span>
+<span class="s2">        3. Suggested speakers or leaders for each section</span>
+<span class="s2">        4. Potential discussion topics and questions to drive the conversation</span>
+<span class="s2">        5. Strategies to address the specific focus areas and concerns: </span><span class="si">{</span><span class="n">focus_areas</span><span class="si">}</span>
+
+<span class="s2">        Ensure the strategy and agenda align with the meeting objective: </span><span class="si">{</span><span class="n">meeting_objective</span><span class="si">}</span>
+<span class="s2">        Format your output using markdown with appropriate headings and subheadings.</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">agent</span><span class="o">=</span><span class="n">strategy_formulator</span><span class="p">,</span>
+        <span class="n">expected_output</span><span class="o">=</span><span class="s2">&quot;A detailed meeting strategy and time-boxed agenda, including objectives, key talking points, and strategies to address specific focus areas, formatted in markdown with headings and subheadings.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">executive_brief_task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Synthesize all the gathered information into a comprehensive yet concise executive brief for the meeting with </span><span class="si">{</span><span class="n">company_name</span><span class="si">}</span><span class="s2">. Create the following components:</span>
+
+<span class="s2">        1. A detailed one-page executive summary including:</span>
+<span class="s2">           - Clear statement of the meeting objective</span>
+<span class="s2">           - List of key attendees and their roles</span>
+<span class="s2">           - Critical background points about </span><span class="si">{</span><span class="n">company_name</span><span class="si">}</span><span class="s2"> and relevant industry context</span>
+<span class="s2">           - Top 3-5 strategic goals for the meeting, aligned with the objective</span>
+<span class="s2">           - Brief overview of the meeting structure and key topics to be covered</span>
+
+<span class="s2">        2. An in-depth list of key talking points, each supported by:</span>
+<span class="s2">           - Relevant data or statistics</span>
+<span class="s2">           - Specific examples or case studies</span>
+<span class="s2">           - Connection to the company&#39;s current situation or challenges</span>
+
+<span class="s2">        3. Anticipate and prepare for potential questions:</span>
+<span class="s2">           - List likely questions from attendees based on their roles and the meeting objective</span>
+<span class="s2">           - Craft thoughtful, data-driven responses to each question</span>
+<span class="s2">           - Include any supporting information or additional context that might be needed</span>
+
+<span class="s2">        4. Strategic recommendations and next steps:</span>
+<span class="s2">           - Provide 3-5 actionable recommendations based on the analysis</span>
+<span class="s2">           - Outline clear next steps for implementation or follow-up</span>
+<span class="s2">           - Suggest timelines or deadlines for key actions</span>
+<span class="s2">           - Identify potential challenges or roadblocks and propose mitigation strategies</span>
+
+<span class="s2">        Ensure the brief is comprehensive yet concise, highly actionable, and precisely aligned with the meeting objective: </span><span class="si">{</span><span class="n">meeting_objective</span><span class="si">}</span><span class="s2">. The document should be structured for easy navigation and quick reference during the meeting.</span>
+<span class="s2">        Format your output using markdown with appropriate headings and subheadings.</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">agent</span><span class="o">=</span><span class="n">executive_briefing_creator</span><span class="p">,</span>
+        <span class="n">expected_output</span><span class="o">=</span><span class="s2">&quot;A comprehensive executive brief including summary, key talking points, Q&amp;A preparation, and strategic recommendations, formatted in markdown with main headings (H1), section headings (H2), and subsection headings (H3) where appropriate. Use bullet points, numbered lists, and emphasis (bold/italic) for key information.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Create the crew</span>
+    <span class="n">meeting_prep_crew</span> <span class="o">=</span> <span class="n">Crew</span><span class="p">(</span>
+        <span class="n">agents</span><span class="o">=</span><span class="p">[</span><span class="n">context_analyzer</span><span class="p">,</span> <span class="n">industry_insights_generator</span><span class="p">,</span> <span class="n">strategy_formulator</span><span class="p">,</span> <span class="n">executive_briefing_creator</span><span class="p">],</span>
+        <span class="n">tasks</span><span class="o">=</span><span class="p">[</span><span class="n">context_analysis_task</span><span class="p">,</span> <span class="n">industry_analysis_task</span><span class="p">,</span> <span class="n">strategy_development_task</span><span class="p">,</span> <span class="n">executive_brief_task</span><span class="p">],</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">process</span><span class="o">=</span><span class="n">Process</span><span class="o">.</span><span class="n">sequential</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Run the crew when the user clicks the button</span>
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Prepare Meeting&quot;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;AI agents are preparing your meeting...&quot;</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">meeting_prep_crew</span><span class="o">.</span><span class="n">kickoff</span><span class="p">()</span>        
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    ## How to use this app:</span>
+<span class="s2">    1. Enter your API keys in the sidebar.</span>
+<span class="s2">    2. Provide the requested information about the meeting.</span>
+<span class="s2">    3. Click &#39;Prepare Meeting&#39; to generate your comprehensive meeting preparation package.</span>
+
+<span class="s2">    The AI agents will work together to:</span>
+<span class="s2">    - Analyze the meeting context and company background</span>
+<span class="s2">    - Provide industry insights and trends</span>
+<span class="s2">    - Develop a tailored meeting strategy and agenda</span>
+<span class="s2">    - Create an executive brief with key talking points</span>
+
+<span class="s2">    This process may take a few minutes. Please be patient!</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please enter all API keys in the sidebar before proceeding.&quot;</span><span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-single-agent-apps/ai-meeting-agent/meeting_agent.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">37 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit 
+crewai
+crewai-tools
+openai
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-single-agent-apps/ai-meeting-agent/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li><li><a href="../../../lecons/11-integrating-with-function-calling/index.html">11 · Intégrer des services externes avec l&#x27;appel de fonctions</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-single-agent-apps/ai-meeting-agent">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-single-agent-apps/ai-journalist-agent/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Agent journaliste</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-single-agent-apps/ai-movie-production-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Agent de production de film</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/single_agent_apps/ai_meeting_agent" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/single_agent_apps/ai_meeting_agent</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#ai-meeting-preparation-agent">📝 AI Meeting Preparation Agent</a></li><li class="toc__item toc__item--h3"><a href="#free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial</a></li><li class="toc__item toc__item--h3"><a href="#features">Features</a></li><li class="toc__item toc__item--h3"><a href="#how-to-get-started">How to get Started?</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

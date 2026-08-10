@@ -1,0 +1,1269 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Due diligence de capital-risque — atelier</title>
+<meta name="description" content="Évalue une startup sous l&#x27;angle marché, équipe et technologie.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html">Équipes d&#x27;agents par métier</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">👥</span> Équipes d&#x27;agents par métier</p>
+  <h1 class="pagehead__title">Due diligence de capital-risque</h1>
+  <p class="pagehead__summary">Évalue une startup sous l&#x27;angle marché, équipe et technologie.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#palier-gratuit" title="Des comptes sont nécessaires, mais leur offre gratuite couvre l&#x27;exercice."><span class="tag__icon" aria-hidden="true">🧪</span><span class="tag__label">Palier gratuit suffisant</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio / Gemini</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Palier gratuit confortable, sans carte bancaire. Convient à la quasi-totalité des ateliers.</p><ul class="alts__list"><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Le palier gratuit suffit</a> — Créez la clé dans AI Studio : aucune carte n&#x27;est demandée.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Si vous dépassez le quota, un modèle local prend le relais.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>🔍 Live Research - Real-time web search for company and market data</li><li>🌐 URL Support - Analyze any startup by their website URL</li><li>📈 Revenue Charts - Bear/Base/Bull projection charts with matplotlib</li><li>🧠 Deep Risk Analysis - Comprehensive risk assessment across 5 categories</li><li>📄 Professional Reports - McKinsey-style HTML investment reports</li><li>🎨 Visual TL;DR - AI-generated infographic summary for quick review</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="ai-vc-due-diligence-agent-team">📊 AI VC Due Diligence Agent Team<a class="anchor" href="#ai-vc-due-diligence-agent-team" aria-label="Lien vers cette section">#</a></h1>
+<p>A multi-agent AI pipeline for startup investment analysis, built with <a href="https://google.github.io/adk-docs/" target="_blank" rel="noopener noreferrer">Google ADK</a>, Gemini 3 Pro, Gemini 3 Flash and Nano Banana Pro.</p>
+<p><strong>Works with any startup</strong> - from early-stage unknowns to well-funded companies. Just provide a company name, website URL, or both.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>🔍 <strong>Live Research</strong> - Real-time web search for company and market data</li>
+<li>🌐 <strong>URL Support</strong> - Analyze any startup by their website URL</li>
+<li>📈 <strong>Revenue Charts</strong> - Bear/Base/Bull projection charts with matplotlib</li>
+<li>🧠 <strong>Deep Risk Analysis</strong> - Comprehensive risk assessment across 5 categories</li>
+<li>📄 <strong>Professional Reports</strong> - McKinsey-style HTML investment reports</li>
+<li>🎨 <strong>Visual TL;DR</strong> - AI-generated infographic summary for quick review</li>
+</ul>
+<h2 id="what-it-does">What It Does<a class="anchor" href="#what-it-does" aria-label="Lien vers cette section">#</a></h2>
+<p>Given a startup name or URL, the pipeline automatically:</p>
+<ol>
+<li><strong>Researches the company</strong> - Founders, funding, product, traction</li>
+<li><strong>Analyzes the market</strong> - TAM/SAM, competitors, positioning</li>
+<li><strong>Builds financial models</strong> - Revenue projections, unit economics</li>
+<li><strong>Assesses risks</strong> - Market, execution, financial, regulatory, exit</li>
+<li><strong>Generates investor memo</strong> - Structured investment thesis</li>
+<li><strong>Creates HTML report</strong> - Professional due diligence document</li>
+<li><strong>Generates infographic</strong> - Visual summary for quick review</li>
+</ol>
+<h2 id="quick-start">Quick Start<a class="anchor" href="#quick-start" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="1-clone-navigate">1. Clone &amp; Navigate<a class="anchor" href="#1-clone-navigate" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>awesome-llm-apps/advanced_ai_agents/multi_agent_apps/agent_teams/ai_vc_due_diligence_agent_team
+</pre></div>
+</div><h3 id="2-set-environment">2. Set Environment<a class="anchor" href="#2-set-environment" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_API_KEY</span><span class="o">=</span>your_api_key
+<span class="c1"># Or create .env file:</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;GOOGLE_API_KEY=your_api_key&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.env
+</pre></div>
+</div><h3 id="3-install-run">3. Install &amp; Run<a class="anchor" href="#3-install-run" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+adk<span class="w"> </span>web
+</pre></div>
+</div><h3 id="4-try-it">4. Try It<a class="anchor" href="#4-try-it" aria-label="Lien vers cette section">#</a></h3>
+<p>Works with company names, URLs, or both:</p>
+<p>Open <code>http://localhost:8000</code> and try:</p>
+<ul>
+<li><em>&quot;Analyze https://agno.com for Series A investment of $30-50M&quot;</em></li>
+<li><em>&quot;Research Genspark AI for its next funding round&quot;</em></li>
+<li><em>&quot;Analyze Lovable for Series C funding opportunities&quot;</em></li>
+<li><em>&quot;Research emergent.sh for Series B funding in the $40-60M range&quot;</em></li>
+</ul>
+<h2 id="pipeline-architecture">Pipeline Architecture<a class="anchor" href="#pipeline-architecture" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User Query: &quot;Analyze https://agno.com for Series A&quot;
+    │
+    ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              DueDiligencePipeline (SequentialAgent)             │
+│                                                                 │
+│  ┌─────────────┐    ┌────────────────┐    ┌──────────────────┐  │
+│  │  Stage 1    │    │    Stage 2     │    │     Stage 3      │  │
+│  │  Company    │───▶│    Market      │───▶│    Financial     │  │
+│  │  Research   │    │    Analysis    │    │    Modeling      │  │
+│  └─────────────┘    └────────────────┘    └──────────────────┘  │
+│         │                   │                      │            │
+│         ▼                   ▼                      ▼            │
+│  ┌─────────────┐    ┌────────────────┐    ┌──────────────────┐  │
+│  │  Stage 4    │    │    Stage 5     │    │     Stage 6      │  │
+│  │    Risk     │───▶│   Investor     │───▶│     Report       │  │
+│  │ Assessment  │    │     Memo       │    │    Generator     │  │
+│  └─────────────┘    └────────────────┘    └──────────────────┘  │
+│                                                    │            │
+│                                                    ▼            │
+│                                          ┌──────────────────┐   │
+│                                          │     Stage 7      │   │
+│                                          │   Infographic    │   │
+│                                          │    Generator     │   │
+│                                          └──────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+    │
+    ▼
+Artifacts: revenue_chart.png, investment_report.html, infographic.png
+</pre></div>
+</div><hr />
+<h2 id="agent-details">Agent Details<a class="anchor" href="#agent-details" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="stage-1-company-research-agent">Stage 1: Company Research Agent<a class="anchor" href="#stage-1-company-research-agent" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>Purpose:</strong> Gathers comprehensive company information through web search.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>gemini-3-flash-preview</code></td>
+</tr>
+<tr>
+<td>Tools</td>
+<td><code>google_search</code></td>
+</tr>
+<tr>
+<td>Output Key</td>
+<td><code>company_info</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>What it researches:</strong></p>
+<ul>
+<li><strong>Company Basics</strong> - What they do, founding date, HQ location, team size</li>
+<li><strong>Founders &amp; Team</strong> - Key people, backgrounds, LinkedIn profiles</li>
+<li><strong>Product/Technology</strong> - Core offering, how it works, target customers</li>
+<li><strong>Funding History</strong> - Rounds raised, investors, amounts</li>
+<li><strong>Traction</strong> - Customers, partnerships, growth signals</li>
+<li><strong>Recent News</strong> - Press coverage, product launches, announcements</li>
+</ul>
+<p><strong>For early-stage startups:</strong> Checks website, LinkedIn, Crunchbase, AngelList, founder interviews, and notes when information is limited.</p>
+<hr />
+<h3 id="stage-2-market-analysis-agent">Stage 2: Market Analysis Agent<a class="anchor" href="#stage-2-market-analysis-agent" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>Purpose:</strong> Analyzes market size, competition, and positioning.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>gemini-3-flash-preview</code></td>
+</tr>
+<tr>
+<td>Tools</td>
+<td><code>google_search</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>{company_info}</code></td>
+</tr>
+<tr>
+<td>Output Key</td>
+<td><code>market_analysis</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>What it analyzes:</strong></p>
+<ul>
+<li><strong>Market Size</strong> - TAM, SAM, growth rate from industry reports</li>
+<li><strong>Competitors</strong> - Who else is in the space, their funding/traction</li>
+<li><strong>Positioning</strong> - How the company differentiates</li>
+<li><strong>Trends</strong> - Market drivers, emerging tech, regulatory changes</li>
+</ul>
+<p><strong>For early-stage:</strong> Focuses on broader market category, identifies well-funded competitors, looks for market validation signals.</p>
+<hr />
+<h3 id="stage-3-financial-modeling-agent">Stage 3: Financial Modeling Agent<a class="anchor" href="#stage-3-financial-modeling-agent" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>Purpose:</strong> Builds revenue projections and generates financial charts.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>gemini-3-pro-preview</code></td>
+</tr>
+<tr>
+<td>Tools</td>
+<td><code>generate_financial_chart</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>{company_info}</code>, <code>{market_analysis}</code></td>
+</tr>
+<tr>
+<td>Output Key</td>
+<td><code>financial_model</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>What it calculates:</strong></p>
+<ul>
+<li><strong>Current Metrics</strong> - Estimated ARR, growth stage</li>
+<li><strong>Growth Scenarios</strong> (5-year projections):
+<ul>
+<li>Bear Case: Conservative growth rates</li>
+<li>Base Case: Expected trajectory</li>
+<li>Bull Case: Optimistic scenario</li>
+</ul>
+</li>
+<li><strong>Return Analysis</strong> - Exit valuations, MOIC, IRR estimates</li>
+</ul>
+<p><strong>Stage benchmarks:</strong></p>
+<ul>
+<li>Seed: $0.1-0.5M ARR, 3-5x growth</li>
+<li>Series A: $1-3M ARR, 2-3x growth</li>
+<li>Series B: $5-15M ARR, 1.5-2x growth</li>
+</ul>
+<p><strong>Artifact:</strong> Saves <code>revenue_chart_TIMESTAMP.png</code> with Bear/Base/Bull projections.</p>
+<hr />
+<h3 id="stage-4-risk-assessment-agent">Stage 4: Risk Assessment Agent<a class="anchor" href="#stage-4-risk-assessment-agent" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>Purpose:</strong> Conducts deep risk analysis across multiple categories.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>gemini-3-pro-preview</code></td>
+</tr>
+<tr>
+<td>Tools</td>
+<td>None (extended reasoning)</td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>{company_info}</code>, <code>{market_analysis}</code>, <code>{financial_model}</code></td>
+</tr>
+<tr>
+<td>Output Key</td>
+<td><code>risk_assessment</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Risk categories analyzed:</strong></p>
+<ol>
+<li><strong>Market Risk</strong> - Competition, timing, adoption barriers</li>
+<li><strong>Execution Risk</strong> - Team gaps, technology challenges, scaling</li>
+<li><strong>Financial Risk</strong> - Burn rate, fundraising, unit economics</li>
+<li><strong>Regulatory Risk</strong> - Compliance, legal, geopolitical</li>
+<li><strong>Exit Risk</strong> - Acquirer landscape, IPO viability</li>
+</ol>
+<p><strong>For each risk provides:</strong></p>
+<ul>
+<li>Severity (Low/Medium/High/Critical)</li>
+<li>Description with evidence</li>
+<li>Mitigation strategy</li>
+</ul>
+<p><strong>Final output:</strong></p>
+<ul>
+<li>Overall Risk Score (1-10)</li>
+<li>Top 3 risks that could kill the investment</li>
+<li>Recommended protective terms</li>
+</ul>
+<hr />
+<h3 id="stage-5-investor-memo-agent">Stage 5: Investor Memo Agent<a class="anchor" href="#stage-5-investor-memo-agent" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>Purpose:</strong> Synthesizes all findings into a structured investment memo.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>gemini-3-pro-preview</code></td>
+</tr>
+<tr>
+<td>Tools</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Input</td>
+<td>All previous stages</td>
+</tr>
+<tr>
+<td>Output Key</td>
+<td><code>investor_memo</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Memo structure:</strong></p>
+<ol>
+<li><strong>Executive Summary</strong> - Company one-liner, recommendation, key highlights</li>
+<li><strong>Company Overview</strong> - What they do, team, product/technology</li>
+<li><strong>Funding &amp; Valuation</strong> - History, estimated valuation range</li>
+<li><strong>Market Opportunity</strong> - Size, growth, competitors, differentiation</li>
+<li><strong>Financial Analysis</strong> - Revenue, unit economics, runway</li>
+<li><strong>Risk Analysis</strong> - Top risks with severity, overall score</li>
+<li><strong>Investment Thesis</strong> - Why invest, concerns, return scenarios</li>
+<li><strong>Recommendation</strong> - Final verdict, suggested next steps</li>
+</ol>
+<p><strong>Recommendations:</strong> Strong Buy / Buy / Hold / Pass</p>
+<hr />
+<h3 id="stage-6-report-generator-agent">Stage 6: Report Generator Agent<a class="anchor" href="#stage-6-report-generator-agent" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>Purpose:</strong> Creates a professional HTML investment report.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>gemini-3-flash-preview</code></td>
+</tr>
+<tr>
+<td>Tools</td>
+<td><code>generate_html_report</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>{investor_memo}</code></td>
+</tr>
+<tr>
+<td>Output Key</td>
+<td><code>html_report_result</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Report features:</strong></p>
+<ul>
+<li>McKinsey/Goldman Sachs styling</li>
+<li>Dark blue (#1a365d) and gold (#d4af37) color scheme</li>
+<li>Executive summary at top</li>
+<li>Clear section headers with professional typography</li>
+<li>Data tables for metrics</li>
+<li>Print-friendly layout</li>
+</ul>
+<p><strong>Artifact:</strong> Saves <code>investment_report_TIMESTAMP.html</code> viewable in any browser.</p>
+<hr />
+<h3 id="stage-7-infographic-generator-agent">Stage 7: Infographic Generator Agent<a class="anchor" href="#stage-7-infographic-generator-agent" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>Purpose:</strong> Creates a visual summary infographic using AI image generation.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td><code>gemini-3-flash-preview</code></td>
+</tr>
+<tr>
+<td>Tools</td>
+<td><code>generate_infographic</code> (uses <code>gemini-3-pro-image-preview</code>)</td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>{investor_memo}</code></td>
+</tr>
+<tr>
+<td>Output Key</td>
+<td><code>infographic_result</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Infographic includes:</strong></p>
+<ul>
+<li>Company name prominently displayed</li>
+<li>Key metrics in large, bold numbers</li>
+<li>Market size visualization</li>
+<li>Risk score indicator (1-10 scale)</li>
+<li>Investment recommendation badge</li>
+<li>Professional investment banking aesthetic</li>
+</ul>
+<p><strong>Artifact:</strong> Saves <code>infographic_TIMESTAMP.png</code> for quick visual review.</p>
+<hr />
+<h2 id="project-structure">Project Structure<a class="anchor" href="#project-structure" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>ai_due_diligence_agent/
+├── __init__.py        # Exports root_agent
+├── agent.py           # All 7 agents + pipeline defined here
+├── tools.py           # Custom tools (chart, report, infographic)
+├── outputs/           # Generated artifacts saved here
+├── requirements.txt   # Python dependencies
+└── README.md          # This file
+</pre></div>
+</div><h2 id="generated-artifacts">Generated Artifacts<a class="anchor" href="#generated-artifacts" aria-label="Lien vers cette section">#</a></h2>
+<p>All artifacts are saved to the <strong>Artifacts tab</strong> in ADK web and the <strong><code>outputs/</code></strong> folder:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>outputs/
+├── revenue_chart_20260104_143030.png       # Financial projections
+├── investment_report_20260104_143052.html  # Full HTML report
+└── infographic_20260104_143105.png         # Visual TL;DR
+</pre></div>
+</div><table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revenue Chart</td>
+<td>PNG</td>
+<td>Bear/Base/Bull 5-year projections</td>
+</tr>
+<tr>
+<td>Investment Report</td>
+<td>HTML</td>
+<td>Full due diligence document</td>
+</tr>
+<tr>
+<td>Infographic</td>
+<td>PNG/JPG</td>
+<td>Visual summary one-pager</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="adk-features-demonstrated">ADK Features Demonstrated<a class="anchor" href="#adk-features-demonstrated" aria-label="Lien vers cette section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SequentialAgent</strong></td>
+<td>7-stage pipeline orchestration</td>
+</tr>
+<tr>
+<td><strong>LlmAgent</strong></td>
+<td>All specialized agents</td>
+</tr>
+<tr>
+<td><strong>google_search</strong></td>
+<td>Real-time company/market research</td>
+</tr>
+<tr>
+<td><strong>Custom Tools</strong></td>
+<td>Chart generation, HTML reports, infographics</td>
+</tr>
+<tr>
+<td><strong>Artifacts</strong></td>
+<td>Saving and versioning generated files</td>
+</tr>
+<tr>
+<td><strong>State Management</strong></td>
+<td>Passing data between pipeline stages via <code>output_key</code></td>
+</tr>
+<tr>
+<td><strong>Multi-modal Output</strong></td>
+<td>Text analysis + image generation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="models-used">Models Used<a class="anchor" href="#models-used" aria-label="Lien vers cette section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Model</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CompanyResearch</td>
+<td><code>gemini-3-flash-preview</code></td>
+<td>Fast web search</td>
+</tr>
+<tr>
+<td>MarketAnalysis</td>
+<td><code>gemini-3-flash-preview</code></td>
+<td>Fast web search</td>
+</tr>
+<tr>
+<td>FinancialModeling</td>
+<td><code>gemini-3-pro-preview</code></td>
+<td>Complex calculations</td>
+</tr>
+<tr>
+<td>RiskAssessment</td>
+<td><code>gemini-3-pro-preview</code></td>
+<td>Deep reasoning</td>
+</tr>
+<tr>
+<td>InvestorMemo</td>
+<td><code>gemini-3-pro-preview</code></td>
+<td>Synthesis quality</td>
+</tr>
+<tr>
+<td>ReportGenerator</td>
+<td><code>gemini-3-flash-preview</code></td>
+<td>Fast HTML generation</td>
+</tr>
+<tr>
+<td>InfographicGenerator</td>
+<td><code>gemini-3-flash-preview</code></td>
+<td>Orchestration</td>
+</tr>
+<tr>
+<td>Infographic Tool</td>
+<td><code>gemini-3-pro-image-preview</code></td>
+<td>Image generation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="learn-more">Learn More<a class="anchor" href="#learn-more" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><a href="https://google.github.io/adk-docs/" target="_blank" rel="noopener noreferrer">Google ADK Documentation</a></li>
+<li><a href="https://developers.googleblog.com/developers-guide-to-multi-agent-patterns-in-adk/" target="_blank" rel="noopener noreferrer">Multi Agent Patterns in ADK</a></li>
+<li><a href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener noreferrer">Gemini API</a></li>
+<li><a href="https://ai.google.dev/gemini-api/docs/image-generation" target="_blank" rel="noopener noreferrer">Gemini Image Generation</a></li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-init-py"><summary class="codefile__head"><span class="codefile__name">__init__.py</span><span class="codefile__size">141 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;AI Due Diligence Agent - Multi-Agent Pipeline for Startup Investment Analysis&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">root_agent</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;root_agent&quot;</span><span class="p">]</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-vc-due-diligence-agent-team/__init__.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-agent-py"><summary class="codefile__head"><span class="codefile__name">agent.py</span><span class="codefile__size">12 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;AI Due Diligence Agent - Multi-Agent Pipeline for Startup Investment Analysis</span>
+
+<span class="sd">This demonstrates ADK&#39;s SequentialAgent pattern with Gemini&#39;s capabilities:</span>
+<span class="sd">- Web search for company and market research</span>
+<span class="sd">- Code execution for financial modeling</span>
+<span class="sd">- Extended reasoning for risk assessment</span>
+<span class="sd">- Structured output for investor memos</span>
+<span class="sd">- Image generation for visual summaries</span>
+
+<span class="sd">Pattern Reference: https://google.github.io/adk-docs/agents/multi-agents/#sequentialagent</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">LlmAgent</span><span class="p">,</span> <span class="n">SequentialAgent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">google_search</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.code_executors</span><span class="w"> </span><span class="kn">import</span> <span class="n">BuiltInCodeExecutor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_html_report</span><span class="p">,</span> <span class="n">generate_infographic</span><span class="p">,</span> <span class="n">generate_financial_chart</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Stage 1: Company Research Agent</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">company_research_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CompanyResearchAgent&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Researches company information using web search&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a senior investment analyst conducting company research.</span>
+
+<span class="s2">The user may provide:</span>
+<span class="s2">- A company name (e.g., &quot;Agno AI&quot;)</span>
+<span class="s2">- A website URL (e.g., &quot;https://agno.com&quot;)</span>
+<span class="s2">- Or both</span>
+
+<span class="s2">**RESEARCH STRATEGY:**</span>
+
+<span class="s2">1. If URL provided: Start by searching for information about that specific URL/domain</span>
+<span class="s2">2. If only company name: Search for &quot;[company name] startup funding&quot; and similar queries</span>
+<span class="s2">3. For lesser-known startups: Search for their domain, LinkedIn, Crunchbase, news mentions</span>
+
+<span class="s2">**GATHER THIS INFORMATION:**</span>
+
+<span class="s2">1. **Company Basics**: What they do, founded when, HQ location, team size</span>
+<span class="s2">2. **Founders &amp; Team**: Key people, their backgrounds, LinkedIn profiles</span>
+<span class="s2">3. **Product/Technology**: Core offering, how it works, target customers</span>
+<span class="s2">4. **Funding History**: Any rounds raised, investors, amounts (if available)</span>
+<span class="s2">5. **Traction**: Customers, partnerships, growth signals</span>
+<span class="s2">6. **Recent News**: Any press coverage, product launches, announcements</span>
+
+<span class="s2">**FOR EARLY-STAGE/UNKNOWN STARTUPS:**</span>
+<span class="s2">- Check their website, LinkedIn company page, Twitter/X</span>
+<span class="s2">- Look for Crunchbase, PitchBook, or AngelList profiles</span>
+<span class="s2">- Search for founder interviews or podcast appearances</span>
+<span class="s2">- Note if information is limited (that&#39;s useful data too)</span>
+
+<span class="s2">Be thorough but realistic about what&#39;s publicly available for early-stage companies.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">google_search</span><span class="p">],</span>
+    <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;company_info&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Stage 2: Market Analysis Agent</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">market_analysis_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MarketAnalysisAgent&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Analyzes market size, competitors, and positioning&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a market research analyst.</span>
+
+<span class="s2">COMPANY RESEARCH (from previous stage):</span>
+<span class="si">{company_info}</span>
+
+<span class="s2">Use google_search to research the market this company operates in:</span>
+
+<span class="s2">1. **Market Size**: TAM, SAM, growth rate (use industry reports)</span>
+<span class="s2">2. **Competitors**: Who else is in this space? Their funding/traction</span>
+<span class="s2">3. **Positioning**: How does this company differentiate?</span>
+<span class="s2">4. **Trends**: Market drivers, emerging tech, regulatory changes</span>
+
+<span class="s2">**FOR EARLY-STAGE COMPANIES:**</span>
+<span class="s2">- Focus on the broader market category they&#39;re in</span>
+<span class="s2">- Identify well-funded competitors in the same space</span>
+<span class="s2">- Look for market validation signals</span>
+<span class="s2">- Note if they&#39;re creating a new category</span>
+
+<span class="s2">Be specific with numbers where available. For early-stage, estimate based on comparable markets.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">google_search</span><span class="p">],</span>
+    <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;market_analysis&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Stage 3: Financial Modeling Agent (with Code Execution)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">financial_modeling_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FinancialModelingAgent&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-pro-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Builds financial models and generates projection charts&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a financial analyst building investment models.</span>
+
+<span class="s2">COMPANY RESEARCH:</span>
+<span class="si">{company_info}</span>
+
+<span class="s2">MARKET ANALYSIS:</span>
+<span class="si">{market_analysis}</span>
+
+<span class="s2">**YOUR TASKS:**</span>
+
+<span class="s2">1. **Estimate Current Metrics** based on available data:</span>
+<span class="s2">   - Current ARR (in millions)</span>
+<span class="s2">   - Growth stage and trajectory</span>
+
+<span class="s2">2. **Define Growth Scenarios** (5-year YoY multipliers):</span>
+<span class="s2">   - Bear Case: Conservative (e.g., 1.5, 1.3, 1.2, 1.1, 1.1)</span>
+<span class="s2">   - Base Case: Expected (e.g., 3.0, 2.5, 2.0, 1.8, 1.5)</span>
+<span class="s2">   - Bull Case: Optimistic (e.g., 4.5, 3.5, 2.5, 2.0, 1.8)</span>
+
+<span class="s2">3. **Generate the Chart** using the generate_financial_chart tool:</span>
+<span class="s2">   - company_name: The company name</span>
+<span class="s2">   - current_arr: Current ARR in millions (number only, e.g., 1.2)</span>
+<span class="s2">   - bear_rates: Comma-separated rates like &quot;1.5,1.3,1.2,1.1,1.1&quot;</span>
+<span class="s2">   - base_rates: Comma-separated rates like &quot;3.0,2.5,2.0,1.8,1.5&quot;</span>
+<span class="s2">   - bull_rates: Comma-separated rates like &quot;4.5,3.5,2.5,2.0,1.8&quot;</span>
+
+<span class="s2">4. **Calculate Returns** (in your response, not code):</span>
+<span class="s2">   - Exit valuations at 10x, 15x, 25x ARR multiples</span>
+<span class="s2">   - MOIC and IRR estimates</span>
+
+<span class="s2">**FOR EARLY-STAGE COMPANIES:**</span>
+<span class="s2">- Seed: Estimate $0.1-0.5M ARR, use 3-5x growth rates</span>
+<span class="s2">- Series A: Estimate $1-3M ARR, use 2-3x growth rates  </span>
+<span class="s2">- Series B: Estimate $5-15M ARR, use 1.5-2x growth rates</span>
+
+<span class="s2">**OUTPUT FORMAT:**</span>
+<span class="s2">Provide a clean summary with your assumptions, then call the chart tool.</span>
+<span class="s2">Do NOT write or show any Python code. Just use the tool.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_financial_chart</span><span class="p">],</span>
+    <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;financial_model&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Stage 4: Risk Assessment Agent (with Extended Reasoning)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">risk_assessment_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RiskAssessmentAgent&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-pro-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Conducts deep risk analysis using extended reasoning&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a senior risk analyst at a top-tier VC firm.</span>
+
+<span class="s2">COMPANY RESEARCH:</span>
+<span class="si">{company_info}</span>
+
+<span class="s2">MARKET ANALYSIS:</span>
+<span class="si">{market_analysis}</span>
+
+<span class="s2">FINANCIAL MODEL:</span>
+<span class="si">{financial_model}</span>
+
+<span class="s2">Think deeply and analyze risks across these categories:</span>
+
+<span class="s2">1. **Market Risk**: Competition, timing, adoption barriers</span>
+<span class="s2">2. **Execution Risk**: Team gaps, technology challenges, scaling</span>
+<span class="s2">3. **Financial Risk**: Burn rate, fundraising, unit economics</span>
+<span class="s2">4. **Regulatory Risk**: Compliance, legal, geopolitical</span>
+<span class="s2">5. **Exit Risk**: Acquirer landscape, IPO viability</span>
+
+<span class="s2">For each risk, provide:</span>
+<span class="s2">- Severity (Low/Medium/High/Critical)</span>
+<span class="s2">- Description with evidence</span>
+<span class="s2">- Mitigation strategy</span>
+
+<span class="s2">End with:</span>
+<span class="s2">- Overall Risk Score (1-10, where 10 is highest risk)</span>
+<span class="s2">- Top 3 risks that could kill the investment</span>
+<span class="s2">- Recommended protective terms (board seat, milestones, etc.)</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;risk_assessment&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Stage 5: Investor Memo Agent</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">investor_memo_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;InvestorMemoAgent&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-pro-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Synthesizes all findings into a structured investor memo&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a senior investment partner writing the investment memo.</span>
+
+<span class="s2">COMPANY RESEARCH:</span>
+<span class="si">{company_info}</span>
+
+<span class="s2">MARKET ANALYSIS:</span>
+<span class="si">{market_analysis}</span>
+
+<span class="s2">FINANCIAL MODEL:</span>
+<span class="si">{financial_model}</span>
+
+<span class="s2">RISK ASSESSMENT:</span>
+<span class="si">{risk_assessment}</span>
+
+<span class="s2">Create an INVESTOR MEMO:</span>
+
+<span class="s2">## Executive Summary</span>
+<span class="s2">- Company name and one-liner</span>
+<span class="s2">- Recommendation: **Strong Buy / Buy / Hold / Pass**</span>
+<span class="s2">- Key highlights (3-4 bullets)</span>
+
+<span class="s2">## Company Overview</span>
+<span class="s2">- What they do, when founded, team</span>
+<span class="s2">- Founders and backgrounds</span>
+<span class="s2">- Product/technology</span>
+
+<span class="s2">## Funding &amp; Valuation</span>
+<span class="s2">- Funding history (or &quot;Pre-seed/Bootstrapped&quot; if none)</span>
+<span class="s2">- Estimated valuation range</span>
+
+<span class="s2">## Market Opportunity</span>
+<span class="s2">- Market size and growth</span>
+<span class="s2">- Key competitors</span>
+<span class="s2">- Differentiation</span>
+
+<span class="s2">## Financial Analysis</span>
+<span class="s2">- Revenue/growth if known, or stage-appropriate estimates</span>
+<span class="s2">- Unit economics assessment</span>
+<span class="s2">- Runway considerations</span>
+
+<span class="s2">## Risk Analysis</span>
+<span class="s2">- Top 3-5 risks with severity</span>
+<span class="s2">- Overall risk score (1-10)</span>
+
+<span class="s2">## Investment Thesis</span>
+<span class="s2">- Why invest (strengths)</span>
+<span class="s2">- Key concerns</span>
+<span class="s2">- Return scenarios</span>
+
+<span class="s2">## Recommendation</span>
+<span class="s2">- Final verdict</span>
+<span class="s2">- Suggested next steps</span>
+
+<span class="s2">**NOTE:** For early-stage companies with limited public data, clearly note what&#39;s estimated vs. confirmed. That&#39;s valuable information for investors.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;investor_memo&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Stage 6: Report Generator Agent</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">report_generator_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ReportGeneratorAgent&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Generates professional HTML investment report&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You create professional investment reports.</span>
+
+<span class="s2">INVESTOR MEMO:</span>
+<span class="si">{investor_memo}</span>
+
+<span class="s2">Use the generate_html_report tool to create a polished HTML report.</span>
+
+<span class="s2">Pass the complete investor memo as the report_data parameter.</span>
+<span class="s2">The tool will generate a McKinsey/Goldman-style HTML report with:</span>
+<span class="s2">- Executive Summary</span>
+<span class="s2">- Company Overview  </span>
+<span class="s2">- Market Opportunity</span>
+<span class="s2">- Financial Analysis</span>
+<span class="s2">- Risk Assessment</span>
+<span class="s2">- Investment Recommendation</span>
+
+<span class="s2">After generating, confirm the report was saved as an artifact.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_html_report</span><span class="p">],</span>
+    <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;html_report_result&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Stage 7: Infographic Generator Agent</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">infographic_generator_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;InfographicGeneratorAgent&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Creates visual investment summary infographic&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You create visual investment summaries.</span>
+
+<span class="s2">INVESTOR MEMO:</span>
+<span class="si">{investor_memo}</span>
+
+<span class="s2">Use the generate_infographic tool to create a visual infographic.</span>
+
+<span class="s2">Prepare a data summary with key metrics:</span>
+<span class="s2">- Company name, founding date, HQ</span>
+<span class="s2">- Total funding raised, valuation</span>
+<span class="s2">- Market size (TAM), growth rate</span>
+<span class="s2">- Risk score (1-10)</span>
+<span class="s2">- Investment recommendation</span>
+
+<span class="s2">Pass this summary to the generate_infographic tool.</span>
+<span class="s2">The tool will create a professional infographic saved as an artifact.</span>
+
+<span class="s2">Confirm the infographic was generated successfully.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_infographic</span><span class="p">],</span>
+    <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;infographic_result&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Due Diligence Pipeline (SequentialAgent)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">due_diligence_pipeline</span> <span class="o">=</span> <span class="n">SequentialAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;DueDiligencePipeline&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Complete due diligence pipeline: Research → Market → Financials → Risks → Memo → Report → Infographic&quot;</span><span class="p">,</span>
+    <span class="n">sub_agents</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">company_research_agent</span><span class="p">,</span>
+        <span class="n">market_analysis_agent</span><span class="p">,</span>
+        <span class="n">financial_modeling_agent</span><span class="p">,</span>
+        <span class="n">risk_assessment_agent</span><span class="p">,</span>
+        <span class="n">investor_memo_agent</span><span class="p">,</span>
+        <span class="n">report_generator_agent</span><span class="p">,</span>
+        <span class="n">infographic_generator_agent</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Root Agent (Coordinator)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">root_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;DueDiligenceAnalyst&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;AI-powered due diligence analyst for startup investments&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a senior investment analyst helping evaluate startup investment opportunities.</span>
+
+<span class="s2">**WHAT YOU ACCEPT:**</span>
+<span class="s2">- Company name: &quot;Analyze Agno AI&quot;</span>
+<span class="s2">- Website URL: &quot;Due diligence on https://agno.com&quot;</span>
+<span class="s2">- Both: &quot;Check out Lovable at https://lovable.dev&quot;</span>
+
+<span class="s2">**WHEN USER PROVIDES A COMPANY/URL TO ANALYZE:**</span>
+<span class="s2">→ transfer_to_agent to &quot;DueDiligencePipeline&quot;</span>
+
+<span class="s2">The pipeline will:</span>
+<span class="s2">1. Research the company (works for both well-known and early-stage startups)</span>
+<span class="s2">2. Analyze market and competitors</span>
+<span class="s2">3. Build financial models</span>
+<span class="s2">4. Assess investment risks</span>
+<span class="s2">5. Generate investor memo, HTML report, and infographic</span>
+
+<span class="s2">**EXAMPLES TO ROUTE TO PIPELINE:**</span>
+<span class="s2">- &quot;Analyze https://agno.com for seed investment&quot;</span>
+<span class="s2">- &quot;Due diligence on Lovable - the AI app builder&quot;</span>
+<span class="s2">- &quot;Evaluate Cursor IDE as a Series A opportunity&quot;</span>
+<span class="s2">- &quot;Check out https://replit.com for investment&quot;</span>
+<span class="s2">- &quot;Research this startup: https://v0.dev&quot;</span>
+
+<span class="s2">**FOR GENERAL QUESTIONS:**</span>
+<span class="s2">Answer directly about VC, due diligence, or how you can help.</span>
+
+<span class="s2">After analysis, summarize key findings and mention the generated artifacts.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">sub_agents</span><span class="o">=</span><span class="p">[</span><span class="n">due_diligence_pipeline</span><span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;root_agent&quot;</span><span class="p">]</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-vc-due-diligence-agent-team/agent.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">76 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>google-adk&gt;=1.0.0
+google-genai&gt;=1.0.0
+python-dotenv&gt;=1.0.0
+matplotlib&gt;=3.8.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-vc-due-diligence-agent-team/requirements.txt" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-tools-py"><summary class="codefile__head"><span class="codefile__name">tools.py</span><span class="codefile__size">10 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Custom tools for the Due Diligence Pipeline.</span>
+
+<span class="sd">Provides HTML report generation, financial charts, and infographic creation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolContext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span><span class="p">,</span> <span class="n">Client</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;DueDiligencePipeline&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create outputs directory for generated files</span>
+<span class="n">OUTPUTS_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;outputs&quot;</span>
+<span class="n">OUTPUTS_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_financial_chart</span><span class="p">(</span>
+    <span class="n">company_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">current_arr</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">bear_rates</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">base_rates</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">bull_rates</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a revenue projection chart and save as ADK artifact.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        company_name: Name of the company being analyzed</span>
+<span class="sd">        current_arr: Current ARR in millions (e.g., 1.2 for $1.2M)</span>
+<span class="sd">        bear_rates: Comma-separated YoY growth rates for bear case</span>
+<span class="sd">        base_rates: Comma-separated YoY growth rates for base case</span>
+<span class="sd">        bull_rates: Comma-separated YoY growth rates for bull case</span>
+<span class="sd">        tool_context: ADK tool context for artifact saving</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict with status and artifact info</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Parse growth rates</span>
+        <span class="n">bear</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bear_rates</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">base_rates</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        <span class="n">bull</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bull_rates</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        
+        <span class="c1"># Calculate projections</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">2025</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">base</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        
+        <span class="k">def</span><span class="w"> </span><span class="nf">project_arr</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">rates</span><span class="p">):</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">rate</span> <span class="ow">in</span> <span class="n">rates</span><span class="p">:</span>
+                <span class="n">arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">rate</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">arr</span>
+        
+        <span class="n">bear_arr</span> <span class="o">=</span> <span class="n">project_arr</span><span class="p">(</span><span class="n">current_arr</span><span class="p">,</span> <span class="n">bear</span><span class="p">)</span>
+        <span class="n">base_arr</span> <span class="o">=</span> <span class="n">project_arr</span><span class="p">(</span><span class="n">current_arr</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+        <span class="n">bull_arr</span> <span class="o">=</span> <span class="n">project_arr</span><span class="p">(</span><span class="n">current_arr</span><span class="p">,</span> <span class="n">bull</span><span class="p">)</span>
+        
+        <span class="c1"># Create professional chart</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">bear_arr</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#dc2626&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Bear Case&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">base_arr</span><span class="p">,</span> <span class="s1">&#39;s-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#1a365d&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Base Case&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">bull_arr</span><span class="p">,</span> <span class="s1">&#39;^-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#16a34a&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Bull Case&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">bear_arr</span><span class="p">,</span> <span class="n">bull_arr</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#1a365d&#39;</span><span class="p">)</span>
+        
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">company_name</span><span class="si">}</span><span class="s1"> - Revenue Projection Analysis&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#1a365d&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ARR ($ Millions)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">base_arr</span><span class="p">):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">M&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span> 
+                       <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#1a365d&#39;</span><span class="p">)</span>
+        
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        
+        <span class="c1"># Save to bytes buffer</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">image_bytes</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        
+        <span class="c1"># Save as ADK artifact (MUST await)</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">artifact_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;revenue_chart_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span>
+        <span class="n">chart_artifact</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">image_bytes</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;image/png&quot;</span><span class="p">)</span>
+        
+        <span class="n">version</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">save_artifact</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact</span><span class="o">=</span><span class="n">chart_artifact</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved chart artifact: </span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2"> (version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Also save to outputs folder</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">OUTPUTS_DIR</span> <span class="o">/</span> <span class="n">artifact_name</span>
+        <span class="n">filepath</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">image_bytes</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Chart saved as &#39;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">&#39; - view in Artifacts tab&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;artifact&quot;</span><span class="p">:</span> <span class="n">artifact_name</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span>
+            <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;year_5_bear&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">bear_arr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">M&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year_5_base&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">base_arr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">M&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year_5_bull&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">bull_arr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">M&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error generating chart: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_html_report</span><span class="p">(</span>
+    <span class="n">report_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a professional HTML investment report.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        report_data: The investor memo content to format as HTML</span>
+<span class="sd">        tool_context: ADK tool context for artifact saving</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict with status and artifact info</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">current_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2">, %Y&quot;</span><span class="p">)</span>
+    
+    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Generate a professional investment due diligence report in HTML format.</span>
+
+<span class="s2">**IMPORTANT: Use this exact date: </span><span class="si">{</span><span class="n">current_date</span><span class="si">}</span><span class="s2">**</span>
+
+<span class="s2">Style it like a McKinsey or Goldman Sachs investment memo with:</span>
+<span class="s2">- Clean, professional design with dark blue (#1a365d) and gold (#d4af37) colors</span>
+<span class="s2">- Executive summary at the top with DATE: </span><span class="si">{</span><span class="n">current_date</span><span class="si">}</span>
+<span class="s2">- Clear section headers with good typography</span>
+<span class="s2">- Data tables for metrics</span>
+<span class="s2">- Print-friendly layout</span>
+
+<span class="s2">DATA TO FORMAT:</span>
+<span class="si">{</span><span class="n">report_data</span><span class="si">}</span>
+
+<span class="s2">SECTIONS TO INCLUDE:</span>
+<span class="s2">1. Executive Summary (Date: </span><span class="si">{</span><span class="n">current_date</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">2. Company Overview</span>
+<span class="s2">3. Market Opportunity</span>
+<span class="s2">4. Financial Analysis</span>
+<span class="s2">5. Risk Assessment</span>
+<span class="s2">6. Investment Recommendation</span>
+
+<span class="s2">Generate complete, valid HTML with embedded CSS.&quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+            <span class="n">contents</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">html_content</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="c1"># Clean up markdown wrapping if present</span>
+        <span class="k">if</span> <span class="s2">&quot;```html&quot;</span> <span class="ow">in</span> <span class="n">html_content</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">html_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;```html&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">7</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">html_content</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;```&quot;</span><span class="p">)</span>
+            <span class="n">html_content</span> <span class="o">=</span> <span class="n">html_content</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="s2">&quot;```&quot;</span> <span class="ow">in</span> <span class="n">html_content</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">html_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;```&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">html_content</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;```&quot;</span><span class="p">)</span>
+            <span class="n">html_content</span> <span class="o">=</span> <span class="n">html_content</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="c1"># Save as ADK artifact (MUST await)</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">artifact_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;investment_report_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.html&quot;</span>
+        <span class="n">html_artifact</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">html_content</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+            <span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;text/html&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">version</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">save_artifact</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact</span><span class="o">=</span><span class="n">html_artifact</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved HTML artifact: </span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2"> (version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Also save to outputs folder</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">OUTPUTS_DIR</span> <span class="o">/</span> <span class="n">artifact_name</span>
+        <span class="n">filepath</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">html_content</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Report saved as &#39;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">&#39; - view in Artifacts tab&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;artifact&quot;</span><span class="p">:</span> <span class="n">artifact_name</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">version</span>
+        <span class="p">}</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error generating HTML report: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_infographic</span><span class="p">(</span>
+    <span class="n">data_summary</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate an investment infographic using Gemini&#39;s image generation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_summary: Key metrics and data to visualize</span>
+<span class="sd">        tool_context: ADK tool context for artifact saving</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict with status and artifact info</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Create a professional investment infographic.</span>
+
+<span class="s2">Style: Clean, modern, investment banking aesthetic</span>
+<span class="s2">Colors: Dark blue (#1a365d) primary, gold (#d4af37) accent, white background</span>
+
+<span class="s2">Content to visualize:</span>
+<span class="si">{</span><span class="n">data_summary</span><span class="si">}</span>
+
+<span class="s2">Include:</span>
+<span class="s2">1. Company name prominently at top</span>
+<span class="s2">2. Key metrics in large, bold numbers</span>
+<span class="s2">3. Market size visualization</span>
+<span class="s2">4. Risk score indicator (1-10 scale)</span>
+<span class="s2">5. Investment recommendation badge</span>
+
+<span class="s2">Make it look like a Goldman Sachs one-pager. Professional, data-rich.&quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-pro-image-preview&quot;</span><span class="p">,</span>
+            <span class="n">contents</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">GenerateContentConfig</span><span class="p">(</span>
+                <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;TEXT&quot;</span><span class="p">,</span> <span class="s2">&quot;IMAGE&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Look for image in response</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span> <span class="ow">and</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">mime_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;image/&quot;</span><span class="p">):</span>
+                <span class="n">image_bytes</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">data</span>
+                <span class="n">mime_type</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">mime_type</span>
+                
+                <span class="c1"># Save as ADK artifact (MUST await)</span>
+                <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+                <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span> <span class="k">if</span> <span class="s2">&quot;png&quot;</span> <span class="ow">in</span> <span class="n">mime_type</span> <span class="k">else</span> <span class="s2">&quot;jpg&quot;</span>
+                <span class="n">artifact_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;infographic_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+                
+                <span class="n">image_artifact</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">image_bytes</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="n">mime_type</span><span class="p">)</span>
+                <span class="n">version</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">save_artifact</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact</span><span class="o">=</span><span class="n">image_artifact</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved infographic artifact: </span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2"> (version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Also save to outputs folder</span>
+                <span class="n">filepath</span> <span class="o">=</span> <span class="n">OUTPUTS_DIR</span> <span class="o">/</span> <span class="n">artifact_name</span>
+                <span class="n">filepath</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">image_bytes</span><span class="p">)</span>
+                
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Infographic saved as &#39;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">&#39; - view in Artifacts tab&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;artifact&quot;</span><span class="p">:</span> <span class="n">artifact_name</span><span class="p">,</span>
+                    <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">version</span>
+                <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;partial&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Image generation not available&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span> <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span> <span class="k">else</span> <span class="s2">&quot;No content&quot;</span>
+        <span class="p">}</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error generating infographic: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-vc-due-diligence-agent-team/tools.py" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li><li><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html">12 · Concevoir l&#x27;UX des applications d&#x27;IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-multi-agent-apps-agent-teams/ai-vc-due-diligence-agent-team">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-travel-planner-agent-team/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">TripCraft AI — planificateur de voyage</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/multimodal-coding-agent-team/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Équipe de développement multimodale</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/multi_agent_apps/agent_teams/ai_vc_due_diligence_agent_team" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/multi_agent_apps/agent_teams/ai_vc_due_diligence_agent_team</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#what-it-does">What It Does</a></li><li class="toc__item toc__item--h2"><a href="#quick-start">Quick Start</a></li><li class="toc__item toc__item--h3"><a href="#1-clone-navigate">1. Clone &amp; Navigate</a></li><li class="toc__item toc__item--h3"><a href="#2-set-environment">2. Set Environment</a></li><li class="toc__item toc__item--h3"><a href="#3-install-run">3. Install &amp; Run</a></li><li class="toc__item toc__item--h3"><a href="#4-try-it">4. Try It</a></li><li class="toc__item toc__item--h2"><a href="#pipeline-architecture">Pipeline Architecture</a></li><li class="toc__item toc__item--h2"><a href="#agent-details">Agent Details</a></li><li class="toc__item toc__item--h3"><a href="#stage-1-company-research-agent">Stage 1: Company Research Agent</a></li><li class="toc__item toc__item--h3"><a href="#stage-2-market-analysis-agent">Stage 2: Market Analysis Agent</a></li><li class="toc__item toc__item--h3"><a href="#stage-3-financial-modeling-agent">Stage 3: Financial Modeling Agent</a></li><li class="toc__item toc__item--h3"><a href="#stage-4-risk-assessment-agent">Stage 4: Risk Assessment Agent</a></li><li class="toc__item toc__item--h3"><a href="#stage-5-investor-memo-agent">Stage 5: Investor Memo Agent</a></li><li class="toc__item toc__item--h3"><a href="#stage-6-report-generator-agent">Stage 6: Report Generator Agent</a></li><li class="toc__item toc__item--h3"><a href="#stage-7-infographic-generator-agent">Stage 7: Infographic Generator Agent</a></li><li class="toc__item toc__item--h2"><a href="#project-structure">Project Structure</a></li><li class="toc__item toc__item--h2"><a href="#generated-artifacts">Generated Artifacts</a></li><li class="toc__item toc__item--h2"><a href="#adk-features-demonstrated">ADK Features Demonstrated</a></li><li class="toc__item toc__item--h2"><a href="#models-used">Models Used</a></li><li class="toc__item toc__item--h2"><a href="#learn-more">Learn More</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

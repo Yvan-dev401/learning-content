@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📁 Filesystem Agent - MCP Integration — Cours intensif Google ADK</title>
+<meta name="description" content="📁 Filesystem Agent - MCP Integration — page de l&#x27;atelier Cours intensif Google ADK.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<link rel="stylesheet" href="../../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/index.html">Cours intensifs sur les frameworks</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/google-adk-crash-course/index.html">Cours intensif Google ADK</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page de l'atelier Cours intensif Google ADK</p>
+</header>
+<article class="prose">
+<h1 id="filesystem-agent-mcp-integration">📁 Filesystem Agent - MCP Integration<a class="anchor" href="#filesystem-agent-mcp-integration" aria-label="Lien vers cette section">#</a></h1>
+<p>This example demonstrates how to connect an ADK agent to a <strong>filesystem MCP server</strong> using the <code>MCPToolset</code>. The agent can perform file operations like reading, writing, and listing files through the Model Context Protocol.</p>
+<h2 id="what-this-example-shows">🎯 What This Example Shows<a class="anchor" href="#what-this-example-shows" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>MCP Server Connection</strong>: Connect to <code>@modelcontextprotocol/server-filesystem</code></li>
+<li><strong>File Operations</strong>: Read, write, list files and directories</li>
+<li><strong>Stdio Communication</strong>: Use standard input/output for local MCP server communication</li>
+<li><strong>Automatic Tool Discovery</strong>: Let ADK discover and use available filesystem tools</li>
+</ul>
+<h2 id="how-it-works">🔧 How It Works<a class="anchor" href="#how-it-works" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="mcp-server-setup">MCP Server Setup<a class="anchor" href="#mcp-server-setup" aria-label="Lien vers cette section">#</a></h3>
+<p>The agent connects to a filesystem MCP server that provides these tools:</p>
+<ul>
+<li><code>list_directory</code>: List files and folders</li>
+<li><code>read_file</code>: Read file contents</li>
+<li><code>write_file</code>: Write content to files</li>
+<li><code>create_directory</code>: Create new directories</li>
+</ul>
+<h3 id="connection-flow">Connection Flow<a class="anchor" href="#connection-flow" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">MCPToolset</span><span class="p">(</span>
+    <span class="n">connection_params</span><span class="o">=</span><span class="n">StdioServerParameters</span><span class="p">(</span>
+        <span class="n">command</span><span class="o">=</span><span class="s1">&#39;npx&#39;</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;@modelcontextprotocol/server-filesystem&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/folder&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div><h2 id="getting-started">🚀 Getting Started<a class="anchor" href="#getting-started" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="prerequisites">Prerequisites<a class="anchor" href="#prerequisites" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li><strong>Node.js and npm</strong>: Required for the filesystem MCP server</li>
+<li><strong>ADK Environment</strong>: Set up with your Google AI API key</li>
+<li><strong>Dependencies</strong>: Install from <code>requirements.txt</code></li>
+</ol>
+<h3 id="running-the-agent">Running the Agent<a class="anchor" href="#running-the-agent" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>
+<p><strong>Navigate to tutorials root</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>ai_agent_framework_crash_course/google_adk_tutorials/
+</pre></div>
+</div></li>
+<li>
+<p><strong>Start ADK Web</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>adk<span class="w"> </span>web
+</pre></div>
+</div></li>
+<li>
+<p><strong>Select Agent</strong>: Choose <code>filesystem_mcp_agent</code> from the dropdown</p>
+</li>
+<li>
+<p><strong>Test Commands</strong>:</p>
+<ul>
+<li>&quot;List files in the current directory&quot;</li>
+<li>&quot;Read the contents of sample.txt&quot;</li>
+<li>&quot;Create a new file called hello.txt with the content Hello World!&quot;</li>
+<li>&quot;Show me all text files in the directory&quot;</li>
+</ul>
+</li>
+</ol>
+<h2 id="example-conversations">📝 Example Conversations<a class="anchor" href="#example-conversations" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="file-listing">File Listing<a class="anchor" href="#file-listing" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: List files in the current directory
+Agent: I&#39;ll list the files in the current directory for you.
+[Uses list_directory tool]
+Found the following files:
+- sample.txt
+- hello.txt
+</pre></div>
+</div><h3 id="file-reading">File Reading<a class="anchor" href="#file-reading" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: Read the contents of sample.txt
+Agent: I&#39;ll read the contents of sample.txt for you.
+[Uses read_file tool]
+The file contains:
+This is a sample file for the MCP filesystem agent demonstration.
+You can read, write, and list files using MCP tools.
+</pre></div>
+</div><h3 id="file-writing">File Writing<a class="anchor" href="#file-writing" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: Create a new file called notes.txt with the content &quot;Meeting notes for today&quot;
+Agent: I&#39;ll create the file notes.txt with your specified content.
+[Uses write_file tool]
+Successfully created notes.txt with the content &quot;Meeting notes for today&quot;.
+</pre></div>
+</div><h2 id="code-structure">🔧 Code Structure<a class="anchor" href="#code-structure" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="agent-definition">Agent Definition<a class="anchor" href="#agent-definition" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">root_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gemini-3-flash-preview&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;filesystem_mcp_agent&#39;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    You are a helpful filesystem assistant that can help users manage their files.</span>
+<span class="s2">    You have access to filesystem tools through the Model Context Protocol (MCP).</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">MCPToolset</span><span class="p">(</span>
+            <span class="n">connection_params</span><span class="o">=</span><span class="n">StdioServerParameters</span><span class="p">(</span>
+                <span class="n">command</span><span class="o">=</span><span class="s1">&#39;npx&#39;</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;@modelcontextprotocol/server-filesystem&#39;</span><span class="p">,</span> <span class="n">DEMO_FOLDER</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div><h3 id="demo-environment">Demo Environment<a class="anchor" href="#demo-environment" aria-label="Lien vers cette section">#</a></h3>
+<p>The agent uses the parent directory of the agent file for demonstration:</p>
+<ul>
+<li><strong>Location</strong>: Parent directory of the filesystem_agent folder</li>
+<li><strong>Sample File</strong>: <code>sample.txt</code> with demo content</li>
+<li><strong>Working Directory</strong>: Accessible to the MCP server for safe operations</li>
+</ul>
+<h2 id="available-tools">🛠️ Available Tools<a class="anchor" href="#available-tools" aria-label="Lien vers cette section">#</a></h2>
+<p>The filesystem MCP server provides these tools automatically:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+<th>Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_directory</code></td>
+<td>List files and folders</td>
+<td><code>path</code> (optional)</td>
+</tr>
+<tr>
+<td><code>read_file</code></td>
+<td>Read file contents</td>
+<td><code>path</code> (required)</td>
+</tr>
+<tr>
+<td><code>write_file</code></td>
+<td>Write content to file</td>
+<td><code>path</code>, <code>content</code></td>
+</tr>
+<tr>
+<td><code>create_directory</code></td>
+<td>Create new directory</td>
+<td><code>path</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="advanced-usage">🔍 Advanced Usage<a class="anchor" href="#advanced-usage" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="tool-filtering">Tool Filtering<a class="anchor" href="#tool-filtering" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">MCPToolset</span><span class="p">(</span>
+    <span class="n">connection_params</span><span class="o">=</span><span class="n">StdioServerParameters</span><span class="p">(</span>
+        <span class="n">command</span><span class="o">=</span><span class="s1">&#39;npx&#39;</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;@modelcontextprotocol/server-filesystem&#39;</span><span class="p">,</span> <span class="n">DEMO_FOLDER</span><span class="p">]</span>
+    <span class="p">),</span>
+    <span class="n">tool_filter</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_directory&#39;</span><span class="p">,</span> <span class="s1">&#39;read_file&#39;</span><span class="p">]</span>  <span class="c1"># Only expose specific tools</span>
+<span class="p">)</span>
+</pre></div>
+</div><h2 id="important-notes">🚨 Important Notes<a class="anchor" href="#important-notes" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Security</strong>: The MCP server only has access to the specified directory</li>
+<li><strong>Node.js Required</strong>: The filesystem server runs via <code>npx</code></li>
+<li><strong>Working Directory</strong>: Uses parent directory for easy access to project files</li>
+<li><strong>Error Handling</strong>: Agent handles file not found and permission errors gracefully</li>
+</ul>
+<h2 id="troubleshooting">🔍 Troubleshooting<a class="anchor" href="#troubleshooting" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="common-issues">Common Issues<a class="anchor" href="#common-issues" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>
+<p><strong>Node.js Not Found</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Install Node.js</span>
+<span class="c1"># macOS: brew install node</span>
+<span class="c1"># Ubuntu: sudo apt install nodejs npm</span>
+</pre></div>
+</div></li>
+<li>
+<p><strong>Permission Errors</strong>:</p>
+<ul>
+<li>Ensure the directory is writable</li>
+<li>Check file permissions</li>
+</ul>
+</li>
+<li>
+<p><strong>MCP Server Not Starting</strong>:</p>
+<ul>
+<li>Verify Node.js installation</li>
+<li>Check if port is available</li>
+<li>Review console logs</li>
+</ul>
+</li>
+</ol>
+<h3 id="debug-commands">Debug Commands<a class="anchor" href="#debug-commands" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Test MCP server directly</span>
+npx<span class="w"> </span>@modelcontextprotocol/server-filesystem<span class="w"> </span>/path/to/folder
+
+<span class="c1"># Run with debug logging</span>
+adk<span class="w"> </span>web<span class="w"> </span>--debug
+</pre></div>
+</div><h2 id="next-steps">🔗 Next Steps<a class="anchor" href="#next-steps" aria-label="Lien vers cette section">#</a></h2>
+<p>After trying this example:</p>
+<ol>
+<li><strong>Customize the Directory</strong>: Change <code>DEMO_FOLDER</code> to your preferred location</li>
+<li><strong>Add More Tools</strong>: Explore other MCP servers</li>
+<li><strong>Try Server Agent</strong>: Learn to create custom MCP servers</li>
+<li><strong>Integrate with Workflows</strong>: Combine with other ADK features</li>
+</ol>
+<h2 id="related-documentation">📚 Related Documentation<a class="anchor" href="#related-documentation" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong><a href="https://google.github.io/adk-docs/tools/mcp-tools/" target="_blank" rel="noopener noreferrer">ADK MCP Tools</a></strong> - Official documentation</li>
+<li><strong><a href="https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem" target="_blank" rel="noopener noreferrer">MCP Filesystem Server</a></strong> - Server details</li>
+<li><strong><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer">Model Context Protocol</a></strong> - Protocol specification</li>
+</ul>
+
+</article>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/blob/main/ai_agent_framework_crash_course/google_adk_crash_course/4_tool_using_agent/4_4_mcp_tools/filesystem_agent/README.md" target="_blank" rel="noopener noreferrer">
+    ai_agent_framework_crash_course/google_adk_crash_course/4_tool_using_agent/4_4_mcp_tools/filesystem_agent/README.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#what-this-example-shows">🎯 What This Example Shows</a></li><li class="toc__item toc__item--h2"><a href="#how-it-works">🔧 How It Works</a></li><li class="toc__item toc__item--h3"><a href="#mcp-server-setup">MCP Server Setup</a></li><li class="toc__item toc__item--h3"><a href="#connection-flow">Connection Flow</a></li><li class="toc__item toc__item--h2"><a href="#getting-started">🚀 Getting Started</a></li><li class="toc__item toc__item--h3"><a href="#prerequisites">Prerequisites</a></li><li class="toc__item toc__item--h3"><a href="#running-the-agent">Running the Agent</a></li><li class="toc__item toc__item--h2"><a href="#example-conversations">📝 Example Conversations</a></li><li class="toc__item toc__item--h3"><a href="#file-listing">File Listing</a></li><li class="toc__item toc__item--h3"><a href="#file-reading">File Reading</a></li><li class="toc__item toc__item--h3"><a href="#file-writing">File Writing</a></li><li class="toc__item toc__item--h2"><a href="#code-structure">🔧 Code Structure</a></li><li class="toc__item toc__item--h3"><a href="#agent-definition">Agent Definition</a></li><li class="toc__item toc__item--h3"><a href="#demo-environment">Demo Environment</a></li><li class="toc__item toc__item--h2"><a href="#available-tools">🛠️ Available Tools</a></li><li class="toc__item toc__item--h2"><a href="#advanced-usage">🔍 Advanced Usage</a></li><li class="toc__item toc__item--h3"><a href="#tool-filtering">Tool Filtering</a></li><li class="toc__item toc__item--h2"><a href="#important-notes">🚨 Important Notes</a></li><li class="toc__item toc__item--h2"><a href="#troubleshooting">🔍 Troubleshooting</a></li><li class="toc__item toc__item--h3"><a href="#common-issues">Common Issues</a></li><li class="toc__item toc__item--h3"><a href="#debug-commands">Debug Commands</a></li><li class="toc__item toc__item--h2"><a href="#next-steps">🔗 Next Steps</a></li><li class="toc__item toc__item--h2"><a href="#related-documentation">📚 Related Documentation</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

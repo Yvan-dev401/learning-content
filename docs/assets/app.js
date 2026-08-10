@@ -162,6 +162,10 @@
     document.querySelectorAll("[data-lesson]").forEach(function (el) {
       el.classList.toggle("is-done", !!done[el.getAttribute("data-lesson")]);
     });
+    // Les ateliers partagent le même stockage, sous des clés préfixées « atelier: ».
+    document.querySelectorAll("[data-item]").forEach(function (el) {
+      el.classList.toggle("is-done", !!done[el.getAttribute("data-item")]);
+    });
 
     var toggle = document.querySelector("[data-lesson-toggle]");
     if (toggle) {
@@ -212,6 +216,74 @@
   }
 
   paintProgress();
+
+  /* --------------------------------------------------- filtrage par tag */
+
+  document.querySelectorAll(".filters").forEach(function (bar) {
+    var selector = bar.getAttribute("data-filter-target");
+    var noun = bar.getAttribute("data-filter-noun") || "élément";
+    var items = Array.prototype.slice.call(document.querySelectorAll(selector));
+    if (!items.length) return;
+    var buttons = Array.prototype.slice.call(bar.querySelectorAll(".filters__tag"));
+    var status = bar.querySelector(".filters__status");
+    var reset = bar.querySelector(".filters__reset");
+    var active = new Set();
+
+    function tagsOf(el) {
+      return (el.getAttribute("data-tags") || "").split(/\s+/).filter(Boolean);
+    }
+
+    function apply(pushState) {
+      var shown = 0;
+      items.forEach(function (el) {
+        // Un élément doit porter TOUS les tags actifs : cumuler les filtres restreint.
+        var tags = tagsOf(el);
+        var ok = true;
+        active.forEach(function (t) { if (tags.indexOf(t) < 0) ok = false; });
+        el.classList.toggle("is-filtered-out", !ok);
+        if (ok) shown++;
+      });
+      // Une carte de parcours dont toutes les leçons sont masquées n'a plus lieu d'être.
+      document.querySelectorAll(".tcard").forEach(function (card) {
+        var lessons = card.querySelectorAll(".tcard__lesson");
+        if (!lessons.length) return;
+        var visible = card.querySelectorAll(".tcard__lesson:not(.is-filtered-out)").length;
+        card.classList.toggle("is-filtered-out", visible === 0);
+      });
+      buttons.forEach(function (b) {
+        b.setAttribute("aria-pressed", active.has(b.getAttribute("data-tag")) ? "true" : "false");
+      });
+      if (status) {
+        status.textContent = active.size
+          ? shown + " " + noun + (shown > 1 ? "s" : "") + " sur " + items.length
+          : "";
+      }
+      if (reset) reset.hidden = active.size === 0;
+
+      if (pushState && window.history && window.history.replaceState) {
+        var url = new URL(window.location.href);
+        if (active.size) url.searchParams.set("tag", Array.from(active).join(","));
+        else url.searchParams.delete("tag");
+        window.history.replaceState(null, "", url);
+      }
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var t = b.getAttribute("data-tag");
+        if (active.has(t)) active.delete(t); else active.add(t);
+        apply(true);
+      });
+    });
+    if (reset) {
+      reset.addEventListener("click", function () { active.clear(); apply(true); });
+    }
+
+    var known = new Set(buttons.map(function (b) { return b.getAttribute("data-tag"); }));
+    (new URL(window.location.href).searchParams.get("tag") || "")
+      .split(",").filter(Boolean).forEach(function (t) { if (known.has(t)) active.add(t); });
+    apply(false);
+  });
 
   /* ------------------------------------------------------------ recherche */
 

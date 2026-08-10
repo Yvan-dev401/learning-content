@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent navigateur (MCP) — atelier</title>
+<meta name="description" content="Pilote un navigateur via MCP : navigation, remplissage, extraction.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/mcp-ai-agents/index.html">Agents MCP</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🔌</span> Agents MCP</p>
+  <h1 class="pagehead__title">Agent navigateur (MCP)</h1>
+  <p class="pagehead__summary">Pilote un navigateur via MCP : navigation, remplissage, extraction.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#incontournable" title="Le socle : sans ça, la suite ne tient pas."><span class="tag__icon" aria-hidden="true">⭐</span><span class="tag__label">Incontournable</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://console.anthropic.com" target="_blank" rel="noopener noreferrer">Anthropic (Claude)</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Facturation à l&#x27;usage, sans palier gratuit sur l&#x27;API.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Modèles de niveau comparable, gratuitement.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit, bon en raisonnement et sur les longs contextes.</li><li><a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer">OpenRouter</a> — Quelques modèles ouverts y sont proposés gratuitement.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Natural Language Interface: Control a browser with simple English commands</li><li>Full Browser Navigation: Visit websites and navigate through pages</li><li>Interactive Elements: Click buttons, fill forms, and scroll through content</li><li>Visual Feedback: Take screenshots of webpage elements</li><li>Information Extraction: Extract and summarize content from webpages</li><li>Multi-step Tasks: Complete complex browsing sequences through conversation</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="browser-mcp-agent">🌐 Browser MCP Agent<a class="anchor" href="#browser-mcp-agent" aria-label="Lien vers cette section">#</a></h1>
+<p>https://github.com/user-attachments/assets/a01e09fa-131b-479a-8df3-2d1a61fd80f3</p>
+<p>A Streamlit application that allows you to browse and interact with websites using natural language commands through the Model Context Protocol (MCP) and <a href="https://github.com/lastmile-ai/mcp-agent" target="_blank" rel="noopener noreferrer">MCP-Agent</a> with Playwright integration.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Natural Language Interface</strong>: Control a browser with simple English commands</li>
+<li><strong>Full Browser Navigation</strong>: Visit websites and navigate through pages</li>
+<li><strong>Interactive Elements</strong>: Click buttons, fill forms, and scroll through content</li>
+<li><strong>Visual Feedback</strong>: Take screenshots of webpage elements</li>
+<li><strong>Information Extraction</strong>: Extract and summarize content from webpages</li>
+<li><strong>Multi-step Tasks</strong>: Complete complex browsing sequences through conversation</li>
+</ul>
+<h2 id="setup">Setup<a class="anchor" href="#setup" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="requirements">Requirements<a class="anchor" href="#requirements" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Python 3.8+</li>
+<li>Node.js and npm (for Playwright)
+<ul>
+<li>This is a critical requirement! The app uses Playwright to control a headless browser</li>
+<li>Download and install from <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer">nodejs.org</a></li>
+</ul>
+</li>
+<li>OpenAI or Anthropic API Key</li>
+</ul>
+<h3 id="installation">Installation<a class="anchor" href="#installation" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>
+<p>Clone this repository:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>mcp_ai_agents/browser_mcp_agent
+</pre></div>
+</div></li>
+<li>
+<p>Install the required Python packages:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p>Verify Node.js and npm are installed:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>node<span class="w"> </span>--version
+npm<span class="w"> </span>--version
+</pre></div>
+</div><p>Both commands should return version numbers. If they don't, please install Node.js.</p>
+</li>
+<li>
+<p>Set up your API keys. Pick <strong>one</strong> of:</p>
+<p><strong>a) Via environment variable (simplest for OpenAI):</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your-openai-api-key
+</pre></div>
+</div><p><strong>b) Via <code>mcp_agent.secrets.yaml</code> (required for Ollama / any custom base URL):</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>cp<span class="w"> </span>mcp_agent.secrets.yaml.example<span class="w"> </span>mcp_agent.secrets.yaml
+<span class="c1"># edit mcp_agent.secrets.yaml and put your key under openai.api_key</span>
+</pre></div>
+</div></li>
+</ol>
+<h3 id="running-with-a-local-ollama-model">Running with a local Ollama model<a class="anchor" href="#running-with-a-local-ollama-model" aria-label="Lien vers cette section">#</a></h3>
+<p>Because <code>mcp-agent</code> talks to an OpenAI-compatible endpoint and Ollama exposes one at <code>http://localhost:11434/v1</code>, this agent runs against a local model with just config changes — no code edits or extra dependencies. See discussion in <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/issues/329" target="_blank" rel="noopener noreferrer">#329</a>.</p>
+<ol>
+<li>
+<p>Install and start Ollama, then pull a tool-capable model:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.2
+ollama<span class="w"> </span>serve
+</pre></div>
+</div></li>
+<li>
+<p>Edit <code>mcp_agent.config.yaml</code> and replace the <code>openai:</code> block with:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">yaml</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nt">openai</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://localhost:11434/v1&quot;</span>
+<span class="w">  </span><span class="nt">default_model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;llama3.2&quot;</span>
+</pre></div>
+</div></li>
+<li>
+<p>In <code>mcp_agent.secrets.yaml</code>, set any non-empty <code>api_key</code> (Ollama ignores it):</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">yaml</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nt">openai</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ollama&quot;</span>
+</pre></div>
+</div></li>
+<li>
+<p>Run as normal — <code>streamlit run main.py</code>. No <code>OPENAI_API_KEY</code> env var is required in this path.</p>
+</li>
+</ol>
+<blockquote>
+<p>Note: browser automation benefits from a reasoning-capable model. Smaller local models may struggle with multi-step Playwright tasks.</p>
+</blockquote>
+<h3 id="running-the-app">Running the App<a class="anchor" href="#running-the-app" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>
+<p>Start the Streamlit app:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>main.py
+</pre></div>
+</div></li>
+<li>
+<p>In the app interface:</p>
+<ul>
+<li>Enter your browsing command</li>
+<li>Click &quot;Run Command&quot;</li>
+<li>View the results and screenshots</li>
+</ul>
+</li>
+</ol>
+<h3 id="example-commands">Example Commands<a class="anchor" href="#example-commands" aria-label="Lien vers cette section">#</a></h3>
+<h4 id="basic-navigation">Basic Navigation<a class="anchor" href="#basic-navigation" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>&quot;Go to www.mcp-agent.com&quot;</li>
+<li>&quot;Go back to the previous page&quot;</li>
+</ul>
+<h4 id="interaction">Interaction<a class="anchor" href="#interaction" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>&quot;Click on the login button&quot;</li>
+<li>&quot;Scroll down to see more content&quot;</li>
+</ul>
+<h4 id="content-extraction">Content Extraction<a class="anchor" href="#content-extraction" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>&quot;Summarize the main content of this page&quot;</li>
+<li>&quot;Extract the navigation menu items&quot;</li>
+<li>&quot;Take a screenshot of the hero section&quot;</li>
+</ul>
+<h4 id="multi-step-tasks">Multi-step Tasks<a class="anchor" href="#multi-step-tasks" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>&quot;Go to the blog, find the most recent article, and summarize its key points&quot;</li>
+</ul>
+<h2 id="architecture">Architecture<a class="anchor" href="#architecture" aria-label="Lien vers cette section">#</a></h2>
+<p>The application uses:</p>
+<ul>
+<li>Streamlit for the user interface</li>
+<li>MCP (Model Context Protocol) to connect the LLM with tools</li>
+<li>Playwright for browser automation</li>
+<li><a href="https://github.com/lastmile-ai/mcp-agent/" target="_blank" rel="noopener noreferrer">MCP-Agent</a> for the Agentic Framework</li>
+<li>OpenAI's models to interpret commands and generate responses</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-main-py"><summary class="codefile__head"><span class="codefile__name">main.py</span><span class="codefile__size">7 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">dedent</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_agent.app</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPApp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_agent.agents.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_agent.workflows.llm.augmented_llm_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIAugmentedLLM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_agent.workflows.llm.augmented_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">RequestParams</span>
+
+<span class="c1"># Page config</span>
+<span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;Browser MCP Agent&quot;</span><span class="p">,</span> <span class="n">page_icon</span><span class="o">=</span><span class="s2">&quot;🌐&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">)</span>
+
+<span class="c1"># Title and description</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&lt;h1 class=&#39;main-header&#39;&gt;🌐 Browser MCP Agent&lt;/h1&gt;&quot;</span><span class="p">,</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;Interact with a powerful web browsing agent that can navigate and interact with websites&quot;</span><span class="p">)</span>
+
+<span class="c1"># Setup sidebar with example commands</span>
+<span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Example Commands&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Navigation**&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- Go to github.com/Shubhamsaboo/awesome-llm-apps&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Interactions**&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- click on mcp_ai_agents&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- Scroll down to view more content&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Multi-step Tasks**&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- Navigate to github.com/Shubhamsaboo/awesome-llm-apps, scroll down, and report details&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- Scroll down and summarize the github readme&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">&quot;Note: The agent uses Playwright to control a real browser.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Query input</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span><span class="s2">&quot;Your Command&quot;</span><span class="p">,</span> 
+                   <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Ask the agent to navigate to websites and interact with them&quot;</span><span class="p">)</span>
+
+<span class="c1"># Initialize app and agent</span>
+<span class="k">if</span> <span class="s1">&#39;initialized&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">mcp_app</span> <span class="o">=</span> <span class="n">MCPApp</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;streamlit_mcp_agent&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">mcp_context</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">mcp_agent_app</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">browser_agent</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">llm</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">set_event_loop</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">is_processing</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Setup function that runs only once</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">setup_agent</span><span class="p">():</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create context manager and store it in session state</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">mcp_context</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">mcp_app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">mcp_agent_app</span> <span class="o">=</span> <span class="k">await</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">mcp_context</span><span class="o">.</span><span class="fm">__aenter__</span><span class="p">()</span>
+            
+            <span class="c1"># Create and initialize agent</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">browser_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;browser&quot;</span><span class="p">,</span>
+                <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;You are a helpful web browsing assistant that can interact with websites using playwright.</span>
+<span class="s2">                    - Navigate to websites and perform browser actions (click, scroll, type)</span>
+<span class="s2">                    - Extract information from web pages </span>
+<span class="s2">                    - Take screenshots of page elements when useful</span>
+<span class="s2">                    - Provide concise summaries of web content using markdown</span>
+<span class="s2">                    - Follow multi-step browsing sequences to complete tasks</span>
+<span class="s2">                    </span>
+<span class="s2">                Respond back with a status update on completing the commands.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="n">server_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;playwright&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># Initialize agent and attach LLM</span>
+            <span class="k">await</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">browser_agent</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">llm</span> <span class="o">=</span> <span class="k">await</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">browser_agent</span><span class="o">.</span><span class="n">attach_llm</span><span class="p">(</span><span class="n">OpenAIAugmentedLLM</span><span class="p">)</span>
+            
+            <span class="c1"># List tools once</span>
+            <span class="n">logger</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">mcp_agent_app</span><span class="o">.</span><span class="n">logger</span>
+            <span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">browser_agent</span><span class="o">.</span><span class="n">list_tools</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Tools available:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">tools</span><span class="p">)</span>
+            
+            <span class="c1"># Mark as initialized</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error during initialization: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="c1"># Main function to run agent</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_mcp_agent</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="c1"># Credentials come from mcp_agent.secrets.yaml (api_key) and</span>
+    <span class="c1"># mcp_agent.config.yaml (base_url, default_model). Both OpenAI and any</span>
+    <span class="c1"># OpenAI-compatible server (e.g. Ollama at http://localhost:11434/v1)</span>
+    <span class="c1"># are supported via the same `openai:` config section — see README.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;mcp_agent.secrets.yaml&quot;</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s2">&quot;Error: no LLM credentials found. Either set OPENAI_API_KEY in &quot;</span>
+            <span class="s2">&quot;your environment, or create mcp_agent.secrets.yaml from the &quot;</span>
+            <span class="s2">&quot;provided example (works for OpenAI and local Ollama).&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Make sure agent is initialized</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="k">await</span> <span class="n">setup_agent</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">error</span>
+        
+        <span class="c1"># Generate response without recreating agents</span>
+        <span class="c1"># Switch use_history to False to reduce the passed context</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">generate_str</span><span class="p">(</span>
+            <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> 
+            <span class="n">request_params</span><span class="o">=</span><span class="n">RequestParams</span><span class="p">(</span><span class="n">use_history</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maxTokens</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># Defaults</span>
+<span class="k">if</span> <span class="s1">&#39;is_processing&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">is_processing</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="s1">&#39;last_result&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">last_result</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">start_run</span><span class="p">():</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">is_processing</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># Button (use a callback so the click just flips state)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span>
+    <span class="s2">&quot;🚀 Run Command&quot;</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span>
+    <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">disabled</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">is_processing</span><span class="p">,</span>
+    <span class="n">on_click</span><span class="o">=</span><span class="n">start_run</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># If we’re in a processing run, do the work now</span>
+<span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">is_processing</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Processing your request...&quot;</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">run_mcp_agent</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
+    <span class="c1"># persist result across the next rerun</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">last_result</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="c1"># unlock the button and refresh UI</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">is_processing</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+
+<span class="c1"># Render the most recent result (after the rerun)</span>
+<span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">last_result</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Response&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">last_result</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># (your existing help text here)</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Display help text for first-time users</span>
+<span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&lt;div style=&#39;padding: 20px; background-color: #f0f2f6; border-radius: 10px;&#39;&gt;</span>
+<span class="sd">        &lt;h4&gt;How to use this app:&lt;/h4&gt;</span>
+<span class="sd">        &lt;ol&gt;</span>
+<span class="sd">            &lt;li&gt;Enter your OpenAI API key in your mcp_agent.secrets.yaml file&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Type a command for the agent to navigate and interact with websites&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Click &#39;Run Command&#39; to see results&lt;/li&gt;</span>
+<span class="sd">        &lt;/ol&gt;</span>
+<span class="sd">        &lt;p&gt;&lt;strong&gt;Capabilities:&lt;/strong&gt;&lt;/p&gt;</span>
+<span class="sd">        &lt;ul&gt;</span>
+<span class="sd">            &lt;li&gt;Navigate to websites using Playwright&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Click on elements, scroll, and type text&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Take screenshots of specific elements&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Extract information from web pages&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Perform multi-step browsing tasks&lt;/li&gt;</span>
+<span class="sd">        &lt;/ul&gt;</span>
+<span class="sd">        &lt;/div&gt;&quot;&quot;&quot;</span><span class="p">,</span> 
+        <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+<span class="c1"># Footer</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Built with Streamlit, Playwright, and [MCP-Agent](https://www.github.com/lastmile-ai/mcp-agent) Framework ❤️&quot;</span><span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/mcp-ai-agents/browser-mcp-agent/main.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-mcp-agent-config-yaml"><summary class="codefile__head"><span class="codefile__name">mcp_agent.config.yaml</span><span class="codefile__size">959 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">yaml</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nt">execution_engine</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asyncio</span>
+<span class="nt">logger</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">transports</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">console</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">file</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">debug</span>
+<span class="w">  </span><span class="nt">progress_display</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">path_settings</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">path_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;logs/mcp-agent-{unique_id}.jsonl&quot;</span>
+<span class="w">    </span><span class="nt">unique_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;timestamp&quot;</span><span class="w"> </span><span class="c1"># Options: &quot;timestamp&quot; or &quot;session_id&quot;</span>
+<span class="w">    </span><span class="nt">timestamp_format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;%Y%m%d_%H%M%S&quot;</span>
+
+<span class="nt">mcp</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">servers</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">playwright</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;npx&quot;</span>
+<span class="w">      </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;@playwright/mcp@latest&quot;</span><span class="p p-Indicator">]</span>
+
+
+<span class="nt">openai</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Secrets (API keys, etc.) are stored in an mcp_agent.secrets.yaml file which can be gitignored</span>
+<span class="w">  </span><span class="nt">default_model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gpt-4o-mini&quot;</span>
+
+<span class="c1"># To run against a local Ollama (or any OpenAI-compatible) server, override</span>
+<span class="c1"># the `openai` block above with the commented example below and put a dummy</span>
+<span class="c1"># api_key (e.g. &quot;ollama&quot;) in mcp_agent.secrets.yaml. Ollama exposes an</span>
+<span class="c1"># OpenAI-compatible endpoint at /v1, so no framework changes are needed —</span>
+<span class="c1"># this was confirmed by the mcp-agent maintainer in issue #329.</span>
+<span class="c1">#</span>
+<span class="c1"># openai:</span>
+<span class="c1">#   base_url: &quot;http://localhost:11434/v1&quot;</span>
+<span class="c1">#   default_model: &quot;llama3.2&quot;</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/mcp-ai-agents/browser-mcp-agent/mcp_agent.config.yaml" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-mcp-agent-secrets-yaml-example"><summary class="codefile__head"><span class="codefile__name">mcp_agent.secrets.yaml.example</span><span class="codefile__size">220 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>openai:
+  api_key: YOUR_OPENAI_API_KEY
+
+# For a local Ollama backend, any non-empty api_key works because Ollama
+# doesn&#39;t authenticate; the important part is the base_url in config.yaml.
+# openai:
+#   api_key: &quot;ollama&quot;
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/mcp-ai-agents/browser-mcp-agent/mcp_agent.secrets.yaml.example" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">49 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit&gt;=1.28.0
+mcp-agent&gt;=0.0.14
+openai&gt;=1.0.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/mcp-ai-agents/browser-mcp-agent/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/11-integrating-with-function-calling/index.html">11 · Intégrer des services externes avec l&#x27;appel de fonctions</a></li><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:mcp-ai-agents/browser-mcp-agent">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/mcp-ai-agents/ai-travel-planner-mcp-agent-team/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Planificateur de voyage multi-MCP</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/mcp-ai-agents/github-mcp-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Agent GitHub (MCP)</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/mcp_ai_agents/browser_mcp_agent" target="_blank" rel="noopener noreferrer">
+    mcp_ai_agents/browser_mcp_agent</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#setup">Setup</a></li><li class="toc__item toc__item--h3"><a href="#requirements">Requirements</a></li><li class="toc__item toc__item--h3"><a href="#installation">Installation</a></li><li class="toc__item toc__item--h3"><a href="#running-with-a-local-ollama-model">Running with a local Ollama model</a></li><li class="toc__item toc__item--h3"><a href="#running-the-app">Running the App</a></li><li class="toc__item toc__item--h3"><a href="#example-commands">Example Commands</a></li><li class="toc__item toc__item--h2"><a href="#architecture">Architecture</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔍 Tutorial 8: Tracing &amp; Observability — Cours intensif OpenAI Agents SDK</title>
+<meta name="description" content="🔍 Tutorial 8: Tracing &amp; Observability — page de l&#x27;atelier Cours intensif OpenAI Agents SDK.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<link rel="stylesheet" href="../../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/index.html">Cours intensifs sur les frameworks</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/index.html">Cours intensif OpenAI Agents SDK</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page de l'atelier Cours intensif OpenAI Agents SDK</p>
+</header>
+<article class="prose">
+<h1 id="tutorial-8-tracing-observability">🔍 Tutorial 8: Tracing &amp; Observability<a class="anchor" href="#tutorial-8-tracing-observability" aria-label="Lien vers cette section">#</a></h1>
+<p>Master monitoring and debugging with built-in tracing! This tutorial teaches you how to use the OpenAI Agents SDK's comprehensive tracing system to visualize, debug, and monitor your agent workflows during development and production.</p>
+<h2 id="what-youll-learn">🎯 What You'll Learn<a class="anchor" href="#what-youll-learn" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Built-in Tracing</strong>: Automatic capture of LLM generations, tool calls, handoffs</li>
+<li><strong>Traces &amp; Spans</strong>: Understanding workflow structure and execution flow</li>
+<li><strong>Custom Tracing</strong>: Creating custom traces and spans for complex workflows</li>
+<li><strong>Production Monitoring</strong>: Debugging and performance optimization</li>
+</ul>
+<h2 id="core-concept-what-is-tracing">🧠 Core Concept: What Is Tracing?<a class="anchor" href="#core-concept-what-is-tracing" aria-label="Lien vers cette section">#</a></h2>
+<p>Tracing provides <strong>comprehensive workflow monitoring</strong> that automatically captures every event during agent execution:</p>
+<ul>
+<li><strong>LLM Generations</strong>: Model calls, inputs, outputs, and performance</li>
+<li><strong>Tool Calls</strong>: Function executions, parameters, and results</li>
+<li><strong>Handoffs</strong>: Agent-to-agent delegations and context transfer</li>
+<li><strong>Guardrails</strong>: Input/output validation events</li>
+<li><strong>Custom Events</strong>: Your own monitoring points</li>
+</ul>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│                    TRACING ARCHITECTURE                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  AGENT WORKFLOW                                             │
+│       │                                                     │
+│       ▼                                                     │
+│  ┌─────────────┐    AUTOMATIC CAPTURE                       │
+│  │    TRACE    │◀─────────────────────────────────────────┐ │
+│  │ (Workflow)  │                                          │ │
+│  └─────────────┘                                          │ │
+│       │                                                   │ │
+│       ▼                                                   │ │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    │ │
+│  │    SPAN     │    │    SPAN     │    │    SPAN     │    │ │
+│  │ (LLM Call)  │    │ (Tool Call) │    │ (Handoff)   │    │ │
+│  └─────────────┘    └─────────────┘    └─────────────┘    │ │
+│       │                    │                    │         │ │
+│       ▼                    ▼                    ▼         │ │
+│  ┌─────────────────────────────────────────────────────┐  │ │
+│  │         OPENAI TRACES DASHBOARD                     │  │ │
+│  │    • Execution Visualization                        │  │ │
+│  │    • Performance Metrics                            │__| │ 
+│  │    • Debug Information                              │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+</pre></div>
+</div><h2 id="tutorial-overview">🚀 Tutorial Overview<a class="anchor" href="#tutorial-overview" aria-label="Lien vers cette section">#</a></h2>
+<p>This tutorial demonstrates <strong>three key tracing patterns</strong>:</p>
+<h3 id="1-default-tracing-default-tracingpy"><strong>1. Default Tracing</strong> (<code>default_tracing.py</code>)<a class="anchor" href="#1-default-tracing-default-tracingpy" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Built-in automatic tracing (enabled by default)</li>
+<li>Understanding traces and spans structure</li>
+<li>Basic workflow monitoring</li>
+</ul>
+<h3 id="2-custom-tracing-custom-tracingpy"><strong>2. Custom Tracing</strong> (<code>custom_tracing.py</code>)<a class="anchor" href="#2-custom-tracing-custom-tracingpy" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Creating custom traces for multi-step workflows</li>
+<li>Adding custom spans for monitoring points</li>
+<li>Grouping multiple agent runs in single trace</li>
+</ul>
+<h3 id="3-advanced-observability-advanced-observabilitypy"><strong>3. Advanced Observability</strong> (<code>advanced_observability.py</code>)<a class="anchor" href="#3-advanced-observability-advanced-observabilitypy" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Sensitive data handling and configuration</li>
+<li>Custom trace processors for external systems</li>
+<li>Production monitoring patterns</li>
+</ul>
+<h2 id="project-structure">📁 Project Structure<a class="anchor" href="#project-structure" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>8_tracing_observability/
+├── README.md                    # This file - concept explanation
+├── requirements.txt             # Dependencies  
+├── default_tracing.py           # Built-in tracing basics (35 lines)
+├── custom_tracing.py            # Custom traces and spans (45 lines)
+├── advanced_observability.py    # Production tracing patterns (40 lines)
+├── app.py                      # Streamlit tracing dashboard (optional)
+└── env.example                 # Environment variables template
+</pre></div>
+</div><h2 id="learning-objectives">🎯 Learning Objectives<a class="anchor" href="#learning-objectives" aria-label="Lien vers cette section">#</a></h2>
+<p>By the end of this tutorial, you'll understand:</p>
+<ul>
+<li>✅ How built-in tracing captures agent workflow events</li>
+<li>✅ Difference between traces (workflows) and spans (operations)</li>
+<li>✅ Creating custom traces for complex multi-step workflows</li>
+<li>✅ Monitoring and debugging agent performance in production</li>
+<li>✅ Integrating with external observability systems</li>
+</ul>
+<h2 id="getting-started">🚀 Getting Started<a class="anchor" href="#getting-started" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p><strong>Install OpenAI Agents SDK</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>openai-agents
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install dependencies</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Set up environment variables</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>cp<span class="w"> </span>env.example<span class="w"> </span>.env
+<span class="c1"># Edit .env and add your OpenAI API key</span>
+</pre></div>
+</div></li>
+<li>
+<p><strong>Test default tracing</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python<span class="w"> </span>default_tracing.py
+</pre></div>
+</div></li>
+<li>
+<p><strong>Try custom tracing</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python<span class="w"> </span>custom_tracing.py
+</pre></div>
+</div></li>
+<li>
+<p><strong>Explore advanced patterns</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python<span class="w"> </span>advanced_observability.py
+</pre></div>
+</div></li>
+</ol>
+<h2 id="sample-use-cases">🧪 Sample Use Cases<a class="anchor" href="#sample-use-cases" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="default-tracing">Default Tracing<a class="anchor" href="#default-tracing" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Monitor basic agent workflows automatically</li>
+<li>Debug tool call failures and LLM generation issues</li>
+<li>Track performance metrics for optimization</li>
+</ul>
+<h3 id="custom-tracing">Custom Tracing<a class="anchor" href="#custom-tracing" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Group related agent runs in complex workflows</li>
+<li>Add custom monitoring points in business logic</li>
+<li>Create hierarchical span structures for debugging</li>
+</ul>
+<h3 id="advanced-observability">Advanced Observability<a class="anchor" href="#advanced-observability" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Configure sensitive data handling for compliance</li>
+<li>Export traces to external monitoring systems</li>
+<li>Set up production alerting and dashboards</li>
+</ul>
+<h2 id="key-tracing-patterns">🔧 Key Tracing Patterns<a class="anchor" href="#key-tracing-patterns" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="1-default-tracing-automatic">1. <strong>Default Tracing (Automatic)</strong><a class="anchor" href="#1-default-tracing-automatic" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Runner</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Assistant&quot;</span><span class="p">)</span>
+<span class="c1"># Tracing happens automatically - no setup required!</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+<span class="c1"># View traces at: https://platform.openai.com/traces</span>
+</pre></div>
+</div><h3 id="2-custom-trace-creation">2. <strong>Custom Trace Creation</strong><a class="anchor" href="#2-custom-trace-creation" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Runner</span><span class="p">,</span> <span class="n">trace</span>
+
+<span class="k">with</span> <span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Multi-step Workflow&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">my_trace</span><span class="p">:</span>
+    <span class="n">result1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s2">&quot;Step 1&quot;</span><span class="p">)</span>
+    <span class="n">result2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s2">&quot;Step 2&quot;</span><span class="p">)</span>
+    <span class="c1"># Both runs are part of the same trace</span>
+</pre></div>
+</div><h3 id="3-custom-spans">3. <strong>Custom Spans</strong><a class="anchor" href="#3-custom-spans" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">custom_span</span>
+
+<span class="k">with</span> <span class="n">custom_span</span><span class="p">(</span><span class="s2">&quot;Data Processing&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">span</span><span class="p">:</span>
+    <span class="c1"># Your custom logic here</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">process_data</span><span class="p">()</span>
+    <span class="n">span</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="s2">&quot;Processing complete&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;records&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)})</span>
+</pre></div>
+</div><h2 id="tracing-design-best-practices">💡 Tracing Design Best Practices<a class="anchor" href="#tracing-design-best-practices" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li><strong>Meaningful Names</strong>: Use descriptive trace and span names</li>
+<li><strong>Logical Grouping</strong>: Group related operations in single traces</li>
+<li><strong>Custom Events</strong>: Add key business events as custom spans</li>
+<li><strong>Sensitive Data</strong>: Configure data handling for compliance</li>
+<li><strong>Performance Monitoring</strong>: Track execution time and resource usage</li>
+</ol>
+<h2 id="important-notes">🚨 Important Notes<a class="anchor" href="#important-notes" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Enabled by Default</strong>: Tracing is automatically enabled</li>
+<li><strong>Zero Data Retention</strong>: Tracing unavailable for ZDR policy organizations</li>
+<li><strong>Free Dashboard</strong>: View traces at OpenAI Traces dashboard</li>
+<li><strong>Disable if Needed</strong>: Set <code>OPENAI_AGENTS_DISABLE_TRACING=1</code> to disable</li>
+</ul>
+<h2 id="next-steps">🔗 Next Steps<a class="anchor" href="#next-steps" aria-label="Lien vers cette section">#</a></h2>
+<p>After completing this tutorial, you'll be ready for:</p>
+<ul>
+<li><strong><a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/8-handoffs-delegation/index.html">Tutorial 9: Handoffs &amp; Delegation</a></strong> - Agent handoffs and task delegation</li>
+<li><strong><a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/9-multi-agent-orchestration/index.html">Tutorial 10: Multi-Agent Orchestration</a></strong> - Complex multi-agent workflows</li>
+<li><strong><a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/11-voice/index.html">Tutorial 11: Production Patterns</a></strong> - Real-world deployment strategies</li>
+</ul>
+<h2 id="troubleshooting">🚨 Troubleshooting<a class="anchor" href="#troubleshooting" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>No Traces Visible</strong>: Check OpenAI API key and internet connectivity</li>
+<li><strong>Missing Spans</strong>: Ensure operations are within trace context</li>
+<li><strong>Performance Issues</strong>: Configure sensitive data filtering</li>
+<li><strong>ZDR Policy</strong>: Tracing unavailable - disable or use custom processors</li>
+</ul>
+<h2 id="pro-tips">💡 Pro Tips<a class="anchor" href="#pro-tips" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Start Simple</strong>: Use default tracing first, add custom traces as needed</li>
+<li><strong>Strategic Naming</strong>: Use consistent naming conventions for traces/spans</li>
+<li><strong>Monitor Performance</strong>: Track execution time trends over time</li>
+<li><strong>External Integration</strong>: Consider custom processors for your monitoring stack</li>
+<li><strong>Development vs Production</strong>: Different tracing strategies for each environment</li>
+</ul>
+
+</article>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/blob/main/ai_agent_framework_crash_course/openai_sdk_crash_course/10_tracing_observability/README.md" target="_blank" rel="noopener noreferrer">
+    ai_agent_framework_crash_course/openai_sdk_crash_course/10_tracing_observability/README.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#what-youll-learn">🎯 What You&#x27;ll Learn</a></li><li class="toc__item toc__item--h2"><a href="#core-concept-what-is-tracing">🧠 Core Concept: What Is Tracing?</a></li><li class="toc__item toc__item--h2"><a href="#tutorial-overview">🚀 Tutorial Overview</a></li><li class="toc__item toc__item--h3"><a href="#1-default-tracing-default-tracingpy">**1. Default Tracing** (`default_tracing.py`)</a></li><li class="toc__item toc__item--h3"><a href="#2-custom-tracing-custom-tracingpy">**2. Custom Tracing** (`custom_tracing.py`)</a></li><li class="toc__item toc__item--h3"><a href="#3-advanced-observability-advanced-observabilitypy">**3. Advanced Observability** (`advanced_observability.py`)</a></li><li class="toc__item toc__item--h2"><a href="#project-structure">📁 Project Structure</a></li><li class="toc__item toc__item--h2"><a href="#learning-objectives">🎯 Learning Objectives</a></li><li class="toc__item toc__item--h2"><a href="#getting-started">🚀 Getting Started</a></li><li class="toc__item toc__item--h2"><a href="#sample-use-cases">🧪 Sample Use Cases</a></li><li class="toc__item toc__item--h3"><a href="#default-tracing">Default Tracing</a></li><li class="toc__item toc__item--h3"><a href="#custom-tracing">Custom Tracing</a></li><li class="toc__item toc__item--h3"><a href="#advanced-observability">Advanced Observability</a></li><li class="toc__item toc__item--h2"><a href="#key-tracing-patterns">🔧 Key Tracing Patterns</a></li><li class="toc__item toc__item--h3"><a href="#1-default-tracing-automatic">1. **Default Tracing (Automatic)**</a></li><li class="toc__item toc__item--h3"><a href="#2-custom-trace-creation">2. **Custom Trace Creation**</a></li><li class="toc__item toc__item--h3"><a href="#3-custom-spans">3. **Custom Spans**</a></li><li class="toc__item toc__item--h2"><a href="#tracing-design-best-practices">💡 Tracing Design Best Practices</a></li><li class="toc__item toc__item--h2"><a href="#important-notes">🚨 Important Notes</a></li><li class="toc__item toc__item--h2"><a href="#next-steps">🔗 Next Steps</a></li><li class="toc__item toc__item--h2"><a href="#troubleshooting">🚨 Troubleshooting</a></li><li class="toc__item toc__item--h2"><a href="#pro-tips">💡 Pro Tips</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

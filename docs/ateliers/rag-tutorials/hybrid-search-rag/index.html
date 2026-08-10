@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recherche hybride (cloud) — atelier</title>
+<meta name="description" content="Combine recherche vectorielle et recherche par mots-clés — nettement meilleur que le vectoriel seul.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/rag-tutorials/index.html">RAG — ancrer le modèle dans vos données</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">📚</span> RAG — ancrer le modèle dans vos données</p>
+  <h1 class="pagehead__title">Recherche hybride (cloud)</h1>
+  <p class="pagehead__summary">Combine recherche vectorielle et recherche par mots-clés — nettement meilleur que le vectoriel seul.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#incontournable" title="Le socle : sans ça, la suite ne tient pas."><span class="tag__icon" aria-hidden="true">⭐</span><span class="tag__label">Incontournable</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://console.anthropic.com" target="_blank" rel="noopener noreferrer">Anthropic (Claude)</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Facturation à l&#x27;usage, sans palier gratuit sur l&#x27;API.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Modèles de niveau comparable, gratuitement.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit, bon en raisonnement et sur les longs contextes.</li><li><a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer">OpenRouter</a> — Quelques modèles ouverts y sont proposés gratuitement.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://dashboard.cohere.com" target="_blank" rel="noopener noreferrer">Cohere</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Clé d&#x27;essai gratuite, limitée en débit mais sans expiration.</p><ul class="alts__list"><li><a href="https://dashboard.cohere.com/api-keys" target="_blank" rel="noopener noreferrer">La clé d&#x27;essai suffit</a> — Le débit limité convient à un atelier.</li><li><a href="https://sbert.net" target="_blank" rel="noopener noreferrer">sentence-transformers</a> — Embeddings locaux de bonne qualité, gratuits.</li><li><a href="https://ai.google.dev/gemma" target="_blank" rel="noopener noreferrer">EmbeddingGemma</a> — Embeddings légers de Google, exécutables en local.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Hybrid Search Question Answering</li><li>RAG-based answers for document-specific queries</li><li>Fallback to Claude for general knowledge questions</li><li>Document Processing:</li><li>PDF document upload and processing</li><li>Automatic text chunking and embedding</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="rag-app-with-hybrid-search">👀 RAG App with Hybrid Search<a class="anchor" href="#rag-app-with-hybrid-search" aria-label="Lien vers cette section">#</a></h1>
+<p>A powerful document Q&amp;A application that leverages Hybrid Search (RAG) and Claude's advanced language capabilities to provide comprehensive answers. Built with RAGLite for robust document processing and retrieval, and Streamlit for an intuitive chat interface, this system seamlessly combines document-specific knowledge with Claude's general intelligence to deliver accurate and contextual responses.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>
+<p><strong>Hybrid Search Question Answering</strong></p>
+<ul>
+<li>RAG-based answers for document-specific queries</li>
+<li>Fallback to Claude for general knowledge questions</li>
+</ul>
+</li>
+<li>
+<p><strong>Document Processing</strong>:</p>
+<ul>
+<li>PDF document upload and processing</li>
+<li>Automatic text chunking and embedding</li>
+<li>Hybrid search combining semantic and keyword matching</li>
+<li>Reranking for better context selection</li>
+</ul>
+</li>
+<li>
+<p><strong>Multi-Model Integration</strong>:</p>
+<ul>
+<li>Claude for text generation - tested with Claude 3 Opus</li>
+<li>OpenAI for embeddings - tested with text-embedding-3-large</li>
+<li>Cohere for reranking - tested with Cohere 3.5 reranker</li>
+</ul>
+</li>
+</ul>
+<h2 id="prerequisites">Prerequisites<a class="anchor" href="#prerequisites" aria-label="Lien vers cette section">#</a></h2>
+<p>You'll need the following API keys and database setup:</p>
+<ol>
+<li>
+<p><strong>Database</strong>: Create a free PostgreSQL database at <a href="https://neon.tech" target="_blank" rel="noopener noreferrer">Neon</a>:</p>
+<ul>
+<li>Sign up/Login at Neon</li>
+<li>Create a new project</li>
+<li>Copy the connection string (looks like: <code>postgresql://user:pass@ep-xyz.region.aws.neon.tech/dbname</code>)</li>
+</ul>
+</li>
+<li>
+<p><strong>API Keys</strong>:</p>
+<ul>
+<li><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">OpenAI API key</a> for embeddings</li>
+<li><a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">Anthropic API key</a> for Claude</li>
+<li><a href="https://dashboard.cohere.com/api-keys" target="_blank" rel="noopener noreferrer">Cohere API key</a> for reranking</li>
+</ul>
+</li>
+</ol>
+<h2 id="how-to-get-started">How to get Started?<a class="anchor" href="#how-to-get-started" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p><strong>Clone the Repository</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>awesome-llm-apps/rag_tutorials/hybrid_search_rag
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install Dependencies</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install spaCy Model</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>https://github.com/explosion/spacy-models/releases/download/xx_sent_ud_sm-3.7.0/xx_sent_ud_sm-3.7.0-py3-none-any.whl
+</pre></div>
+</div></li>
+<li>
+<p><strong>Run the Application</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>main.py
+</pre></div>
+</div></li>
+</ol>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>Start the application</li>
+<li>Enter your API keys in the sidebar:
+<ul>
+<li>OpenAI API key</li>
+<li>Anthropic API key</li>
+<li>Cohere API key</li>
+<li>Database URL (optional, defaults to SQLite)</li>
+</ul>
+</li>
+<li>Click &quot;Save Configuration&quot;</li>
+<li>Upload PDF documents</li>
+<li>Start asking questions!
+<ul>
+<li>Document-specific questions will use RAG</li>
+<li>General questions will use Claude directly</li>
+</ul>
+</li>
+</ol>
+<h2 id="database-options">Database Options<a class="anchor" href="#database-options" aria-label="Lien vers cette section">#</a></h2>
+<p>The application supports multiple database backends:</p>
+<ul>
+<li>
+<p><strong>PostgreSQL</strong> (Recommended):</p>
+<ul>
+<li>Create a free serverless PostgreSQL database at <a href="https://neon.tech" target="_blank" rel="noopener noreferrer">Neon</a></li>
+<li>Get instant provisioning and scale-to-zero capability</li>
+<li>Connection string format: <code>postgresql://user:pass@ep-xyz.region.aws.neon.tech/dbname</code></li>
+</ul>
+</li>
+<li>
+<p><strong>MySQL</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>mysql://user:pass@host:port/db
+</pre></div>
+</div></li>
+<li>
+<p><strong>SQLite</strong> (Local development):</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>sqlite:///path/to/db.sqlite
+</pre></div>
+</div></li>
+</ul>
+<h2 id="contributing">Contributing<a class="anchor" href="#contributing" aria-label="Lien vers cette section">#</a></h2>
+<p>Contributions are welcome! Please feel free to submit a Pull Request.</p>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-main-py"><summary class="codefile__head"><span class="codefile__name">main.py</span><span class="codefile__size">10 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">raglite</span><span class="w"> </span><span class="kn">import</span> <span class="n">RAGLiteConfig</span><span class="p">,</span> <span class="n">insert_document</span><span class="p">,</span> <span class="n">hybrid_search</span><span class="p">,</span> <span class="n">retrieve_chunks</span><span class="p">,</span> <span class="n">rerank_chunks</span><span class="p">,</span> <span class="n">rag</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rerankers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reranker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anthropic</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*torch.classes.*&quot;</span><span class="p">)</span>
+
+<span class="n">RAG_SYSTEM_PROMPT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a friendly and knowledgeable assistant that provides complete and insightful answers.</span>
+<span class="s2">Answer the user&#39;s question using only the context below.</span>
+<span class="s2">When responding, you MUST NOT reference the existence of the context, directly or indirectly.</span>
+<span class="s2">Instead, you MUST treat the context as if its contents are entirely part of your working memory.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">initialize_config</span><span class="p">(</span><span class="n">openai_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">anthropic_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cohere_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">db_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RAGLiteConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initializes and returns a RAGLiteConfig object with the specified API keys and database URL.</span>
+
+<span class="sd">    This function sets the provided API keys in the environment variables and returns a </span>
+<span class="sd">    RAGLiteConfig object configured with the given database URL and pre-defined settings for </span>
+<span class="sd">    language model, embedder, and reranker.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        openai_key (str): The API key for OpenAI services.</span>
+<span class="sd">        anthropic_key (str): The API key for Anthropic services.</span>
+<span class="sd">        cohere_key (str): The API key for Cohere services.</span>
+<span class="sd">        db_url (str): The database URL for connecting to the desired data source.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        RAGLiteConfig: A configuration object initialized with the specified parameters.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If there is an issue setting up the configuration, an error is raised with details.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">openai_key</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">anthropic_key</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;COHERE_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cohere_key</span>
+        
+        <span class="k">return</span> <span class="n">RAGLiteConfig</span><span class="p">(</span>
+            <span class="n">db_url</span><span class="o">=</span><span class="n">db_url</span><span class="p">,</span>
+            <span class="n">llm</span><span class="o">=</span><span class="s2">&quot;claude-3-opus-20240229&quot;</span><span class="p">,</span>
+            <span class="n">embedder</span><span class="o">=</span><span class="s2">&quot;text-embedding-3-large&quot;</span><span class="p">,</span>
+            <span class="n">embedder_normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">chunk_max_size</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+            <span class="n">embedder_sentence_window_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">reranker</span><span class="o">=</span><span class="n">Reranker</span><span class="p">(</span><span class="s2">&quot;cohere&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">cohere_key</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_document</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Processes a document by inserting it into a system with a given configuration.</span>
+
+<span class="sd">    This function checks if a configuration is initialized in the session state.</span>
+<span class="sd">    If the configuration is present, it attempts to insert the document located</span>
+<span class="sd">    at the given file path using this configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path (str): The path to the document to be processed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the document was successfully processed; False otherwise.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;my_config&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Configuration not initialized&quot;</span><span class="p">)</span>
+        <span class="n">insert_document</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="n">config</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">my_config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing document: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">perform_search</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Conducts a hybrid search and returns a list of ranked chunks based on the query.</span>
+
+<span class="sd">    This function performs a search using a hybrid search method, retrieves the relevant </span>
+<span class="sd">    chunks, and reranks them according to the query. It handles any exceptions that occur </span>
+<span class="sd">    during the process and logs the errors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query (str): The search query string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[dict]: A list of dictionaries representing the ranked chunks. Returns an </span>
+<span class="sd">        empty list if no results are found or if an error occurs.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">chunk_ids</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">hybrid_search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">my_config</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk_ids</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="n">retrieve_chunks</span><span class="p">(</span><span class="n">chunk_ids</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">my_config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rerank_chunks</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">my_config</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_fallback</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">anthropic</span><span class="o">.</span><span class="n">Anthropic</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">user_env</span><span class="p">[</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">])</span>
+        <span class="n">system_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a helpful AI assistant. When you don&#39;t know something, </span>
+<span class="s2">        be honest about it. Provide clear, concise, and accurate responses. If the question </span>
+<span class="s2">        is not related to any specific document, use your general knowledge to answer.&quot;&quot;&quot;</span>
+        
+        <span class="n">message</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-3-sonnet-20240229&quot;</span><span class="p">,</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+            <span class="n">system</span><span class="o">=</span><span class="n">system_prompt</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">}],</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fallback error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fallback error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Show error in UI</span>
+        <span class="k">return</span> <span class="s2">&quot;I apologize, but I encountered an error while processing your request. Please try again.&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;LLM-Powered Hybrid Search-RAG Assistant&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">state_var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;chat_history&#39;</span><span class="p">,</span> <span class="s1">&#39;documents_loaded&#39;</span><span class="p">,</span> <span class="s1">&#39;my_config&#39;</span><span class="p">,</span> <span class="s1">&#39;user_env&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">state_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="n">state_var</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">state_var</span> <span class="o">==</span> <span class="s1">&#39;chat_history&#39;</span> <span class="k">else</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">state_var</span> <span class="o">==</span> <span class="s1">&#39;documents_loaded&#39;</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">state_var</span> <span class="o">==</span> <span class="s1">&#39;my_config&#39;</span> <span class="k">else</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Configuration&quot;</span><span class="p">)</span>
+        <span class="n">openai_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;OpenAI API Key&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;openai_key&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span><span class="p">)</span>
+        <span class="n">anthropic_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Anthropic API Key&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;anthropic_key&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;sk-ant-...&quot;</span><span class="p">)</span>
+        <span class="n">cohere_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Cohere API Key&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cohere_key&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Enter Cohere key&quot;</span><span class="p">)</span>
+        <span class="n">db_url</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Database URL&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;db_url&#39;</span><span class="p">,</span> <span class="s1">&#39;sqlite:///raglite.sqlite&#39;</span><span class="p">),</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;sqlite:///raglite.sqlite&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Save Configuration&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">openai_key</span><span class="p">,</span> <span class="n">anthropic_key</span><span class="p">,</span> <span class="n">cohere_key</span><span class="p">,</span> <span class="n">db_url</span><span class="p">]):</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;All fields are required!&quot;</span><span class="p">)</span>
+                    <span class="k">return</span>
+                
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;openai_key&#39;</span><span class="p">:</span> <span class="n">openai_key</span><span class="p">,</span> <span class="s1">&#39;anthropic_key&#39;</span><span class="p">:</span> <span class="n">anthropic_key</span><span class="p">,</span> <span class="s1">&#39;cohere_key&#39;</span><span class="p">:</span> <span class="n">cohere_key</span><span class="p">,</span> <span class="s1">&#39;db_url&#39;</span><span class="p">:</span> <span class="n">db_url</span><span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">my_config</span> <span class="o">=</span> <span class="n">initialize_config</span><span class="p">(</span><span class="n">openai_key</span><span class="o">=</span><span class="n">openai_key</span><span class="p">,</span> <span class="n">anthropic_key</span><span class="o">=</span><span class="n">anthropic_key</span><span class="p">,</span> <span class="n">cohere_key</span><span class="o">=</span><span class="n">cohere_key</span><span class="p">,</span> <span class="n">db_url</span><span class="o">=</span><span class="n">db_url</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">user_env</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">:</span> <span class="n">anthropic_key</span><span class="p">}</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Configuration saved successfully!&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;👀 RAG App with Hybrid Search&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">my_config</span><span class="p">:</span>
+        <span class="n">uploaded_files</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">file_uploader</span><span class="p">(</span><span class="s2">&quot;Upload PDF documents&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pdf&quot;</span><span class="p">],</span> <span class="n">accept_multiple_files</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;pdf_uploader&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">uploaded_files</span><span class="p">:</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">uploaded_file</span> <span class="ow">in</span> <span class="n">uploaded_files</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">):</span>
+                    <span class="n">temp_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;temp_</span><span class="si">{</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+                    
+                    <span class="k">if</span> <span class="n">process_document</span><span class="p">(</span><span class="n">temp_path</span><span class="p">):</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully processed: </span><span class="si">{</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to process: </span><span class="si">{</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_path</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">documents_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Documents are ready! You can now ask questions about them.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">documents_loaded</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">chat_history</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">):</span> <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="s2">&quot;assistant&quot;</span><span class="p">):</span> <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">user_input</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_input</span><span class="p">(</span><span class="s2">&quot;Ask a question about the documents...&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_input</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">):</span> <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="s2">&quot;assistant&quot;</span><span class="p">):</span>
+                <span class="n">message_placeholder</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">reranked_chunks</span> <span class="o">=</span> <span class="n">perform_search</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">user_input</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">reranked_chunks</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">reranked_chunks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No relevant documents found. Falling back to Claude.&quot;</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No relevant documents found. Using general knowledge to answer.&quot;</span><span class="p">)</span>
+                        <span class="n">full_response</span> <span class="o">=</span> <span class="n">handle_fallback</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">formatted_messages</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">}</span>
+                                           <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">msg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">m</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">chat_history</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">pair</span><span class="p">])</span> <span class="k">if</span> <span class="n">msg</span><span class="p">]</span>
+                        
+                        <span class="n">response_stream</span> <span class="o">=</span> <span class="n">rag</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="n">user_input</span><span class="p">,</span> 
+                                           <span class="n">system_prompt</span><span class="o">=</span><span class="n">RAG_SYSTEM_PROMPT</span><span class="p">,</span>
+                                           <span class="n">search</span><span class="o">=</span><span class="n">hybrid_search</span><span class="p">,</span> 
+                                           <span class="n">messages</span><span class="o">=</span><span class="n">formatted_messages</span><span class="p">,</span>
+                                           <span class="n">max_contexts</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+                                           <span class="n">config</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">my_config</span><span class="p">)</span>
+                        
+                        <span class="n">full_response</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response_stream</span><span class="p">:</span>
+                            <span class="n">full_response</span> <span class="o">+=</span> <span class="n">chunk</span>
+                            <span class="n">message_placeholder</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">full_response</span> <span class="o">+</span> <span class="s2">&quot;▌&quot;</span><span class="p">)</span>
+                    
+                    <span class="n">message_placeholder</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">full_response</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">chat_history</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">user_input</span><span class="p">,</span> <span class="n">full_response</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Please configure your API keys and upload documents to get started.&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">my_config</span> <span class="k">else</span> <span class="s2">&quot;Please upload some documents to get started.&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/hybrid-search-rag/main.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">184 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>raglite==0.2.1
+pydantic==2.10.1
+sqlalchemy&gt;=2.0.0
+psycopg2-binary&gt;=2.9.9
+openai&gt;=1.0.0
+cohere&gt;=4.37
+pypdf&gt;=3.0.0
+python-dotenv&gt;=1.0.0
+rerankers==0.6.0
+spacy&gt;=3.7.0
+streamlit
+anthropic
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/hybrid-search-rag/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/15-rag-and-vector-databases/index.html">15 · RAG et bases de données vectorielles</a></li><li><a href="../../../lecons/08-building-search-applications/index.html">08 · Construire des applications de recherche (embeddings)</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:rag-tutorials/hybrid-search-rag">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/rag-tutorials/gemini-agentic-rag/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">RAG agentique avec Gemini Flash</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/rag-tutorials/knowledge-graph-rag-citations/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">RAG sur graphe de connaissances, avec citations</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/rag_tutorials/hybrid_search_rag" target="_blank" rel="noopener noreferrer">
+    rag_tutorials/hybrid_search_rag</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#prerequisites">Prerequisites</a></li><li class="toc__item toc__item--h2"><a href="#how-to-get-started">How to get Started?</a></li><li class="toc__item toc__item--h2"><a href="#usage">Usage</a></li><li class="toc__item toc__item--h2"><a href="#database-options">Database Options</a></li><li class="toc__item toc__item--h2"><a href="#contributing">Contributing</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

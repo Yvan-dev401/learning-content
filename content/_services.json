@@ -1,0 +1,435 @@
+{
+  "_comment": "Services externes cités par le cours et les ateliers, avec leurs alternatives gratuites. Chaque motif de `detect` est une expression régulière cherchée dans le Markdown, le code et les requirements d'une page : ce sont les identifiants qu'il faut réellement obtenir pour exécuter le projet. Le tag de coût des pages est calculé à partir de cette table — il n'est jamais écrit à la main.",
+  "cost_labels": {
+    "gratuit": "gratuit ou exécutable en local",
+    "freemium": "palier gratuit utilisable",
+    "payant": "compte payant nécessaire"
+  },
+  "categories": {
+    "modele": { "order": 1, "title": "Modèles de langage", "icon": "🧠" },
+    "embeddings": { "order": 2, "title": "Embeddings", "icon": "🧬" },
+    "vectoriel": { "order": 3, "title": "Bases vectorielles et de graphes", "icon": "🗂️" },
+    "recherche": { "order": 4, "title": "Recherche web et extraction", "icon": "🔎" },
+    "image": { "order": 5, "title": "Génération d'images", "icon": "🎨" },
+    "voix": { "order": 6, "title": "Voix et transcription", "icon": "🎙️" },
+    "memoire": { "order": 7, "title": "Mémoire", "icon": "💾" },
+    "observabilite": { "order": 8, "title": "Observabilité et évaluation", "icon": "📈" },
+    "outils": { "order": 9, "title": "Outils et exécution de code", "icon": "🧰" },
+    "lowcode": { "order": 10, "title": "Plateformes low-code", "icon": "🧱" },
+    "donnees": { "order": 11, "title": "Sources de données", "icon": "📊" }
+  },
+  "services": {
+    "openai": {
+      "name": "OpenAI API",
+      "category": "modele",
+      "cost": "payant",
+      "url": "https://platform.openai.com",
+      "note": "Aucun crédit offert à l'inscription : il faut approvisionner le compte avant le premier appel.",
+      "detect": ["OPENAI_API_KEY", "platform\\.openai\\.com", "OpenAI API [Kk]ey"],
+      "free": [
+        { "name": "GitHub Models", "url": "https://github.com/marketplace/models", "note": "Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l'URL de base et la clé." },
+        { "name": "Google AI Studio (Gemini)", "url": "https://aistudio.google.com", "note": "Palier gratuit large, avec un mode compatible OpenAI." },
+        { "name": "Groq", "url": "https://console.groq.com", "note": "Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts." },
+        { "name": "Ollama", "url": "https://ollama.com", "note": "Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local." }
+      ]
+    },
+    "azure-openai": {
+      "name": "Azure OpenAI",
+      "category": "modele",
+      "cost": "payant",
+      "url": "https://azure.microsoft.com/products/ai-services/openai-service",
+      "note": "Nécessite un abonnement Azure. C'est le service utilisé par défaut dans le cours Microsoft.",
+      "detect": ["AZURE_OPENAI_API_KEY", "AZURE_OPENAI_ENDPOINT", "AZURE_API_KEY", "Azure OpenAI"],
+      "free": [
+        { "name": "GitHub Models", "url": "https://github.com/marketplace/models", "note": "Donne accès aux mêmes familles de modèles (GPT, Llama, Mistral, Phi) gratuitement. C'est l'alternative recommandée par le cours lui-même." },
+        { "name": "Azure pour les étudiants", "url": "https://azure.microsoft.com/free/students", "note": "100 $ de crédit sans carte bancaire, si vous avez une adresse universitaire." },
+        { "name": "Ollama", "url": "https://ollama.com", "note": "Pour les leçons où seul le comportement du modèle importe, un modèle local suffit." }
+      ]
+    },
+    "github-models": {
+      "name": "GitHub Models",
+      "category": "modele",
+      "cost": "gratuit",
+      "url": "https://github.com/marketplace/models",
+      "note": "Gratuit avec un compte GitHub, dans la limite d'un quota de requêtes. C'est le chemin le moins coûteux pour suivre le cours.",
+      "detect": ["AZURE_INFERENCE_ENDPOINT", "AZURE_INFERENCE_CREDENTIAL", "models\\.inference\\.ai\\.azure\\.com", "GITHUB_MODELS"],
+      "free": []
+    },
+    "anthropic": {
+      "name": "Anthropic (Claude)",
+      "category": "modele",
+      "cost": "payant",
+      "url": "https://console.anthropic.com",
+      "note": "Facturation à l'usage, sans palier gratuit sur l'API.",
+      "detect": ["ANTHROPIC_API_KEY", "^anthropic(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-anthropic(==|>=|<=|~=|!=|\\[|\\s*$)", "Anthropic API [Kk]ey"],
+      "free": [
+        { "name": "GitHub Models", "url": "https://github.com/marketplace/models", "note": "Modèles de niveau comparable, gratuitement." },
+        { "name": "Google AI Studio (Gemini)", "url": "https://aistudio.google.com", "note": "Palier gratuit, bon en raisonnement et sur les longs contextes." },
+        { "name": "OpenRouter", "url": "https://openrouter.ai", "note": "Quelques modèles ouverts y sont proposés gratuitement." }
+      ]
+    },
+    "google-gemini": {
+      "name": "Google AI Studio / Gemini",
+      "category": "modele",
+      "cost": "freemium",
+      "url": "https://aistudio.google.com",
+      "note": "Palier gratuit confortable, sans carte bancaire. Convient à la quasi-totalité des ateliers.",
+      "detect": ["GOOGLE_API_KEY", "GEMINI_API_KEY", "GOOGLE_DEVELOPER_API_KEY", "aistudio\\.google\\.com", "^google-genai(==|>=|<=|~=|!=|\\[|\\s*$)", "^google-generativeai(==|>=|<=|~=|!=|\\[|\\s*$)", "^google-adk(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-google-genai(==|>=|<=|~=|!=|\\[|\\s*$)", "Gemini API [Kk]ey", "Google API [Kk]ey"],
+      "free": [
+        { "name": "Le palier gratuit suffit", "url": "https://aistudio.google.com", "note": "Créez la clé dans AI Studio : aucune carte n'est demandée." },
+        { "name": "Ollama", "url": "https://ollama.com", "note": "Si vous dépassez le quota, un modèle local prend le relais." }
+      ]
+    },
+    "mistral": {
+      "name": "Mistral AI",
+      "category": "modele",
+      "cost": "freemium",
+      "url": "https://console.mistral.ai",
+      "note": "Palier gratuit disponible sur l'API.",
+      "detect": ["MISTRAL_API_KEY", "^mistralai(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-mistralai(==|>=|<=|~=|!=|\\[|\\s*$)", "Mistral API [Kk]ey"],
+      "free": [
+        { "name": "Modèles Mistral via Ollama", "url": "https://ollama.com/library/mistral", "note": "Les modèles ouverts de Mistral tournent en local." },
+        { "name": "GitHub Models", "url": "https://github.com/marketplace/models", "note": "Propose aussi les modèles Mistral gratuitement." }
+      ]
+    },
+    "groq": {
+      "name": "Groq",
+      "category": "modele",
+      "cost": "freemium",
+      "url": "https://console.groq.com",
+      "note": "Palier gratuit généreux, latence très faible sur des modèles ouverts.",
+      "detect": ["GROQ_API_KEY", "^groq(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-groq(==|>=|<=|~=|!=|\\[|\\s*$)", "Groq API [Kk]ey"],
+      "free": [{ "name": "Le palier gratuit suffit", "url": "https://console.groq.com", "note": "Clé gratuite immédiate, sans carte bancaire." }]
+    },
+    "openrouter": {
+      "name": "OpenRouter",
+      "category": "modele",
+      "cost": "freemium",
+      "url": "https://openrouter.ai",
+      "note": "Passerelle vers des dizaines de modèles ; certains sont gratuits.",
+      "detect": ["OPENROUTER_API_KEY", "OpenRouter API [Kk]ey"],
+      "free": [{ "name": "Modèles marqués « :free »", "url": "https://openrouter.ai/models?max_price=0", "note": "Suffisants pour découvrir un atelier." }]
+    },
+    "together": {
+      "name": "Together AI",
+      "category": "modele",
+      "cost": "freemium",
+      "url": "https://api.together.ai",
+      "note": "Crédit offert à l'inscription.",
+      "detect": ["TOGETHER_API_KEY", "^together(==|>=|<=|~=|!=|\\[|\\s*$)", "Together API [Kk]ey"],
+      "free": [{ "name": "Ollama", "url": "https://ollama.com", "note": "Les mêmes modèles ouverts, en local." }]
+    },
+    "perplexity": {
+      "name": "Perplexity API",
+      "category": "modele",
+      "cost": "payant",
+      "url": "https://docs.perplexity.ai",
+      "note": "Modèle de langage couplé à une recherche web, facturé à l'usage.",
+      "detect": ["PERPLEXITY_API_KEY", "^perplexityai(==|>=|<=|~=|!=|\\[|\\s*$)", "Perplexity API [Kk]ey"],
+      "free": [
+        { "name": "Gemini + DuckDuckGo", "url": "https://duckduckgo.com", "note": "La combinaison modèle gratuit + recherche gratuite reproduit le même résultat." },
+        { "name": "Tavily (palier gratuit)", "url": "https://tavily.com", "note": "1 000 recherches par mois offertes." }
+      ]
+    },
+    "xai": {
+      "name": "xAI (Grok)",
+      "category": "modele",
+      "cost": "payant",
+      "url": "https://console.x.ai",
+      "note": "Facturation à l'usage.",
+      "detect": ["XAI_API_KEY", "xAI API [Kk]ey", "XAI API [Kk]ey"],
+      "free": [{ "name": "GitHub Models", "url": "https://github.com/marketplace/models", "note": "Alternative gratuite pour le même type d'atelier." }]
+    },
+    "huggingface": {
+      "name": "Hugging Face",
+      "category": "modele",
+      "cost": "freemium",
+      "url": "https://huggingface.co",
+      "note": "Inference API gratuite dans la limite d'un quota ; les modèles restent téléchargeables librement.",
+      "detect": ["HUGGING_FACE_API_KEY", "HUGGINGFACE_API_KEY", "HF_TOKEN", "^huggingface-hub(==|>=|<=|~=|!=|\\[|\\s*$)", "^huggingface_hub(==|>=|<=|~=|!=|\\[|\\s*$)", "Hugging ?Face API [Kk]ey"],
+      "free": [{ "name": "Exécution locale via transformers", "url": "https://huggingface.co/docs/transformers", "note": "Aucun quota quand le modèle tourne chez vous." }]
+    },
+    "ollama": {
+      "name": "Ollama",
+      "category": "modele",
+      "cost": "gratuit",
+      "url": "https://ollama.com",
+      "note": "Exécute les modèles ouverts sur votre machine. Aucun compte, aucune donnée envoyée.",
+      "detect": ["localhost:11434", "ollama\\.com", "^ollama(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-ollama(==|>=|<=|~=|!=|\\[|\\s*$)"],
+      "free": []
+    },
+    "cohere": {
+      "name": "Cohere",
+      "category": "embeddings",
+      "cost": "freemium",
+      "url": "https://dashboard.cohere.com",
+      "note": "Clé d'essai gratuite, limitée en débit mais sans expiration.",
+      "detect": ["COHERE_API_KEY", "CO_API_KEY", "^cohere(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-cohere(==|>=|<=|~=|!=|\\[|\\s*$)", "Cohere API [Kk]ey"],
+      "free": [
+        { "name": "La clé d'essai suffit", "url": "https://dashboard.cohere.com/api-keys", "note": "Le débit limité convient à un atelier." },
+        { "name": "sentence-transformers", "url": "https://sbert.net", "note": "Embeddings locaux de bonne qualité, gratuits." },
+        { "name": "EmbeddingGemma", "url": "https://ai.google.dev/gemma", "note": "Embeddings légers de Google, exécutables en local." }
+      ]
+    },
+    "qdrant-cloud": {
+      "name": "Qdrant Cloud",
+      "category": "vectoriel",
+      "cost": "freemium",
+      "url": "https://cloud.qdrant.io",
+      "note": "Une grappe gratuite de 1 Go, suffisante pour apprendre.",
+      "detect": ["QDRANT_API_KEY", "QDRANT_URL", "cloud\\.qdrant\\.io", "Qdrant Cloud", "Qdrant API [Kk]ey"],
+      "free": [
+        { "name": "Qdrant en local (Docker)", "url": "https://qdrant.tech/documentation/quick-start/", "note": "Une commande docker run, exactement la même API : le code de l'atelier fonctionne sans modification." },
+        { "name": "ChromaDB", "url": "https://www.trychroma.com", "note": "S'exécute dans le processus Python, sans serveur." },
+        { "name": "FAISS", "url": "https://faiss.ai", "note": "Bibliothèque locale de Meta, idéale pour de petits volumes." }
+      ]
+    },
+    "pinecone": {
+      "name": "Pinecone",
+      "category": "vectoriel",
+      "cost": "freemium",
+      "url": "https://www.pinecone.io",
+      "note": "Un index gratuit par compte.",
+      "detect": ["PINECONE_API_KEY", "PINECONE_ENVIRONMENT", "^pinecone(==|>=|<=|~=|!=|\\[|\\s*$)", "^pinecone-client(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-pinecone(==|>=|<=|~=|!=|\\[|\\s*$)", "Pinecone API [Kk]ey"],
+      "free": [
+        { "name": "ChromaDB", "url": "https://www.trychroma.com", "note": "Le remplacement le plus direct, sans serveur." },
+        { "name": "pgvector", "url": "https://github.com/pgvector/pgvector", "note": "Si vous avez déjà PostgreSQL, l'extension suffit." },
+        { "name": "Qdrant en local", "url": "https://qdrant.tech", "note": "Plus complet dès que le volume grandit." }
+      ]
+    },
+    "azure-search": {
+      "name": "Azure AI Search",
+      "category": "vectoriel",
+      "cost": "payant",
+      "url": "https://azure.microsoft.com/products/ai-services/ai-search",
+      "note": "Le palier gratuit existe mais reste limité à un service par abonnement.",
+      "detect": ["AZURE_SEARCH_API_KEY", "AZURE_AI_SEARCH", "search\\.windows\\.net"],
+      "free": [
+        { "name": "ChromaDB", "url": "https://www.trychroma.com", "note": "Suffit pour les exercices de recherche vectorielle du cours." },
+        { "name": "Qdrant en local", "url": "https://qdrant.tech", "note": "Gère aussi la recherche hybride, comme Azure AI Search." }
+      ]
+    },
+    "weaviate": {
+      "name": "Weaviate Cloud",
+      "category": "vectoriel",
+      "cost": "freemium",
+      "url": "https://weaviate.io",
+      "note": "Bac à sable gratuit de 14 jours.",
+      "detect": ["WEAVIATE_API_KEY", "WEAVIATE_URL", "^weaviate-client(==|>=|<=|~=|!=|\\[|\\s*$)"],
+      "free": [{ "name": "Weaviate en local (Docker)", "url": "https://weaviate.io/developers/weaviate/installation/docker-compose", "note": "Sans limite de durée." }]
+    },
+    "neo4j": {
+      "name": "Neo4j Aura",
+      "category": "vectoriel",
+      "cost": "freemium",
+      "url": "https://neo4j.com/cloud/aura",
+      "note": "Une instance gratuite, mise en veille après inactivité.",
+      "detect": ["NEO4J_URI", "NEO4J_PASSWORD", "neo4j\\+s://", "^neo4j(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-neo4j(==|>=|<=|~=|!=|\\[|\\s*$)"],
+      "free": [{ "name": "Neo4j Community en local", "url": "https://neo4j.com/deployment-center/", "note": "Gratuit et sans mise en veille." }]
+    },
+    "chromadb": {
+      "name": "ChromaDB",
+      "category": "vectoriel",
+      "cost": "gratuit",
+      "url": "https://www.trychroma.com",
+      "note": "Base vectorielle qui s'exécute dans le processus Python. Aucun serveur, aucun compte.",
+      "detect": ["import chromadb", "^chromadb(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-chroma(==|>=|<=|~=|!=|\\[|\\s*$)"],
+      "free": []
+    },
+    "firecrawl": {
+      "name": "Firecrawl",
+      "category": "recherche",
+      "cost": "freemium",
+      "url": "https://firecrawl.dev",
+      "note": "500 crédits offerts à l'inscription, puis payant.",
+      "detect": ["FIRECRAWL_API_KEY", "^firecrawl-py(==|>=|<=|~=|!=|\\[|\\s*$)", "^firecrawl(==|>=|<=|~=|!=|\\[|\\s*$)", "Firecrawl API [Kk]ey"],
+      "free": [
+        { "name": "Crawl4AI", "url": "https://github.com/unclecode/crawl4ai", "note": "Extraction web open source pensée pour les LLM, exécutée en local." },
+        { "name": "Playwright + trafilatura", "url": "https://trafilatura.readthedocs.io", "note": "Combinaison classique : navigation puis extraction du texte principal." },
+        { "name": "Firecrawl auto-hébergé", "url": "https://github.com/mendableai/firecrawl", "note": "Le service est open source et s'installe soi-même." }
+      ]
+    },
+    "tavily": {
+      "name": "Tavily",
+      "category": "recherche",
+      "cost": "freemium",
+      "url": "https://tavily.com",
+      "note": "1 000 recherches gratuites par mois, sans carte bancaire.",
+      "detect": ["TAVILY_API_KEY", "^tavily-python(==|>=|<=|~=|!=|\\[|\\s*$)", "^tavily(==|>=|<=|~=|!=|\\[|\\s*$)", "^langchain-tavily(==|>=|<=|~=|!=|\\[|\\s*$)", "Tavily API [Kk]ey"],
+      "free": [
+        { "name": "Le palier gratuit suffit", "url": "https://tavily.com", "note": "Largement au-dessus des besoins d'un atelier." },
+        { "name": "DuckDuckGo Search", "url": "https://pypi.org/project/duckduckgo-search/", "note": "Aucune clé, aucun quota. Déjà utilisé par plusieurs ateliers du dépôt." },
+        { "name": "SearXNG", "url": "https://docs.searxng.org", "note": "Métamoteur auto-hébergeable, sans limite." }
+      ]
+    },
+    "exa": {
+      "name": "Exa",
+      "category": "recherche",
+      "cost": "freemium",
+      "url": "https://exa.ai",
+      "note": "Crédit offert à l'inscription. Recherche sémantique, pas par mots-clés.",
+      "detect": ["EXA_API_KEY", "^exa-py(==|>=|<=|~=|!=|\\[|\\s*$)", "^exa_py(==|>=|<=|~=|!=|\\[|\\s*$)", "Exa API [Kk]ey"],
+      "free": [
+        { "name": "DuckDuckGo Search", "url": "https://pypi.org/project/duckduckgo-search/", "note": "Sans clé ; il faut en revanche formuler la requête soi-même." },
+        { "name": "Tavily (palier gratuit)", "url": "https://tavily.com", "note": "Recherche pensée pour les agents, 1 000 appels offerts par mois." }
+      ]
+    },
+    "serp": {
+      "name": "SerpAPI / Serper",
+      "category": "recherche",
+      "cost": "freemium",
+      "url": "https://serpapi.com",
+      "note": "Une centaine de recherches gratuites par mois.",
+      "detect": ["SERPAPI_API_KEY", "SERPER_API_KEY", "SERP_API_KEY", "^google-search-results(==|>=|<=|~=|!=|\\[|\\s*$)", "^serpapi(==|>=|<=|~=|!=|\\[|\\s*$)", "Serper API [Kk]ey", "SerpAPI [Kk]ey"],
+      "free": [
+        { "name": "DuckDuckGo Search", "url": "https://pypi.org/project/duckduckgo-search/", "note": "Le remplacement le plus simple : ni clé, ni quota." },
+        { "name": "SearXNG", "url": "https://docs.searxng.org", "note": "Si vous voulez agréger plusieurs moteurs vous-même." }
+      ]
+    },
+    "browserbase": {
+      "name": "Browserbase",
+      "category": "recherche",
+      "cost": "freemium",
+      "url": "https://browserbase.com",
+      "note": "Navigateurs hébergés pour agents, avec un palier d'essai.",
+      "detect": ["BROWSERBASE_API_KEY", "BROWSERBASE_PROJECT_ID", "^browserbase(==|>=|<=|~=|!=|\\[|\\s*$)", "Browserbase API [Kk]ey"],
+      "free": [{ "name": "Playwright en local", "url": "https://playwright.dev/python/", "note": "Un vrai navigateur sur votre machine, gratuit et sans quota." }]
+    },
+    "dalle": {
+      "name": "DALL·E (OpenAI Images)",
+      "category": "image",
+      "cost": "payant",
+      "url": "https://platform.openai.com/docs/guides/images",
+      "note": "Facturé par image générée.",
+      "detect": ["DALL[·\\.-]?E", "dall-e", "images\\.generate", "AZURE_OPENAI_DALLE"],
+      "free": [
+        { "name": "Stable Diffusion via ComfyUI", "url": "https://github.com/comfyanonymous/ComfyUI", "note": "Génération locale, gratuite et illimitée si vous avez un GPU." },
+        { "name": "Pollinations", "url": "https://pollinations.ai", "note": "API de génération d'images gratuite et sans clé — pratique pour tester la leçon 09." },
+        { "name": "FLUX.1 sur Hugging Face", "url": "https://huggingface.co/black-forest-labs/FLUX.1-schnell", "note": "Modèle ouvert de très bonne qualité, utilisable via l'Inference API gratuite." }
+      ]
+    },
+    "elevenlabs": {
+      "name": "ElevenLabs",
+      "category": "voix",
+      "cost": "freemium",
+      "url": "https://elevenlabs.io",
+      "note": "10 000 caractères gratuits par mois.",
+      "detect": ["ELEVENLABS_API_KEY", "ELEVEN_API_KEY", "^elevenlabs(==|>=|<=|~=|!=|\\[|\\s*$)", "ElevenLabs API [Kk]ey"],
+      "free": [
+        { "name": "Piper", "url": "https://github.com/rhasspy/piper", "note": "Synthèse vocale locale, rapide, bonne qualité, y compris en français." },
+        { "name": "Coqui TTS", "url": "https://github.com/coqui-ai/TTS", "note": "Clonage de voix en local." },
+        { "name": "Kokoro TTS", "url": "https://huggingface.co/hexgrad/Kokoro-82M", "note": "Modèle très léger, exécutable même sans GPU." }
+      ]
+    },
+    "assemblyai": {
+      "name": "AssemblyAI / Deepgram",
+      "category": "voix",
+      "cost": "freemium",
+      "url": "https://www.assemblyai.com",
+      "note": "Crédit offert à l'inscription, puis facturation à la minute.",
+      "detect": ["ASSEMBLYAI_API_KEY", "DEEPGRAM_API_KEY", "CARTESIA_API_KEY", "^assemblyai(==|>=|<=|~=|!=|\\[|\\s*$)", "^deepgram-sdk(==|>=|<=|~=|!=|\\[|\\s*$)", "^cartesia(==|>=|<=|~=|!=|\\[|\\s*$)", "AssemblyAI API [Kk]ey", "Deepgram API [Kk]ey"],
+      "free": [
+        { "name": "faster-whisper", "url": "https://github.com/SYSTRAN/faster-whisper", "note": "Transcription Whisper locale, plusieurs fois plus rapide que l'originale." },
+        { "name": "whisper.cpp", "url": "https://github.com/ggml-org/whisper.cpp", "note": "Fonctionne sur processeur, y compris sur une machine modeste." }
+      ]
+    },
+    "mem0": {
+      "name": "Mem0 Platform",
+      "category": "memoire",
+      "cost": "freemium",
+      "url": "https://mem0.ai",
+      "note": "Palier gratuit sur la version hébergée.",
+      "detect": ["MEM0_API_KEY", "^mem0ai(==|>=|<=|~=|!=|\\[|\\s*$)", "Mem0 API [Kk]ey"],
+      "free": [
+        { "name": "Mem0 en open source", "url": "https://github.com/mem0ai/mem0", "note": "La bibliothèque s'utilise sans compte, avec un stockage local." },
+        { "name": "Une table SQLite + pgvector", "url": "https://github.com/pgvector/pgvector", "note": "Pour comprendre le mécanisme, une mémoire maison de cinquante lignes suffit." }
+      ]
+    },
+    "zep": {
+      "name": "Zep",
+      "category": "memoire",
+      "cost": "freemium",
+      "url": "https://www.getzep.com",
+      "note": "Mémoire longue pour agents, avec palier gratuit.",
+      "detect": ["ZEP_API_KEY", "^zep-python(==|>=|<=|~=|!=|\\[|\\s*$)", "^zep-cloud(==|>=|<=|~=|!=|\\[|\\s*$)"],
+      "free": [{ "name": "Zep Community Edition", "url": "https://github.com/getzep/zep", "note": "Version auto-hébergeable." }]
+    },
+    "langsmith": {
+      "name": "LangSmith",
+      "category": "observabilite",
+      "cost": "freemium",
+      "url": "https://smith.langchain.com",
+      "note": "5 000 traces gratuites par mois.",
+      "detect": ["LANGCHAIN_API_KEY", "LANGSMITH_API_KEY", "LANGCHAIN_TRACING", "^langsmith(==|>=|<=|~=|!=|\\[|\\s*$)"],
+      "free": [
+        { "name": "Langfuse auto-hébergé", "url": "https://langfuse.com/self-hosting", "note": "Équivalent open source, complet et gratuit." },
+        { "name": "Phoenix (Arize)", "url": "https://github.com/Arize-ai/phoenix", "note": "Observabilité et évaluation en local, dans un notebook." }
+      ]
+    },
+    "langfuse": {
+      "name": "Langfuse",
+      "category": "observabilite",
+      "cost": "gratuit",
+      "url": "https://langfuse.com",
+      "note": "Open source et auto-hébergeable ; l'offre infonuagique a aussi un palier gratuit.",
+      "detect": ["LANGFUSE_PUBLIC_KEY", "LANGFUSE_SECRET_KEY", "^langfuse(==|>=|<=|~=|!=|\\[|\\s*$)"],
+      "free": []
+    },
+    "composio": {
+      "name": "Composio",
+      "category": "outils",
+      "cost": "freemium",
+      "url": "https://composio.dev",
+      "note": "Connecteurs prêts à l'emploi vers des centaines d'applications, avec un palier gratuit.",
+      "detect": ["COMPOSIO_API_KEY", "^composio(==|>=|<=|~=|!=|\\[|\\s*$)", "^composio-core(==|>=|<=|~=|!=|\\[|\\s*$)", "^composio_langchain(==|>=|<=|~=|!=|\\[|\\s*$)", "Composio API [Kk]ey"],
+      "free": [
+        { "name": "Serveurs MCP officiels", "url": "https://github.com/modelcontextprotocol/servers", "note": "GitHub, Slack, système de fichiers… gratuits et auto-hébergés." },
+        { "name": "Appel direct des API", "url": "https://modelcontextprotocol.io", "note": "Pour un ou deux outils, écrire l'appel soi-même reste le plus simple." }
+      ]
+    },
+    "e2b": {
+      "name": "E2B",
+      "category": "outils",
+      "cost": "freemium",
+      "url": "https://e2b.dev",
+      "note": "Bacs à sable d'exécution de code, avec des heures gratuites.",
+      "detect": ["E2B_API_KEY", "^e2b(==|>=|<=|~=|!=|\\[|\\s*$)", "^e2b-code-interpreter(==|>=|<=|~=|!=|\\[|\\s*$)", "E2B API [Kk]ey"],
+      "free": [
+        { "name": "Docker en local", "url": "https://docs.docker.com", "note": "Un conteneur jetable rend le même service pour apprendre." },
+        { "name": "Noyau Jupyter local", "url": "https://jupyter.org", "note": "Suffit pour les ateliers d'analyse de données." }
+      ]
+    },
+    "github-token": {
+      "name": "Jeton GitHub",
+      "category": "outils",
+      "cost": "gratuit",
+      "url": "https://github.com/settings/tokens",
+      "note": "Un jeton personnel suffit ; il donne aussi accès à GitHub Models.",
+      "detect": ["GITHUB_TOKEN", "GITHUB_PERSONAL_ACCESS_TOKEN"],
+      "free": []
+    },
+    "power-platform": {
+      "name": "Microsoft Power Platform / Copilot Studio",
+      "category": "lowcode",
+      "cost": "payant",
+      "url": "https://powerplatform.microsoft.com",
+      "note": "Utilisé par la leçon 10. L'essai gratuit est limité dans le temps et demande un compte professionnel.",
+      "detect": ["Power Apps", "Power Automate", "Copilot Studio", "Power Platform", "AI Builder"],
+      "free": [
+        { "name": "Flowise", "url": "https://flowiseai.com", "note": "Construction d'agents et de chaînes RAG par glisser-déposer, open source et auto-hébergeable." },
+        { "name": "Langflow", "url": "https://www.langflow.org", "note": "Même principe, très proche de ce que montre la leçon 10." },
+        { "name": "n8n", "url": "https://n8n.io", "note": "Automatisation visuelle avec nœuds IA ; la version communautaire est gratuite." },
+        { "name": "Plan développeur Power Platform", "url": "https://powerapps.microsoft.com/developerplan/", "note": "Gratuit et sans limite de durée pour l'apprentissage, mais réservé à un usage non productif." }
+      ]
+    },
+    "spoonacular": {
+      "name": "Spoonacular",
+      "category": "donnees",
+      "cost": "freemium",
+      "url": "https://spoonacular.com/food-api",
+      "note": "150 requêtes gratuites par jour.",
+      "detect": ["SPOONACULAR_API_KEY", "Spoonacular API [Kk]ey"],
+      "free": [{ "name": "Open Food Facts", "url": "https://world.openfoodfacts.org/data", "note": "Base ouverte, sans clé ni quota." }]
+    }
+  }
+}

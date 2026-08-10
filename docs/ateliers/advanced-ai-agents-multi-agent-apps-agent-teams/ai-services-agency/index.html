@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agence de services (CrewAI) — atelier</title>
+<meta name="description" content="Une agence complète simulée avec CrewAI — bonne porte d&#x27;entrée sur ce framework.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html">Équipes d&#x27;agents par métier</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">👥</span> Équipes d&#x27;agents par métier</p>
+  <h1 class="pagehead__title">Agence de services (CrewAI)</h1>
+  <p class="pagehead__summary">Une agence complète simulée avec CrewAI — bonne porte d&#x27;entrée sur ce framework.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="ai-services-agency">AI Services Agency 👨‍💼<a class="anchor" href="#ai-services-agency" aria-label="Lien vers cette section">#</a></h1>
+<p>An AI application that simulates a full-service digital agency using multiple AI agents to analyze and plan software projects. Each agent represents a different role in the project lifecycle, from strategic planning to technical implementation.</p>
+<h2 id="demo">Demo:<a class="anchor" href="#demo" aria-label="Lien vers cette section">#</a></h2>
+<p>https://github.com/user-attachments/assets/a0befa3a-f4c3-400d-9790-4b9e37254405</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="five-specialized-ai-agents">Five specialized AI agents<a class="anchor" href="#five-specialized-ai-agents" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>
+<p><strong>CEO Agent</strong>: Strategic leader and final decision maker</p>
+<ul>
+<li>Analyzes startup ideas using structured evaluation</li>
+<li>Makes strategic decisions across product, technical, marketing, and financial domains</li>
+<li>Uses AnalyzeProjectRequirements tool</li>
+</ul>
+</li>
+<li>
+<p><strong>CTO Agent</strong>: Technical architecture and feasibility expert</p>
+<ul>
+<li>Evaluates technical requirements and feasibility</li>
+<li>Provides architecture decisions</li>
+<li>Uses CreateTechnicalSpecification tool</li>
+</ul>
+</li>
+<li>
+<p><strong>Product Manager Agent</strong>: Product strategy specialist</p>
+<ul>
+<li>Defines product strategy and roadmap</li>
+<li>Coordinates between technical and marketing teams</li>
+<li>Focuses on product-market fit</li>
+</ul>
+</li>
+<li>
+<p><strong>Developer Agent</strong>: Technical implementation expert</p>
+<ul>
+<li>Provides detailed technical implementation guidance</li>
+<li>Suggests optimal tech stack and cloud solutions</li>
+<li>Estimates development costs and timelines</li>
+</ul>
+</li>
+<li>
+<p><strong>Client Success Agent</strong>: Marketing strategy leader</p>
+<ul>
+<li>Develops go-to-market strategies</li>
+<li>Plans customer acquisition approaches</li>
+<li>Coordinates with product team</li>
+</ul>
+</li>
+</ul>
+<h3 id="custom-tools">Custom Tools<a class="anchor" href="#custom-tools" aria-label="Lien vers cette section">#</a></h3>
+<p>The agency uses specialized tools built with OpenAI Schema for structured analysis:</p>
+<ul>
+<li><strong>Analysis Tools</strong>: AnalyzeProjectRequirements for market evaluation and analysis of startup idea</li>
+<li><strong>Technical Tools</strong>: CreateTechnicalSpecification for technical assessment</li>
+</ul>
+<h3 id="multi-agent-collaboration">🤝 Multi-Agent Collaboration<a class="anchor" href="#multi-agent-collaboration" aria-label="Lien vers cette section">#</a></h3>
+<p>The agency coordinates five specialists through explicit communication flows:</p>
+<ul>
+<li>CEO drives strategic oversight across the team</li>
+<li>CTO and Developer collaborate on implementation feasibility</li>
+<li>Product and Client Success coordinate roadmap and go-to-market planning</li>
+<li>Each analysis is returned in a dedicated section in the Streamlit UI</li>
+</ul>
+<h3 id="agent-communication-flows">🔗 Agent Communication Flows<a class="anchor" href="#agent-communication-flows" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>CEO ↔️ All Agents (Strategic Oversight)</li>
+<li>CTO ↔️ Developer (Technical Implementation)</li>
+<li>Product Manager ↔️ Client Success Manager (Go-to-Market Strategy)</li>
+<li>Product Manager ↔️ Developer (Feature Implementation)</li>
+<li>(and more!)</li>
+</ul>
+<h2 id="how-to-run">How to Run<a class="anchor" href="#how-to-run" aria-label="Lien vers cette section">#</a></h2>
+<p>Follow the steps below to set up and run the application:
+Before anything else, Please get your OpenAI API Key here: https://platform.openai.com/api-keys</p>
+<ol>
+<li>
+<p><strong>Clone the Repository</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>advanced_ai_agents/multi_agent_apps/agent_teams/ai_services_agency
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install the dependencies</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Run the Streamlit app</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>agency.py
+</pre></div>
+</div></li>
+<li>
+<p><strong>Enter your OpenAI API Key</strong> in the sidebar when prompted and start analyzing your startup idea!</p>
+</li>
+</ol>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-agency-py"><summary class="codefile__head"><span class="codefile__name">agency.py</span><span class="codefile__size">17 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">agency_swarm</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Agency</span><span class="p">,</span> <span class="n">BaseTool</span><span class="p">,</span> <span class="n">ModelSettings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AnalyzeProjectRequirements</span><span class="p">(</span><span class="n">BaseTool</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze project requirements and feasibility.&quot;&quot;&quot;</span>
+
+    <span class="n">project_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the project&quot;</span><span class="p">)</span>
+    <span class="n">project_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Project description and goals&quot;</span><span class="p">)</span>
+    <span class="n">project_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Web Application&quot;</span><span class="p">,</span> <span class="s2">&quot;Mobile App&quot;</span><span class="p">,</span> <span class="s2">&quot;API Development&quot;</span><span class="p">,</span> 
+                         <span class="s2">&quot;Data Analytics&quot;</span><span class="p">,</span> <span class="s2">&quot;AI/ML Solution&quot;</span><span class="p">,</span> <span class="s2">&quot;Other&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> 
+                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Type of project&quot;</span><span class="p">)</span>
+    <span class="n">budget_range</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;$10k-$25k&quot;</span><span class="p">,</span> <span class="s2">&quot;$25k-$50k&quot;</span><span class="p">,</span> <span class="s2">&quot;$50k-$100k&quot;</span><span class="p">,</span> <span class="s2">&quot;$100k+&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> 
+                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Budget range for the project&quot;</span><span class="p">)</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ToolConfig</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;analyze_project&quot;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Analyzes project requirements and feasibility&quot;</span>
+        <span class="n">one_call_at_a_time</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyzes project and stores results in shared state&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project_analysis&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Project analysis already exists. Please proceed with technical specification.&quot;</span><span class="p">)</span>
+        
+        <span class="n">analysis</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_type</span><span class="p">,</span>
+            <span class="s2">&quot;complexity&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;timeline&quot;</span><span class="p">:</span> <span class="s2">&quot;6 months&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;budget_feasibility&quot;</span><span class="p">:</span> <span class="s2">&quot;within range&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;requirements&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Scalable architecture&quot;</span><span class="p">,</span> <span class="s2">&quot;Security&quot;</span><span class="p">,</span> <span class="s2">&quot;API integration&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;project_analysis&quot;</span><span class="p">,</span> <span class="n">analysis</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;Project analysis completed. Please proceed with technical specification.&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CreateTechnicalSpecification</span><span class="p">(</span><span class="n">BaseTool</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a technical specification based on project analysis.&quot;&quot;&quot;</span>
+
+    <span class="n">architecture_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;monolithic&quot;</span><span class="p">,</span> <span class="s2">&quot;microservices&quot;</span><span class="p">,</span> <span class="s2">&quot;serverless&quot;</span><span class="p">,</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> 
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Proposed architecture type&quot;</span>
+    <span class="p">)</span>
+    <span class="n">core_technologies</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> 
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Comma-separated list of main technologies and frameworks&quot;</span>
+    <span class="p">)</span>
+    <span class="n">scalability_requirements</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;high&quot;</span><span class="p">,</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span> <span class="s2">&quot;low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> 
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Scalability needs&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ToolConfig</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;create_technical_spec&quot;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Creates technical specifications based on project analysis&quot;</span>
+        <span class="n">one_call_at_a_time</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates technical specification based on analysis&quot;&quot;&quot;</span>
+        <span class="n">project_analysis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project_analysis&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">project_analysis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please analyze project requirements first using AnalyzeProjectRequirements tool.&quot;</span><span class="p">)</span>
+        
+        <span class="n">spec</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;project_name&quot;</span><span class="p">:</span> <span class="n">project_analysis</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;architecture&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">architecture_type</span><span class="p">,</span>
+            <span class="s2">&quot;technologies&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">core_technologies</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;scalability&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scalability_requirements</span>
+        <span class="p">}</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;technical_specification&quot;</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Technical specification created for </span><span class="si">{</span><span class="n">project_analysis</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">init_session_state</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize session state variables&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;messages&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s1">&#39;api_key&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;AI Services Agency&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">)</span>
+    <span class="n">init_session_state</span><span class="p">()</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🚀 AI Services Agency&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># API Configuration</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;🔑 API Configuration&quot;</span><span class="p">)</span>
+        <span class="n">openai_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+            <span class="s2">&quot;OpenAI API Key&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter your OpenAI API key to continue&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">openai_api_key</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">openai_api_key</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;API Key accepted!&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ Please enter your OpenAI API Key to proceed&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;[Get your API key here](https://platform.openai.com/api-keys)&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+    <span class="c1"># Agency Swarm v1 uses standard OPENAI_API_KEY resolution.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">api_key</span>
+    
+    <span class="c1"># Project Input Form</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">form</span><span class="p">(</span><span class="s2">&quot;project_form&quot;</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Project Details&quot;</span><span class="p">)</span>
+        
+        <span class="n">project_name</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Project Name&quot;</span><span class="p">)</span>
+        <span class="n">project_description</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span>
+            <span class="s2">&quot;Project Description&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Describe the project, its goals, and any specific requirements&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">project_type</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Project Type&quot;</span><span class="p">,</span>
+                <span class="p">[</span><span class="s2">&quot;Web Application&quot;</span><span class="p">,</span> <span class="s2">&quot;Mobile App&quot;</span><span class="p">,</span> <span class="s2">&quot;API Development&quot;</span><span class="p">,</span> 
+                 <span class="s2">&quot;Data Analytics&quot;</span><span class="p">,</span> <span class="s2">&quot;AI/ML Solution&quot;</span><span class="p">,</span> <span class="s2">&quot;Other&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">timeline</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Expected Timeline&quot;</span><span class="p">,</span>
+                <span class="p">[</span><span class="s2">&quot;1-2 months&quot;</span><span class="p">,</span> <span class="s2">&quot;3-4 months&quot;</span><span class="p">,</span> <span class="s2">&quot;5-6 months&quot;</span><span class="p">,</span> <span class="s2">&quot;6+ months&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">budget_range</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Budget Range&quot;</span><span class="p">,</span>
+                <span class="p">[</span><span class="s2">&quot;$10k-$25k&quot;</span><span class="p">,</span> <span class="s2">&quot;$25k-$50k&quot;</span><span class="p">,</span> <span class="s2">&quot;$50k-$100k&quot;</span><span class="p">,</span> <span class="s2">&quot;$100k+&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">priority</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Project Priority&quot;</span><span class="p">,</span>
+                <span class="p">[</span><span class="s2">&quot;High&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium&quot;</span><span class="p">,</span> <span class="s2">&quot;Low&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        
+        <span class="n">tech_requirements</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span>
+            <span class="s2">&quot;Technical Requirements (optional)&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Any specific technical requirements or preferences&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">special_considerations</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span>
+            <span class="s2">&quot;Special Considerations (optional)&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Any additional information or special requirements&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">submitted</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">form_submit_button</span><span class="p">(</span><span class="s2">&quot;Analyze Project&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">submitted</span> <span class="ow">and</span> <span class="n">project_name</span> <span class="ow">and</span> <span class="n">project_description</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Create agents</span>
+                <span class="n">ceo</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Project Director&quot;</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;You are a CEO of multiple companies in the past and have a lot of experience in evaluating projects and making strategic decisions.&quot;</span><span class="p">,</span>
+                    <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    You are an experienced CEO who evaluates projects. Follow these steps strictly:</span>
+
+<span class="s2">                    1. FIRST, use the AnalyzeProjectRequirements tool with:</span>
+<span class="s2">                       - project_name: The name from the project details</span>
+<span class="s2">                       - project_description: The full project description</span>
+<span class="s2">                       - project_type: The type of project (Web Application, Mobile App, etc)</span>
+<span class="s2">                       - budget_range: The specified budget range</span>
+
+<span class="s2">                    2. WAIT for the analysis to complete before proceeding.</span>
+<span class="s2">                    </span>
+<span class="s2">                    3. Review the analysis results and provide strategic recommendations.</span>
+<span class="s2">                    &quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">AnalyzeProjectRequirements</span><span class="p">],</span>
+                    <span class="n">model_settings</span><span class="o">=</span><span class="n">ModelSettings</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">25000</span><span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="n">cto</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Technical Architect&quot;</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Senior technical architect with deep expertise in system design.&quot;</span><span class="p">,</span>
+                    <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    You are a technical architect. Follow these steps strictly:</span>
+
+<span class="s2">                    1. WAIT for the project analysis to be completed by the CEO.</span>
+<span class="s2">                    </span>
+<span class="s2">                    2. Use the CreateTechnicalSpecification tool with:</span>
+<span class="s2">                       - architecture_type: Choose from monolithic/microservices/serverless/hybrid</span>
+<span class="s2">                       - core_technologies: List main technologies as comma-separated values</span>
+<span class="s2">                       - scalability_requirements: Choose high/medium/low based on project needs</span>
+
+<span class="s2">                    3. Review the technical specification and provide additional recommendations.</span>
+<span class="s2">                    &quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">CreateTechnicalSpecification</span><span class="p">],</span>
+                    <span class="n">model_settings</span><span class="o">=</span><span class="n">ModelSettings</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">25000</span><span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="n">product_manager</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Product Manager&quot;</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Experienced product manager focused on delivery excellence.&quot;</span><span class="p">,</span>
+                    <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    - Manage project scope and timeline giving the roadmap of the project</span>
+<span class="s2">                    - Define product requirements and you should give potential products and features that can be built for the startup</span>
+<span class="s2">                    &quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">model_settings</span><span class="o">=</span><span class="n">ModelSettings</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">25000</span><span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="n">developer</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Lead Developer&quot;</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Senior developer with full-stack expertise.&quot;</span><span class="p">,</span>
+                    <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    - Plan technical implementation</span>
+<span class="s2">                    - Provide effort estimates</span>
+<span class="s2">                    - Review technical feasibility</span>
+<span class="s2">                    &quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">model_settings</span><span class="o">=</span><span class="n">ModelSettings</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">25000</span><span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="n">client_manager</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Client Success Manager&quot;</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Experienced client manager focused on project delivery.&quot;</span><span class="p">,</span>
+                    <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    - Ensure client satisfaction</span>
+<span class="s2">                    - Manage expectations</span>
+<span class="s2">                    - Handle feedback</span>
+<span class="s2">                    &quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">model_settings</span><span class="o">=</span><span class="n">ModelSettings</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">25000</span><span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Create agency</span>
+                <span class="n">agency</span> <span class="o">=</span> <span class="n">Agency</span><span class="p">(</span>
+                    <span class="n">ceo</span><span class="p">,</span>
+                    <span class="n">cto</span><span class="p">,</span>
+                    <span class="n">product_manager</span><span class="p">,</span>
+                    <span class="n">developer</span><span class="p">,</span>
+                    <span class="n">client_manager</span><span class="p">,</span>
+                    <span class="n">communication_flows</span><span class="o">=</span><span class="p">[</span>
+                        <span class="p">(</span><span class="n">ceo</span><span class="p">,</span> <span class="n">cto</span><span class="p">),</span>
+                        <span class="p">(</span><span class="n">ceo</span><span class="p">,</span> <span class="n">product_manager</span><span class="p">),</span>
+                        <span class="p">(</span><span class="n">ceo</span><span class="p">,</span> <span class="n">developer</span><span class="p">),</span>
+                        <span class="p">(</span><span class="n">ceo</span><span class="p">,</span> <span class="n">client_manager</span><span class="p">),</span>
+                        <span class="p">(</span><span class="n">cto</span><span class="p">,</span> <span class="n">developer</span><span class="p">),</span>
+                        <span class="p">(</span><span class="n">product_manager</span><span class="p">,</span> <span class="n">developer</span><span class="p">),</span>
+                        <span class="p">(</span><span class="n">product_manager</span><span class="p">,</span> <span class="n">client_manager</span><span class="p">),</span>
+                    <span class="p">],</span>
+                <span class="p">)</span>
+                
+                <span class="c1"># Prepare project info</span>
+                <span class="n">project_info</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">project_name</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">project_description</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">project_type</span><span class="p">,</span>
+                    <span class="s2">&quot;timeline&quot;</span><span class="p">:</span> <span class="n">timeline</span><span class="p">,</span>
+                    <span class="s2">&quot;budget&quot;</span><span class="p">:</span> <span class="n">budget_range</span><span class="p">,</span>
+                    <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="n">priority</span><span class="p">,</span>
+                    <span class="s2">&quot;technical_requirements&quot;</span><span class="p">:</span> <span class="n">tech_requirements</span><span class="p">,</span>
+                    <span class="s2">&quot;special_considerations&quot;</span><span class="p">:</span> <span class="n">special_considerations</span>
+                <span class="p">}</span>
+
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">project_info</span><span class="p">)})</span>
+                <span class="c1"># Create tabs and run analysis</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;AI Services Agency is analyzing your project...&quot;</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="c1"># Get analysis from each agent using get_response_sync.</span>
+                        <span class="n">ceo_response</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="n">agency</span><span class="o">.</span><span class="n">get_response_sync</span><span class="p">(</span>
+                            <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;Analyze this project using the AnalyzeProjectRequirements tool:</span>
+<span class="s2">                            Project Name: </span><span class="si">{</span><span class="n">project_name</span><span class="si">}</span>
+<span class="s2">                            Project Description: </span><span class="si">{</span><span class="n">project_description</span><span class="si">}</span>
+<span class="s2">                            Project Type: </span><span class="si">{</span><span class="n">project_type</span><span class="si">}</span>
+<span class="s2">                            Budget Range: </span><span class="si">{</span><span class="n">budget_range</span><span class="si">}</span>
+<span class="s2">                            </span>
+<span class="s2">                            Use these exact values with the tool and wait for the analysis results.&quot;&quot;&quot;</span><span class="p">,</span>
+                            <span class="n">recipient_agent</span><span class="o">=</span><span class="n">ceo</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">final_output</span>
+                        <span class="p">)</span>
+                        
+                        <span class="n">cto_response</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="n">agency</span><span class="o">.</span><span class="n">get_response_sync</span><span class="p">(</span>
+                            <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;Review the project analysis and create technical specifications using the CreateTechnicalSpecification tool.</span>
+<span class="s2">                            Choose the most appropriate:</span>
+<span class="s2">                            - architecture_type (monolithic/microservices/serverless/hybrid)</span>
+<span class="s2">                            - core_technologies (comma-separated list)</span>
+<span class="s2">                            - scalability_requirements (high/medium/low)</span>
+<span class="s2">                            </span>
+<span class="s2">                            Base your choices on the project requirements and analysis.&quot;&quot;&quot;</span><span class="p">,</span>
+                            <span class="n">recipient_agent</span><span class="o">=</span><span class="n">cto</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">final_output</span>
+                        <span class="p">)</span>
+                        
+                        <span class="n">pm_response</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="n">agency</span><span class="o">.</span><span class="n">get_response_sync</span><span class="p">(</span>
+                            <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Analyze project management aspects: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">project_info</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">recipient_agent</span><span class="o">=</span><span class="n">product_manager</span><span class="p">,</span>
+                            <span class="n">additional_instructions</span><span class="o">=</span><span class="s2">&quot;Focus on product-market fit and roadmap development, and coordinate with technical and marketing teams.&quot;</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">final_output</span>
+                        <span class="p">)</span>
+
+                        <span class="n">developer_response</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="n">agency</span><span class="o">.</span><span class="n">get_response_sync</span><span class="p">(</span>
+                            <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Analyze technical implementation based on CTO&#39;s specifications: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">project_info</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">recipient_agent</span><span class="o">=</span><span class="n">developer</span><span class="p">,</span>
+                            <span class="n">additional_instructions</span><span class="o">=</span><span class="s2">&quot;Provide technical implementation details, optimal tech stack you would be using including the costs of cloud services (if any) and feasibility feedback, and coordinate with product manager and CTO to build the required products for the startup.&quot;</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">final_output</span>
+                        <span class="p">)</span>
+                        
+                        <span class="n">client_response</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="n">agency</span><span class="o">.</span><span class="n">get_response_sync</span><span class="p">(</span>
+                            <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Analyze client success aspects: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">project_info</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">recipient_agent</span><span class="o">=</span><span class="n">client_manager</span><span class="p">,</span>
+                            <span class="n">additional_instructions</span><span class="o">=</span><span class="s2">&quot;Provide detailed go-to-market strategy and customer acquisition plan, and coordinate with product manager.&quot;</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">final_output</span>
+                        <span class="p">)</span>
+                        
+                        <span class="c1"># Create tabs for different analyses</span>
+                        <span class="n">tabs</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span>
+                            <span class="s2">&quot;CEO&#39;s Project Analysis&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;CTO&#39;s Technical Specification&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;Product Manager&#39;s Plan&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;Developer&#39;s Implementation&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;Client Success Strategy&quot;</span>
+                        <span class="p">])</span>
+                        
+                        <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;## CEO&#39;s Strategic Analysis&quot;</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">ceo_response</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">ceo_response</span><span class="p">})</span>
+                        
+                        <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;## CTO&#39;s Technical Specification&quot;</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">cto_response</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">cto_response</span><span class="p">})</span>
+                        
+                        <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;## Product Manager&#39;s Plan&quot;</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">pm_response</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">pm_response</span><span class="p">})</span>
+                        
+                        <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;## Lead Developer&#39;s Development Plan&quot;</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">developer_response</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">developer_response</span><span class="p">})</span>
+                        
+                        <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;## Client Success Strategy&quot;</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">client_response</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">client_response</span><span class="p">})</span>
+
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during analysis: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please check your inputs and API key and try again.&quot;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during analysis: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please check your API key and try again.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Add history management in sidebar</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Options&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">checkbox</span><span class="p">(</span><span class="s2">&quot;Show Analysis History&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">]):</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Clear History&quot;</span><span class="p">):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-services-agency/agency.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">51 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python-dotenv==1.1.1
+agency-swarm==1.7.0
+streamlit
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-services-agency/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li><li><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html">12 · Concevoir l&#x27;UX des applications d&#x27;IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-multi-agent-apps-agent-teams/ai-services-agency">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-seo-audit-team/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Équipe d&#x27;audit SEO</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-teaching-agent-team/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Équipe pédagogique</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/multi_agent_apps/agent_teams/ai_services_agency" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/multi_agent_apps/agent_teams/ai_services_agency</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#demo">Demo:</a></li><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h3"><a href="#five-specialized-ai-agents">Five specialized AI agents</a></li><li class="toc__item toc__item--h3"><a href="#custom-tools">Custom Tools</a></li><li class="toc__item toc__item--h3"><a href="#multi-agent-collaboration">🤝 Multi-Agent Collaboration</a></li><li class="toc__item toc__item--h3"><a href="#agent-communication-flows">🔗 Agent Communication Flows</a></li><li class="toc__item toc__item--h2"><a href="#how-to-run">How to Run</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

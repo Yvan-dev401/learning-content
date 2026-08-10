@@ -1,0 +1,1504 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recherche d&#x27;un moment dans une vidéo — atelier</title>
+<meta name="description" content="Retrouve l&#x27;instant précis correspondant à une description.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-llm-apps/index.html">Applications LLM diverses</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🧪</span> Applications LLM diverses</p>
+  <h1 class="pagehead__title">Recherche d&#x27;un moment dans une vidéo</h1>
+  <p class="pagehead__summary">Retrouve l&#x27;instant précis correspondant à une description.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#palier-gratuit" title="Des comptes sont nécessaires, mais leur offre gratuite couvre l&#x27;exercice."><span class="tag__icon" aria-hidden="true">🧪</span><span class="tag__label">Palier gratuit suffisant</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio / Gemini</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Palier gratuit confortable, sans carte bancaire. Convient à la quasi-totalité des ateliers.</p><ul class="alts__list"><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Le palier gratuit suffit</a> — Créez la clé dans AI Studio : aucune carte n&#x27;est demandée.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Si vous dépassez le quota, un modèle local prend le relais.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="multimodal-video-moment-finder">🎬 Multimodal Video Moment Finder<a class="anchor" href="#multimodal-video-moment-finder" aria-label="Lien vers cette section">#</a></h1>
+<p align="center">
+  <img src="../../../assets/images/hero_banner.png" alt="Multimodal Video Moment Finder" width="700">
+</p>
+<p>Find any moment in a video using images or text. Drop a screenshot to find where it appears, or describe a scene in words. Pure visual matching, zero transcription.</p>
+<p>Powered by <strong>Gemini Embedding 2</strong> for native cross-modal search.</p>
+<h2 id="how-it-works">How It Works<a class="anchor" href="#how-it-works" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li><strong>Upload a video</strong> — frames are extracted at 1fps using ffmpeg</li>
+<li><strong>Each frame is embedded</strong> natively with <code>gemini-embedding-2-preview</code></li>
+<li><strong>Search by image</strong> — embed your photo, cosine similarity against all frames</li>
+<li><strong>Search by text</strong> — embed your description, cross-modal match against frames</li>
+<li><strong>Jump to the moment</strong> — click any result to play the video at that timestamp</li>
+</ol>
+<p>No transcription. No captions. No OCR. The embedding model understands visual content directly.</p>
+<h2 id="stack">Stack<a class="anchor" href="#stack" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Backend</strong>: FastAPI + Gemini Embedding 2 + ChromaDB</li>
+<li><strong>Frontend</strong>: Next.js (dark theme, split panel)</li>
+<li><strong>Frame extraction</strong>: ffmpeg (1fps)</li>
+<li><strong>Frame descriptions</strong>: Gemini 3 Flash</li>
+<li><strong>Models</strong>: <code>gemini-embedding-2-preview</code> (embeddings), <code>gemini-3-flash-preview</code> (descriptions)</li>
+</ul>
+<h2 id="project-structure">Project Structure<a class="anchor" href="#project-structure" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>advanced_llm_apps/multimodal_video_moment_finder/
+├── backend/
+│   ├── server.py           # FastAPI server with upload, search &amp; video management endpoints
+│   ├── video_store.py      # Video processing, frame extraction, embedding &amp; ChromaDB storage
+│   └── requirements.txt    # Python dependencies
+├── frontend/
+│   ├── app/
+│   │   ├── page.tsx        # Main UI — video upload, image/text search, result playback
+│   │   ├── layout.tsx      # Root layout
+│   │   └── globals.css     # Global styles
+│   ├── package.json
+│   ├── next.config.ts
+│   └── tsconfig.json
+└── README.md
+</pre></div>
+</div><h2 id="setup">Setup<a class="anchor" href="#setup" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="prerequisites">Prerequisites<a class="anchor" href="#prerequisites" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Python 3.10+</li>
+<li>Node.js 18+</li>
+<li>ffmpeg installed (<code>brew install ffmpeg</code> or <code>apt install ffmpeg</code>)</li>
+<li><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Google AI API key</a></li>
+</ul>
+<h3 id="backend">Backend<a class="anchor" href="#backend" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>advanced_llm_apps/multimodal_video_moment_finder/backend
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_API_KEY</span><span class="o">=</span><span class="s2">&quot;your-api-key&quot;</span>
+python<span class="w"> </span>server.py
+</pre></div>
+</div><p>Backend runs on <code>http://localhost:8890</code>.</p>
+<h3 id="frontend">Frontend<a class="anchor" href="#frontend" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>advanced_llm_apps/multimodal_video_moment_finder/frontend
+npm<span class="w"> </span>install
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;NEXT_PUBLIC_API_URL=http://localhost:8890&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>.env.local
+npm<span class="w"> </span>run<span class="w"> </span>dev
+</pre></div>
+</div><p>Frontend runs on <code>http://localhost:3000</code>.</p>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>Open <code>http://localhost:3000</code></li>
+<li>Upload a video (any format ffmpeg supports)</li>
+<li>Wait for frame extraction and embedding (1 frame/second)</li>
+<li>Search:
+<ul>
+<li><strong>Image</strong>: drop a screenshot or photo to find where it appears</li>
+<li><strong>Text</strong>: describe a scene (&quot;person on stage&quot;, &quot;aerial view of city&quot;)</li>
+</ul>
+</li>
+<li>Click any result to jump the video to that moment</li>
+</ol>
+<h2 id="api-endpoints">API Endpoints<a class="anchor" href="#api-endpoints" aria-label="Lien vers cette section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/upload-video</code></td>
+<td>Upload and index a video</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/find-moment</code></td>
+<td>Search by image (multipart form)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/find-moment-text</code></td>
+<td>Search by text description</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/videos</code></td>
+<td>List indexed videos</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/videos/{id}</code></td>
+<td>Remove a video</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/health</code></td>
+<td>Status check</td>
+</tr>
+</tbody>
+</table>
+<h2 id="architecture">Architecture<a class="anchor" href="#architecture" aria-label="Lien vers cette section">#</a></h2>
+<p align="center">
+  <img src="../../../assets/images/architecture_diagram.png" alt="Architecture Diagram" width="600">
+</p>
+<h2 id="key-insight">Key Insight<a class="anchor" href="#key-insight" aria-label="Lien vers cette section">#</a></h2>
+<p>Gemini Embedding 2 embeds images and text into the same vector space natively. This means you can search for a visual moment using either another image or a text description, without any intermediate captioning or transcription step. The model understands what's in the frame directly.</p>
+
+</article>
+<section class="subpages"><h2 id="pages-de-l-atelier">Pages de cet atelier<a class="anchor" href="#pages-de-l-atelier" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/index.html">or</a></li></ul></section>
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs" role="tablist"><button class="tabs__btn" role="tab" aria-selected="true" data-tab="backend">backend</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="frontend">frontend</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="fichiers">Fichiers</button></div><div class="tabs__panel" data-tab="backend"><details class="codefile" id="code-backend-requirements-txt"><summary class="codefile__head"><span class="codefile__name">backend/requirements.txt</span><span class="codefile__size">126 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>fastapi&gt;=0.115.0
+uvicorn&gt;=0.30.0
+google-genai&gt;=1.0.0
+google-adk&gt;=1.0.0
+chromadb&gt;=0.5.0
+python-multipart&gt;=0.0.7
+Pillow&gt;=10.0.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/backend/requirements.txt" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-backend-server-py"><summary class="codefile__head"><span class="codefile__name">backend/server.py</span><span class="codefile__size">4 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Video Moment Finder — FastAPI Server</span>
+
+<span class="sd">Upload videos, then find exact moments using images or text.</span>
+<span class="sd">Pure visual matching via Gemini Embedding 2.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">Form</span><span class="p">,</span> <span class="n">UploadFile</span><span class="p">,</span> <span class="n">HTTPException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.middleware.cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORSMiddleware</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.staticfiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticFiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">video_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">VideoStore</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Multimodal Video Moment Finder&quot;</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
+    <span class="n">CORSMiddleware</span><span class="p">,</span>
+    <span class="n">allow_origins</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+    <span class="n">allow_credentials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+    <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># Serve frame images</span>
+<span class="n">frames_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./frames&quot;</span><span class="p">)</span>
+<span class="n">frames_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;/frames&quot;</span><span class="p">,</span> <span class="n">StaticFiles</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="s2">&quot;frames&quot;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;frames&quot;</span><span class="p">)</span>
+
+<span class="c1"># Serve uploaded videos</span>
+<span class="n">uploads_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./uploads&quot;</span><span class="p">)</span>
+<span class="n">uploads_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;/uploads&quot;</span><span class="p">,</span> <span class="n">StaticFiles</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="s2">&quot;uploads&quot;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;uploads&quot;</span><span class="p">)</span>
+
+<span class="n">store</span> <span class="o">=</span> <span class="n">VideoStore</span><span class="p">()</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TextSearchRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">video_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/upload-video&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upload_video</span><span class="p">(</span>
+    <span class="n">file</span><span class="p">:</span> <span class="n">UploadFile</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+    <span class="n">fps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Form</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Upload and process a video. Extracts frames and embeds each one.&quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">:</span>  <span class="c1"># 100MB limit</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="s2">&quot;Video too large (100MB max)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Save video</span>
+    <span class="n">video_path</span> <span class="o">=</span> <span class="n">uploads_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">video_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># Process</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">ingest_video</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">video_path</span><span class="p">),</span> <span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/find-moment&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_moment</span><span class="p">(</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">UploadFile</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+    <span class="n">video_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Form</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span>
+    <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Form</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find video moments matching an uploaded image.&quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">image</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">mime</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">content_type</span> <span class="ow">or</span> <span class="s2">&quot;image/jpeg&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">moments</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">find_moment</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">mime</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="n">top_k</span><span class="p">,</span> <span class="n">video_id</span><span class="o">=</span><span class="n">video_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Embedding error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Add descriptions for top moments</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">moments</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">m</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">describe_moment</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;frame_path&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">m</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="c1"># Convert frame paths to URLs</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">moments</span><span class="p">:</span>
+        <span class="n">frame_path</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;frame_path&quot;</span><span class="p">]</span>
+        <span class="c1"># Make relative to frames dir</span>
+        <span class="n">rel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">frame_path</span><span class="p">,</span> <span class="s2">&quot;frames&quot;</span><span class="p">)</span>
+        <span class="n">m</span><span class="p">[</span><span class="s2">&quot;frame_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/frames/</span><span class="si">{</span><span class="n">rel</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;moments&quot;</span><span class="p">:</span> <span class="n">moments</span><span class="p">,</span> <span class="s2">&quot;query_type&quot;</span><span class="p">:</span> <span class="s2">&quot;image&quot;</span><span class="p">}</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/find-moment-text&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_moment_text</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">TextSearchRequest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find video moments matching a text description.&quot;&quot;&quot;</span>
+    <span class="n">moments</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">find_moment_by_text</span><span class="p">(</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">query</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">top_k</span><span class="p">,</span> <span class="n">video_id</span><span class="o">=</span><span class="n">req</span><span class="o">.</span><span class="n">video_id</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">moments</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">m</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">describe_moment</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;frame_path&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">m</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">moments</span><span class="p">:</span>
+        <span class="n">frame_path</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;frame_path&quot;</span><span class="p">]</span>
+        <span class="n">rel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">frame_path</span><span class="p">,</span> <span class="s2">&quot;frames&quot;</span><span class="p">)</span>
+        <span class="n">m</span><span class="p">[</span><span class="s2">&quot;frame_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/frames/</span><span class="si">{</span><span class="n">rel</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;moments&quot;</span><span class="p">:</span> <span class="n">moments</span><span class="p">,</span> <span class="s2">&quot;query_type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">}</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/videos&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_videos</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List all processed videos.&quot;&quot;&quot;</span>
+    <span class="n">videos</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">list_videos</span><span class="p">()</span>
+    <span class="c1"># Add video URLs</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">videos</span><span class="p">:</span>
+        <span class="n">v</span><span class="p">[</span><span class="s2">&quot;video_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/uploads/</span><span class="si">{</span><span class="n">v</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;videos&quot;</span><span class="p">:</span> <span class="n">videos</span><span class="p">}</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;/videos/</span><span class="si">{video_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_video</span><span class="p">(</span><span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">ok</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">delete_video</span><span class="p">(</span><span class="n">video_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s2">&quot;Video not found&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;deleted&quot;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">}</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health</span><span class="p">():</span>
+    <span class="n">videos</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">list_videos</span><span class="p">()</span>
+    <span class="n">total_frames</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;total_frames&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">videos</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;videos&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">videos</span><span class="p">),</span>
+        <span class="s2">&quot;total_frames&quot;</span><span class="p">:</span> <span class="n">total_frames</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;8890&quot;</span><span class="p">))</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/backend/server.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-backend-video-store-py"><summary class="codefile__head"><span class="codefile__name">backend/video_store.py</span><span class="codefile__size">10 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Video Moment Finder — Gemini Embedding 2 + ChromaDB</span>
+
+<span class="sd">Extracts frames from video, embeds each frame natively with</span>
+<span class="sd">Gemini Embedding 2, then finds matching moments via image query.</span>
+<span class="sd">Zero transcription. Pure visual matching.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">chromadb</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google</span><span class="w"> </span><span class="kn">import</span> <span class="n">genai</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+
+<span class="n">MAX_IMAGE_DIMENSION</span> <span class="o">=</span> <span class="mi">1024</span>  <span class="c1"># Max width/height for embedding</span>
+
+<span class="n">GEMINI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GOOGLE_API_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">EMBED_MODEL</span> <span class="o">=</span> <span class="s2">&quot;gemini-embedding-2-preview&quot;</span>
+<span class="n">DESCRIBE_MODEL</span> <span class="o">=</span> <span class="s2">&quot;gemini-3-flash-preview&quot;</span>
+<span class="n">COLLECTION_NAME</span> <span class="o">=</span> <span class="s2">&quot;video_frames&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">VideoStore</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">persist_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./chroma_video_db&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">GEMINI_API_KEY</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chroma</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">persist_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chroma</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">COLLECTION_NAME</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hnsw:space&quot;</span><span class="p">:</span> <span class="s2">&quot;cosine&quot;</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./frames&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resize_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resize image if too large for the embedding API.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">image_data</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_IMAGE_DIMENSION</span><span class="p">:</span>
+                <span class="n">img</span><span class="o">.</span><span class="n">thumbnail</span><span class="p">((</span><span class="n">MAX_IMAGE_DIMENSION</span><span class="p">,</span> <span class="n">MAX_IMAGE_DIMENSION</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">LANCZOS</span><span class="p">)</span>
+            <span class="c1"># Convert to RGB if needed (handles PNG with alpha, etc.)</span>
+            <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">):</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;JPEG&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">85</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">image_data</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_embed_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Embed a single image using Gemini Embedding 2.&quot;&quot;&quot;</span>
+        <span class="n">image_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resize_image</span><span class="p">(</span><span class="n">image_data</span><span class="p">)</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">image_data</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">embed_content</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">EMBED_MODEL</span><span class="p">,</span>
+            <span class="n">contents</span><span class="o">=</span><span class="p">[</span><span class="n">part</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">embeddings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_embed_images_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Embed multiple images in batches (API limit: 6 images per request).&quot;&quot;&quot;</span>
+        <span class="n">all_embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># Gemini Embedding 2 limit</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
+            <span class="n">batch</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="n">mime</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">mime</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">embed_content</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">EMBED_MODEL</span><span class="p">,</span>
+                <span class="n">contents</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">all_embeddings</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">e</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">embeddings</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">all_embeddings</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_frames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract frames from video using ffmpeg.&quot;&quot;&quot;</span>
+        <span class="n">video_id</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span>
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames_dir</span> <span class="o">/</span> <span class="n">video_id</span>
+        <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Get video duration</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;ffprobe&quot;</span><span class="p">,</span> <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;quiet&quot;</span><span class="p">,</span> <span class="s2">&quot;-show_entries&quot;</span><span class="p">,</span> <span class="s2">&quot;format=duration&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;-of&quot;</span><span class="p">,</span> <span class="s2">&quot;csv=p=0&quot;</span><span class="p">,</span> <span class="n">video_path</span><span class="p">],</span>
+            <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="c1"># Extract frames</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;ffmpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">video_path</span><span class="p">,</span> <span class="s2">&quot;-vf&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;fps=</span><span class="si">{</span><span class="n">fps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;-q:v&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;frame_</span><span class="si">%04d</span><span class="s2">.jpg&quot;</span><span class="p">),</span> <span class="s2">&quot;-y&quot;</span><span class="p">],</span>
+            <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Collect frame info</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">frame_file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">output_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;frame_*.jpg&quot;</span><span class="p">)):</span>
+            <span class="n">frame_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">frame_file</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">fps</span>  <span class="c1"># 0-indexed</span>
+            <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">frame_file</span><span class="p">),</span>
+                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span>
+                <span class="s2">&quot;frame_num&quot;</span><span class="p">:</span> <span class="n">frame_num</span><span class="p">,</span>
+                <span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">,</span>
+            <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">video_id</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ingest_video</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">video_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">fps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">on_progress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ingest a video: extract frames, embed each, store in ChromaDB.&quot;&quot;&quot;</span>
+        <span class="n">frames</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">video_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_frames</span><span class="p">(</span><span class="n">video_path</span><span class="p">,</span> <span class="n">fps</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">frames</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No frames extracted&quot;</span><span class="p">,</span> <span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">}</span>
+
+        <span class="c1"># Read all frame images</span>
+        <span class="n">frame_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+                <span class="n">frame_data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="s2">&quot;image/jpeg&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Embed in batches</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame_data</span><span class="p">)</span>
+        <span class="n">embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">6</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+            <span class="n">batch</span> <span class="o">=</span> <span class="n">frame_data</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_resize_image</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">mime</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">embed_content</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">EMBED_MODEL</span><span class="p">,</span>
+                <span class="n">contents</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">embeddings</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">e</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">embeddings</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">on_progress</span><span class="p">:</span>
+                <span class="n">on_progress</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">total</span><span class="p">),</span> <span class="n">total</span><span class="p">)</span>
+
+        <span class="c1"># Store in ChromaDB</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">metadatas</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">documents</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
+            <span class="n">frame_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">video_id</span><span class="si">}</span><span class="s2">_f</span><span class="si">{</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;frame_num&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame_id</span><span class="p">)</span>
+            <span class="n">metadatas</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">,</span>
+                <span class="s2">&quot;video_filename&quot;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">frame</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;frame_num&quot;</span><span class="p">:</span> <span class="n">frame</span><span class="p">[</span><span class="s2">&quot;frame_num&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;frame_path&quot;</span><span class="p">:</span> <span class="n">frame</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;total_frames&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="n">duration</span><span class="p">,</span>
+                <span class="s2">&quot;fps&quot;</span><span class="p">:</span> <span class="n">fps</span><span class="p">,</span>
+            <span class="p">})</span>
+            <span class="n">documents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Frame </span><span class="si">{</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;frame_num&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">s from </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span>
+            <span class="n">embeddings</span><span class="o">=</span><span class="n">embeddings</span><span class="p">,</span>
+            <span class="n">documents</span><span class="o">=</span><span class="n">documents</span><span class="p">,</span>
+            <span class="n">metadatas</span><span class="o">=</span><span class="n">metadatas</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">,</span>
+            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+            <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;frames_extracted&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+            <span class="s2">&quot;fps&quot;</span><span class="p">:</span> <span class="n">fps</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_moment</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">image_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
+        <span class="n">mime_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;image/jpeg&quot;</span><span class="p">,</span>
+        <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the video moment matching an image query.&quot;&quot;&quot;</span>
+        <span class="c1"># Embed the query image</span>
+        <span class="n">embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embed_image</span><span class="p">(</span><span class="n">image_data</span><span class="p">,</span> <span class="n">mime_type</span><span class="p">)</span>
+
+        <span class="c1"># Search</span>
+        <span class="n">where</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">}</span> <span class="k">if</span> <span class="n">video_id</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">query_embeddings</span><span class="o">=</span><span class="p">[</span><span class="n">embedding</span><span class="p">],</span>
+            <span class="n">n_results</span><span class="o">=</span><span class="n">top_k</span><span class="p">,</span>
+            <span class="n">where</span><span class="o">=</span><span class="n">where</span><span class="p">,</span>
+            <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;metadatas&quot;</span><span class="p">,</span> <span class="s2">&quot;distances&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="n">moments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="n">meta</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;metadatas&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">moments</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;frame_num&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;frame_num&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;video_filename&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;video_filename&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;video_id&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;frame_path&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;frame_path&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                <span class="s2">&quot;time_formatted&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_time</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]),</span>
+            <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">moments</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_moment_by_text</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find video moments matching a text description.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">embed_content</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">EMBED_MODEL</span><span class="p">,</span>
+            <span class="n">contents</span><span class="o">=</span><span class="p">[</span><span class="n">query</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">embedding</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">embeddings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="n">where</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">}</span> <span class="k">if</span> <span class="n">video_id</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">query_embeddings</span><span class="o">=</span><span class="p">[</span><span class="n">embedding</span><span class="p">],</span>
+            <span class="n">n_results</span><span class="o">=</span><span class="n">top_k</span><span class="p">,</span>
+            <span class="n">where</span><span class="o">=</span><span class="n">where</span><span class="p">,</span>
+            <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;metadatas&quot;</span><span class="p">,</span> <span class="s2">&quot;distances&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="n">moments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="n">meta</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;metadatas&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">moments</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;frame_num&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;frame_num&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;video_filename&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;video_filename&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;video_id&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;frame_path&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;frame_path&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                <span class="s2">&quot;time_formatted&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_time</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]),</span>
+            <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">moments</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">describe_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Use Gemini to describe what&#39;s happening in a frame.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">frame_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">DESCRIBE_MODEL</span><span class="p">,</span>
+            <span class="n">contents</span><span class="o">=</span><span class="p">[</span><span class="n">part</span><span class="p">,</span> <span class="s2">&quot;Describe what&#39;s happening in this video frame in one sentence.&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_videos</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all ingested videos.&quot;&quot;&quot;</span>
+        <span class="n">all_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;metadatas&quot;</span><span class="p">])</span>
+        <span class="n">videos</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">meta</span> <span class="ow">in</span> <span class="n">all_data</span><span class="p">[</span><span class="s2">&quot;metadatas&quot;</span><span class="p">]:</span>
+            <span class="n">vid</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;video_id&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">vid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">videos</span><span class="p">:</span>
+                <span class="n">videos</span><span class="p">[</span><span class="n">vid</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">vid</span><span class="p">,</span>
+                    <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;video_filename&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;total_frames&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;total_frames&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;fps&quot;</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;fps&quot;</span><span class="p">],</span>
+                <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">videos</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete all frames for a video.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">all_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">})</span>
+            <span class="k">if</span> <span class="n">all_data</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="n">all_data</span><span class="p">[</span><span class="s2">&quot;ids&quot;</span><span class="p">])</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_format_time</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="n">secs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">%</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mins</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">secs</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/backend/video_store.py" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="frontend" hidden><details class="codefile" id="code-frontend-gitignore"><summary class="codefile__head"><span class="codefile__name">frontend/.gitignore</span><span class="codefile__size">480 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span># See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/.gitignore" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-frontend-app-globals-css"><summary class="codefile__head"><span class="codefile__name">frontend/app/globals.css</span><span class="codefile__size">2 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">css</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">@</span><span class="k">import</span><span class="w"> </span><span class="s2">&quot;tailwindcss&quot;</span><span class="p">;</span>
+
+<span class="p">:</span><span class="nd">root</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">--accent</span><span class="p">:</span><span class="w"> </span><span class="mh">#a855f7</span><span class="p">;</span>
+<span class="w">  </span><span class="nv">--accent-dim</span><span class="p">:</span><span class="w"> </span><span class="mh">#7c3aed</span><span class="p">;</span>
+<span class="w">  </span><span class="nv">--accent-glow</span><span class="p">:</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">168</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">247</span><span class="p">,</span><span class="w"> </span><span class="mf">0.15</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="o">*</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">scrollbar-width</span><span class="p">:</span><span class="w"> </span><span class="kc">thin</span><span class="p">;</span>
+<span class="w">  </span><span class="k">scrollbar-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#27272a</span><span class="w"> </span><span class="kc">transparent</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">body</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="mh">#09090b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Glass panels */</span>
+<span class="p">.</span><span class="nc">glass</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="mf">0.6</span><span class="p">);</span>
+<span class="w">  </span><span class="n">backdrop-filter</span><span class="p">:</span><span class="w"> </span><span class="nb">blur</span><span class="p">(</span><span class="mi">20</span><span class="kt">px</span><span class="p">)</span><span class="w"> </span><span class="nb">saturate</span><span class="p">(</span><span class="mf">1.2</span><span class="p">);</span>
+<span class="w">  </span><span class="k">border</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="w"> </span><span class="kc">solid</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">63</span><span class="p">,</span><span class="w"> </span><span class="mi">63</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span><span class="w"> </span><span class="mf">0.4</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">glass-subtle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="mf">0.3</span><span class="p">);</span>
+<span class="w">  </span><span class="n">backdrop-filter</span><span class="p">:</span><span class="w"> </span><span class="nb">blur</span><span class="p">(</span><span class="mi">12</span><span class="kt">px</span><span class="p">);</span>
+<span class="w">  </span><span class="k">border</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="w"> </span><span class="kc">solid</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">63</span><span class="p">,</span><span class="w"> </span><span class="mi">63</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span><span class="w"> </span><span class="mf">0.25</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c">/* Score bar gradient */</span>
+<span class="p">.</span><span class="nc">score-bar</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="nb">linear-gradient</span><span class="p">(</span><span class="mi">90</span><span class="kt">deg</span><span class="p">,</span><span class="w"> </span><span class="mh">#7c3aed</span><span class="p">,</span><span class="w"> </span><span class="mh">#a855f7</span><span class="p">,</span><span class="w"> </span><span class="mh">#c084fc</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c">/* Accent glow */</span>
+<span class="p">.</span><span class="nc">glow-accent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">box-shadow</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--accent-glow</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">60</span><span class="kt">px</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">168</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">247</span><span class="p">,</span><span class="w"> </span><span class="mf">0.05</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c">/* Drop zone pulse */</span>
+<span class="p">@</span><span class="k">keyframes</span><span class="w"> </span><span class="nt">drop-pulse</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">0</span><span class="o">%,</span><span class="w"> </span><span class="nt">100</span><span class="o">%</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">border-color</span><span class="p">:</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">168</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">247</span><span class="p">,</span><span class="w"> </span><span class="mf">0.3</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">50</span><span class="o">%</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">border-color</span><span class="p">:</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">168</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">247</span><span class="p">,</span><span class="w"> </span><span class="mf">0.7</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">drop-zone-active</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">animation</span><span class="p">:</span><span class="w"> </span><span class="n">drop-pulse</span><span class="w"> </span><span class="mf">1.5</span><span class="kt">s</span><span class="w"> </span><span class="kc">ease-in-out</span><span class="w"> </span><span class="kc">infinite</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Fade up for results */</span>
+<span class="p">@</span><span class="k">keyframes</span><span class="w"> </span><span class="nt">fade-up</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">from</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">opacity</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="k">transform</span><span class="p">:</span><span class="w"> </span><span class="nb">translateY</span><span class="p">(</span><span class="mi">12</span><span class="kt">px</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">to</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">opacity</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="k">transform</span><span class="p">:</span><span class="w"> </span><span class="nb">translateY</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">animate-fade-up</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">animation</span><span class="p">:</span><span class="w"> </span><span class="n">fade-up</span><span class="w"> </span><span class="mf">0.35</span><span class="kt">s</span><span class="w"> </span><span class="kc">ease-out</span><span class="w"> </span><span class="kc">both</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Shimmer for loading */</span>
+<span class="p">@</span><span class="k">keyframes</span><span class="w"> </span><span class="nt">shimmer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">0</span><span class="o">%</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">background-position</span><span class="p">:</span><span class="w"> </span><span class="mi">-200</span><span class="kt">%</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">100</span><span class="o">%</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">background-position</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="kt">%</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">shimmer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="nb">linear-gradient</span><span class="p">(</span><span class="mi">90</span><span class="kt">deg</span><span class="p">,</span><span class="w"> </span><span class="kc">transparent</span><span class="w"> </span><span class="mi">0</span><span class="kt">%</span><span class="p">,</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">168</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">247</span><span class="p">,</span><span class="w"> </span><span class="mf">0.06</span><span class="p">)</span><span class="w"> </span><span class="mi">50</span><span class="kt">%</span><span class="p">,</span><span class="w"> </span><span class="kc">transparent</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">);</span>
+<span class="w">  </span><span class="k">background-size</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="kt">%</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">  </span><span class="k">animation</span><span class="p">:</span><span class="w"> </span><span class="n">shimmer</span><span class="w"> </span><span class="mf">1.8</span><span class="kt">s</span><span class="w"> </span><span class="kc">infinite</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Smooth video transition */</span>
+<span class="nt">video</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">transition</span><span class="p">:</span><span class="w"> </span><span class="k">opacity</span><span class="w"> </span><span class="mf">0.3</span><span class="kt">s</span><span class="w"> </span><span class="kc">ease</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Custom focus ring */</span>
+<span class="nt">input</span><span class="p">:</span><span class="nd">focus</span><span class="o">,</span><span class="w"> </span><span class="nt">button</span><span class="p">:</span><span class="nd">focus-visible</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">outline</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span>
+<span class="w">  </span><span class="k">box-shadow</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="kt">px</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">168</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">247</span><span class="p">,</span><span class="w"> </span><span class="mf">0.4</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c">/* Result card hover lift */</span>
+<span class="p">.</span><span class="nc">result-card</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">transition</span><span class="p">:</span><span class="w"> </span><span class="k">transform</span><span class="w"> </span><span class="mf">0.2</span><span class="kt">s</span><span class="w"> </span><span class="kc">ease</span><span class="p">,</span><span class="w"> </span><span class="k">box-shadow</span><span class="w"> </span><span class="mf">0.2</span><span class="kt">s</span><span class="w"> </span><span class="kc">ease</span><span class="p">,</span><span class="w"> </span><span class="k">border-color</span><span class="w"> </span><span class="mf">0.2</span><span class="kt">s</span><span class="w"> </span><span class="kc">ease</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">.</span><span class="nc">result-card</span><span class="p">:</span><span class="nd">hover</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">transform</span><span class="p">:</span><span class="w"> </span><span class="nb">translateY</span><span class="p">(</span><span class="mi">-1</span><span class="kt">px</span><span class="p">);</span>
+<span class="w">  </span><span class="k">box-shadow</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">4</span><span class="kt">px</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.3</span><span class="p">);</span>
+<span class="w">  </span><span class="k">border-color</span><span class="p">:</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">168</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">247</span><span class="p">,</span><span class="w"> </span><span class="mf">0.4</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/app/globals.css" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-frontend-app-layout-tsx"><summary class="codefile__head"><span class="codefile__name">frontend/app/layout.tsx</span><span class="codefile__size">626 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>import type { Metadata } from &quot;next&quot;;
+import { Inter } from &quot;next/font/google&quot;;
+import &quot;./globals.css&quot;;
+
+const inter = Inter({ subsets: [&quot;latin&quot;], variable: &quot;--font-inter&quot; });
+
+export const metadata: Metadata = {
+  title: &quot;Multimodal Video Moment Finder&quot;,
+  description: &quot;Find any moment in a video using images or text. Powered by Gemini Embedding 2.&quot;,
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    &lt;html lang=&quot;en&quot; className=&quot;dark&quot;&gt;
+      &lt;body className={`${inter.className} bg-[#09090b] text-zinc-100 antialiased`}&gt;
+        {children}
+      &lt;/body&gt;
+    &lt;/html&gt;
+  );
+}
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/app/layout.tsx" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-frontend-app-page-tsx"><summary class="codefile__head"><span class="codefile__name">frontend/app/page.tsx</span><span class="codefile__size">22 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>&quot;use client&quot;;
+
+import { useState, useRef, useEffect, useCallback } from &quot;react&quot;;
+
+const API = process.env.NEXT_PUBLIC_API_URL || &quot;http://localhost:8890&quot;;
+
+interface Video {
+  video_id: string;
+  filename: string;
+  duration: number;
+  total_frames: number;
+  fps: number;
+  video_url?: string;
+}
+
+interface Moment {
+  timestamp: number;
+  frame_num: number;
+  video_filename: string;
+  video_id: string;
+  frame_url: string;
+  score: number;
+  time_formatted: string;
+  description?: string;
+}
+
+function formatDuration(sec: number): string {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, &quot;0&quot;)}`;
+}
+
+function ScoreIndicator({ score }: { score: number }) {
+  const pct = Math.round(score * 100);
+  const color =
+    score &gt; 0.85 ? &quot;text-emerald-400&quot; :
+    score &gt; 0.7 ? &quot;text-purple-400&quot; :
+    score &gt; 0.5 ? &quot;text-amber-400&quot; : &quot;text-zinc-500&quot;;
+  const bg =
+    score &gt; 0.85 ? &quot;bg-emerald-500&quot; :
+    score &gt; 0.7 ? &quot;bg-purple-500&quot; :
+    score &gt; 0.5 ? &quot;bg-amber-500&quot; : &quot;bg-zinc-600&quot;;
+
+  return (
+    &lt;div className=&quot;flex items-center gap-2&quot;&gt;
+      &lt;div className=&quot;w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden&quot;&gt;
+        &lt;div className={`h-full rounded-full ${bg}`} style={{ width: `${pct}%` }} /&gt;
+      &lt;/div&gt;
+      &lt;span className={`text-xs font-mono ${color}`}&gt;{pct}%&lt;/span&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default function Home() {
+  const [videos, setVideos] = useState&lt;Video[]&gt;([]);
+  const [moments, setMoments] = useState&lt;Moment[]&gt;([]);
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(&quot;&quot;);
+  const [searchMode, setSearchMode] = useState&lt;&quot;image&quot; | &quot;text&quot;&gt;(&quot;image&quot;);
+  const [textQuery, setTextQuery] = useState(&quot;&quot;);
+  const [queryImage, setQueryImage] = useState&lt;string | null&gt;(null);
+  const [elapsed, setElapsed] = useState&lt;number | null&gt;(null);
+  const [selectedVideo, setSelectedVideo] = useState&lt;string | null&gt;(null);
+  const [videoTimestamp, setVideoTimestamp] = useState&lt;number | null&gt;(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const videoRef = useRef&lt;HTMLVideoElement&gt;(null);
+  const imageInputRef = useRef&lt;HTMLInputElement&gt;(null);
+  const videoInputRef = useRef&lt;HTMLInputElement&gt;(null);
+
+  const fetchVideos = async () =&gt; {
+    try {
+      const res = await fetch(`${API}/videos`);
+      const data = await res.json();
+      setVideos(data.videos);
+    } catch {}
+  };
+
+  useEffect(() =&gt; { fetchVideos(); }, []);
+
+  const handleVideoUpload = async (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+    if (!e.target.files?.[0]) return;
+    const file = e.target.files[0];
+    setUploading(true);
+    setUploadProgress(&quot;Extracting frames and building visual index...&quot;);
+
+    const form = new FormData();
+    form.append(&quot;file&quot;, file);
+    form.append(&quot;fps&quot;, &quot;1&quot;);
+
+    try {
+      const res = await fetch(`${API}/upload-video`, { method: &quot;POST&quot;, body: form });
+      const data = await res.json();
+      setUploadProgress(`Indexed ${data.frames_extracted} frames from ${formatDuration(data.duration)}`);
+      await fetchVideos();
+      setSelectedVideo(data.video_id);
+    } catch {
+      setUploadProgress(&quot;Upload failed. Check connection.&quot;);
+    } finally {
+      setUploading(false);
+      setTimeout(() =&gt; setUploadProgress(&quot;&quot;), 5000);
+    }
+  };
+
+  const runImageSearch = async (file: File) =&gt; {
+    const reader = new FileReader();
+    reader.onload = (ev) =&gt; setQueryImage(ev.target?.result as string);
+    reader.readAsDataURL(file);
+
+    setLoading(true);
+    setMoments([]);
+    const t0 = Date.now();
+
+    const form = new FormData();
+    form.append(&quot;image&quot;, file);
+    if (selectedVideo) form.append(&quot;video_id&quot;, selectedVideo);
+    form.append(&quot;top_k&quot;, &quot;5&quot;);
+
+    try {
+      const res = await fetch(`${API}/find-moment`, { method: &quot;POST&quot;, body: form });
+      const data = await res.json();
+      setMoments(data.moments || []);
+      setElapsed((Date.now() - t0) / 1000);
+    } catch {
+      setMoments([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImageSearch = (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+    if (!e.target.files?.[0]) return;
+    runImageSearch(e.target.files[0]);
+  };
+
+  const handleTextSearch = async () =&gt; {
+    if (!textQuery.trim()) return;
+    setLoading(true);
+    setMoments([]);
+    setQueryImage(null);
+    const t0 = Date.now();
+
+    try {
+      const body: any = { query: textQuery, top_k: 5 };
+      if (selectedVideo) body.video_id = selectedVideo;
+      const res = await fetch(`${API}/find-moment-text`, {
+        method: &quot;POST&quot;,
+        headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      setMoments(data.moments || []);
+      setElapsed((Date.now() - t0) / 1000);
+    } catch {
+      setMoments([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const jumpToMoment = (moment: Moment) =&gt; {
+    setVideoTimestamp(moment.timestamp);
+    const switchingVideo = moment.video_id !== selectedVideo;
+    setSelectedVideo(moment.video_id);
+    const seek = () =&gt; {
+      if (videoRef.current) {
+        videoRef.current.currentTime = moment.timestamp;
+        videoRef.current.play();
+      }
+    };
+    if (switchingVideo &amp;&amp; videoRef.current) {
+      // The &lt;video src&gt; changes on the re-render triggered above; a fixed 100ms
+      // timeout races that reload, so seek only once the new file has loaded.
+      videoRef.current.addEventListener(&quot;loadeddata&quot;, seek, { once: true });
+    } else {
+      setTimeout(seek, 100);
+    }
+  };
+
+  // Drag and drop
+  const handleDrop = useCallback((e: React.DragEvent) =&gt; {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file &amp;&amp; file.type.startsWith(&quot;image/&quot;)) {
+      runImageSearch(file);
+    }
+  }, [selectedVideo]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) =&gt; {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback(() =&gt; setIsDragging(false), []);
+
+  const activeVideo = videos.find((v) =&gt; v.video_id === selectedVideo) || videos[0];
+  const totalFrames = videos.reduce((a, v) =&gt; a + v.total_frames, 0);
+
+  return (
+    &lt;div className=&quot;flex flex-col h-screen bg-[#09090b]&quot;&gt;
+      {/* Header */}
+      &lt;header className=&quot;glass border-b border-zinc-800/60 px-6 py-3.5 flex items-center justify-between z-10&quot;&gt;
+        &lt;div className=&quot;flex items-center gap-3&quot;&gt;
+          &lt;div className=&quot;w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center&quot;&gt;
+            &lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; strokeWidth=&quot;2&quot; className=&quot;text-purple-400&quot;&gt;
+              &lt;polygon points=&quot;5 3 19 12 5 21 5 3&quot; /&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+            &lt;h1 className=&quot;text-base font-semibold text-zinc-100 tracking-tight&quot;&gt;Multimodal Video Moment Finder&lt;/h1&gt;
+            &lt;p className=&quot;text-[11px] text-zinc-500 tracking-wide&quot;&gt;
+              Gemini Embedding 2 &amp;middot; Visual Matching &amp;middot; Zero Transcription
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div className=&quot;flex items-center gap-4&quot;&gt;
+          {totalFrames &gt; 0 &amp;&amp; (
+            &lt;div className=&quot;flex items-center gap-3 text-[11px] text-zinc-500&quot;&gt;
+              &lt;span className=&quot;flex items-center gap-1.5&quot;&gt;
+                &lt;span className=&quot;w-1.5 h-1.5 rounded-full bg-emerald-500&quot; /&gt;
+                {videos.length} video{videos.length !== 1 ? &quot;s&quot; : &quot;&quot;}
+              &lt;/span&gt;
+              &lt;span&gt;{totalFrames.toLocaleString()} frames&lt;/span&gt;
+            &lt;/div&gt;
+          )}
+        &lt;/div&gt;
+      &lt;/header&gt;
+
+      &lt;div className=&quot;flex flex-1 overflow-hidden&quot;&gt;
+        {/* Left: Video + Controls */}
+        &lt;div className=&quot;w-[55%] border-r border-zinc-800/40 flex flex-col&quot;&gt;
+          {/* Video Player */}
+          &lt;div className=&quot;flex-1 bg-black/40 flex items-center justify-center relative&quot;&gt;
+            {activeVideo ? (
+              &lt;video
+                ref={videoRef}
+                src={`${API}${activeVideo.video_url}`}
+                controls
+                className=&quot;max-w-full max-h-full&quot;
+              /&gt;
+            ) : (
+              &lt;div className=&quot;text-center px-8&quot;&gt;
+                &lt;div className=&quot;w-16 h-16 rounded-2xl bg-zinc-800/50 border border-zinc-700/50 flex items-center justify-center mx-auto mb-4&quot;&gt;
+                  &lt;svg width=&quot;28&quot; height=&quot;28&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; strokeWidth=&quot;1.5&quot; className=&quot;text-zinc-600&quot;&gt;
+                    &lt;rect x=&quot;2&quot; y=&quot;2&quot; width=&quot;20&quot; height=&quot;20&quot; rx=&quot;2.18&quot; ry=&quot;2.18&quot; /&gt;
+                    &lt;line x1=&quot;7&quot; y1=&quot;2&quot; x2=&quot;7&quot; y2=&quot;22&quot; /&gt;
+                    &lt;line x1=&quot;17&quot; y1=&quot;2&quot; x2=&quot;17&quot; y2=&quot;22&quot; /&gt;
+                    &lt;line x1=&quot;2&quot; y1=&quot;12&quot; x2=&quot;22&quot; y2=&quot;12&quot; /&gt;
+                    &lt;line x1=&quot;2&quot; y1=&quot;7&quot; x2=&quot;7&quot; y2=&quot;7&quot; /&gt;
+                    &lt;line x1=&quot;2&quot; y1=&quot;17&quot; x2=&quot;7&quot; y2=&quot;17&quot; /&gt;
+                    &lt;line x1=&quot;17&quot; y1=&quot;7&quot; x2=&quot;22&quot; y2=&quot;7&quot; /&gt;
+                    &lt;line x1=&quot;17&quot; y1=&quot;17&quot; x2=&quot;22&quot; y2=&quot;17&quot; /&gt;
+                  &lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;p className=&quot;text-sm text-zinc-500 mb-1&quot;&gt;No videos yet&lt;/p&gt;
+                &lt;p className=&quot;text-xs text-zinc-600&quot;&gt;Upload a video to start finding moments&lt;/p&gt;
+              &lt;/div&gt;
+            )}
+            {videoTimestamp !== null &amp;&amp; (
+              &lt;div className=&quot;absolute top-3 right-3 bg-purple-600/90 backdrop-blur text-white text-xs px-2.5 py-1 rounded-full font-medium&quot;&gt;
+                {formatDuration(videoTimestamp)}
+              &lt;/div&gt;
+            )}
+          &lt;/div&gt;
+
+          {/* Bottom: Upload + Video List */}
+          &lt;div className=&quot;p-4 border-t border-zinc-800/40 bg-zinc-950/60&quot;&gt;
+            &lt;div className=&quot;flex items-center gap-3 mb-3&quot;&gt;
+              &lt;button
+                onClick={() =&gt; videoInputRef.current?.click()}
+                disabled={uploading}
+                className={`
+                  px-4 py-2 rounded-lg text-sm font-medium transition-all
+                  ${uploading
+                    ? &quot;bg-zinc-800 text-zinc-500 cursor-wait&quot;
+                    : &quot;bg-purple-600 hover:bg-purple-500 active:bg-purple-700 text-white shadow-lg shadow-purple-500/10&quot;}
+                `}
+              &gt;
+                &lt;input
+                  ref={videoInputRef}
+                  type=&quot;file&quot;
+                  accept=&quot;video/*&quot;
+                  className=&quot;hidden&quot;
+                  onChange={handleVideoUpload}
+                  disabled={uploading}
+                /&gt;
+                {uploading ? (
+                  &lt;span className=&quot;flex items-center gap-2&quot;&gt;
+                    &lt;svg className=&quot;w-3.5 h-3.5 animate-spin&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot;&gt;
+                      &lt;circle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;10&quot; stroke=&quot;currentColor&quot; strokeWidth=&quot;3&quot; className=&quot;opacity-20&quot; /&gt;
+                      &lt;path d=&quot;M12 2a10 10 0 0 1 10 10&quot; stroke=&quot;currentColor&quot; strokeWidth=&quot;3&quot; strokeLinecap=&quot;round&quot; /&gt;
+                    &lt;/svg&gt;
+                    Processing...
+                  &lt;/span&gt;
+                ) : &quot;Upload Video&quot;}
+              &lt;/button&gt;
+              {uploadProgress &amp;&amp; (
+                &lt;span className=&quot;text-xs text-zinc-400 animate-fade-up&quot;&gt;{uploadProgress}&lt;/span&gt;
+              )}
+            &lt;/div&gt;
+
+            {videos.length &gt; 0 &amp;&amp; (
+              &lt;div className=&quot;flex gap-2 overflow-x-auto pb-1&quot;&gt;
+                {videos.map((v) =&gt; {
+                  const isActive = selectedVideo === v.video_id || (!selectedVideo &amp;&amp; v === videos[0]);
+                  return (
+                    &lt;button
+                      key={v.video_id}
+                      onClick={() =&gt; setSelectedVideo(v.video_id)}
+                      className={`
+                        shrink-0 px-3 py-2 rounded-lg text-xs transition-all
+                        ${isActive
+                          ? &quot;bg-purple-500/15 text-purple-300 border border-purple-500/30&quot;
+                          : &quot;bg-zinc-900/60 text-zinc-500 border border-zinc-800 hover:border-zinc-600 hover:text-zinc-300&quot;}
+                      `}
+                    &gt;
+                      &lt;span className=&quot;font-medium&quot;&gt;{v.filename}&lt;/span&gt;
+                      &lt;span className=&quot;text-zinc-600 ml-1.5&quot;&gt;
+                        {formatDuration(v.duration)} &amp;middot; {v.total_frames}f
+                      &lt;/span&gt;
+                    &lt;/button&gt;
+                  );
+                })}
+              &lt;/div&gt;
+            )}
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        {/* Right: Search + Results */}
+        &lt;div className=&quot;w-[45%] flex flex-col bg-zinc-950/30&quot;&gt;
+          {/* Search Controls */}
+          &lt;div className=&quot;p-4 border-b border-zinc-800/40&quot;&gt;
+            {/* Mode Tabs */}
+            &lt;div className=&quot;flex gap-1 mb-3 bg-zinc-900/50 p-1 rounded-lg w-fit&quot;&gt;
+              &lt;button
+                onClick={() =&gt; setSearchMode(&quot;image&quot;)}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                  searchMode === &quot;image&quot;
+                    ? &quot;bg-purple-600 text-white shadow-sm&quot;
+                    : &quot;text-zinc-500 hover:text-zinc-300&quot;
+                }`}
+              &gt;
+                Image Search
+              &lt;/button&gt;
+              &lt;button
+                onClick={() =&gt; setSearchMode(&quot;text&quot;)}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                  searchMode === &quot;text&quot;
+                    ? &quot;bg-purple-600 text-white shadow-sm&quot;
+                    : &quot;text-zinc-500 hover:text-zinc-300&quot;
+                }`}
+              &gt;
+                Text Search
+              &lt;/button&gt;
+            &lt;/div&gt;
+
+            {/* Search Input */}
+            {searchMode === &quot;image&quot; ? (
+              &lt;div
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onClick={() =&gt; imageInputRef.current?.click()}
+                className={`
+                  relative rounded-xl cursor-pointer transition-all overflow-hidden
+                  ${isDragging
+                    ? &quot;border-2 border-purple-500 bg-purple-500/5 drop-zone-active&quot;
+                    : &quot;border-2 border-dashed border-zinc-800 hover:border-zinc-600&quot;}
+                  ${queryImage ? &quot;p-2&quot; : &quot;p-8&quot;}
+                `}
+              &gt;
+                &lt;input
+                  ref={imageInputRef}
+                  type=&quot;file&quot;
+                  accept=&quot;image/*&quot;
+                  className=&quot;hidden&quot;
+                  onChange={handleImageSearch}
+                /&gt;
+                {queryImage ? (
+                  &lt;div className=&quot;relative&quot;&gt;
+                    &lt;img src={queryImage} alt=&quot;Query&quot; className=&quot;max-h-36 mx-auto rounded-lg&quot; /&gt;
+                    &lt;button
+                      onClick={(e) =&gt; { e.stopPropagation(); setQueryImage(null); setMoments([]); }}
+                      className=&quot;absolute top-1 right-1 w-6 h-6 bg-black/70 rounded-full flex items-center justify-center text-zinc-400 hover:text-white text-xs&quot;
+                    &gt;
+                      &amp;times;
+                    &lt;/button&gt;
+                  &lt;/div&gt;
+                ) : (
+                  &lt;div className=&quot;text-center&quot;&gt;
+                    &lt;div className=&quot;w-10 h-10 rounded-xl bg-zinc-800/50 border border-zinc-700/50 flex items-center justify-center mx-auto mb-3&quot;&gt;
+                      &lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; strokeWidth=&quot;1.5&quot; className=&quot;text-zinc-500&quot;&gt;
+                        &lt;rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot; ry=&quot;2&quot; /&gt;
+                        &lt;circle cx=&quot;8.5&quot; cy=&quot;8.5&quot; r=&quot;1.5&quot; /&gt;
+                        &lt;polyline points=&quot;21 15 16 10 5 21&quot; /&gt;
+                      &lt;/svg&gt;
+                    &lt;/div&gt;
+                    &lt;p className=&quot;text-sm text-zinc-400 mb-1&quot;&gt;Drop an image or click to browse&lt;/p&gt;
+                    &lt;p className=&quot;text-[11px] text-zinc-600&quot;&gt;Find the exact moment this image appears in the video&lt;/p&gt;
+                  &lt;/div&gt;
+                )}
+              &lt;/div&gt;
+            ) : (
+              &lt;form onSubmit={(e) =&gt; { e.preventDefault(); handleTextSearch(); }} className=&quot;flex gap-2&quot;&gt;
+                &lt;input
+                  value={textQuery}
+                  onChange={(e) =&gt; setTextQuery(e.target.value)}
+                  placeholder=&#39;Describe a scene: &quot;person on stage&quot;, &quot;aerial view&quot;...&#39;
+                  className=&quot;flex-1 bg-zinc-900/60 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-200 placeholder-zinc-600 focus:border-purple-500/50 transition-colors&quot;
+                /&gt;
+                &lt;button
+                  type=&quot;submit&quot;
+                  disabled={!textQuery.trim() || loading}
+                  className=&quot;px-5 py-3 bg-purple-600 hover:bg-purple-500 disabled:opacity-30 disabled:hover:bg-purple-600 rounded-xl text-sm font-medium transition-all shadow-lg shadow-purple-500/10&quot;
+                &gt;
+                  Find
+                &lt;/button&gt;
+              &lt;/form&gt;
+            )}
+          &lt;/div&gt;
+
+          {/* Results */}
+          &lt;div className=&quot;flex-1 overflow-y-auto p-4&quot;&gt;
+            {/* Loading */}
+            {loading &amp;&amp; (
+              &lt;div className=&quot;space-y-3&quot;&gt;
+                {[0, 1, 2].map((i) =&gt; (
+                  &lt;div key={i} className=&quot;glass rounded-xl p-3 animate-fade-up&quot; style={{ animationDelay: `${i * 100}ms` }}&gt;
+                    &lt;div className=&quot;flex gap-3&quot;&gt;
+                      &lt;div className=&quot;w-36 h-20 bg-zinc-800/50 rounded-lg shimmer&quot; /&gt;
+                      &lt;div className=&quot;flex-1 space-y-2 py-1&quot;&gt;
+                        &lt;div className=&quot;w-20 h-3 bg-zinc-800/50 rounded shimmer&quot; /&gt;
+                        &lt;div className=&quot;w-32 h-2 bg-zinc-800/30 rounded shimmer&quot; /&gt;
+                        &lt;div className=&quot;w-24 h-2 bg-zinc-800/30 rounded shimmer&quot; /&gt;
+                      &lt;/div&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                ))}
+              &lt;/div&gt;
+            )}
+
+            {/* Empty State */}
+            {!loading &amp;&amp; moments.length === 0 &amp;&amp; !queryImage &amp;&amp; (
+              &lt;div className=&quot;flex flex-col items-center justify-center h-full text-center px-8&quot;&gt;
+                &lt;div className=&quot;w-14 h-14 rounded-2xl bg-zinc-800/30 border border-zinc-800/50 flex items-center justify-center mb-4&quot;&gt;
+                  &lt;svg width=&quot;24&quot; height=&quot;24&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; strokeWidth=&quot;1.5&quot; className=&quot;text-zinc-600&quot;&gt;
+                    &lt;circle cx=&quot;11&quot; cy=&quot;11&quot; r=&quot;8&quot; /&gt;
+                    &lt;line x1=&quot;21&quot; y1=&quot;21&quot; x2=&quot;16.65&quot; y2=&quot;16.65&quot; /&gt;
+                  &lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;h3 className=&quot;text-sm font-medium text-zinc-400 mb-1.5&quot;&gt;Search for any moment&lt;/h3&gt;
+                &lt;p className=&quot;text-xs text-zinc-600 max-w-xs leading-relaxed&quot;&gt;
+                  Drop a screenshot to find where it appears, or describe a scene in words.
+                  Gemini Embedding 2 matches visual content directly across modalities.
+                &lt;/p&gt;
+              &lt;/div&gt;
+            )}
+
+            {/* Results List */}
+            {!loading &amp;&amp; moments.length &gt; 0 &amp;&amp; (
+              &lt;div&gt;
+                &lt;div className=&quot;flex items-center justify-between mb-3&quot;&gt;
+                  &lt;span className=&quot;text-xs font-medium text-zinc-400&quot;&gt;
+                    {moments.length} moment{moments.length !== 1 ? &quot;s&quot; : &quot;&quot;} found
+                  &lt;/span&gt;
+                  {elapsed !== null &amp;&amp; (
+                    &lt;span className=&quot;text-[11px] text-zinc-600&quot;&gt;{elapsed.toFixed(1)}s&lt;/span&gt;
+                  )}
+                &lt;/div&gt;
+
+                &lt;div className=&quot;space-y-2&quot;&gt;
+                  {moments.map((m, i) =&gt; (
+                    &lt;button
+                      key={`${m.video_id}-${m.frame_num}`}
+                      onClick={() =&gt; jumpToMoment(m)}
+                      className=&quot;result-card w-full text-left glass rounded-xl p-3 group animate-fade-up&quot;
+                      style={{ animationDelay: `${i * 60}ms` }}
+                    &gt;
+                      &lt;div className=&quot;flex gap-3&quot;&gt;
+                        {/* Thumbnail */}
+                        &lt;div className=&quot;relative shrink-0&quot;&gt;
+                          &lt;img
+                            src={`${API}${m.frame_url}`}
+                            alt={`Frame at ${m.time_formatted}`}
+                            className=&quot;w-36 h-20 object-cover rounded-lg&quot;
+                            loading=&quot;lazy&quot;
+                          /&gt;
+                          &lt;div className=&quot;absolute bottom-1 right-1 bg-black/80 text-white text-[10px] font-mono px-1.5 py-0.5 rounded&quot;&gt;
+                            {m.time_formatted}
+                          &lt;/div&gt;
+                          {i === 0 &amp;&amp; (
+                            &lt;div className=&quot;absolute top-1 left-1 bg-emerald-500/90 text-white text-[10px] font-medium px-1.5 py-0.5 rounded&quot;&gt;
+                              Best
+                            &lt;/div&gt;
+                          )}
+                        &lt;/div&gt;
+
+                        {/* Info */}
+                        &lt;div className=&quot;flex-1 min-w-0 py-0.5&quot;&gt;
+                          &lt;div className=&quot;flex items-center justify-between mb-1.5&quot;&gt;
+                            &lt;span className=&quot;text-sm font-medium text-zinc-200&quot;&gt;
+                              {m.time_formatted}
+                            &lt;/span&gt;
+                            &lt;ScoreIndicator score={m.score} /&gt;
+                          &lt;/div&gt;
+
+                          {m.description &amp;&amp; (
+                            &lt;p className=&quot;text-[11px] text-zinc-500 leading-relaxed line-clamp-2 mb-1&quot;&gt;
+                              {m.description}
+                            &lt;/p&gt;
+                          )}
+
+                          &lt;div className=&quot;flex items-center gap-2&quot;&gt;
+                            &lt;span className=&quot;text-[10px] text-zinc-600&quot;&gt;
+                              {m.video_filename}
+                            &lt;/span&gt;
+                            &lt;span className=&quot;text-[10px] text-zinc-700&quot;&gt;&amp;middot;&lt;/span&gt;
+                            &lt;span className=&quot;text-[10px] text-zinc-600&quot;&gt;
+                              Frame {m.frame_num}
+                            &lt;/span&gt;
+                          &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        {/* Play indicator */}
+                        &lt;div className=&quot;flex items-center opacity-0 group-hover:opacity-100 transition-opacity&quot;&gt;
+                          &lt;div className=&quot;w-8 h-8 rounded-full bg-purple-600/20 flex items-center justify-center&quot;&gt;
+                            &lt;svg width=&quot;12&quot; height=&quot;12&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;currentColor&quot; className=&quot;text-purple-400 ml-0.5&quot;&gt;
+                              &lt;polygon points=&quot;5 3 19 12 5 21 5 3&quot; /&gt;
+                            &lt;/svg&gt;
+                          &lt;/div&gt;
+                        &lt;/div&gt;
+                      &lt;/div&gt;
+                    &lt;/button&gt;
+                  ))}
+                &lt;/div&gt;
+              &lt;/div&gt;
+            )}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/app/page.tsx" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-frontend-eslint-config-mjs"><summary class="codefile__head"><span class="codefile__name">frontend/eslint.config.mjs</span><span class="codefile__size">465 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>import { defineConfig, globalIgnores } from &quot;eslint/config&quot;;
+import nextVitals from &quot;eslint-config-next/core-web-vitals&quot;;
+import nextTs from &quot;eslint-config-next/typescript&quot;;
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    &quot;.next/**&quot;,
+    &quot;out/**&quot;,
+    &quot;build/**&quot;,
+    &quot;next-env.d.ts&quot;,
+  ]),
+]);
+
+export default eslintConfig;
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/eslint.config.mjs" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-frontend-next-config-ts"><summary class="codefile__head"><span class="codefile__name">frontend/next.config.ts</span><span class="codefile__size">133 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">typescript</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NextConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;next&quot;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">nextConfig</span><span class="o">:</span><span class="w"> </span><span class="kt">NextConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="cm">/* config options here */</span>
+<span class="p">};</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">nextConfig</span><span class="p">;</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/next.config.ts" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-frontend-package-lock-json"><summary class="codefile__head"><span class="codefile__name">frontend/package-lock.json</span><span class="codefile__size">267 ko</span></summary><div class="codefile__body"><p class="note">Fichier généré ou volumineux : il n'est pas affiché ici.</p><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/package-lock.json" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-frontend-package-json"><summary class="codefile__head"><span class="codefile__name">frontend/package.json</span><span class="codefile__size">563 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">json</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;frontend&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;private&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;next dev&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;build&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;next build&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;next start&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;lint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eslint&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;next&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;16.1.6&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;react&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;19.2.3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;react-dom&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;19.2.3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;react-markdown&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^10.1.0&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;@tailwindcss/postcss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;@types/node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^20&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;@types/react&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^19&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;@types/react-dom&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^19&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;eslint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^9&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;eslint-config-next&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;16.1.6&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;tailwindcss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;typescript&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^5&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/package.json" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-frontend-postcss-config-mjs"><summary class="codefile__head"><span class="codefile__name">frontend/postcss.config.mjs</span><span class="codefile__size">94 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>const config = {
+  plugins: {
+    &quot;@tailwindcss/postcss&quot;: {},
+  },
+};
+
+export default config;
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/postcss.config.mjs" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-frontend-tsconfig-json"><summary class="codefile__head"><span class="codefile__name">frontend/tsconfig.json</span><span class="codefile__size">666 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">json</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ES2017&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;lib&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dom&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dom.iterable&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;esnext&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;allowJs&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;skipLibCheck&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;strict&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;noEmit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;esModuleInterop&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;esnext&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;moduleResolution&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bundler&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;resolveJsonModule&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;isolatedModules&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;jsx&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;react-jsx&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;incremental&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;plugins&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;next&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;paths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;@/*&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;./*&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;include&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;next-env.d.ts&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;**/*.ts&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;**/*.tsx&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;.next/types/**/*.ts&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;.next/dev/types/**/*.ts&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;**/*.mts&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;exclude&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_modules&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/frontend/tsconfig.json" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="fichiers" hidden><details class="codefile" id="code-gitignore"><summary class="codefile__head"><span class="codefile__name">.gitignore</span><span class="codefile__size">390 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span># Python
+__pycache__/
+*.pyc
+backend/venv/
+backend/chroma_video_db/
+backend/chroma_db/
+backend/frames/
+backend/uploads/
+
+# Node
+frontend/node_modules/
+frontend/.next/
+
+# Env
+.env
+.env.local
+*.env.local
+
+# Old/unused
+backend/agents.py
+backend/knowledge_store.py
+frontend/public/file.svg
+frontend/public/globe.svg
+frontend/public/next.svg
+frontend/public/vercel.svg
+frontend/public/window.svg
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-llm-apps/multimodal-video-moment-finder/.gitignore" download>Télécharger ce fichier</a></p></div></details></div><details class="codepanel__skipped"><summary>Fichiers non embarqués (1)</summary><ul><li><code>frontend/app/favicon.ico</code> — binaire (25 ko)</li></ul><p>Ils restent disponibles dans le <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_llm_apps/multimodal_video_moment_finder" target="_blank" rel="noopener noreferrer">dépôt d'origine</a>.</p></details></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/05-advanced-prompts/index.html">05 · Créer des prompts avancés</a></li><li><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html">14 · Le cycle de vie d&#x27;une application d&#x27;IA générative</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-llm-apps/multimodal-video-moment-finder">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-llm-apps/llm-optimization-tools/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Outils d&#x27;optimisation de contexte</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-llm-apps/resume-job-matcher/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Appariement CV / offre d&#x27;emploi</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_llm_apps/multimodal_video_moment_finder" target="_blank" rel="noopener noreferrer">
+    advanced_llm_apps/multimodal_video_moment_finder</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#how-it-works">How It Works</a></li><li class="toc__item toc__item--h2"><a href="#stack">Stack</a></li><li class="toc__item toc__item--h2"><a href="#project-structure">Project Structure</a></li><li class="toc__item toc__item--h2"><a href="#setup">Setup</a></li><li class="toc__item toc__item--h3"><a href="#prerequisites">Prerequisites</a></li><li class="toc__item toc__item--h3"><a href="#backend">Backend</a></li><li class="toc__item toc__item--h3"><a href="#frontend">Frontend</a></li><li class="toc__item toc__item--h2"><a href="#usage">Usage</a></li><li class="toc__item toc__item--h2"><a href="#api-endpoints">API Endpoints</a></li><li class="toc__item toc__item--h2"><a href="#architecture">Architecture</a></li><li class="toc__item toc__item--h2"><a href="#key-insight">Key Insight</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

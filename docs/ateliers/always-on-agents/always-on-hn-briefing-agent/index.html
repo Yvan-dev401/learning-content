@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Briefing Hacker News permanent — atelier</title>
+<meta name="description" content="Un agent planifié qui vous résume l&#x27;actualité technique chaque matin.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/always-on-agents/index.html">Agents permanents</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🛰️</span> Agents permanents</p>
+  <h1 class="pagehead__title">Briefing Hacker News permanent</h1>
+  <p class="pagehead__summary">Un agent planifié qui vous résume l&#x27;actualité technique chaque matin.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#palier-gratuit" title="Des comptes sont nécessaires, mais leur offre gratuite couvre l&#x27;exercice."><span class="tag__icon" aria-hidden="true">🧪</span><span class="tag__label">Palier gratuit suffisant</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio / Gemini</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Palier gratuit confortable, sans carte bancaire. Convient à la quasi-totalité des ateliers.</p><ul class="alts__list"><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Le palier gratuit suffit</a> — Créez la clé dans AI Studio : aucune carte n&#x27;est demandée.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Si vous dépassez le quota, un modèle local prend le relais.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Hacker News monitoring: Finds AI agent, MCP, coding agent, automation, and LLM app stories from Hacker News.</li><li>Signal ranking: Scores stories by relevance, points, comments, and front-page position.</li><li>Brief generation: Produces a clean text and HTML briefing with summaries, links, and next actions.</li><li>Google ADK agent: Exposes a root_agent so users can request briefs in ADK Web.</li><li>Scheduler-ready backend: Includes HTTP and Pub/Sub endpoints for Cloud Scheduler or other automation systems.</li><li>Gmail and webhook delivery: Sends briefs through Gmail API or a generic webhook when dry_run=false.</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="always-on-hacker-news-briefing-agent">📰 Always-on Hacker News Briefing Agent<a class="anchor" href="#always-on-hacker-news-briefing-agent" aria-label="Lien vers cette section">#</a></h1>
+<p>AgentScout is an always-on Hacker News briefing agent built with Google ADK. It scans Hacker News for high-signal stories about AI agents, MCP, coding agents, workflow automation, and LLM apps, then turns the best links into a concise engineering brief.</p>
+<p>The app can run as an interactive ADK agent or as a scheduled backend service. Use ADK Web to ask for a brief manually, or run the FastAPI scheduler hook so Cloud Scheduler can trigger a daily Hacker News briefing and send it through Gmail, Slack, Linear, Jira, or an internal digest workflow.</p>
+<p><img src="../../../assets/images/always-on-hn-briefing-agent.png" alt="Always-on Hacker News Briefing Agent architecture" loading="lazy" decoding="async" /></p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Hacker News monitoring</strong>: Finds AI agent, MCP, coding agent, automation, and LLM app stories from Hacker News.</li>
+<li><strong>Signal ranking</strong>: Scores stories by relevance, points, comments, and front-page position.</li>
+<li><strong>Brief generation</strong>: Produces a clean text and HTML briefing with summaries, links, and next actions.</li>
+<li><strong>Google ADK agent</strong>: Exposes a <code>root_agent</code> so users can request briefs in ADK Web.</li>
+<li><strong>Scheduler-ready backend</strong>: Includes HTTP and Pub/Sub endpoints for Cloud Scheduler or other automation systems.</li>
+<li><strong>Gmail and webhook delivery</strong>: Sends briefs through Gmail API or a generic webhook when <code>dry_run=false</code>.</li>
+<li><strong>Safe delivery flow</strong>: Defaults to dry-run mode and skips delivery unless credentials are explicitly configured.</li>
+</ul>
+<h2 id="how-it-works">How It Works<a class="anchor" href="#how-it-works" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>AgentScout collects stories from deterministic sample data or the live Hacker News front page.</li>
+<li>It filters for AI agent and LLM app topics.</li>
+<li>It ranks the most useful stories for engineers and product builders.</li>
+<li>It renders a daily briefing in text and HTML.</li>
+<li>ADK Web, an HTTP trigger, or a Pub/Sub push endpoint returns the result.</li>
+<li>If delivery is enabled, the scheduler API sends the brief through Gmail or posts it to <code>AGENTSCOUT_WEBHOOK_URL</code>.</li>
+</ol>
+<h2 id="requirements">Requirements<a class="anchor" href="#requirements" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Python 3.10+</li>
+<li>Gemini API key for ADK Web</li>
+<li>Optional Gmail OAuth credentials for direct email delivery</li>
+<li>Optional webhook URL for Slack, Linear, Jira, GitHub Issues, SendGrid, or internal workflows</li>
+</ul>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>awesome-llm-apps/always_on_agents/always_on_hn_briefing_agent
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_API_KEY</span><span class="o">=</span><span class="s2">&quot;your_gemini_api_key&quot;</span>
+</pre></div>
+</div><h2 id="option-1-run-in-adk-web">Option 1: Run in ADK Web<a class="anchor" href="#option-1-run-in-adk-web" aria-label="Lien vers cette section">#</a></h2>
+<p>Use ADK Web when you want to chat with the agent and ask for a brief manually.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>adk<span class="w"> </span>web<span class="w"> </span>.
+</pre></div>
+</div><p>Open the ADK Web UI and select <code>always_on_hn_briefing_agent</code>.</p>
+<p>Try prompts like:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>Give me today&#39;s AgentScout brief.
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>Scout the top 3 Hacker News stories about AI agents and LLM apps.
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>Show me the highest-signal Hacker News items about MCP, coding agents, and workflow automation.
+</pre></div>
+</div><h2 id="option-2-run-the-scheduler-api-locally">Option 2: Run the Scheduler API Locally<a class="anchor" href="#option-2-run-the-scheduler-api-locally" aria-label="Lien vers cette section">#</a></h2>
+<p>Use the scheduler API when you want AgentScout to run like an always-on backend service. This is the same surface you can deploy behind Cloud Run and trigger from Cloud Scheduler.</p>
+<p>Start the scheduler backend:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>uvicorn<span class="w"> </span>scheduler_api:app<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</pre></div>
+</div><p>In another terminal, preview a scheduled run without delivery:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>curl<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/agent-scout/dry-run?top_n=3&amp;live=false&quot;</span>
+</pre></div>
+</div><p>Trigger the scheduler path in dry-run mode:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/agent-scout/trigger&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;dry_run&quot;: true, &quot;top_n&quot;: 5, &quot;live&quot;: false}&#39;</span>
+</pre></div>
+</div><p>Dry-run mode returns the rendered brief and delivery status, but it does not send anything.</p>
+<p>Enable live Hacker News scanning for the current process:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_LIVE_HN</span><span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div><p>You can also override live mode per request:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/agent-scout/trigger&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;dry_run&quot;: true, &quot;top_n&quot;: 5, &quot;live&quot;: true}&#39;</span>
+</pre></div>
+</div><h2 id="option-3-enable-scheduled-delivery">Option 3: Enable Scheduled Delivery<a class="anchor" href="#option-3-enable-scheduled-delivery" aria-label="Lien vers cette section">#</a></h2>
+<p>Delivery is opt-in. AgentScout will not send email or call a webhook unless the request body includes <code>&quot;dry_run&quot;: false</code> and one delivery method is configured.</p>
+<p>Delivery mode behavior:</p>
+<ul>
+<li><code>AGENTSCOUT_DELIVERY=gmail</code> sends through Gmail API.</li>
+<li><code>AGENTSCOUT_DELIVERY=webhook</code> posts to <code>AGENTSCOUT_WEBHOOK_URL</code>.</li>
+<li>If <code>AGENTSCOUT_DELIVERY</code> is not set, AgentScout uses Gmail when Gmail is fully configured, otherwise webhook when a webhook URL is configured.</li>
+</ul>
+<h3 id="gmail-delivery">Gmail Delivery<a class="anchor" href="#gmail-delivery" aria-label="Lien vers cette section">#</a></h3>
+<p>Use Gmail when you want AgentScout to send the daily brief directly to an inbox. Create a Google OAuth client with Gmail API access, generate a refresh token with the <code>https://www.googleapis.com/auth/gmail.send</code> scope, then set:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_DELIVERY</span><span class="o">=</span><span class="s2">&quot;gmail&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_EMAIL_TO</span><span class="o">=</span><span class="s2">&quot;you@example.com&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_EMAIL_FROM</span><span class="o">=</span><span class="s2">&quot;you@example.com&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_GMAIL_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;your_google_oauth_client_id&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_GMAIL_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;your_google_oauth_client_secret&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_GMAIL_REFRESH_TOKEN</span><span class="o">=</span><span class="s2">&quot;your_gmail_refresh_token&quot;</span>
+
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/agent-scout/trigger&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;dry_run&quot;: false, &quot;top_n&quot;: 5, &quot;live&quot;: true}&#39;</span>
+</pre></div>
+</div><p>AgentScout sends a multipart email with both plain text and HTML versions of the brief.</p>
+<h3 id="webhook-delivery">Webhook Delivery<a class="anchor" href="#webhook-delivery" aria-label="Lien vers cette section">#</a></h3>
+<p>Use webhook delivery when you want to route the brief to Slack, Linear, Jira, GitHub Issues, SendGrid, or your own internal workflow.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_DELIVERY</span><span class="o">=</span><span class="s2">&quot;webhook&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_WEBHOOK_URL</span><span class="o">=</span><span class="s2">&quot;https://example.com/agent-brief-webhook&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AGENTSCOUT_WEBHOOK_TOKEN</span><span class="o">=</span><span class="s2">&quot;optional_bearer_token&quot;</span>
+
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/agent-scout/trigger&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;dry_run&quot;: false, &quot;top_n&quot;: 5, &quot;live&quot;: true}&#39;</span>
+</pre></div>
+</div><p>The webhook receives <code>subject</code>, <code>text</code>, <code>html</code>, <code>stories</code>, and <code>next_actions</code>.</p>
+<h2 id="cloud-scheduler-hook">Cloud Scheduler Hook<a class="anchor" href="#cloud-scheduler-hook" aria-label="Lien vers cette section">#</a></h2>
+<p>Deploy the scheduler API behind Cloud Run or another HTTP service, configure Gmail or webhook delivery in that environment, then call one of these endpoints from Cloud Scheduler.</p>
+<p>Direct HTTP trigger:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>https://YOUR_CLOUD_RUN_URL/agent-scout/trigger
+</pre></div>
+</div><p>Request body:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">json</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;dry_run&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;top_n&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;live&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div><p>Set <code>dry_run</code> to <code>true</code> while testing the schedule. Set it to <code>false</code> only after Gmail or webhook delivery is configured.</p>
+<p>Recommended weekday briefing schedule:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>0 9 * * 1-5
+</pre></div>
+</div><p>Pub/Sub push endpoint:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>https://YOUR_CLOUD_RUN_URL/agent-scout/pubsub
+</pre></div>
+</div><p>For Pub/Sub push, send the same JSON payload as base64-encoded message data.</p>
+<h2 id="example-output">Example Output<a class="anchor" href="#example-output" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">json</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AgentScout Hacker News brief - 2026-06-08&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;watch_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;stories&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Show HN: An open-source framework for reliable AI agent workflows&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;points&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">428</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;comments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">116</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Framework discussion with practical tradeoffs around orchestration, retries, state, and tool execution.&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;next_actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;Open the highest-comment thread and extract objections or implementation patterns.&quot;</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs" role="tablist"><button class="tabs__btn" role="tab" aria-selected="true" data-tab="tests">tests</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="fichiers">Fichiers</button></div><div class="tabs__panel" data-tab="tests"><details class="codefile" id="code-tests-eval-eval-config-yaml"><summary class="codefile__head"><span class="codefile__name">tests/eval/eval_config.yaml</span><span class="codefile__size">850 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">yaml</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nt">eval_set_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agent_scout_ambient_brief</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgentScout ambient agent eval prompts</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prompts for checking that AgentScout behaves like a scouting and handoff agent.</span>
+<span class="nt">eval_cases</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">daily_brief</span>
+<span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Give me today&#39;s ambient AgentScout brief.</span>
+<span class="w">    </span><span class="nt">expected_behavior</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Calls preview_agent_builder_brief.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Returns ranked stories with engineering relevance.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Includes concise next actions.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">top_three</span>
+<span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Scout for the top 3 agent-builder stories and explain why they matter.</span>
+<span class="w">    </span><span class="nt">expected_behavior</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Requests three stories from the scouting tool.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Explains signal instead of dumping links only.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_false_delivery</span>
+<span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Send this to the team.</span>
+<span class="w">    </span><span class="nt">expected_behavior</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Does not claim to send email or Slack.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provides handoff-ready text or HTML payload.</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/always-on-agents/always-on-hn-briefing-agent/tests/eval/eval_config.yaml" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-tests-unit-test-scheduler-api-py"><summary class="codefile__head"><span class="codefile__name">tests/unit/test_scheduler_api.py</span><span class="codefile__size">3 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.testclient</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestClient</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">always_on_hn_briefing_agent.scheduler_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">app</span><span class="p">,</span> <span class="n">run_scheduled_scout</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_scheduled_scout_defaults_to_dry_run</span><span class="p">():</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">run_scheduled_scout</span><span class="p">({</span><span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;dry_run&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;delivery&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;dry_run&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;brief&quot;</span><span class="p">][</span><span class="s2">&quot;stories&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_trigger_endpoint_accepts_scheduler_payload</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">TestClient</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="s2">&quot;/agent-scout/trigger&quot;</span><span class="p">,</span>
+        <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dry_run&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;live&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;dry_run&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;brief&quot;</span><span class="p">][</span><span class="s2">&quot;stories&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_pubsub_endpoint_decodes_scheduler_message</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">TestClient</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;dry_run&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;live&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/agent-scout/pubsub&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}})</span>
+
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;top_n&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;delivery&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;dry_run&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_trigger_endpoint_tolerates_empty_body</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">TestClient</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/agent-scout/trigger&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;delivery&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;dry_run&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_scheduled_scout_reports_missing_delivery_config</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="s2">&quot;AGENTSCOUT_DELIVERY&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_WEBHOOK_URL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_EMAIL_TO&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_EMAIL_FROM&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_GMAIL_CLIENT_ID&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_GMAIL_CLIENT_SECRET&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_GMAIL_REFRESH_TOKEN&quot;</span><span class="p">,</span>
+    <span class="p">]:</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">delenv</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">raising</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">run_scheduled_scout</span><span class="p">({</span><span class="s2">&quot;dry_run&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;live&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;delivery&quot;</span><span class="p">][</span><span class="s2">&quot;attempted&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;delivery&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;skipped_no_delivery&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_explicit_gmail_delivery_reports_missing_config</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setenv</span><span class="p">(</span><span class="s2">&quot;AGENTSCOUT_DELIVERY&quot;</span><span class="p">,</span> <span class="s2">&quot;gmail&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="s2">&quot;AGENTSCOUT_EMAIL_TO&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_EMAIL_FROM&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_GMAIL_CLIENT_ID&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_GMAIL_CLIENT_SECRET&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AGENTSCOUT_GMAIL_REFRESH_TOKEN&quot;</span><span class="p">,</span>
+    <span class="p">]:</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">delenv</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">raising</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">run_scheduled_scout</span><span class="p">({</span><span class="s2">&quot;dry_run&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;live&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;delivery&quot;</span><span class="p">][</span><span class="s2">&quot;provider&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;gmail&quot;</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;delivery&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;skipped_missing_gmail_config&quot;</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/always-on-agents/always-on-hn-briefing-agent/tests/unit/test_scheduler_api.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-tests-unit-test-scout-py"><summary class="codefile__head"><span class="codefile__name">tests/unit/test_scout.py</span><span class="codefile__size">1 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">always_on_hn_briefing_agent.scout</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AGENT_KEYWORDS</span><span class="p">,</span>
+    <span class="n">PACIFIC</span><span class="p">,</span>
+    <span class="n">curate_stories</span><span class="p">,</span>
+    <span class="n">render_brief</span><span class="p">,</span>
+    <span class="n">run_ambient_scout</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_curate_stories_returns_ranked_agent_signals</span><span class="p">():</span>
+    <span class="n">stories</span> <span class="o">=</span> <span class="n">curate_stories</span><span class="p">(</span><span class="n">live</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">stories</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="k">assert</span> <span class="n">stories</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">points</span> <span class="o">&gt;=</span> <span class="n">stories</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">points</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="nb">any</span><span class="p">(</span><span class="n">keyword</span> <span class="ow">in</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">story</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">story</span><span class="o">.</span><span class="n">summary</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">AGENT_KEYWORDS</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">story</span> <span class="ow">in</span> <span class="n">stories</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_render_brief_includes_text_html_and_next_actions</span><span class="p">():</span>
+    <span class="n">stories</span> <span class="o">=</span> <span class="n">curate_stories</span><span class="p">(</span><span class="n">live</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">PACIFIC</span><span class="p">)</span>
+
+    <span class="n">brief</span> <span class="o">=</span> <span class="n">render_brief</span><span class="p">(</span><span class="n">stories</span><span class="p">,</span> <span class="n">watch_mode</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">brief</span><span class="o">.</span><span class="n">subject</span> <span class="o">==</span> <span class="s2">&quot;AgentScout Hacker News brief - 2026-06-08&quot;</span>
+    <span class="k">assert</span> <span class="s2">&quot;AgentScout Hacker News Engineering Brief&quot;</span> <span class="ow">in</span> <span class="n">brief</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">assert</span> <span class="s2">&quot;&lt;ol&gt;&quot;</span> <span class="ow">in</span> <span class="n">brief</span><span class="o">.</span><span class="n">html</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">brief</span><span class="o">.</span><span class="n">next_actions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_run_ambient_scout_returns_delivery_handoff_payload</span><span class="p">():</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">run_ambient_scout</span><span class="p">(</span><span class="n">live</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;watch_mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;sample&quot;</span>
+    <span class="k">assert</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;stories&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="s2">&quot;text&quot;</span> <span class="ow">in</span> <span class="n">payload</span>
+    <span class="k">assert</span> <span class="s2">&quot;html&quot;</span> <span class="ow">in</span> <span class="n">payload</span>
+    <span class="k">assert</span> <span class="s2">&quot;delivery_note&quot;</span> <span class="ow">in</span> <span class="n">payload</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/always-on-agents/always-on-hn-briefing-agent/tests/unit/test_scout.py" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="fichiers" hidden><details class="codefile" id="code-init-py"><summary class="codefile__head"><span class="codefile__name">__init__.py</span><span class="codefile__size">56 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">root_agent</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;root_agent&quot;</span><span class="p">]</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/always-on-agents/always-on-hn-briefing-agent/__init__.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-agent-py"><summary class="codefile__head"><span class="codefile__name">agent.py</span><span class="codefile__size">2 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;AgentScout: an always-on Hacker News briefing agent.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">LlmAgent</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.scout</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_ambient_scout</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">preview_agent_builder_brief</span><span class="p">(</span><span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Preview the Hacker News briefing for agent builders.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        top_n: Number of stories to include in the brief.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A rendered daily brief with ranked stories, signal, and next actions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">run_ambient_scout</span><span class="p">(</span><span class="n">live</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">)</span>
+
+
+<span class="n">root_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;agent_scout&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;Always-on Hacker News briefing agent that watches for AI agent, MCP, &quot;</span>
+        <span class="s2">&quot;coding agent, workflow automation, and LLM app stories.&quot;</span>
+    <span class="p">),</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are AgentScout, an always-on Hacker News briefing agent for teams building</span>
+<span class="s2">AI agents and LLM apps.</span>
+
+<span class="s2">Your job is to act like a focused daily briefing system:</span>
+<span class="s2">- Curate only the highest-signal Hacker News items.</span>
+<span class="s2">- Explain why each item matters to engineers and product builders.</span>
+<span class="s2">- Separate observation from delivery; do not claim to send messages or schedule jobs.</span>
+<span class="s2">- When asked for the current brief, daily digest, scouting run, or Hacker News</span>
+<span class="s2">  update, call preview_agent_builder_brief.</span>
+<span class="s2">- Keep responses concise and operational. Prefer ranked findings, signal, and next actions.</span>
+
+<span class="s2">The tool returns rendered text and HTML that can be handed to email, Slack, or</span>
+<span class="s2">ticketing automation in a production deployment.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">preview_agent_builder_brief</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/always-on-agents/always-on-hn-briefing-agent/agent.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-delivery-py"><summary class="codefile__head"><span class="codefile__name">delivery.py</span><span class="codefile__size">6 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Optional delivery hooks for scheduled AgentScout runs.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.error</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">email.message</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmailMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+
+<span class="n">GMAIL_REQUIRED_ENV</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;AGENTSCOUT_EMAIL_TO&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AGENTSCOUT_EMAIL_FROM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AGENTSCOUT_GMAIL_CLIENT_ID&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AGENTSCOUT_GMAIL_CLIENT_SECRET&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AGENTSCOUT_GMAIL_REFRESH_TOKEN&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_brief</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send a rendered brief through Gmail or a webhook.</span>
+
+<span class="sd">    Delivery is intentionally opt-in. If AGENTSCOUT_DELIVERY is unset, Gmail is</span>
+<span class="sd">    preferred when fully configured, then webhook delivery, then a skipped status.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">delivery_mode</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AGENTSCOUT_DELIVERY&quot;</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">delivery_mode</span> <span class="o">==</span> <span class="s2">&quot;gmail&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">send_gmail</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">delivery_mode</span> <span class="o">==</span> <span class="s2">&quot;webhook&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">send_webhook</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_gmail_configured</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">send_gmail</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AGENTSCOUT_WEBHOOK_URL&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">send_webhook</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;configured&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;skipped_no_delivery&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;detail&quot;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">&quot;Set Gmail environment variables or AGENTSCOUT_WEBHOOK_URL to deliver &quot;</span>
+            <span class="s2">&quot;scheduled briefs.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_gmail_configured</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">GMAIL_REQUIRED_ENV</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_missing_gmail_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">GMAIL_REQUIRED_ENV</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fetch_gmail_access_token</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+        <span class="s2">&quot;https://oauth2.googleapis.com/token&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AGENTSCOUT_GMAIL_CLIENT_ID&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;client_secret&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AGENTSCOUT_GMAIL_CLIENT_SECRET&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;refresh_token&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AGENTSCOUT_GMAIL_REFRESH_TOKEN&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;grant_type&quot;</span><span class="p">:</span> <span class="s2">&quot;refresh_token&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">},</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+        <span class="n">token_payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">token_payload</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_gmail</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send the rendered brief through the Gmail API.&quot;&quot;&quot;</span>
+
+    <span class="n">missing</span> <span class="o">=</span> <span class="n">_missing_gmail_config</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;gmail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;configured&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;skipped_missing_gmail_config&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;missing&quot;</span><span class="p">:</span> <span class="n">missing</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">access_token</span> <span class="o">=</span> <span class="n">_fetch_gmail_access_token</span><span class="p">()</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">EmailMessage</span><span class="p">()</span>
+        <span class="n">message</span><span class="p">[</span><span class="s2">&quot;To&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AGENTSCOUT_EMAIL_TO&quot;</span><span class="p">]</span>
+        <span class="n">message</span><span class="p">[</span><span class="s2">&quot;From&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AGENTSCOUT_EMAIL_FROM&quot;</span><span class="p">]</span>
+        <span class="n">message</span><span class="p">[</span><span class="s2">&quot;Subject&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span>
+        <span class="n">message</span><span class="o">.</span><span class="n">set_content</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">])</span>
+        <span class="n">message</span><span class="o">.</span><span class="n">add_alternative</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">],</span> <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;html&quot;</span><span class="p">)</span>
+
+        <span class="n">encoded_message</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">as_bytes</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="s2">&quot;https://gmail.googleapis.com/gmail/v1/users/me/messages/send&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="n">encoded_message</span><span class="p">})</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">access_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+            <span class="n">response_payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;gmail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;configured&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;sent&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;message_id&quot;</span><span class="p">:</span> <span class="n">response_payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;thread_id&quot;</span><span class="p">:</span> <span class="n">response_payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;threadId&quot;</span><span class="p">),</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="n">urllib</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">detail</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;gmail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;configured&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+            <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">detail</span><span class="p">[:</span><span class="mi">500</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="n">urllib</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">URLError</span><span class="p">,</span> <span class="ne">TimeoutError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;gmail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;configured&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;connection_error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span>
+        <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_webhook</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send a rendered brief to a configured webhook.</span>
+
+<span class="sd">    The app stays safe by default: no webhook is called unless</span>
+<span class="sd">    AGENTSCOUT_WEBHOOK_URL is present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">webhook_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AGENTSCOUT_WEBHOOK_URL&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">webhook_url</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;webhook&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;configured&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;skipped_no_webhook&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;detail&quot;</span><span class="p">:</span> <span class="s2">&quot;Set AGENTSCOUT_WEBHOOK_URL to deliver scheduled briefs.&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="n">body</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;html&quot;</span><span class="p">:</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;stories&quot;</span><span class="p">:</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;stories&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;next_actions&quot;</span><span class="p">:</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;next_actions&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AGENTSCOUT_WEBHOOK_TOKEN&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
+        <span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Authorization&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">request</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+        <span class="n">webhook_url</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+            <span class="n">response_text</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;webhook&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;configured&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="mi">200</span> <span class="o">&lt;=</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">&lt;</span> <span class="mi">300</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                <span class="s2">&quot;response&quot;</span><span class="p">:</span> <span class="n">response_text</span><span class="p">[:</span><span class="mi">500</span><span class="p">],</span>
+            <span class="p">}</span>
+    <span class="k">except</span> <span class="n">urllib</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">detail</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;webhook&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;configured&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+            <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">detail</span><span class="p">[:</span><span class="mi">500</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="n">urllib</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">URLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;webhook&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;configured&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;connection_error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span>
+        <span class="p">}</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/always-on-agents/always-on-hn-briefing-agent/delivery.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">27 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>google-adk
+fastapi
+uvicorn
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/always-on-agents/always-on-hn-briefing-agent/requirements.txt" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-scheduler-api-py"><summary class="codefile__head"><span class="codefile__name">scheduler_api.py</span><span class="codefile__size">3 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Scheduler-facing API for AgentScout.</span>
+
+<span class="sd">Run locally with:</span>
+<span class="sd">    uvicorn scheduler_api:app --host 0.0.0.0 --port 8000</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JSONDecodeError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">Request</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.delivery</span><span class="w"> </span><span class="kn">import</span> <span class="n">send_brief</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.scout</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_ambient_scout</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">delivery</span><span class="w"> </span><span class="kn">import</span> <span class="n">send_brief</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scout</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_ambient_scout</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;AgentScout Scheduler API&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;HTTP and Pub/Sub hooks for scheduled Hacker News briefing runs.&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_as_bool</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">lowered</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;yes&quot;</span><span class="p">}:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">lowered</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span> <span class="s2">&quot;no&quot;</span><span class="p">}:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">default</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_as_top_n</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">top_n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">5</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">top_n</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_scheduled_scout</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run AgentScout from a scheduler payload.</span>
+
+<span class="sd">    Payload fields:</span>
+<span class="sd">        dry_run: defaults to true. Set false to call configured delivery.</span>
+<span class="sd">        live: optional override for live Hacker News mode.</span>
+<span class="sd">        top_n: number of stories, clamped to 1-10.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="n">dry_run</span> <span class="o">=</span> <span class="n">_as_bool</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dry_run&quot;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">live</span> <span class="o">=</span> <span class="n">_as_bool</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;live&quot;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">top_n</span> <span class="o">=</span> <span class="n">_as_top_n</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;top_n&quot;</span><span class="p">))</span>
+
+    <span class="n">brief</span> <span class="o">=</span> <span class="n">run_ambient_scout</span><span class="p">(</span><span class="n">live</span><span class="o">=</span><span class="n">live</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">)</span>
+    <span class="n">delivery</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;attempted&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;sent&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;dry_run&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;detail&quot;</span><span class="p">:</span> <span class="s2">&quot;Set dry_run=false to use configured Gmail or webhook delivery.&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">dry_run</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">delivery</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;attempted&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">send_brief</span><span class="p">(</span><span class="n">brief</span><span class="p">)}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;dry_run&quot;</span><span class="p">:</span> <span class="n">dry_run</span><span class="p">,</span>
+        <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="n">top_n</span><span class="p">,</span>
+        <span class="s2">&quot;delivery&quot;</span><span class="p">:</span> <span class="n">delivery</span><span class="p">,</span>
+        <span class="s2">&quot;brief&quot;</span><span class="p">:</span> <span class="n">brief</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">health</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">}</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/agent-scout/dry-run&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dry_run_preview</span><span class="p">(</span><span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">live</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">run_scheduled_scout</span><span class="p">({</span><span class="s2">&quot;dry_run&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="n">top_n</span><span class="p">,</span> <span class="s2">&quot;live&quot;</span><span class="p">:</span> <span class="n">live</span><span class="p">})</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/agent-scout/trigger&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">scheduler_trigger</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content-length&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="k">except</span> <span class="n">JSONDecodeError</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">run_scheduled_scout</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/agent-scout/pubsub&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">pubsub_trigger</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cloud Scheduler -&gt; Pub/Sub push compatible endpoint.&quot;&quot;&quot;</span>
+
+    <span class="n">envelope</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">envelope</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="p">{})</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">envelope</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">encoded_data</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">encoded_data</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">decoded</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">encoded_data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">JSONDecodeError</span><span class="p">):</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">run_scheduled_scout</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/always-on-agents/always-on-hn-briefing-agent/scheduler_api.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-scout-py"><summary class="codefile__head"><span class="codefile__name">scout.py</span><span class="codefile__size">13 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Hacker News briefing pipeline for AgentScout.</span>
+
+<span class="sd">The module is intentionally self-contained: it can run with deterministic sample</span>
+<span class="sd">data for demos, or fetch the Hacker News front page directly when live mode is</span>
+<span class="sd">enabled.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">html</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.error</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">html.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTMLParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zoneinfo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZoneInfo</span>
+
+<span class="n">PACIFIC</span> <span class="o">=</span> <span class="n">ZoneInfo</span><span class="p">(</span><span class="s2">&quot;America/Los_Angeles&quot;</span><span class="p">)</span>
+
+<span class="n">AGENT_KEYWORDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;agent&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;agents&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;agentic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;automation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;autonomous&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;coding&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;framework&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mcp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;orchestration&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tool&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;workflow&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">NOISE_WORDS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ask hn: who is hiring&quot;</span><span class="p">,</span> <span class="s2">&quot;freelance&quot;</span><span class="p">,</span> <span class="s2">&quot;hiring&quot;</span><span class="p">}</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Story</span><span class="p">:</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">hn_url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">points</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">comments</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">rank</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Brief</span><span class="p">:</span>
+    <span class="n">generated_at</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">watch_mode</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">html</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">stories</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Story</span><span class="p">]</span>
+    <span class="n">next_actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;stories&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">asdict</span><span class="p">(</span><span class="n">story</span><span class="p">)</span> <span class="k">for</span> <span class="n">story</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stories</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">payload</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">HNFrontPageParser</span><span class="p">(</span><span class="n">HTMLParser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Small parser for the stable HN table markup.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_in_title</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_href</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_text</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_latest_story</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_item_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_in_score</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_in_subtext</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subtext_link_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stories</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_starttag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="n">class_name</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;tr&quot;</span> <span class="ow">and</span> <span class="s2">&quot;athing&quot;</span> <span class="ow">in</span> <span class="n">class_name</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_item_id</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;span&quot;</span> <span class="ow">and</span> <span class="n">class_name</span> <span class="o">==</span> <span class="s2">&quot;titleline&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_title</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_title</span> <span class="ow">and</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_href</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_href</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_text</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;span&quot;</span> <span class="ow">and</span> <span class="n">class_name</span> <span class="o">==</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_score</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_text</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;span&quot;</span> <span class="ow">and</span> <span class="n">class_name</span> <span class="o">==</span> <span class="s2">&quot;subtext&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_subtext</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_subtext</span> <span class="ow">and</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_subtext_link_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_endtag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_title</span> <span class="ow">and</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_href</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_text</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="n">rank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stories</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">item_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_item_id</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;unknown-</span><span class="si">{</span><span class="n">rank</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">hn_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://news.ycombinator.com/item?id=</span><span class="si">{</span><span class="n">item_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_latest_story</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">_absolute_hn_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_href</span><span class="p">),</span>
+                <span class="s2">&quot;hn_url&quot;</span><span class="p">:</span> <span class="n">hn_url</span><span class="p">,</span>
+                <span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;comments&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;rank&quot;</span><span class="p">:</span> <span class="n">rank</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_latest_story</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_item_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_href</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_text</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;span&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_title</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_title</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;span&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_score</span><span class="p">:</span>
+            <span class="n">score_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latest_story</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_latest_story</span><span class="p">[</span><span class="s2">&quot;points&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_first_int</span><span class="p">(</span><span class="n">score_text</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_score</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_text</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_subtext</span> <span class="ow">and</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latest_story</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;comment&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subtext_link_text</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_latest_story</span><span class="p">[</span><span class="s2">&quot;comments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_first_int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subtext_link_text</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;span&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_subtext</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_in_subtext</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_href</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_score</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_subtext</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_subtext_link_text</span> <span class="o">+=</span> <span class="n">data</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_absolute_hn_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;item?id=&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;https://news.ycombinator.com/</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">url</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;https://news.ycombinator.com/</span><span class="si">{</span><span class="n">url</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_first_int</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d+&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span> <span class="k">if</span> <span class="n">match</span> <span class="k">else</span> <span class="mi">0</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_keyword_hits</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="n">normalized</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^a-z0-9]+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">keyword</span> <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">AGENT_KEYWORDS</span> <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">normalized</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_noise</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">lowered</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">noise</span> <span class="ow">in</span> <span class="n">lowered</span> <span class="k">for</span> <span class="n">noise</span> <span class="ow">in</span> <span class="n">NOISE_WORDS</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_score_story</span><span class="p">(</span><span class="n">story</span><span class="p">:</span> <span class="n">Story</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">keyword_score</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">_keyword_hits</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">title</span><span class="p">))</span> <span class="o">*</span> <span class="mi">16</span>
+    <span class="n">discussion_score</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span>
+    <span class="n">points_score</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
+    <span class="n">freshness_score</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">35</span> <span class="o">-</span> <span class="n">story</span><span class="o">.</span><span class="n">rank</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">keyword_score</span> <span class="o">+</span> <span class="n">discussion_score</span> <span class="o">+</span> <span class="n">points_score</span> <span class="o">+</span> <span class="n">freshness_score</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_summarize_story</span><span class="p">(</span><span class="n">story</span><span class="p">:</span> <span class="n">Story</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">hits</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_keyword_hits</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">title</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">hits</span><span class="p">:</span>
+        <span class="n">signal</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hits</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Strong Hacker News signal around </span><span class="si">{</span><span class="n">signal</span><span class="si">}</span><span class="s2">; review for architecture, tooling, or workflow ideas.&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;Useful background item for agent builders; monitor discussion before promoting it to the daily brief.&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_stories</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Story</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deterministic demo data used when live Hacker News mode is disabled.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">Story</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Show HN: An open-source framework for reliable AI agent workflows&quot;</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://example.com/reliable-agent-workflows&quot;</span><span class="p">,</span>
+            <span class="n">hn_url</span><span class="o">=</span><span class="s2">&quot;https://news.ycombinator.com/item?id=40100001&quot;</span><span class="p">,</span>
+            <span class="n">points</span><span class="o">=</span><span class="mi">428</span><span class="p">,</span>
+            <span class="n">comments</span><span class="o">=</span><span class="mi">116</span><span class="p">,</span>
+            <span class="n">rank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">summary</span><span class="o">=</span><span class="s2">&quot;Framework discussion with practical tradeoffs around orchestration, retries, state, and tool execution.&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">Story</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Model Context Protocol adoption in developer tools&quot;</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://example.com/mcp-developer-tools&quot;</span><span class="p">,</span>
+            <span class="n">hn_url</span><span class="o">=</span><span class="s2">&quot;https://news.ycombinator.com/item?id=40100002&quot;</span><span class="p">,</span>
+            <span class="n">points</span><span class="o">=</span><span class="mi">312</span><span class="p">,</span>
+            <span class="n">comments</span><span class="o">=</span><span class="mi">84</span><span class="p">,</span>
+            <span class="n">rank</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">summary</span><span class="o">=</span><span class="s2">&quot;MCP is becoming a shared integration surface for coding assistants and internal tools.&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">Story</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Lessons from running coding agents on production repositories&quot;</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://example.com/coding-agents-production&quot;</span><span class="p">,</span>
+            <span class="n">hn_url</span><span class="o">=</span><span class="s2">&quot;https://news.ycombinator.com/item?id=40100003&quot;</span><span class="p">,</span>
+            <span class="n">points</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+            <span class="n">comments</span><span class="o">=</span><span class="mi">73</span><span class="p">,</span>
+            <span class="n">rank</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+            <span class="n">summary</span><span class="o">=</span><span class="s2">&quot;Operational report on code review loops, test gates, sandboxing, and human approval boundaries.&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">Story</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Why long-running automation needs better human handoff states&quot;</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://example.com/automation-handoff-states&quot;</span><span class="p">,</span>
+            <span class="n">hn_url</span><span class="o">=</span><span class="s2">&quot;https://news.ycombinator.com/item?id=40100004&quot;</span><span class="p">,</span>
+            <span class="n">points</span><span class="o">=</span><span class="mi">184</span><span class="p">,</span>
+            <span class="n">comments</span><span class="o">=</span><span class="mi">41</span><span class="p">,</span>
+            <span class="n">rank</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+            <span class="n">summary</span><span class="o">=</span><span class="s2">&quot;Product and systems perspective on when always-on agents should pause, escalate, or summarize.&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">Story</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;A lightweight eval harness for tool-using LLM applications&quot;</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://example.com/tool-using-evals&quot;</span><span class="p">,</span>
+            <span class="n">hn_url</span><span class="o">=</span><span class="s2">&quot;https://news.ycombinator.com/item?id=40100005&quot;</span><span class="p">,</span>
+            <span class="n">points</span><span class="o">=</span><span class="mi">141</span><span class="p">,</span>
+            <span class="n">comments</span><span class="o">=</span><span class="mi">29</span><span class="p">,</span>
+            <span class="n">rank</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span>
+            <span class="n">summary</span><span class="o">=</span><span class="s2">&quot;Practical eval design for agents that call tools and produce user-facing artifacts.&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fetch_hn_front_page</span><span class="p">(</span><span class="n">timeout_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Story</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch and parse current Hacker News front-page stories.&quot;&quot;&quot;</span>
+
+    <span class="n">request</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+        <span class="s2">&quot;https://news.ycombinator.com/news&quot;</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;AgentScout ambient demo&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_seconds</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+            <span class="n">markup</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">urllib</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">URLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not fetch Hacker News: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">HNFrontPageParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">markup</span><span class="p">)</span>
+    <span class="n">stories</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Story</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">raw_story</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">stories</span><span class="p">:</span>
+        <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">raw_story</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]),</span>
+            <span class="n">url</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">raw_story</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]),</span>
+            <span class="n">hn_url</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">raw_story</span><span class="p">[</span><span class="s2">&quot;hn_url&quot;</span><span class="p">]),</span>
+            <span class="n">points</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">raw_story</span><span class="p">[</span><span class="s2">&quot;points&quot;</span><span class="p">]),</span>
+            <span class="n">comments</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">raw_story</span><span class="p">[</span><span class="s2">&quot;comments&quot;</span><span class="p">]),</span>
+            <span class="n">rank</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">raw_story</span><span class="p">[</span><span class="s2">&quot;rank&quot;</span><span class="p">]),</span>
+            <span class="n">summary</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">stories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">Story</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                <span class="n">hn_url</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">hn_url</span><span class="p">,</span>
+                <span class="n">points</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">points</span><span class="p">,</span>
+                <span class="n">comments</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span>
+                <span class="n">rank</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span>
+                <span class="n">summary</span><span class="o">=</span><span class="n">_summarize_story</span><span class="p">(</span><span class="n">story</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">stories</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">curate_stories</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">live</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Story</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Select the highest-signal agent-building stories.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">live</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">live</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AGENTSCOUT_LIVE_HN&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;yes&quot;</span><span class="p">}</span>
+
+    <span class="n">stories</span> <span class="o">=</span> <span class="n">fetch_hn_front_page</span><span class="p">()</span> <span class="k">if</span> <span class="n">live</span> <span class="k">else</span> <span class="n">sample_stories</span><span class="p">()</span>
+    <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">story</span>
+        <span class="k">for</span> <span class="n">story</span> <span class="ow">in</span> <span class="n">stories</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_noise</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="p">(</span><span class="n">_keyword_hits</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">title</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;agent&quot;</span> <span class="ow">in</span> <span class="n">story</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">_score_story</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">top_n</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_brief</span><span class="p">(</span>
+    <span class="n">stories</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Story</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">watch_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+    <span class="n">now</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Brief</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a Hacker News daily brief in text and HTML.&quot;&quot;&quot;</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">now</span> <span class="ow">or</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">PACIFIC</span><span class="p">)</span>
+    <span class="n">date_label</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;AgentScout Hacker News brief - </span><span class="si">{</span><span class="n">date_label</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">next_actions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Open the highest-comment thread and extract objections or implementation patterns.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Promote only stories with clear engineering signal to the team digest.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;If this is running on a schedule, send the brief after human-readable rendering succeeds.&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">text_lines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;AgentScout Hacker News Engineering Brief&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;Generated: </span><span class="si">{</span><span class="n">now</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="n">timespec</span><span class="o">=</span><span class="s1">&#39;seconds&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;Watch mode: </span><span class="si">{</span><span class="n">watch_mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Highest-signal agent-building stories:&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">html_lines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;&lt;h2&gt;AgentScout Hacker News Engineering Brief&lt;/h2&gt;&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;&lt;p&gt;&lt;strong&gt;Generated:&lt;/strong&gt; </span><span class="si">{</span><span class="n">html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="n">timespec</span><span class="o">=</span><span class="s1">&#39;seconds&#39;</span><span class="p">))</span><span class="si">}</span><span class="s2">&lt;br&gt;&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;&lt;strong&gt;Watch mode:&lt;/strong&gt; </span><span class="si">{</span><span class="n">html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">watch_mode</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/p&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&lt;ol&gt;&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">story</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stories</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">signal</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">story</span><span class="o">.</span><span class="n">points</span><span class="si">}</span><span class="s2"> points, </span><span class="si">{</span><span class="n">story</span><span class="o">.</span><span class="n">comments</span><span class="si">}</span><span class="s2"> comments, front-page rank </span><span class="si">{</span><span class="n">story</span><span class="o">.</span><span class="n">rank</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">text_lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">story</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;   Why it matters: </span><span class="si">{</span><span class="n">story</span><span class="o">.</span><span class="n">summary</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;   Signal: </span><span class="si">{</span><span class="n">signal</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;   Link: </span><span class="si">{</span><span class="n">story</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;   HN: </span><span class="si">{</span><span class="n">story</span><span class="o">.</span><span class="n">hn_url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">html_lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;&lt;li&gt;&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;&lt;strong&gt;</span><span class="si">{</span><span class="n">html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/strong&gt;&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;&lt;p&gt;</span><span class="si">{</span><span class="n">html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/p&gt;&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;&lt;p&gt;&lt;strong&gt;Signal:&lt;/strong&gt; </span><span class="si">{</span><span class="n">html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;br&gt;&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;&lt;a href=&quot;</span><span class="si">{</span><span class="n">html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">url</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;&gt;source&lt;/a&gt; | &#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;&lt;a href=&quot;</span><span class="si">{</span><span class="n">html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">hn_url</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;&gt;HN discussion&lt;/a&gt;&lt;/p&gt;&#39;</span><span class="p">,</span>
+                <span class="s2">&quot;&lt;/li&gt;&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">stories</span><span class="p">:</span>
+        <span class="n">text_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;No high-signal agent-building stories found.&quot;</span><span class="p">)</span>
+        <span class="n">html_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;li&gt;No high-signal agent-building stories found.&lt;/li&gt;&quot;</span><span class="p">)</span>
+
+    <span class="n">text_lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;Next actions:&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">next_actions</span><span class="p">]])</span>
+    <span class="n">html_lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;&lt;/ol&gt;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&lt;h3&gt;Next actions&lt;/h3&gt;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&lt;ul&gt;&quot;</span><span class="p">,</span>
+            <span class="o">*</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;&lt;li&gt;</span><span class="si">{</span><span class="n">html</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">action</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/li&gt;&quot;</span> <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">next_actions</span><span class="p">],</span>
+            <span class="s2">&quot;&lt;/ul&gt;&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">Brief</span><span class="p">(</span>
+        <span class="n">generated_at</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="n">timespec</span><span class="o">=</span><span class="s2">&quot;seconds&quot;</span><span class="p">),</span>
+        <span class="n">watch_mode</span><span class="o">=</span><span class="n">watch_mode</span><span class="p">,</span>
+        <span class="n">subject</span><span class="o">=</span><span class="n">subject</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_lines</span><span class="p">),</span>
+        <span class="n">html</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">html_lines</span><span class="p">),</span>
+        <span class="n">stories</span><span class="o">=</span><span class="n">stories</span><span class="p">,</span>
+        <span class="n">next_actions</span><span class="o">=</span><span class="n">next_actions</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_ambient_scout</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">live</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the complete Hacker News briefing pipeline.&quot;&quot;&quot;</span>
+
+    <span class="n">stories</span> <span class="o">=</span> <span class="n">curate_stories</span><span class="p">(</span><span class="n">live</span><span class="o">=</span><span class="n">live</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">)</span>
+    <span class="n">inferred_live</span> <span class="o">=</span> <span class="n">live</span>
+    <span class="k">if</span> <span class="n">inferred_live</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">inferred_live</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AGENTSCOUT_LIVE_HN&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">{</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="n">brief</span> <span class="o">=</span> <span class="n">render_brief</span><span class="p">(</span><span class="n">stories</span><span class="p">,</span> <span class="n">watch_mode</span><span class="o">=</span><span class="s2">&quot;live_hn&quot;</span> <span class="k">if</span> <span class="n">inferred_live</span> <span class="k">else</span> <span class="s2">&quot;sample&quot;</span><span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">brief</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;delivery_note&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;This demo renders the Hacker News digest and handoff text. Wire the &quot;</span>
+        <span class="s2">&quot;returned text/html to your email, Slack, or ticketing sender when you deploy it.&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">payload</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/always-on-agents/always-on-hn-briefing-agent/scout.py" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html">14 · Le cycle de vie d&#x27;une application d&#x27;IA générative</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:always-on-agents/always-on-hn-briefing-agent">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Cours intensif OpenAI Agents SDK</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/always-on-agents/release-radar-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Radar des nouvelles versions</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/always_on_agents/always_on_hn_briefing_agent" target="_blank" rel="noopener noreferrer">
+    always_on_agents/always_on_hn_briefing_agent</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#how-it-works">How It Works</a></li><li class="toc__item toc__item--h2"><a href="#requirements">Requirements</a></li><li class="toc__item toc__item--h2"><a href="#installation">Installation</a></li><li class="toc__item toc__item--h2"><a href="#option-1-run-in-adk-web">Option 1: Run in ADK Web</a></li><li class="toc__item toc__item--h2"><a href="#option-2-run-the-scheduler-api-locally">Option 2: Run the Scheduler API Locally</a></li><li class="toc__item toc__item--h2"><a href="#option-3-enable-scheduled-delivery">Option 3: Enable Scheduled Delivery</a></li><li class="toc__item toc__item--h3"><a href="#gmail-delivery">Gmail Delivery</a></li><li class="toc__item toc__item--h3"><a href="#webhook-delivery">Webhook Delivery</a></li><li class="toc__item toc__item--h2"><a href="#cloud-scheduler-hook">Cloud Scheduler Hook</a></li><li class="toc__item toc__item--h2"><a href="#example-output">Example Output</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Détecteur de dérive de périmètre — atelier</title>
+<meta name="description" content="Signale quand une pull request déborde de ce qu&#x27;elle annonce.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/agent-skills/index.html">Compétences d&#x27;agent</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🧩</span> Compétences d&#x27;agent</p>
+  <h1 class="pagehead__title">Détecteur de dérive de périmètre</h1>
+  <p class="pagehead__summary">Signale quand une pull request déborde de ce qu&#x27;elle annonce.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#gratuit" title="Rien à payer : tout est local ou couvert par un service gratuit."><span class="tag__icon" aria-hidden="true">🆓</span><span class="tag__label">100 % gratuit</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+
+
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="scope-creep-detector">🔭 Scope Creep Detector<a class="anchor" href="#scope-creep-detector" aria-label="Lien vers cette section">#</a></h1>
+<p>Checks a working, staged, saved, or branch diff against a one-line intent. It
+flags unrelated paths, new dependencies, public API renames, config or CI
+edits, oversized hunks, formatting-only files, and subsystem spread. The output
+is a local JSON report for keep, split, or justify decisions.</p>
+<p><img src="https://github.com/mvanhorn/awesome-llm-apps/releases/download/demo-assets/scope-creep-detector.gif" alt="Scope Creep Detector demo" loading="lazy" decoding="async" /></p>
+<p>The demo analyzes a &quot;fix null deref in parser&quot; change that also touched CI
+config, added a dependency, and dropped in an unrelated file. The parser fix is
+kept; the rest is flagged.</p>
+<h2 id="install">Install<a class="anchor" href="#install" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>npx<span class="w"> </span>skills<span class="w"> </span>add<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/agent_skills/scope-creep-detector
+</pre></div>
+</div><h2 id="run">Run<a class="anchor" href="#run" aria-label="Lien vers cette section">#</a></h2>
+<p>Ask the agent:</p>
+<blockquote>
+<p>Did my change grow beyond the parser fix I intended?</p>
+</blockquote>
+<p>Or run the deterministic core directly:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python3<span class="w"> </span>scripts/scope_creep.py<span class="w"> </span>--repo<span class="w"> </span>/path/to/repo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--intent<span class="w"> </span><span class="s2">&quot;fix null dereference in parser&quot;</span><span class="w"> </span>--json
+</pre></div>
+</div><p>Use <code>--staged</code> for the index, <code>--base main</code> for a branch diff, or <code>--diff -</code>
+for unified diff input on stdin. The script uses only the Python standard
+library, makes no network calls, and does not modify the repository.</p>
+
+</article>
+<section class="subpages"><h2 id="pages-de-l-atelier">Pages de cet atelier<a class="anchor" href="#pages-de-l-atelier" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../ateliers/agent-skills/scope-creep-detector/skill/index.html">Scope Creep Detector</a></li><li><a href="../../../ateliers/agent-skills/scope-creep-detector/references-scope-signals/index.html">Scope signals</a></li></ul></section>
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="scripts"><details class="codefile" id="code-scripts-scope-creep-py"><summary class="codefile__head"><span class="codefile__name">scripts/scope_creep.py</span><span class="codefile__size">18 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Classify scope signals in a unified diff.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    python3 scope_creep.py --repo . --intent &quot;fix parser crash&quot; --json</span>
+<span class="sd">    python3 scope_creep.py --repo . --staged --json</span>
+<span class="sd">    python3 scope_creep.py --repo . --base main --json</span>
+<span class="sd">    python3 scope_creep.py --diff change.diff --intent &quot;fix parser crash&quot; --json</span>
+
+<span class="sd">Python 3.11 stdlib only. Runs locally and never changes the target repository.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">collections</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+
+<span class="n">DEFAULT_HUNK_THRESHOLD</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">STOP_WORDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;branch&quot;</span><span class="p">,</span> <span class="s2">&quot;bug&quot;</span><span class="p">,</span> <span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="s2">&quot;changes&quot;</span><span class="p">,</span> <span class="s2">&quot;chore&quot;</span><span class="p">,</span> <span class="s2">&quot;develop&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;development&quot;</span><span class="p">,</span> <span class="s2">&quot;feat&quot;</span><span class="p">,</span> <span class="s2">&quot;feature&quot;</span><span class="p">,</span> <span class="s2">&quot;fix&quot;</span><span class="p">,</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span> <span class="s2">&quot;main&quot;</span><span class="p">,</span> <span class="s2">&quot;master&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;the&quot;</span><span class="p">,</span> <span class="s2">&quot;this&quot;</span><span class="p">,</span> <span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="s2">&quot;with&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">CONFIG_EXTENSIONS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;.toml&quot;</span><span class="p">,</span> <span class="s2">&quot;.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;.yml&quot;</span><span class="p">}</span>
+<span class="n">BUILD_FILES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;cmakelists.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;docker-compose.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;docker-compose.yml&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dockerfile&quot;</span><span class="p">,</span> <span class="s2">&quot;makefile&quot;</span><span class="p">,</span> <span class="s2">&quot;meson.build&quot;</span><span class="p">,</span> <span class="s2">&quot;procfile&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">SYMBOL_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;^\s*(?:(?:async\s+)?def\s+([A-Za-z_]\w*)|class\s+([A-Za-z_]\w*))&quot;</span>
+<span class="p">)</span>
+<span class="n">HUNK_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@(.*)$&quot;</span>
+<span class="p">)</span>
+<span class="n">REQUIREMENTS_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s*([A-Za-z0-9][A-Za-z0-9_.-]*)&quot;</span><span class="p">)</span>
+<span class="n">JSON_PROPERTY_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s*&quot;([A-Za-z0-9@/_.-]+)&quot;\s*:\s*(.+?)[,]?\s*$&#39;</span><span class="p">)</span>
+<span class="n">PYPROJECT_STRING_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s*[&quot;</span><span class="se">\&#39;</span><span class="s1">]([A-Za-z0-9][A-Za-z0-9_.-]*)[^&quot;</span><span class="se">\&#39;</span><span class="s1">]*[&quot;</span><span class="se">\&#39;</span><span class="s1">]\s*,?\s*$&#39;</span><span class="p">)</span>
+<span class="n">PYPROJECT_ASSIGN_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s*([A-Za-z0-9][A-Za-z0-9_.-]*)\s*=\s*(.+)$&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_path</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize a git header path without touching the filesystem.&quot;&quot;&quot;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;/dev/null&quot;</span><span class="p">,</span> <span class="s2">&quot;dev/null&quot;</span><span class="p">}:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;a/&quot;</span><span class="p">,</span> <span class="s2">&quot;b/&quot;</span><span class="p">)):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">new_file</span><span class="p">(</span><span class="n">old_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">new_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;old_path&quot;</span><span class="p">:</span> <span class="n">old_path</span><span class="p">,</span>
+        <span class="s2">&quot;new_path&quot;</span><span class="p">:</span> <span class="n">new_path</span><span class="p">,</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">new_path</span> <span class="ow">or</span> <span class="n">old_path</span> <span class="ow">or</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hunks&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_diff</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse the file and hunk structure needed by the classifiers.&quot;&quot;&quot;</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">hunk</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">old_remaining</span> <span class="o">=</span> <span class="n">new_remaining</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">raw</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;diff --git &quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">old_path</span> <span class="o">=</span> <span class="n">clean_path</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">new_path</span> <span class="o">=</span> <span class="n">clean_path</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">new_file</span><span class="p">(</span><span class="n">old_path</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+            <span class="n">hunk</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">raw</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;--- &quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">new_file</span><span class="p">()</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+
+        <span class="n">match</span> <span class="o">=</span> <span class="n">HUNK_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+            <span class="n">old_remaining</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+            <span class="n">new_remaining</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+            <span class="n">hunk</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;header&quot;</span><span class="p">:</span> <span class="n">raw</span><span class="p">,</span> <span class="s2">&quot;lines&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+            <span class="n">current</span><span class="p">[</span><span class="s2">&quot;hunks&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hunk</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">hunk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">raw</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">marker</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">marker</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">}:</span>
+                <span class="k">continue</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="n">marker</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">raw</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">]),</span>
+            <span class="p">}</span>
+            <span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">marker</span> <span class="o">!=</span> <span class="s2">&quot;+&quot;</span><span class="p">:</span>
+                <span class="n">old_remaining</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">marker</span> <span class="o">!=</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                <span class="n">new_remaining</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">old_remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">new_remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">hunk</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;--- &quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">current</span><span class="p">[</span><span class="s2">&quot;hunks&quot;</span><span class="p">]:</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">new_file</span><span class="p">()</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;rename from &quot;</span><span class="p">):</span>
+            <span class="n">current</span><span class="p">[</span><span class="s2">&quot;old_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clean_path</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;rename from &quot;</span><span class="p">):])</span>
+            <span class="n">current</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="p">[</span><span class="s2">&quot;new_path&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">current</span><span class="p">[</span><span class="s2">&quot;old_path&quot;</span><span class="p">]</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;rename to &quot;</span><span class="p">):</span>
+            <span class="n">current</span><span class="p">[</span><span class="s2">&quot;new_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clean_path</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;rename to &quot;</span><span class="p">):])</span>
+            <span class="n">current</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="p">[</span><span class="s2">&quot;new_path&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">current</span><span class="p">[</span><span class="s2">&quot;old_path&quot;</span><span class="p">]</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;--- &quot;</span><span class="p">):</span>
+            <span class="n">current</span><span class="p">[</span><span class="s2">&quot;old_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clean_path</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="mi">4</span><span class="p">:])</span>
+            <span class="n">current</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="p">[</span><span class="s2">&quot;new_path&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">current</span><span class="p">[</span><span class="s2">&quot;old_path&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;unknown&quot;</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;+++ &quot;</span><span class="p">):</span>
+            <span class="n">current</span><span class="p">[</span><span class="s2">&quot;new_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clean_path</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="mi">4</span><span class="p">:])</span>
+            <span class="n">current</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="p">[</span><span class="s2">&quot;new_path&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">current</span><span class="p">[</span><span class="s2">&quot;old_path&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;unknown&quot;</span>
+            <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="n">files</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">changed_lines</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="n">marker</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">hunk</span> <span class="ow">in</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;hunks&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">marker</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tokenize</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([a-z0-9])([A-Z])&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1 \2&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^A-Za-z0-9]+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="n">token</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">STOP_WORDS</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">subsystem</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;(root)&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">config_kind</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="n">normalized</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">normalized</span><span class="p">)</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">name</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">normalized</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.github/&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;ci&quot;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">BUILD_FILES</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;dockerfile.&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;build&quot;</span>
+    <span class="k">if</span> <span class="n">extension</span> <span class="ow">in</span> <span class="n">CONFIG_EXTENSIONS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;config&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">requirement_dependency</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+    <span class="n">stripped</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">stripped</span> <span class="ow">or</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">REQUIREMENTS_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">stripped</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">),</span> <span class="n">stripped</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">package_json_dependencies</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="n">marker</span><span class="p">):</span>
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">hunk</span> <span class="ow">in</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;hunks&quot;</span><span class="p">]:</span>
+        <span class="n">in_dependencies</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">]:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+            <span class="n">top_key</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s{0,2}&quot;([^&quot;]+)&quot;\s*:&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">top_key</span><span class="p">:</span>
+                <span class="n">in_dependencies</span> <span class="o">=</span> <span class="n">top_key</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="ow">in</span> <span class="p">{</span>
+                    <span class="s2">&quot;dependencies&quot;</span><span class="p">,</span> <span class="s2">&quot;devDependencies&quot;</span><span class="p">,</span> <span class="s2">&quot;optionalDependencies&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;peerDependencies&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">marker</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">in_dependencies</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">JSON_PROPERTY_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="n">dependencies</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">dependencies</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pyproject_dependencies</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="n">marker</span><span class="p">):</span>
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">in_project_list</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">hunk</span> <span class="ow">in</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;hunks&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">]:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+            <span class="n">section_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s*\[([^]]+)\]\s*$&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">section_match</span><span class="p">:</span>
+                <span class="n">section</span> <span class="o">=</span> <span class="n">section_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                <span class="n">in_project_list</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">section</span> <span class="o">==</span> <span class="s2">&quot;project&quot;</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s*dependencies\s*=\s*\[&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+                <span class="n">in_project_list</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">in_project_list</span> <span class="ow">and</span> <span class="s2">&quot;]&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">in_project_list</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">marker</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">in_project_list</span><span class="p">:</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">PYPROJECT_STRING_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                    <span class="n">dependencies</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">),</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+            <span class="k">elif</span> <span class="n">section</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;tool.poetry.dependencies&quot;</span><span class="p">,</span> <span class="s2">&quot;tool.poetry.group.dev.dependencies&quot;</span><span class="p">}:</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">PYPROJECT_ASSIGN_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;python&quot;</span><span class="p">:</span>
+                    <span class="n">dependencies</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">),</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">dependencies</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dependency_lines</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="n">marker</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;requirements&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.txt&quot;</span><span class="p">):</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">changed_lines</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="n">marker</span><span class="p">):</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">requirement_dependency</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">parsed</span><span class="p">:</span>
+                <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">found</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;package.json&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">package_json_dependencies</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="n">marker</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pyproject_dependencies</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="n">marker</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_new_dependencies</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">file_change</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">removed</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">_line</span> <span class="ow">in</span> <span class="n">dependency_lines</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">dependency_lines</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">removed</span><span class="p">:</span>
+                <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="n">line</span><span class="p">})</span>
+    <span class="n">unique</span> <span class="o">=</span> <span class="p">{(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]):</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">found</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">unique</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unique</span><span class="p">)]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">declaration</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">SYMBOL_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;function&quot;</span> <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;class&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="n">kind</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;entry&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_api_renames</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="n">renames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">file_change</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">hunk</span> <span class="ow">in</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;hunks&quot;</span><span class="p">]:</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="p">[</span><span class="n">declaration</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">]</span>
+            <span class="n">added</span> <span class="o">=</span> <span class="p">[</span><span class="n">declaration</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;+&quot;</span><span class="p">]</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">removed</span> <span class="k">if</span> <span class="n">item</span><span class="p">]</span>
+            <span class="n">added</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">added</span> <span class="k">if</span> <span class="n">item</span><span class="p">]</span>
+            <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">removed</span><span class="p">:</span>
+                <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">old</span><span class="p">[</span><span class="s2">&quot;entry&quot;</span><span class="p">][</span><span class="s2">&quot;index&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">new</span><span class="p">[</span><span class="s2">&quot;entry&quot;</span><span class="p">][</span><span class="s2">&quot;index&quot;</span><span class="p">]),</span> <span class="n">index</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">new</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">added</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used</span>
+                    <span class="ow">and</span> <span class="n">new</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">old</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span>
+                    <span class="ow">and</span> <span class="n">new</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">old</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+                <span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">candidates</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">distance</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">new</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">distance</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">used</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+                <span class="n">renames</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="n">old</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">old</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">new</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;hunk&quot;</span><span class="p">:</span> <span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">],</span>
+                <span class="p">})</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">renames</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;from&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;to&quot;</span><span class="p">]))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">lines_are_formatting_only</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">removed</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">added</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">normalize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">normalize</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">removed</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">normalize</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">added</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">classify</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">intent</span><span class="p">,</span> <span class="n">hunk_threshold</span><span class="p">):</span>
+    <span class="n">intent_words</span> <span class="o">=</span> <span class="n">tokenize</span><span class="p">(</span><span class="n">intent</span><span class="p">)</span>
+    <span class="n">new_deps</span> <span class="o">=</span> <span class="n">find_new_dependencies</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">api_renames</span> <span class="o">=</span> <span class="n">find_api_renames</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">dep_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">new_deps</span><span class="p">}</span>
+    <span class="n">rename_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">api_renames</span><span class="p">}</span>
+
+    <span class="n">config_edits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">oversized</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">formatting_only</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">subsystems</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">()</span>
+    <span class="n">additions</span> <span class="o">=</span> <span class="n">deletions</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">file_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">file_change</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+        <span class="n">subsystems</span><span class="p">[</span><span class="n">subsystem</span><span class="p">(</span><span class="n">path</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">added_lines</span> <span class="o">=</span> <span class="n">changed_lines</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">)</span>
+        <span class="n">removed_lines</span> <span class="o">=</span> <span class="n">changed_lines</span><span class="p">(</span><span class="n">file_change</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="n">file_additions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">added_lines</span><span class="p">)</span>
+        <span class="n">file_deletions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">removed_lines</span><span class="p">)</span>
+        <span class="n">file_metrics</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">file_change</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">file_additions</span><span class="p">,</span> <span class="n">file_deletions</span><span class="p">)</span>
+        <span class="n">additions</span> <span class="o">+=</span> <span class="n">file_additions</span>
+        <span class="n">deletions</span> <span class="o">+=</span> <span class="n">file_deletions</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">config_kind</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kind</span><span class="p">:</span>
+            <span class="n">config_edits</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+                <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="n">kind</span><span class="p">,</span>
+                <span class="s2">&quot;churn&quot;</span><span class="p">:</span> <span class="n">file_additions</span> <span class="o">+</span> <span class="n">file_deletions</span><span class="p">,</span>
+            <span class="p">})</span>
+        <span class="k">if</span> <span class="n">lines_are_formatting_only</span><span class="p">(</span><span class="n">removed_lines</span><span class="p">,</span> <span class="n">added_lines</span><span class="p">):</span>
+            <span class="n">formatting_only</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">hunk</span> <span class="ow">in</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;hunks&quot;</span><span class="p">]:</span>
+            <span class="n">churn</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">})</span>
+            <span class="k">if</span> <span class="n">churn</span> <span class="o">&gt;</span> <span class="n">hunk_threshold</span><span class="p">:</span>
+                <span class="n">oversized</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;hunk&quot;</span><span class="p">:</span> <span class="n">hunk</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">],</span> <span class="s2">&quot;churn&quot;</span><span class="p">:</span> <span class="n">churn</span><span class="p">})</span>
+
+    <span class="n">config_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">config_edits</span><span class="p">}</span>
+    <span class="n">oversized_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">oversized</span><span class="p">}</span>
+    <span class="n">formatting_paths</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">formatting_only</span><span class="p">)</span>
+    <span class="n">in_scope</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">likely_creep</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">file_change</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">file_change</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+        <span class="n">overlap</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">intent_words</span> <span class="o">&amp;</span> <span class="n">tokenize</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">intent_words</span><span class="p">)),</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">signals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">dep_paths</span><span class="p">:</span>
+            <span class="n">signals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;new_dependency&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">rename_paths</span><span class="p">:</span>
+            <span class="n">signals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;public_api_rename&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">config_paths</span><span class="p">:</span>
+            <span class="n">signals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;config_edit&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">oversized_paths</span><span class="p">:</span>
+            <span class="n">signals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;oversized_hunk&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">formatting_paths</span><span class="p">:</span>
+            <span class="n">signals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;formatting_only&quot;</span><span class="p">)</span>
+
+        <span class="n">additions_for_file</span><span class="p">,</span> <span class="n">deletions_for_file</span> <span class="o">=</span> <span class="n">file_metrics</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">file_change</span><span class="p">)]</span>
+        <span class="n">reasons</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">overlap</span><span class="p">:</span>
+            <span class="n">reasons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;intent/path overlap: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">overlap</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">intent_words</span><span class="p">:</span>
+            <span class="n">reasons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;no intent/path keyword overlap&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">reasons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;intent has no usable keywords&quot;</span><span class="p">)</span>
+        <span class="n">reasons</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">signal</span> <span class="ow">in</span> <span class="n">signals</span><span class="p">)</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+            <span class="s2">&quot;subsystem&quot;</span><span class="p">:</span> <span class="n">subsystem</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+            <span class="s2">&quot;relatedness&quot;</span><span class="p">:</span> <span class="n">score</span><span class="p">,</span>
+            <span class="s2">&quot;overlap&quot;</span><span class="p">:</span> <span class="n">overlap</span><span class="p">,</span>
+            <span class="s2">&quot;signals&quot;</span><span class="p">:</span> <span class="n">signals</span><span class="p">,</span>
+            <span class="s2">&quot;reasons&quot;</span><span class="p">:</span> <span class="n">reasons</span><span class="p">,</span>
+            <span class="s2">&quot;additions&quot;</span><span class="p">:</span> <span class="n">additions_for_file</span><span class="p">,</span>
+            <span class="s2">&quot;deletions&quot;</span><span class="p">:</span> <span class="n">deletions_for_file</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="p">(</span><span class="n">in_scope</span> <span class="k">if</span> <span class="n">overlap</span> <span class="k">else</span> <span class="n">likely_creep</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;intent&quot;</span><span class="p">:</span> <span class="n">intent</span><span class="p">,</span>
+        <span class="s2">&quot;in_scope&quot;</span><span class="p">:</span> <span class="n">in_scope</span><span class="p">,</span>
+        <span class="s2">&quot;likely_creep&quot;</span><span class="p">:</span> <span class="n">likely_creep</span><span class="p">,</span>
+        <span class="s2">&quot;new_deps&quot;</span><span class="p">:</span> <span class="n">new_deps</span><span class="p">,</span>
+        <span class="s2">&quot;api_renames&quot;</span><span class="p">:</span> <span class="n">api_renames</span><span class="p">,</span>
+        <span class="s2">&quot;config_edits&quot;</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">config_edits</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]),</span>
+        <span class="s2">&quot;stats&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;files_touched&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">),</span>
+            <span class="s2">&quot;additions&quot;</span><span class="p">:</span> <span class="n">additions</span><span class="p">,</span>
+            <span class="s2">&quot;deletions&quot;</span><span class="p">:</span> <span class="n">deletions</span><span class="p">,</span>
+            <span class="s2">&quot;subsystems&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">subsystems</span><span class="o">.</span><span class="n">items</span><span class="p">())),</span>
+            <span class="s2">&quot;oversized_hunks&quot;</span><span class="p">:</span> <span class="n">oversized</span><span class="p">,</span>
+            <span class="s2">&quot;formatting_only_files&quot;</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">formatting_only</span><span class="p">),</span>
+            <span class="s2">&quot;hunk_threshold&quot;</span><span class="p">:</span> <span class="n">hunk_threshold</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_git</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;-C&quot;</span><span class="p">,</span> <span class="n">repo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">],</span>
+        <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="c1"># Decode git output as UTF-8. With text=True and no encoding, Python uses</span>
+        <span class="c1"># the locale default (cp1252 on Windows), which raises UnicodeDecodeError</span>
+        <span class="c1"># on non-Latin-1 bytes in diffs or commit messages (emoji, em-dashes, …).</span>
+        <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span>
+        <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;git command failed&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_diff</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">diff</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">diff</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">diff</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;--no-ext-diff&quot;</span><span class="p">,</span> <span class="s2">&quot;--no-textconv&quot;</span><span class="p">,</span> <span class="s2">&quot;--unified=3&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">staged</span><span class="p">:</span>
+        <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--cached&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">base</span><span class="p">:</span>
+        <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">...HEAD&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">base</span><span class="p">)</span>
+    <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">run_git</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">repo</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fallback_intent</span><span class="p">(</span><span class="n">repo</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="n">run_git</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;branch&quot;</span><span class="p">,</span> <span class="s2">&quot;--show-current&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">branch</span> <span class="ow">or</span> <span class="s2">&quot;detached HEAD&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_human</span><span class="p">(</span><span class="n">report</span><span class="p">):</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SCOPE REPORT&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;intent: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">report</span><span class="p">[</span><span class="s2">&quot;intent&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;files: </span><span class="si">%(files_touched)d</span><span class="s2">  additions: </span><span class="si">%(additions)d</span><span class="s2">  deletions: </span><span class="si">%(deletions)d</span><span class="s2">&quot;</span>
+        <span class="o">%</span> <span class="n">stats</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;subsystems: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;subsystems&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;none&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;in scope: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">report</span><span class="p">[</span><span class="s2">&quot;in_scope&quot;</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">report</span><span class="p">[</span><span class="s2">&quot;in_scope&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  KEEP? </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;reasons&quot;</span><span class="p">])))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;likely creep: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">report</span><span class="p">[</span><span class="s2">&quot;likely_creep&quot;</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">report</span><span class="p">[</span><span class="s2">&quot;likely_creep&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  SPLIT OR JUSTIFY: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;reasons&quot;</span><span class="p">])))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_parser</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Detect scope signals in a git unified diff.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--repo&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Target git repository (default: current directory).&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--diff&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Read a unified diff from a file, or &#39;-&#39; for stdin.&quot;</span><span class="p">)</span>
+    <span class="n">modes</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+    <span class="n">modes</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--staged&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Analyze the staged diff.&quot;</span><span class="p">)</span>
+    <span class="n">modes</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--base&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Analyze BASE...HEAD for a branch diff.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--intent&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;One-line intent; defaults to the current branch name.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--hunk-threshold&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_HUNK_THRESHOLD</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Flag hunks with churn above this value (default: 80).&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Emit the full JSON report.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">build_parser</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">diff</span> <span class="ow">and</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">staged</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">base</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;--diff cannot be combined with --staged or --base&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">hunk_threshold</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;--hunk-threshold must be at least 1&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">diff_text</span> <span class="o">=</span> <span class="n">read_diff</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">intent</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">intent</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">intent</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">else</span> <span class="n">fallback_intent</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">repo</span><span class="p">)</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">classify</span><span class="p">(</span><span class="n">parse_diff</span><span class="p">(</span><span class="n">diff_text</span><span class="p">),</span> <span class="n">intent</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">hunk_threshold</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;scope_creep.py: error: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">error</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">json</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">report</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">print_human</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/agent-skills/scope-creep-detector/scripts/scope_creep.py" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:agent-skills/scope-creep-detector">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/agent-skills/project-graveyard/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Cimetière de projets</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/agent-skills/self-improving-agent-skills/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Compétences auto-améliorantes</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/agent_skills/scope-creep-detector" target="_blank" rel="noopener noreferrer">
+    agent_skills/scope-creep-detector</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#install">Install</a></li><li class="toc__item toc__item--h2"><a href="#run">Run</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

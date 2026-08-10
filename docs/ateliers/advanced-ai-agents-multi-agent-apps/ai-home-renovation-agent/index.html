@@ -1,0 +1,1290 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planificateur de rénovation — atelier</title>
+<meta name="description" content="Chiffrage, planning et coordination des corps de métier.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html">Applications multi-agents</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🕸️</span> Applications multi-agents</p>
+  <h1 class="pagehead__title">Planificateur de rénovation</h1>
+  <p class="pagehead__summary">Chiffrage, planning et coordination des corps de métier.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#palier-gratuit" title="Des comptes sont nécessaires, mais leur offre gratuite couvre l&#x27;exercice."><span class="tag__icon" aria-hidden="true">🧪</span><span class="tag__label">Palier gratuit suffisant</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio / Gemini</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Palier gratuit confortable, sans carte bancaire. Convient à la quasi-totalité des ateliers.</p><ul class="alts__list"><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Le palier gratuit suffit</a> — Créez la clé dans AI Studio : aucune carte n&#x27;est demandée.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Si vous dépassez le quota, un modèle local prend le relais.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>🔍 Smart Image Analysis: Upload room photos and inspiration images - agent automatically detects and analyzes them</li><li>🎨 Photorealistic Rendering: Generates professional-quality images of your renovated space using Gemini 3 Pro</li><li>💰 Budget-Aware Planning: Tailors recommendations to your budget constraints</li><li>📊 Complete Roadmap: Provides timeline, budget breakdown, contractor list, and action checklist</li><li>🤖 Multi-Agent Orchestration: Demonstrates Coordinator/Dispatcher + Sequential Pipeline patterns</li><li>✏️ Iterative Refinement: Edit generated renderings based on feedback</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="ai-home-renovation-planner-agent">🏚️ 🍌 AI Home Renovation Planner Agent<a class="anchor" href="#ai-home-renovation-planner-agent" aria-label="Lien vers cette section">#</a></h1>
+<h3 id="free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial<a class="anchor" href="#free-step-by-step-tutorial" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>👉 <a href="https://www.theunwindai.com/p/build-an-ai-home-renovation-planner-agent-using-nano-banana" target="_blank" rel="noopener noreferrer">Click here to follow our complete step-by-step tutorial</a> and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.</strong></p>
+<p>A multi-agent system built with Google ADK that analyzes photos of your space, creates personalized renovation plans, and generates photorealistic renderings using Gemini 3 Flash and Gemini 3 Pro's multimodal capabilities.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>🔍 Smart Image Analysis</strong>: Upload room photos and inspiration images - agent automatically detects and analyzes them</li>
+<li><strong>🎨 Photorealistic Rendering</strong>: Generates professional-quality images of your renovated space using Gemini 3 Pro</li>
+<li><strong>💰 Budget-Aware Planning</strong>: Tailors recommendations to your budget constraints</li>
+<li><strong>📊 Complete Roadmap</strong>: Provides timeline, budget breakdown, contractor list, and action checklist</li>
+<li><strong>🤖 Multi-Agent Orchestration</strong>: Demonstrates Coordinator/Dispatcher + Sequential Pipeline patterns</li>
+<li><strong>✏️ Iterative Refinement</strong>: Edit generated renderings based on feedback</li>
+</ul>
+<h2 id="how-it-works">How It Works<a class="anchor" href="#how-it-works" aria-label="Lien vers cette section">#</a></h2>
+<p>The system uses a <strong>Coordinator/Dispatcher pattern</strong> with three specialized agents:</p>
+<ol>
+<li>
+<p><strong>Visual Assessor</strong> 📸</p>
+<ul>
+<li>Analyzes uploaded room photos (layout, condition, dimensions)</li>
+<li>Extracts style from inspiration images</li>
+<li>Estimates costs and identifies improvement opportunities</li>
+</ul>
+</li>
+<li>
+<p><strong>Design Planner</strong> 🎨</p>
+<ul>
+<li>Creates budget-appropriate design plans</li>
+<li>Specifies exact materials, colors, and fixtures</li>
+<li>Prioritizes high-impact changes</li>
+</ul>
+</li>
+<li>
+<p><strong>Project Coordinator</strong> 🏗️</p>
+<ul>
+<li>Generates comprehensive renovation roadmap</li>
+<li>Creates photorealistic rendering of renovated space</li>
+<li>Provides budget breakdown, timeline, and action steps</li>
+</ul>
+</li>
+</ol>
+<h2 id="quick-start">Quick Start<a class="anchor" href="#quick-start" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p><strong>Clone the repository</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>awesome-llm-apps/advanced_ai_agents/multi_agent_apps/ai_home_renovation_agent
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install dependencies</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Set up your API key</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_API_KEY</span><span class="o">=</span><span class="s2">&quot;your_gemini_api_key&quot;</span>
+</pre></div>
+</div><p>Or create a <code>.env</code> file:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>GOOGLE_API_KEY=your_gemini_api_key
+</pre></div>
+</div></li>
+<li>
+<p><strong>Launch ADK Web</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>multi_agent_apps
+adk<span class="w"> </span>web
+</pre></div>
+</div></li>
+<li>
+<p><strong>Open browser</strong> and select &quot;ai_home_renovation_agent&quot;</p>
+</li>
+</ol>
+<h2 id="usage-examples">Usage Examples<a class="anchor" href="#usage-examples" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="scenario-1-current-room-budget">Scenario 1: Current Room + Budget<a class="anchor" href="#scenario-1-current-room-budget" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>[Upload photo of your kitchen]
+&quot;What can I improve here with a $5k budget?&quot;
+</pre></div>
+</div><p>→ Agent analyzes your space, suggests budget-friendly improvements, generates rendering</p>
+<h3 id="scenario-2-room-inspiration">Scenario 2: Room + Inspiration<a class="anchor" href="#scenario-2-room-inspiration" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>[Upload photo 1: your kitchen]
+[Upload photo 2: Pinterest inspiration]
+&quot;Transform my kitchen to look like this. What&#39;s the cost?&quot;
+</pre></div>
+</div><p>→ Agent extracts style from inspiration, applies to your room, provides budget + rendering</p>
+<h3 id="scenario-3-text-only">Scenario 3: Text Only<a class="anchor" href="#scenario-3-text-only" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>&quot;Renovate my 10x12 kitchen with oak cabinets and laminate counters. 
+Want modern farmhouse style with white shaker cabinets. Budget: $30k&quot;
+</pre></div>
+</div><p>→ Agent creates design plan and generates rendering from description</p>
+<h3 id="scenario-4-iterative-refinement">Scenario 4: Iterative Refinement<a class="anchor" href="#scenario-4-iterative-refinement" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>[After initial rendering]
+&quot;Make the cabinets cream instead of white&quot;
+&quot;Add pendant lights over the island&quot;
+&quot;Change flooring to lighter oak&quot;
+</pre></div>
+</div><p>→ Agent refines the rendering with your feedback</p>
+<h2 id="sample-prompts">Sample Prompts<a class="anchor" href="#sample-prompts" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>&quot;I want to renovate my small galley kitchen. It's 8x12 feet, has oak cabinets from the 90s. I love modern farmhouse style. Budget: $25k&quot;</li>
+<li>&quot;My master bathroom is tiny (5x8) with a cramped tub. I want a spa-like retreat with walk-in shower. Budget: $15k&quot;</li>
+<li>&quot;Transform my boring bedroom into a cozy retreat. Thinking accent wall, new flooring. Budget: $12k&quot;</li>
+</ul>
+<h2 id="tools-capabilities">Tools &amp; Capabilities<a class="anchor" href="#tools-capabilities" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>google_search</strong>: Finds renovation costs, materials, and trends</li>
+<li><strong>estimate_renovation_cost</strong>: Calculates costs by room type and scope</li>
+<li><strong>calculate_timeline</strong>: Estimates project duration</li>
+<li><strong>generate_renovation_rendering</strong>: Creates photorealistic renderings</li>
+<li><strong>edit_renovation_rendering</strong>: Refines renderings based on feedback</li>
+<li><strong>Versioned artifacts</strong>: Automatic version tracking for all renderings</li>
+</ul>
+<h2 id="multi-agent-pattern">Multi-Agent Pattern<a class="anchor" href="#multi-agent-pattern" aria-label="Lien vers cette section">#</a></h2>
+<p>Demonstrates <strong>Coordinator/Dispatcher + Sequential Pipeline</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>Coordinator (Root Agent)
+    ├── Info Agent (quick Q&amp;A)
+    └── Planning Pipeline (Sequential)
+          ├── Visual Assessor (image analysis)
+          ├── Design Planner (specifications)
+          └── Project Coordinator (rendering + roadmap)
+</pre></div>
+</div><p><strong>Why this pattern?</strong></p>
+<ul>
+<li>Efficient: Only runs workflows that are needed</li>
+<li>Modular: Each agent has clear responsibilities</li>
+<li>Scalable: Easy to add new features</li>
+<li>Production-ready: Real-world agentic system pattern</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-init-py"><summary class="codefile__head"><span class="codefile__name">__init__.py</span><span class="codefile__size">139 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;AI Home Renovation Planner - Multi-Agent Pattern Demo with Multimodal Vision&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">root_agent</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;root_agent&quot;</span><span class="p">]</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps/ai-home-renovation-agent/__init__.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-agent-py"><summary class="codefile__head"><span class="codefile__name">agent.py</span><span class="codefile__size">21 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;AI Home Renovation Planner - Coordinator/Dispatcher Pattern with Multimodal Vision</span>
+
+<span class="sd">This demonstrates ADK&#39;s Coordinator/Dispatcher Pattern with Gemini 3 Flash&#39;s multimodal</span>
+<span class="sd">capabilities where a routing agent analyzes requests and delegates to specialists:</span>
+
+<span class="sd">- General questions → Quick info agent</span>
+<span class="sd">- Renovation planning → Full planning pipeline (Sequential Agent with 3 vision-enabled specialists)</span>
+
+<span class="sd">Pattern Reference: https://google.github.io/adk-docs/agents/multi-agents/#coordinator-dispatcher-pattern</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">LlmAgent</span><span class="p">,</span> <span class="n">SequentialAgent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">google_search</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.tools.agent_tool</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentTool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.tools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">generate_renovation_rendering</span><span class="p">,</span>
+    <span class="n">edit_renovation_rendering</span><span class="p">,</span>
+    <span class="n">list_renovation_renderings</span><span class="p">,</span>
+    <span class="n">list_reference_images</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Helper Tool Agent (wraps google_search)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="c1"># google_search is a pre-built tool function that allows the agent to perform Google searches</span>
+<span class="c1"># Note: google_search can only be used by itself within an agent instance (single tool limitation)</span>
+
+<span class="n">search_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SearchAgent&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>  <span class="c1"># google_search requires Gemini 2.0+ models</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Searches for renovation costs, contractors, materials, and design trends&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;You are a search specialist. When asked to find information about renovation costs, </span>
+<span class="s2">contractors, materials, or design trends, the search capability is automatically enabled. </span>
+<span class="s2">Simply respond with the information you find. Be concise and cite sources when available.&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">google_search</span><span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Utility Tools</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">estimate_renovation_cost</span><span class="p">(</span>
+    <span class="n">room_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">square_footage</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate renovation costs based on room type and scope.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        room_type: Type of room (kitchen, bathroom, bedroom, living_room, etc.)</span>
+<span class="sd">        scope: Renovation scope (cosmetic, moderate, full, luxury)</span>
+<span class="sd">        square_footage: Room size in square feet</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Estimated cost range</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Cost per sq ft estimates (2024 ranges)</span>
+    <span class="n">rates</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;kitchen&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;cosmetic&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="s2">&quot;moderate&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">250</span><span class="p">),</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="s2">&quot;luxury&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">1200</span><span class="p">)},</span>
+        <span class="s2">&quot;bathroom&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;cosmetic&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">125</span><span class="p">),</span> <span class="s2">&quot;moderate&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">350</span><span class="p">),</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">600</span><span class="p">),</span> <span class="s2">&quot;luxury&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">1500</span><span class="p">)},</span>
+        <span class="s2">&quot;bedroom&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;cosmetic&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span> <span class="s2">&quot;moderate&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="s2">&quot;luxury&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">800</span><span class="p">)},</span>
+        <span class="s2">&quot;living_room&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;cosmetic&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span> <span class="s2">&quot;moderate&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span> <span class="s2">&quot;luxury&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)},</span>
+    <span class="p">}</span>
+    
+    <span class="n">room</span> <span class="o">=</span> <span class="n">room_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="n">scope_level</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">room</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rates</span><span class="p">:</span>
+        <span class="n">room</span> <span class="o">=</span> <span class="s2">&quot;living_room&quot;</span>
+    <span class="k">if</span> <span class="n">scope_level</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rates</span><span class="p">[</span><span class="n">room</span><span class="p">]:</span>
+        <span class="n">scope_level</span> <span class="o">=</span> <span class="s2">&quot;moderate&quot;</span>
+    
+    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">rates</span><span class="p">[</span><span class="n">room</span><span class="p">][</span><span class="n">scope_level</span><span class="p">]</span>
+    
+    <span class="n">total_low</span> <span class="o">=</span> <span class="n">low</span> <span class="o">*</span> <span class="n">square_footage</span>
+    <span class="n">total_high</span> <span class="o">=</span> <span class="n">high</span> <span class="o">*</span> <span class="n">square_footage</span>
+    
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;💰 Estimated Cost: $</span><span class="si">{</span><span class="n">total_low</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> - $</span><span class="si">{</span><span class="n">total_high</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">scope_level</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">room_type</span><span class="si">}</span><span class="s2"> renovation, ~</span><span class="si">{</span><span class="n">square_footage</span><span class="si">}</span><span class="s2"> sq ft)&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_timeline</span><span class="p">(</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">room_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate renovation timeline based on scope and room type.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        scope: Renovation scope (cosmetic, moderate, full, luxury)</span>
+<span class="sd">        room_type: Type of room being renovated</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Estimated timeline with phases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">timelines</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;cosmetic&quot;</span><span class="p">:</span> <span class="s2">&quot;1-2 weeks (quick refresh)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;moderate&quot;</span><span class="p">:</span> <span class="s2">&quot;3-6 weeks (includes some structural work)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;full&quot;</span><span class="p">:</span> <span class="s2">&quot;2-4 months (complete transformation)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;luxury&quot;</span><span class="p">:</span> <span class="s2">&quot;4-6 months (custom work, high-end finishes)&quot;</span>
+    <span class="p">}</span>
+    
+    <span class="n">scope_level</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">timeline</span> <span class="o">=</span> <span class="n">timelines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope_level</span><span class="p">,</span> <span class="n">timelines</span><span class="p">[</span><span class="s2">&quot;moderate&quot;</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;⏱️ Estimated Timeline: </span><span class="si">{</span><span class="n">timeline</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Specialist Agent 1: Info Agent (for general inquiries)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">info_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;InfoAgent&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Handles general renovation questions and provides system information&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are the Info Agent for the AI Home Renovation Planner.</span>
+
+<span class="s2">WHEN TO USE: The coordinator routes general questions and casual greetings to you.</span>
+
+<span class="s2">YOUR RESPONSE:</span>
+<span class="s2">- Keep it brief and helpful (2-4 sentences)</span>
+<span class="s2">- Explain the system helps with home renovations using visual AI</span>
+<span class="s2">- Mention capabilities: photo analysis, design planning, budget estimation, timeline coordination</span>
+<span class="s2">- Ask about their renovation project (which room, can they share photos?)</span>
+
+<span class="s2">EXAMPLE:</span>
+<span class="s2">&quot;Hi! I&#39;m your AI Home Renovation Planner. I can analyze photos of your current space and inspiration images to create a personalized renovation plan with design suggestions, budget estimates, and timelines. Which room are you thinking of renovating? Feel free to share photos if you have them!&quot;</span>
+
+<span class="s2">Be enthusiastic about home improvement and helpful!</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Specialist Agent 2: Rendering Editor (for iterative refinements)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">rendering_editor</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RenderingEditor&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Edits existing renovation renderings based on user feedback&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You refine existing renovation renderings.</span>
+
+<span class="s2">**TASK**: User wants to modify an existing rendering (e.g., &quot;make cabinets cream&quot;, &quot;darker flooring&quot;).</span>
+
+<span class="s2">**CRITICAL**: Find the most recent rendering filename from conversation history!</span>
+<span class="s2">Look for: &quot;Saved as artifact: [filename]&quot; or &quot;kitchen_modern_renovation_v1.png&quot; type references.</span>
+
+<span class="s2">Use **edit_renovation_rendering** tool:</span>
+
+<span class="s2">Parameters:</span>
+<span class="s2">1. artifact_filename: The exact filename of the most recent rendering</span>
+<span class="s2">2. prompt: Very specific edit instruction (be detailed!)</span>
+<span class="s2">3. asset_name: Base name without _vX (e.g., &quot;kitchen_modern_renovation&quot;)</span>
+
+<span class="s2">**Example:**</span>
+<span class="s2">User: &quot;Make the cabinets cream instead of white&quot;</span>
+<span class="s2">Last rendering: &quot;kitchen_modern_renovation_v1.png&quot;</span>
+
+<span class="s2">Call: edit_renovation_rendering(</span>
+<span class="s2">  artifact_filename=&quot;kitchen_modern_renovation_v1.png&quot;,</span>
+<span class="s2">  prompt=&quot;Change the kitchen cabinets from white to a soft cream color (Benjamin Moore Cream Silk OC-14). Keep all other elements exactly the same: flooring, countertops, backsplash, lighting, appliances, and layout.&quot;,</span>
+<span class="s2">  asset_name=&quot;kitchen_modern_renovation&quot;</span>
+<span class="s2">)</span>
+
+<span class="s2">Be SPECIFIC in prompts - vague = poor results!</span>
+
+<span class="s2">After editing, briefly confirm the change.</span>
+
+<span class="s2">**IMPORTANT - DO NOT use markdown image syntax!**</span>
+<span class="s2">- Do NOT output `![image](filename.png)` or similar markdown image links</span>
+<span class="s2">- Simply confirm the edit was successful and mention the artifact is available in the artifacts panel</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">edit_renovation_rendering</span><span class="p">,</span> <span class="n">list_renovation_renderings</span><span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Specialist Agents 3-5: Full Planning Pipeline (SequentialAgent)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">visual_assessor</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;VisualAssessor&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Analyzes room photos and inspiration images using visual AI&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a visual AI specialist. Analyze ANY uploaded images and detect their type automatically.</span>
+
+<span class="s2">**IMPORTANT NOTE**: You can SEE and ANALYZE uploaded images, but currently the image editing feature</span>
+<span class="s2">has limitations in ADK Web. Focus on providing detailed analysis and design recommendations.</span>
+
+<span class="s2">AUTOMATICALLY DETECT:</span>
+<span class="s2">1. If image shows a CURRENT ROOM (existing space that needs renovation)</span>
+<span class="s2">2. If image shows INSPIRATION/STYLE reference (desired aesthetic)</span>
+<span class="s2">3. Extract budget constraints from user&#39;s message if mentioned</span>
+
+<span class="s2">## For CURRENT ROOM images:</span>
+<span class="s2">**Current Space Analysis:**</span>
+<span class="s2">- Room type: [kitchen/bathroom/bedroom/etc.]</span>
+<span class="s2">- Size estimate: [dimensions if visible]</span>
+<span class="s2">- Current condition: [issues, outdated elements, damage]</span>
+<span class="s2">- Existing style: [current aesthetic]</span>
+<span class="s2">- Key problems: [what needs fixing]</span>
+<span class="s2">- Improvement opportunities: [quick wins, major changes]</span>
+
+<span class="s2">**CRITICAL - DOCUMENT EXACT LAYOUT (for preservation in rendering):**</span>
+<span class="s2">- Window positions: [e.g., &quot;large window on left wall above sink&quot;, &quot;skylight in center&quot;]</span>
+<span class="s2">- Door positions: [e.g., &quot;doorway on right side&quot;]</span>
+<span class="s2">- Cabinet layout: [e.g., &quot;L-shaped upper and lower cabinets along back and left walls&quot;]</span>
+<span class="s2">- Appliance positions: [e.g., &quot;stove centered on back wall&quot;, &quot;refrigerator on right&quot;]</span>
+<span class="s2">- Sink location: [e.g., &quot;under window on left wall&quot;]</span>
+<span class="s2">- Counter layout: [e.g., &quot;continuous counter along back and left walls&quot;]</span>
+<span class="s2">- Special features: [e.g., &quot;skylight&quot;, &quot;breakfast bar&quot;, &quot;island&quot;]</span>
+<span class="s2">- Camera angle in photo: [e.g., &quot;shot from doorway looking into kitchen&quot;]</span>
+
+<span class="s2">## For INSPIRATION images:</span>
+<span class="s2">**Inspiration Style:**</span>
+<span class="s2">- Style name: [modern farmhouse/minimalist/industrial/etc.]</span>
+<span class="s2">- Color palette: [specific colors]</span>
+<span class="s2">- Key materials: [wood/stone/metal types]</span>
+<span class="s2">- Notable features: [lighting/storage/layout elements]</span>
+<span class="s2">- Design elements: [hardware/finishes/patterns]</span>
+
+<span class="s2">## Analysis Output:</span>
+
+<span class="s2">If BOTH current room + inspiration provided:</span>
+<span class="s2">- Compare current vs. inspiration</span>
+<span class="s2">- Identify specific changes needed to achieve the inspiration look</span>
+<span class="s2">- Note what can stay vs. what needs replacement</span>
+
+<span class="s2">If ONLY current room provided:</span>
+<span class="s2">- Suggest 2-3 style directions that would work well</span>
+<span class="s2">- Focus on functional improvements + aesthetic upgrades</span>
+
+<span class="s2">If budget mentioned:</span>
+<span class="s2">- Use estimate_renovation_cost tool with detected room type and appropriate scope</span>
+<span class="s2">- Assess what&#39;s achievable within budget</span>
+
+<span class="s2">**IMPORTANT: At the end of your analysis, output a structured summary:**</span>
+
+<span class="s2">```</span>
+<span class="s2">ASSESSMENT COMPLETE</span>
+
+<span class="s2">Images Provided:</span>
+<span class="s2">- Current room photo: [Yes/No - describe what you see if yes]</span>
+<span class="s2">- Inspiration photo: [Yes/No - describe style if yes]</span>
+
+<span class="s2">Room Details:</span>
+<span class="s2">- Type: [kitchen/bathroom/bedroom/etc.]</span>
+<span class="s2">- Current Analysis: [detailed analysis from photo if provided, or from description]</span>
+<span class="s2">- Desired Style: [from inspiration photo or user description]</span>
+<span class="s2">- Key Issues: [problems to address]</span>
+<span class="s2">- Improvement Opportunities: [suggested improvements]</span>
+<span class="s2">- Budget Constraint: $[amount if mentioned, or &quot;Not specified&quot;]</span>
+
+<span class="s2">**EXACT LAYOUT TO PRESERVE (critical for rendering):**</span>
+<span class="s2">- Windows: [exact positions and sizes]</span>
+<span class="s2">- Doors: [exact positions]</span>
+<span class="s2">- Cabinets: [configuration and placement - upper/lower, which walls]</span>
+<span class="s2">- Appliances: [stove, fridge, dishwasher positions]</span>
+<span class="s2">- Sink: [location]</span>
+<span class="s2">- Counter layout: [shape and coverage]</span>
+<span class="s2">- Special features: [skylights, islands, breakfast bars, etc.]</span>
+<span class="s2">- Camera angle: [perspective of the original photo]</span>
+<span class="s2">```</span>
+
+<span class="s2">Be EXTREMELY DETAILED about the layout - the rendering must match this layout EXACTLY while only changing surface finishes.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">AgentTool</span><span class="p">(</span><span class="n">search_agent</span><span class="p">),</span> <span class="n">estimate_renovation_cost</span><span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="n">design_planner</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;DesignPlanner&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Creates detailed renovation design plan&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Read from state: room_analysis, style_preferences, room_type, key_issues, opportunities, budget_constraint</span>
+
+<span class="s2">Create SPECIFIC, ACTIONABLE design plan tailored to their situation.</span>
+
+<span class="s2">**CRITICAL RULE - PRESERVE EXACT LAYOUT:**</span>
+<span class="s2">The design plan must KEEP THE EXACT SAME LAYOUT as the current room. DO NOT suggest:</span>
+<span class="s2">- Moving appliances to different locations</span>
+<span class="s2">- Reconfiguring cabinet positions</span>
+<span class="s2">- Adding or removing windows/doors</span>
+<span class="s2">- Changing the room&#39;s footprint or structure</span>
+<span class="s2">- Adding islands or removing existing features</span>
+
+<span class="s2">ONLY specify changes to SURFACE FINISHES applied to the existing layout:</span>
+<span class="s2">- Paint colors for existing walls and cabinets</span>
+<span class="s2">- New countertop material on existing counters</span>
+<span class="s2">- New flooring in the same floor area</span>
+<span class="s2">- New backsplash on existing walls</span>
+<span class="s2">- New hardware on existing cabinets</span>
+<span class="s2">- Lighting upgrades (can add under-cabinet lights, replace fixtures in same positions)</span>
+
+<span class="s2">## Design Plan</span>
+
+<span class="s2">**Budget-Conscious Approach:**</span>
+<span class="s2">- If budget_constraint exists: Prioritize changes that give max impact for the money</span>
+<span class="s2">- Separate &quot;must-haves&quot; vs &quot;nice-to-haves&quot;</span>
+
+<span class="s2">**Design Specifications (surface finish changes ONLY - no layout changes):**</span>
+<span class="s2">- **Layout**: PRESERVE EXACTLY AS-IS (reference Visual Assessor&#39;s layout documentation)</span>
+<span class="s2">- **Cabinet Color**: [exact paint color with code - applied to EXISTING cabinets]</span>
+<span class="s2">- **Wall Color**: [exact paint color with code]</span>
+<span class="s2">- **Countertops**: [material and color - applied to EXISTING counter layout]</span>
+<span class="s2">- **Flooring**: [type, color - same floor area]</span>
+<span class="s2">- **Backsplash**: [material, pattern - same wall areas]</span>
+<span class="s2">- **Hardware**: [handles, pulls - replace on existing cabinets]</span>
+<span class="s2">- **Lighting**: [fixture upgrades in same positions, add under-cabinet if applicable]</span>
+<span class="s2">- **Appliances**: [keep existing OR replace with similar size in SAME locations]</span>
+<span class="s2">- **Key Features**: [decorative elements only]</span>
+
+<span class="s2">**Style Consistency:**</span>
+<span class="s2">If inspiration photo provided: Match that aesthetic precisely using ONLY surface finish changes</span>
+<span class="s2">If no inspiration: Use style_preferences from state</span>
+
+<span class="s2">Use calculate_timeline tool with room_type and renovation_scope.</span>
+
+<span class="s2">**IMPORTANT: At the end, provide a structured summary:**</span>
+
+<span class="s2">```</span>
+<span class="s2">DESIGN COMPLETE</span>
+
+<span class="s2">Renovation Scope: [cosmetic/moderate - NO structural changes]</span>
+<span class="s2">Layout: PRESERVED EXACTLY (no changes to cabinet positions, appliance locations, or room structure)</span>
+
+<span class="s2">Surface Finish Changes:</span>
+<span class="s2">- Cabinets: [color change only]</span>
+<span class="s2">- Walls: [paint color]</span>
+<span class="s2">- Countertops: [material/color]</span>
+<span class="s2">- Flooring: [type/color]</span>
+<span class="s2">- Backsplash: [material/pattern]</span>
+<span class="s2">- Hardware: [style/finish]</span>
+<span class="s2">- Lighting: [upgrades]</span>
+
+<span class="s2">Materials Summary:</span>
+<span class="s2">[Detailed list with product names and color codes]</span>
+<span class="s2">```</span>
+
+<span class="s2">Be SPECIFIC with product names, colors, dimensions. The rendering must show the EXACT same layout with only the surface finishes changed.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">calculate_timeline</span><span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="n">project_coordinator</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ProjectCoordinator&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Coordinates renovation timeline, budget, execution plan, and generates photorealistic renderings&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Read conversation history to extract:</span>
+<span class="s2">- Image detection info from Visual Assessor (current room photo? inspiration photo? filenames?)</span>
+<span class="s2">- Design specifications from Design Planner</span>
+<span class="s2">- Budget constraints mentioned</span>
+
+<span class="s2">Create CLEAN, SCANNABLE final plan.</span>
+
+<span class="s2">## Renovation Plan</span>
+
+<span class="s2">**Budget Breakdown**:</span>
+<span class="s2">- Materials: $[amount]</span>
+<span class="s2">- Labor: $[amount]</span>
+<span class="s2">- Permits/fees: $[amount]</span>
+<span class="s2">- Contingency (10%): $[amount]</span>
+<span class="s2">- **Total**: $[amount]</span>
+<span class="s2">[If budget_constraint exists: Show &quot;Within your $X budget ✓&quot; or suggest phasing]</span>
+
+<span class="s2">**Timeline**: [X weeks, broken into phases]</span>
+<span class="s2">**Contractors Needed**: [specific trades]</span>
+
+<span class="s2">## Design Summary</span>
+<span class="s2">[Pull key points from design_plan - tight, scannable bullets]</span>
+
+<span class="s2">## Action Checklist</span>
+<span class="s2">1. [immediate first steps]</span>
+<span class="s2">2. [subsequent actions]</span>
+
+<span class="s2">## 🎨 Visual Rendering: Your Renovated Space</span>
+
+<span class="s2">**🎨 Generate Visual Rendering:**</span>
+
+<span class="s2">Use **generate_renovation_rendering** tool to CREATE a photorealistic rendering:</span>
+
+<span class="s2">Build an ULTRA-DETAILED prompt using the **SLC Formula** (Subject, Lighting, Camera):</span>
+
+<span class="s2">**From Visual Assessor &amp; Design Planner, extract:**</span>
+<span class="s2">- Room type, current layout details, desired style</span>
+<span class="s2">- Exact colors with codes/names, specific materials, finishes</span>
+<span class="s2">- Layout preservation requirements, lighting fixtures, all key features</span>
+
+<span class="s2">**Prompt Structure using SLC Formula:**</span>
+
+<span class="s2">&quot;[CAMERA SPECS FIRST] Shot on professional DSLR, 8K resolution, HDR, ultra high definition, architectural photography, wide-angle lens from [specific angle matching original photo], sharp focus throughout, professional interior design photography quality.</span>
+
+<span class="s2">[SUBJECT - ULTRA DETAILED] A renovated [room_type] featuring [exact style, e.g., &#39;modern farmhouse&#39; or &#39;contemporary minimalist&#39;]. </span>
+
+<span class="s2">**CRITICAL - PRESERVE EXACT LAYOUT**: Maintain the EXACT same layout as original:</span>
+<span class="s2">- [List specific window positions, e.g., &#39;large window on left wall above sink&#39;]</span>
+<span class="s2">- [Door locations, e.g., &#39;doorway on right side&#39;]</span>
+<span class="s2">- [Cabinet configuration, e.g., &#39;L-shaped upper and lower cabinets along back and left walls&#39;]</span>
+<span class="s2">- [Appliance positions, e.g., &#39;stove centered on back wall, refrigerator on right&#39;]</span>
+<span class="s2">- [Sink location, counter layout, special features like skylights]</span>
+<span class="s2">- Same room dimensions and camera angle as original</span>
+
+<span class="s2">**Surface Finish Details (ONLY changes - be VERY specific with textures):**</span>
+<span class="s2">- Cabinets: [e.g., &#39;smooth matte Benjamin Moore Simply White OC-117 shaker-style cabinets with subtle panel details&#39;]</span>
+<span class="s2">- Countertops: [e.g., &#39;honed Carrara marble with delicate grey veining and soft matte finish&#39;]</span>
+<span class="s2">- Flooring: [e.g., &#39;wide-plank white oak with natural grain variation and satin finish&#39;]</span>
+<span class="s2">- Backsplash: [e.g., &#39;classic white subway tile in herringbone pattern with light grey grout&#39;]</span>
+<span class="s2">- Hardware: [e.g., &#39;brushed nickel cabinet pulls and handles with modern cylindrical design&#39;]</span>
+<span class="s2">- Walls: [specific paint color]</span>
+<span class="s2">- Lighting: [e.g., &#39;modern pendant lights with clear glass shades, warm LED under-cabinet lighting&#39;]</span>
+<span class="s2">- Appliances: [e.g., &#39;stainless steel appliances in SAME positions&#39;]</span>
+<span class="s2">- Decorative elements: [e.g., &#39;fresh flowers in white vase, wooden cutting board&#39;]</span>
+
+<span class="s2">[LIGHTING - CREATE ATMOSPHERE] Soft morning sunlight streaming through windows creating gentle shadows, warm LED under-cabinet lighting adding ambient glow, natural diffused light highlighting the [material] countertops, subtle shadows adding depth and dimension, highlights on polished surfaces, clean and inviting atmosphere with even illumination.</span>
+
+<span class="s2">Style: Photorealistic, magazine quality, architectural digest aesthetic, modern luxury feel.&quot;</span>
+
+<span class="s2">**Key Requirements:**</span>
+<span class="s2">- Start with camera/technical specs (8K, HDR, professional DSLR)</span>
+<span class="s2">- Use rich, descriptive adjectives for materials (smooth, honed, brushed, wide-plank, etc.)</span>
+<span class="s2">- Specify exact lighting conditions (soft morning light, warm LED, diffused natural light)</span>
+<span class="s2">- Include texture details (grain, veining, panel details, finish type)</span>
+<span class="s2">- Mention atmosphere (clean, inviting, modern luxury)</span>
+<span class="s2">- Emphasize layout preservation</span>
+<span class="s2">- Use professional photography terms</span>
+
+<span class="s2">Parameters:</span>
+<span class="s2">- prompt: [your ultra-detailed SLC-formatted prompt above]</span>
+<span class="s2">- aspect_ratio: &quot;16:9&quot;</span>
+<span class="s2">- asset_name: &quot;[room_type]_[style_keyword]_renovation&quot; (e.g., &quot;kitchen_modern_farmhouse_renovation&quot;)</span>
+
+<span class="s2">**After generating:**</span>
+<span class="s2">Briefly describe (2-3 sentences) key features visible in the rendering and how it addresses their needs.</span>
+
+<span class="s2">**IMPORTANT - DO NOT use markdown image syntax!**</span>
+<span class="s2">- Do NOT output `![image](filename.png)` or similar markdown image links</span>
+<span class="s2">- Do NOT try to display the image inline with markdown</span>
+<span class="s2">- Simply mention that the rendering has been generated and saved as an artifact</span>
+<span class="s2">- The user can view the artifact through the artifacts panel</span>
+
+<span class="s2">**Note**: The enhanced SLC formula (Subject, Lighting, Camera) creates professional-grade photorealistic renderings.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_renovation_rendering</span><span class="p">,</span> <span class="n">edit_renovation_rendering</span><span class="p">,</span> <span class="n">list_renovation_renderings</span><span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="c1"># Create the planning pipeline (runs only when coordinator routes planning requests here)</span>
+<span class="n">planning_pipeline</span> <span class="o">=</span> <span class="n">SequentialAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;PlanningPipeline&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Full renovation planning pipeline: Visual Assessment → Design Planning → Project Coordination&quot;</span><span class="p">,</span>
+    <span class="n">sub_agents</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">visual_assessor</span><span class="p">,</span>
+        <span class="n">design_planner</span><span class="p">,</span>
+        <span class="n">project_coordinator</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Coordinator/Dispatcher (Root Agent)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">root_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;HomeRenovationPlanner&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-flash-preview&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Intelligent coordinator that routes renovation requests to the appropriate specialist or planning pipeline. Supports image analysis!&quot;</span><span class="p">,</span>
+    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are the Coordinator for the AI Home Renovation Planner.</span>
+
+<span class="s2">YOUR ROLE: Analyze the user&#39;s request and route it to the right specialist using transfer_to_agent.</span>
+
+<span class="s2">ROUTING LOGIC:</span>
+
+<span class="s2">1. **For general questions/greetings**:</span>
+<span class="s2">   → transfer_to_agent to &quot;InfoAgent&quot;</span>
+<span class="s2">   → Examples: &quot;hi&quot;, &quot;what do you do?&quot;, &quot;how much do renovations cost?&quot;</span>
+
+<span class="s2">2. **For editing EXISTING renderings** (only if rendering was already generated):</span>
+<span class="s2">   → transfer_to_agent to &quot;RenderingEditor&quot;</span>
+<span class="s2">   → Examples: &quot;make cabinets cream&quot;, &quot;darker&quot;, &quot;change color&quot;, &quot;add lights&quot;</span>
+<span class="s2">   → User wants to MODIFY an existing rendering</span>
+<span class="s2">   → Check: Was a rendering generated earlier?</span>
+
+<span class="s2">3. **For NEW renovation planning**:</span>
+<span class="s2">   → transfer_to_agent to &quot;PlanningPipeline&quot;</span>
+<span class="s2">   → Examples: &quot;Plan my kitchen&quot;, &quot;Here&#39;s my space [photos]&quot;, &quot;Help renovate&quot;</span>
+<span class="s2">   → First-time planning or new project</span>
+<span class="s2">   → ALWAYS route here if images uploaded!</span>
+
+<span class="s2">CRITICAL: You MUST use transfer_to_agent - don&#39;t answer directly!</span>
+
+<span class="s2">Decision flow:</span>
+<span class="s2">- Rendering exists + wants changes → RenderingEditor</span>
+<span class="s2">- New project/images → PlanningPipeline</span>
+<span class="s2">- Just chatting → InfoAgent</span>
+
+<span class="s2">Be a smart router - match intent!</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">sub_agents</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">info_agent</span><span class="p">,</span>
+        <span class="n">rendering_editor</span><span class="p">,</span>
+        <span class="n">planning_pipeline</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;root_agent&quot;</span><span class="p">]</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps/ai-home-renovation-agent/agent.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">67 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>google-adk&gt;=1.15.0
+google-generativeai&gt;=0.8.3
+python-dotenv&gt;=1.0.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps/ai-home-renovation-agent/requirements.txt" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-tools-py"><summary class="codefile__head"><span class="codefile__name">tools.py</span><span class="codefile__size">27 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google</span><span class="w"> </span><span class="kn">import</span> <span class="n">genai</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolContext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="c1"># Configure logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Helper Functions for Asset Version Management</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_next_version_number</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">,</span> <span class="n">asset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the next version number for a given asset name.&quot;&quot;&quot;</span>
+    <span class="n">asset_versions</span> <span class="o">=</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;asset_versions&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">current_version</span> <span class="o">=</span> <span class="n">asset_versions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asset_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">next_version</span> <span class="o">=</span> <span class="n">current_version</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">next_version</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">update_asset_version</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">,</span> <span class="n">asset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the version tracking for an asset.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;asset_versions&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+        <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;asset_versions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s2">&quot;asset_filenames&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+        <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;asset_filenames&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;asset_versions&quot;</span><span class="p">][</span><span class="n">asset_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">version</span>
+    <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;asset_filenames&quot;</span><span class="p">][</span><span class="n">asset_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
+    
+    <span class="c1"># Maintain a list of all versions for this asset</span>
+    <span class="n">asset_history_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">asset_name</span><span class="si">}</span><span class="s2">_history&quot;</span>
+    <span class="k">if</span> <span class="n">asset_history_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+        <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">asset_history_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">asset_history_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span> <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filename</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_versioned_filename</span><span class="p">(</span><span class="n">asset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">file_extension</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a versioned filename for an asset.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">asset_name</span><span class="si">}</span><span class="s2">_v</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">file_extension</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_asset_versions_info</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get information about all asset versions in the session.&quot;&quot;&quot;</span>
+    <span class="n">asset_versions</span> <span class="o">=</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;asset_versions&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">asset_versions</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;No renovation renderings have been created yet.&quot;</span>
+    
+    <span class="n">info_lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Current renovation renderings:&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">asset_name</span><span class="p">,</span> <span class="n">current_version</span> <span class="ow">in</span> <span class="n">asset_versions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">history_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">asset_name</span><span class="si">}</span><span class="s2">_history&quot;</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">history_key</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">total_versions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">)</span>
+        <span class="n">latest_filename</span> <span class="o">=</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;asset_filenames&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">asset_name</span><span class="p">,</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">)</span>
+        <span class="n">info_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">asset_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">total_versions</span><span class="si">}</span><span class="s2"> version(s), latest is v</span><span class="si">{</span><span class="n">current_version</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">latest_filename</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">info_lines</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_reference_images_info</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get information about all reference images (current room/inspiration) uploaded in the session.&quot;&quot;&quot;</span>
+    <span class="n">reference_images</span> <span class="o">=</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reference_images&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">reference_images</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;No reference images have been uploaded yet.&quot;</span>
+    
+    <span class="n">info_lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Available reference images (current room photos &amp; inspiration):&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">reference_images</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">)</span>
+        <span class="n">image_type</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;reference&quot;</span><span class="p">)</span>
+        <span class="n">info_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">image_type</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">info_lines</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">load_reference_image</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a reference image artifact by filename.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">loaded_part</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">load_artifact</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">loaded_part</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully loaded reference image: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">loaded_part</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reference image not found: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading reference image </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_latest_reference_image_filename</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the filename of the most recently uploaded reference image.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;latest_reference_image&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Pydantic Input Models</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GenerateRenovationRenderingInput</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A detailed description of the renovated space to generate. Include room type, style, colors, materials, fixtures, lighting, and layout.&quot;</span><span class="p">)</span>
+    <span class="n">aspect_ratio</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;16:9&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The desired aspect ratio, e.g., &#39;1:1&#39;, &#39;16:9&#39;, &#39;9:16&#39;. Default is 16:9 for room photos.&quot;</span><span class="p">)</span>
+    <span class="n">asset_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;renovation_rendering&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Base name for the rendering (will be versioned automatically). Use descriptive names like &#39;kitchen_modern_farmhouse&#39; or &#39;bathroom_spa&#39;.&quot;</span><span class="p">)</span>
+    <span class="n">current_room_photo</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Optional: filename of the current room photo to use as reference for layout/structure.&quot;</span><span class="p">)</span>
+    <span class="n">inspiration_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Optional: filename of an inspiration image to guide the style. Use &#39;latest&#39; for most recent upload.&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EditRenovationRenderingInput</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">artifact_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The filename of the rendering artifact to edit. If not provided, uses the last generated rendering.&quot;</span><span class="p">)</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The prompt describing the desired changes (e.g., &#39;make cabinets darker&#39;, &#39;add pendant lights&#39;, &#39;change floor to hardwood&#39;).&quot;</span><span class="p">)</span>
+    <span class="n">asset_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Optional: specify asset name for the new version (defaults to incrementing current asset).&quot;</span><span class="p">)</span>
+    <span class="n">reference_image_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Optional: filename of a reference image to guide the edit. Use &#39;latest&#39; for most recent upload.&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Image Generation Tool</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">generate_renovation_rendering</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">GenerateRenovationRenderingInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a photorealistic rendering of a renovated space based on the design plan.</span>
+<span class="sd">    </span>
+<span class="sd">    This tool uses Gemini 3 Pro&#39;s image generation capabilities to create visual </span>
+<span class="sd">    representations of renovation plans. It can optionally use current room photos </span>
+<span class="sd">    and inspiration images as references.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;GEMINI_API_KEY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="s2">&quot;GOOGLE_API_KEY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;GEMINI_API_KEY or GOOGLE_API_KEY environment variable not set.&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting renovation rendering generation&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+        
+        <span class="c1"># Handle inputs that might come as dict instead of Pydantic model</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">GenerateRenovationRenderingInput</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
+        
+        <span class="c1"># Handle reference images (current room photo or inspiration)</span>
+        <span class="n">reference_images</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">current_room_photo</span><span class="p">:</span>
+            <span class="n">current_photo_part</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_reference_image</span><span class="p">(</span><span class="n">tool_context</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">current_room_photo</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">current_photo_part</span><span class="p">:</span>
+                <span class="n">reference_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_photo_part</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using current room photo: </span><span class="si">{</span><span class="n">inputs</span><span class="o">.</span><span class="n">current_room_photo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">inspiration_image</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">inspiration_image</span> <span class="o">==</span> <span class="s2">&quot;latest&quot;</span><span class="p">:</span>
+                <span class="n">insp_filename</span> <span class="o">=</span> <span class="n">get_latest_reference_image_filename</span><span class="p">(</span><span class="n">tool_context</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">insp_filename</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">inspiration_image</span>
+            
+            <span class="k">if</span> <span class="n">insp_filename</span><span class="p">:</span>
+                <span class="n">inspiration_part</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_reference_image</span><span class="p">(</span><span class="n">tool_context</span><span class="p">,</span> <span class="n">insp_filename</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">inspiration_part</span><span class="p">:</span>
+                    <span class="n">reference_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inspiration_part</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using inspiration image: </span><span class="si">{</span><span class="n">insp_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Build the enhanced prompt using SLC formula (Subject, Lighting, Camera)</span>
+        <span class="n">base_rewrite_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Create an ultra-detailed, photorealistic prompt for generating a professional interior design photograph.</span>
+<span class="s2">        </span>
+<span class="s2">        Original description: </span><span class="si">{</span><span class="n">inputs</span><span class="o">.</span><span class="n">prompt</span><span class="si">}</span>
+<span class="s2">        </span>
+<span class="s2">        **CRITICAL REQUIREMENT - PRESERVE EXACT LAYOUT:**</span>
+<span class="s2">        The generated image MUST maintain the EXACT same room layout, structure, and spatial arrangement described in the prompt:</span>
+<span class="s2">        - Keep all windows, doors, skylights in their exact positions</span>
+<span class="s2">        - Keep all cabinets, counters, appliances in their exact positions</span>
+<span class="s2">        - Keep the same room dimensions and proportions</span>
+<span class="s2">        - Keep the same camera angle/perspective</span>
+<span class="s2">        - ONLY change surface finishes: paint colors, cabinet colors, countertop materials, flooring, backsplash, hardware, and decorative elements</span>
+<span class="s2">        - DO NOT move, add, or remove any structural elements or major fixtures</span>
+<span class="s2">        </span>
+<span class="s2">        **Use the SLC Formula for Photorealism:**</span>
+<span class="s2">        </span>
+<span class="s2">        1. **SUBJECT (S)** - Be highly specific about details and textures:</span>
+<span class="s2">           - Describe exact materials with rich adjectives (e.g., &quot;smooth matte white shaker-style cabinets&quot;, &quot;honed Carrara marble countertops with subtle grey veining&quot;)</span>
+<span class="s2">           - Include texture details (e.g., &quot;brushed nickel hardware&quot;, &quot;wide-plank oak flooring with natural grain&quot;)</span>
+<span class="s2">           - Specify finishes precisely (e.g., &quot;satin finish&quot;, &quot;polished&quot;, &quot;matte&quot;, &quot;textured&quot;)</span>
+<span class="s2">        </span>
+<span class="s2">        2. **LIGHTING (L)** - Describe lighting conditions that create mood and realism:</span>
+<span class="s2">           - Natural light sources (e.g., &quot;soft morning sunlight streaming through windows&quot;, &quot;golden hour warm glow&quot;)</span>
+<span class="s2">           - Artificial lighting (e.g., &quot;warm LED under-cabinet lighting&quot;, &quot;pendant lights casting gentle shadows&quot;)</span>
+<span class="s2">           - Light quality (e.g., &quot;diffused natural light&quot;, &quot;dramatic side lighting&quot;, &quot;even ambient illumination&quot;)</span>
+<span class="s2">           - Shadows and highlights (e.g., &quot;subtle shadows adding depth&quot;, &quot;highlights on polished surfaces&quot;)</span>
+<span class="s2">        </span>
+<span class="s2">        3. **CAMERA (C)** - Include professional photography specifications:</span>
+<span class="s2">           - Camera type: &quot;shot on professional DSLR&quot; or &quot;architectural photography camera&quot;</span>
+<span class="s2">           - Resolution: &quot;8K resolution&quot;, &quot;ultra high definition&quot;, &quot;HDR&quot;</span>
+<span class="s2">           - Perspective: specific angle (e.g., &quot;wide-angle lens from doorway&quot;, &quot;eye-level perspective&quot;, &quot;slightly elevated view&quot;)</span>
+<span class="s2">           - Depth of field: &quot;sharp focus throughout&quot; or &quot;shallow depth of field with background blur&quot;</span>
+<span class="s2">           - Quality keywords: &quot;professional interior design photography&quot;, &quot;magazine quality&quot;, &quot;architectural digest style&quot;</span>
+<span class="s2">        </span>
+<span class="s2">        **Additional Requirements:**</span>
+<span class="s2">        - Maintain existing spatial layout and dimensions exactly as described</span>
+<span class="s2">        - Include specific color names and codes when mentioned</span>
+<span class="s2">        - Add atmospheric details (e.g., &quot;clean, inviting atmosphere&quot;, &quot;modern luxury feel&quot;)</span>
+<span class="s2">        - Specify the aspect ratio: </span><span class="si">{</span><span class="n">inputs</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="si">}</span>
+<span class="s2">        </span>
+<span class="s2">        **Output Format:** Create a single, flowing paragraph that reads like a professional photography brief. </span>
+<span class="s2">        Start with the camera/technical specs, then describe the subject with rich detail, then lighting conditions.</span>
+<span class="s2">        Include keywords: &quot;photorealistic&quot;, &quot;8K&quot;, &quot;HDR&quot;, &quot;professional interior photography&quot;, &quot;architectural photography&quot;.</span>
+<span class="s2">        Emphasize that the layout must remain unchanged - only surface finishes are modified.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">reference_images</span><span class="p">:</span>
+            <span class="n">base_rewrite_prompt</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">**Reference Image Layout:** The reference image shows the EXACT layout that must be preserved. Match the camera angle, room structure, window/door positions, and furniture/appliance placement EXACTLY. Only change the surface finishes and colors. Analyze the lighting in the reference image and replicate it.&quot;</span>
+        
+        <span class="c1"># Get enhanced prompt</span>
+        <span class="n">rewritten_prompt_response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-3-pro-preview&quot;</span><span class="p">,</span> 
+            <span class="n">contents</span><span class="o">=</span><span class="n">base_rewrite_prompt</span>
+        <span class="p">)</span>
+        <span class="n">rewritten_prompt</span> <span class="o">=</span> <span class="n">rewritten_prompt_response</span><span class="o">.</span><span class="n">text</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Enhanced prompt: </span><span class="si">{</span><span class="n">rewritten_prompt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;gemini-3-pro-image-preview&quot;</span>
+        
+        <span class="c1"># Build content parts</span>
+        <span class="n">content_parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">rewritten_prompt</span><span class="p">)]</span>
+        <span class="n">content_parts</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">reference_images</span><span class="p">)</span>
+
+        <span class="n">contents</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">types</span><span class="o">.</span><span class="n">Content</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                <span class="n">parts</span><span class="o">=</span><span class="n">content_parts</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+        
+        <span class="n">generate_content_config</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">GenerateContentConfig</span><span class="p">(</span>
+            <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;IMAGE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;TEXT&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Generate versioned filename</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">get_next_version_number</span><span class="p">(</span><span class="n">tool_context</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">asset_name</span><span class="p">)</span>
+        <span class="n">artifact_filename</span> <span class="o">=</span> <span class="n">create_versioned_filename</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">asset_name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating rendering with artifact filename: </span><span class="si">{</span><span class="n">artifact_filename</span><span class="si">}</span><span class="s2"> (version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Generate the image</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">generate_content_stream</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">contents</span><span class="o">=</span><span class="n">contents</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">generate_content_config</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="p">):</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inline_data</span> <span class="ow">and</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                <span class="n">inline_data</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inline_data</span>
+                
+                <span class="c1"># Create a Part object from the inline data</span>
+                <span class="c1"># The inline_data already contains the mime_type from the API response</span>
+                <span class="n">image_part</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="p">(</span><span class="n">inline_data</span><span class="o">=</span><span class="n">inline_data</span><span class="p">)</span>
+                
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Save the image as an artifact. Do NOT rebind `version` from</span>
+                    <span class="c1"># the return value: that is ADK&#39;s per-filename artifact revision,</span>
+                    <span class="c1"># not our asset version counter (already set by get_next_version_number).</span>
+                    <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">save_artifact</span><span class="p">(</span>
+                        <span class="n">filename</span><span class="o">=</span><span class="n">artifact_filename</span><span class="p">,</span> 
+                        <span class="n">artifact</span><span class="o">=</span><span class="n">image_part</span>
+                    <span class="p">)</span>
+                    
+                    <span class="c1"># Update version tracking</span>
+                    <span class="n">update_asset_version</span><span class="p">(</span><span class="n">tool_context</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">asset_name</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">artifact_filename</span><span class="p">)</span>
+                    
+                    <span class="c1"># Store in session state</span>
+                    <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;last_generated_rendering&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">artifact_filename</span>
+                    <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;current_asset_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">asset_name</span>
+                    
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved rendering as artifact &#39;</span><span class="si">{</span><span class="n">artifact_filename</span><span class="si">}</span><span class="s2">&#39; (version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                    
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;✅ Renovation rendering generated successfully!</span><span class="se">\n\n</span><span class="s2">The rendering has been saved and is available in the artifacts panel. Artifact name: </span><span class="si">{</span><span class="n">inputs</span><span class="o">.</span><span class="n">asset_name</span><span class="si">}</span><span class="s2"> (version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">).</span><span class="se">\n\n</span><span class="s2">Note: The image is stored as an artifact and can be accessed through the session artifacts, not as a direct image link.&quot;</span>
+                    
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error saving artifact: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error saving rendering as artifact: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Log any text responses</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">chunk</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model response: </span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+        <span class="k">return</span> <span class="s2">&quot;No rendering was generated. Please try again with a more detailed prompt.&quot;</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in generate_renovation_rendering: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;An error occurred while generating the rendering: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Image Editing Tool</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">edit_renovation_rendering</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">EditRenovationRenderingInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Edits an existing renovation rendering based on feedback or refinements.</span>
+<span class="sd">    </span>
+<span class="sd">    This tool allows iterative improvements to the rendered image, such as </span>
+<span class="sd">    changing colors, materials, lighting, or layout elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;GEMINI_API_KEY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="s2">&quot;GOOGLE_API_KEY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;GEMINI_API_KEY or GOOGLE_API_KEY environment variable not set.&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting renovation rendering edit&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+        
+        <span class="c1"># Handle inputs that might come as dict instead of Pydantic model</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">EditRenovationRenderingInput</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
+        
+        <span class="c1"># Get artifact_filename from session state if not provided</span>
+        <span class="n">artifact_filename</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">artifact_filename</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">artifact_filename</span><span class="p">:</span>
+            <span class="n">artifact_filename</span> <span class="o">=</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_generated_rendering&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">artifact_filename</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;❌ No artifact_filename provided and no previous rendering found in session. Please generate a rendering first using generate_renovation_rendering.&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using last generated rendering from session: </span><span class="si">{</span><span class="n">artifact_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Validate filename format - check for common hallucination patterns</span>
+        <span class="k">if</span> <span class="s2">&quot;_v0.&quot;</span> <span class="ow">in</span> <span class="n">artifact_filename</span><span class="p">:</span>
+            <span class="c1"># Version 0 doesn&#39;t exist - the first version is always v1</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid version v0 detected in filename: </span><span class="si">{</span><span class="n">artifact_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">corrected_filename</span> <span class="o">=</span> <span class="n">artifact_filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_v0.&quot;</span><span class="p">,</span> <span class="s2">&quot;_v1.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attempting corrected filename: </span><span class="si">{</span><span class="n">corrected_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">artifact_filename</span> <span class="o">=</span> <span class="n">corrected_filename</span>
+        
+        <span class="c1"># Load the existing rendering</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading artifact: </span><span class="si">{</span><span class="n">artifact_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">loaded_image_part</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">loaded_image_part</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">load_artifact</span><span class="p">(</span><span class="n">artifact_filename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading artifact: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># If loading failed, try to find the most recent version of this asset</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">loaded_image_part</span><span class="p">:</span>
+            <span class="c1"># Extract base asset name and try to find any existing version</span>
+            <span class="n">base_name</span> <span class="o">=</span> <span class="n">artifact_filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_v&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;_v&#39;</span> <span class="ow">in</span> <span class="n">artifact_filename</span> <span class="k">else</span> <span class="n">artifact_filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">asset_filenames</span> <span class="o">=</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;asset_filenames&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            
+            <span class="c1"># Check if we have any version of this asset</span>
+            <span class="k">if</span> <span class="n">base_name</span> <span class="ow">in</span> <span class="n">asset_filenames</span><span class="p">:</span>
+                <span class="n">fallback_filename</span> <span class="o">=</span> <span class="n">asset_filenames</span><span class="p">[</span><span class="n">base_name</span><span class="p">]</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attempting fallback to known artifact: </span><span class="si">{</span><span class="n">fallback_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">loaded_image_part</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">load_artifact</span><span class="p">(</span><span class="n">fallback_filename</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">loaded_image_part</span><span class="p">:</span>
+                        <span class="n">artifact_filename</span> <span class="o">=</span> <span class="n">fallback_filename</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully loaded fallback artifact: </span><span class="si">{</span><span class="n">fallback_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fallback load also failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Last resort: try the last generated rendering</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">loaded_image_part</span><span class="p">:</span>
+                <span class="n">last_rendering</span> <span class="o">=</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_generated_rendering&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">last_rendering</span> <span class="ow">and</span> <span class="n">last_rendering</span> <span class="o">!=</span> <span class="n">artifact_filename</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attempting last resort fallback to: </span><span class="si">{</span><span class="n">last_rendering</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">loaded_image_part</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">load_artifact</span><span class="p">(</span><span class="n">last_rendering</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">loaded_image_part</span><span class="p">:</span>
+                            <span class="n">artifact_filename</span> <span class="o">=</span> <span class="n">last_rendering</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully loaded last resort artifact: </span><span class="si">{</span><span class="n">last_rendering</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Last resort load also failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">loaded_image_part</span><span class="p">:</span>
+            <span class="n">available_renderings</span> <span class="o">=</span> <span class="n">get_asset_versions_info</span><span class="p">(</span><span class="n">tool_context</span><span class="p">)</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;❌ Could not find rendering artifact: </span><span class="si">{</span><span class="n">inputs</span><span class="o">.</span><span class="n">artifact_filename</span><span class="si">}</span><span class="se">\n\n</span><span class="si">{</span><span class="n">available_renderings</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Please use one of the available artifact filenames, or generate a new rendering first.&quot;</span>
+
+        <span class="c1"># Handle reference image if specified</span>
+        <span class="n">reference_image_part</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">reference_image_filename</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">reference_image_filename</span> <span class="o">==</span> <span class="s2">&quot;latest&quot;</span><span class="p">:</span>
+                <span class="n">ref_filename</span> <span class="o">=</span> <span class="n">get_latest_reference_image_filename</span><span class="p">(</span><span class="n">tool_context</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ref_filename</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">reference_image_filename</span>
+            
+            <span class="k">if</span> <span class="n">ref_filename</span><span class="p">:</span>
+                <span class="n">reference_image_part</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_reference_image</span><span class="p">(</span><span class="n">tool_context</span><span class="p">,</span> <span class="n">ref_filename</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">reference_image_part</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using reference image for editing: </span><span class="si">{</span><span class="n">ref_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;gemini-3-pro-image-preview&quot;</span>
+
+        <span class="c1"># Build content parts</span>
+        <span class="n">content_parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">loaded_image_part</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">inputs</span><span class="o">.</span><span class="n">prompt</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">reference_image_part</span><span class="p">:</span>
+            <span class="n">content_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reference_image_part</span><span class="p">)</span>
+
+        <span class="n">contents</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">types</span><span class="o">.</span><span class="n">Content</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                <span class="n">parts</span><span class="o">=</span><span class="n">content_parts</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+        
+        <span class="n">generate_content_config</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">GenerateContentConfig</span><span class="p">(</span>
+            <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;IMAGE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;TEXT&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Determine asset name and generate versioned filename</span>
+        <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">asset_name</span><span class="p">:</span>
+            <span class="n">asset_name</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">asset_name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_asset_name</span> <span class="o">=</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;current_asset_name&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">current_asset_name</span><span class="p">:</span>
+                <span class="n">asset_name</span> <span class="o">=</span> <span class="n">current_asset_name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Extract from filename</span>
+                <span class="n">base_name</span> <span class="o">=</span> <span class="n">artifact_filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_v&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;_v&#39;</span> <span class="ow">in</span> <span class="n">artifact_filename</span> <span class="k">else</span> <span class="s2">&quot;renovation_rendering&quot;</span>
+                <span class="n">asset_name</span> <span class="o">=</span> <span class="n">base_name</span>
+        
+        <span class="n">version</span> <span class="o">=</span> <span class="n">get_next_version_number</span><span class="p">(</span><span class="n">tool_context</span><span class="p">,</span> <span class="n">asset_name</span><span class="p">)</span>
+        <span class="n">edited_artifact_filename</span> <span class="o">=</span> <span class="n">create_versioned_filename</span><span class="p">(</span><span class="n">asset_name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Editing rendering with artifact filename: </span><span class="si">{</span><span class="n">edited_artifact_filename</span><span class="si">}</span><span class="s2"> (version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Edit the image</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">generate_content_stream</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">contents</span><span class="o">=</span><span class="n">contents</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">generate_content_config</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="p">):</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inline_data</span> <span class="ow">and</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                <span class="n">inline_data</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">inline_data</span>
+                
+                <span class="c1"># Create a Part object from the inline data</span>
+                <span class="c1"># The inline_data already contains the mime_type from the API response</span>
+                <span class="n">edited_image_part</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="p">(</span><span class="n">inline_data</span><span class="o">=</span><span class="n">inline_data</span><span class="p">)</span>
+                
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Save the edited image as an artifact. Do NOT rebind `version`</span>
+                    <span class="c1"># from the return value (ADK&#39;s per-filename revision); keep the</span>
+                    <span class="c1"># asset version from get_next_version_number above.</span>
+                    <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">save_artifact</span><span class="p">(</span>
+                        <span class="n">filename</span><span class="o">=</span><span class="n">edited_artifact_filename</span><span class="p">,</span>
+                        <span class="n">artifact</span><span class="o">=</span><span class="n">edited_image_part</span>
+                    <span class="p">)</span>
+                    
+                    <span class="c1"># Update version tracking</span>
+                    <span class="n">update_asset_version</span><span class="p">(</span><span class="n">tool_context</span><span class="p">,</span> <span class="n">asset_name</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">edited_artifact_filename</span><span class="p">)</span>
+                    
+                    <span class="c1"># Store in session state</span>
+                    <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;last_generated_rendering&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">edited_artifact_filename</span>
+                    <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;current_asset_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">asset_name</span>
+                    
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved edited rendering as artifact &#39;</span><span class="si">{</span><span class="n">edited_artifact_filename</span><span class="si">}</span><span class="s2">&#39; (version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                    
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;✅ Rendering edited successfully!</span><span class="se">\n\n</span><span class="s2">The updated rendering has been saved and is available in the artifacts panel. Artifact name: </span><span class="si">{</span><span class="n">asset_name</span><span class="si">}</span><span class="s2"> (version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">).</span><span class="se">\n\n</span><span class="s2">Note: The image is stored as an artifact and can be accessed through the session artifacts, not as a direct image link.&quot;</span>
+                    
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error saving edited artifact: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error saving edited rendering as artifact: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Log any text responses</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">chunk</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model response: </span><span class="si">{</span><span class="n">chunk</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+        <span class="k">return</span> <span class="s2">&quot;No edited rendering was generated. Please try again.&quot;</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in edit_renovation_rendering: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;An error occurred while editing the rendering: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Utility Tools</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_renovation_renderings</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lists all renovation renderings created in this session.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_asset_versions_info</span><span class="p">(</span><span class="n">tool_context</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_reference_images</span><span class="p">(</span><span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lists all reference images (current room photos &amp; inspiration) uploaded in this session.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_reference_images_info</span><span class="p">(</span><span class="n">tool_context</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_uploaded_image_as_artifact</span><span class="p">(</span>
+    <span class="n">tool_context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">,</span>
+    <span class="n">image_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">artifact_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">image_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;current_room&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves an uploaded image as a named artifact for later use in editing.</span>
+<span class="sd">    </span>
+<span class="sd">    This tool is used when the Visual Assessor detects an uploaded image</span>
+<span class="sd">    and wants to make it available for the Project Coordinator to edit.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        tool_context: The tool context</span>
+<span class="sd">        image_data: Base64 encoded image data or image bytes</span>
+<span class="sd">        artifact_name: Name to save the artifact as (e.g., &quot;current_room_1&quot;, &quot;inspiration_1&quot;)</span>
+<span class="sd">        image_type: Type of image (&quot;current_room&quot; or &quot;inspiration&quot;)</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Success message with the artifact filename</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Create a Part from the image data</span>
+        <span class="c1"># Note: This assumes image_data is already in the right format</span>
+        <span class="c1"># In practice, we&#39;ll get this from the message content</span>
+        
+        <span class="c1"># Save as artifact</span>
+        <span class="k">await</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">save_artifact</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">artifact_name</span><span class="p">,</span>
+            <span class="n">artifact</span><span class="o">=</span><span class="n">image_data</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Track in state</span>
+        <span class="k">if</span> <span class="s2">&quot;uploaded_images&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+            <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;uploaded_images&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;uploaded_images&quot;</span><span class="p">][</span><span class="n">artifact_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">image_type</span><span class="p">,</span>
+            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">artifact_name</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">image_type</span> <span class="o">==</span> <span class="s2">&quot;current_room&quot;</span><span class="p">:</span>
+            <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;current_room_artifact&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">artifact_name</span>
+        <span class="k">elif</span> <span class="n">image_type</span> <span class="o">==</span> <span class="s2">&quot;inspiration&quot;</span><span class="p">:</span>
+            <span class="n">tool_context</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;inspiration_artifact&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">artifact_name</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved uploaded image as artifact: </span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;✅ Image saved as artifact: </span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2"> (type: </span><span class="si">{</span><span class="n">image_type</span><span class="si">}</span><span class="s2">). This can now be used for editing.&quot;</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error saving uploaded image: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;❌ Error saving uploaded image: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps/ai-home-renovation-agent/tools.py" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-multi-agent-apps/ai-home-renovation-agent">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-multi-agent-apps/ai-financial-coach-agent/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Coach financier (Google ADK)</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-multi-agent-apps/ai-mental-wellbeing-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Équipe bien-être mental</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/multi_agent_apps/ai_home_renovation_agent" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/multi_agent_apps/ai_home_renovation_agent</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h3"><a href="#free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial</a></li><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#how-it-works">How It Works</a></li><li class="toc__item toc__item--h2"><a href="#quick-start">Quick Start</a></li><li class="toc__item toc__item--h2"><a href="#usage-examples">Usage Examples</a></li><li class="toc__item toc__item--h3"><a href="#scenario-1-current-room-budget">Scenario 1: Current Room + Budget</a></li><li class="toc__item toc__item--h3"><a href="#scenario-2-room-inspiration">Scenario 2: Room + Inspiration</a></li><li class="toc__item toc__item--h3"><a href="#scenario-3-text-only">Scenario 3: Text Only</a></li><li class="toc__item toc__item--h3"><a href="#scenario-4-iterative-refinement">Scenario 4: Iterative Refinement</a></li><li class="toc__item toc__item--h2"><a href="#sample-prompts">Sample Prompts</a></li><li class="toc__item toc__item--h2"><a href="#tools-capabilities">Tools &amp; Capabilities</a></li><li class="toc__item toc__item--h2"><a href="#multi-agent-pattern">Multi-Agent Pattern</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

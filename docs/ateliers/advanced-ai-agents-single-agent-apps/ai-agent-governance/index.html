@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gouvernance d&#x27;agent (bac à sable) — atelier</title>
+<meta name="description" content="Encadrer ce qu&#x27;un agent a le droit de faire, par politique explicite. Directement lié à la leçon sécurité.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html">Agents avancés (agent unique)</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🤖</span> Agents avancés (agent unique)</p>
+  <h1 class="pagehead__title">Gouvernance d&#x27;agent (bac à sable)</h1>
+  <p class="pagehead__summary">Encadrer ce qu&#x27;un agent a le droit de faire, par politique explicite. Directement lié à la leçon sécurité.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#tres-demande" title="Compétence fréquemment attendue sur les offres d&#x27;emploi en IA."><span class="tag__icon" aria-hidden="true">🔥</span><span class="tag__label">Très demandé</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Policy-Based Sandboxing: Define what your AI agent can and cannot do using declarative policies</li><li>Action Interception: Catch and validate agent actions before execution</li><li>Audit Logging: Full trail of agent actions for compliance and debugging</li><li>File System Guards: Restrict read/write to specific directories</li><li>Network Guards: Allowlist-only external API access</li><li>Rate Limiting: Prevent runaway agents with configurable limits</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="ai-agent-governance-policy-based-sandboxing">🛡️ AI Agent Governance - Policy-Based Sandboxing<a class="anchor" href="#ai-agent-governance-policy-based-sandboxing" aria-label="Lien vers cette section">#</a></h1>
+<p>Learn how to build a governance layer that enforces deterministic policies on AI agents, preventing dangerous actions before they execute.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Policy-Based Sandboxing</strong>: Define what your AI agent can and cannot do using declarative policies</li>
+<li><strong>Action Interception</strong>: Catch and validate agent actions before execution</li>
+<li><strong>Audit Logging</strong>: Full trail of agent actions for compliance and debugging</li>
+<li><strong>File System Guards</strong>: Restrict read/write to specific directories</li>
+<li><strong>Network Guards</strong>: Allowlist-only external API access</li>
+<li><strong>Rate Limiting</strong>: Prevent runaway agents with configurable limits</li>
+</ul>
+<h2 id="how-it-works">How It Works<a class="anchor" href="#how-it-works" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li><strong>Policy Definition</strong>: Define your security policies in YAML format</li>
+<li><strong>Action Wrapping</strong>: Wrap your agent's tools with the governance layer</li>
+<li><strong>Interception</strong>: Before any tool executes, the policy engine validates the action</li>
+<li><strong>Decision</strong>: Actions are allowed, denied, or require human approval</li>
+<li><strong>Audit</strong>: All decisions are logged for compliance and debugging</li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│   Agent     │────▶│  Governance  │────▶│    Tool     │
+│  (LLM)      │     │    Layer     │     │  Execution  │
+└─────────────┘     └──────────────┘     └─────────────┘
+                           │
+                    ┌──────▼──────┐
+                    │   Policy    │
+                    │   Engine    │
+                    └─────────────┘
+</pre></div>
+</div><h2 id="requirements">Requirements<a class="anchor" href="#requirements" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Python 3.8+</li>
+<li>OpenAI API key (or any LLM provider)</li>
+<li>Required Python packages (see <code>requirements.txt</code>)</li>
+</ul>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p>Clone this repository:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>advanced_ai_agents/single_agent_apps/ai_agent_governance
+</pre></div>
+</div></li>
+<li>
+<p>Install the required packages:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+</ol>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p>Set your API key:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your-openai-api-key
+</pre></div>
+</div></li>
+<li>
+<p>Run the governance demo:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python<span class="w"> </span>ai_agent_governance.py
+</pre></div>
+</div></li>
+<li>
+<p>Try different actions and see how the policy engine handles them.</p>
+</li>
+</ol>
+<h2 id="example-policy-configuration">Example Policy Configuration<a class="anchor" href="#example-policy-configuration" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">yaml</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">filesystem</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">allowed_paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/workspace&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;/tmp&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">denied_paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/etc&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;/home&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;~/.ssh&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span>
+<span class="w">  </span><span class="nt">network</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">allowed_domains</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;api.openai.com&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;api.github.com&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">block_all_others</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span>
+<span class="w">  </span><span class="nt">execution</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">max_actions_per_minute</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">    </span><span class="nt">require_approval_for</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;delete_file&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;execute_shell&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span>
+<span class="w">  </span><span class="nt">tools</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">allowed</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;read_file&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;write_file&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;web_search&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">denied</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;execute_code&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;send_email&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div><h2 id="example-output">Example Output<a class="anchor" href="#example-output" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>🛡️ AI Agent Governance Demo
+============================
+
+📋 Loading policy: workspace_sandbox.yaml
+
+🤖 Agent request: &quot;Read the contents of /etc/passwd&quot;
+❌ DENIED: Path &#39;/etc/passwd&#39; is outside allowed directories
+
+🤖 Agent request: &quot;Write analysis to /workspace/report.md&quot;  
+✅ ALLOWED: Action permitted by policy
+
+🤖 Agent request: &quot;Make HTTP request to unknown-api.com&quot;
+❌ DENIED: Domain &#39;unknown-api.com&#39; not in allowlist
+
+🤖 Agent request: &quot;Delete /workspace/temp.txt&quot;
+⏸️ PENDING: Action requires human approval
+   [Y/n]: 
+</pre></div>
+</div><h2 id="technical-details">Technical Details<a class="anchor" href="#technical-details" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="policy-engine">Policy Engine<a class="anchor" href="#policy-engine" aria-label="Lien vers cette section">#</a></h3>
+<p>The policy engine evaluates actions against a set of rules:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PolicyEngine</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decision</span><span class="p">:</span>
+        <span class="c1"># Check each policy rule</span>
+        <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">Decision</span><span class="o">.</span><span class="n">ALLOW</span>
+</pre></div>
+</div><h3 id="action-interception">Action Interception<a class="anchor" href="#action-interception" aria-label="Lien vers cette section">#</a></h3>
+<p>Tools are wrapped with governance checks:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">governed_tool</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">decision</span> <span class="o">=</span> <span class="n">policy_engine</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">decision</span> <span class="o">==</span> <span class="n">Decision</span><span class="o">.</span><span class="n">DENY</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PolicyViolation</span><span class="p">(</span><span class="n">decision</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">decision</span> <span class="o">==</span> <span class="n">Decision</span><span class="o">.</span><span class="n">REQUIRE_APPROVAL</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">get_human_approval</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">PolicyViolation</span><span class="p">(</span><span class="s2">&quot;Human denied the action&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Log the action</span>
+        <span class="n">audit_log</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">decision</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+</pre></div>
+</div><h3 id="audit-logging">Audit Logging<a class="anchor" href="#audit-logging" aria-label="Lien vers cette section">#</a></h3>
+<p>All actions are logged with full context:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-01-15T10:30:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;write_file&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/workspace/report.md&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;decision&quot;</span><span class="p">:</span> <span class="s2">&quot;ALLOW&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;policy_matched&quot;</span><span class="p">:</span> <span class="s2">&quot;filesystem.allowed_paths&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="s2">&quot;research-agent-001&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div><h2 id="key-concepts-learned">Key Concepts Learned<a class="anchor" href="#key-concepts-learned" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li><strong>Deterministic vs Probabilistic Safety</strong>: Why policy enforcement is more reliable than prompt engineering</li>
+<li><strong>Defense in Depth</strong>: Multiple layers of validation for robust security</li>
+<li><strong>Audit Trails</strong>: Importance of logging for compliance and debugging</li>
+<li><strong>Principle of Least Privilege</strong>: Only grant the permissions agents actually need</li>
+</ol>
+<h2 id="extending-the-tutorial">Extending the Tutorial<a class="anchor" href="#extending-the-tutorial" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Add custom policy rules for your use case</li>
+<li>Implement human-in-the-loop approval workflows</li>
+<li>Connect to external policy management systems</li>
+<li>Add real-time monitoring and alerting</li>
+</ul>
+<h2 id="related-projects">Related Projects<a class="anchor" href="#related-projects" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><a href="https://github.com/langchain-ai/langchain" target="_blank" rel="noopener noreferrer">LangChain</a> - LLM application framework</li>
+<li><a href="https://github.com/guardrails-ai/guardrails" target="_blank" rel="noopener noreferrer">Guardrails AI</a> - Input/output validation for LLMs</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-ai-agent-governance-py"><summary class="codefile__head"><span class="codefile__name">ai_agent_governance.py</span><span class="codefile__size">20 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">🛡️ AI Agent Governance - Policy-Based Sandboxing Tutorial</span>
+
+<span class="sd">This tutorial demonstrates how to build a governance layer that enforces</span>
+<span class="sd">deterministic policies on AI agents, preventing dangerous actions before execution.</span>
+
+<span class="sd">Key concepts:</span>
+<span class="sd">- Policy-based action validation</span>
+<span class="sd">- Tool interception and wrapping</span>
+<span class="sd">- Audit logging for compliance</span>
+<span class="sd">- Rate limiting and resource controls</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="c1"># Configure logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># CORE DATA STRUCTURES</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Decision</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Policy evaluation decision&quot;&quot;&quot;</span>
+    <span class="n">ALLOW</span> <span class="o">=</span> <span class="s2">&quot;allow&quot;</span>
+    <span class="n">DENY</span> <span class="o">=</span> <span class="s2">&quot;deny&quot;</span>
+    <span class="n">REQUIRE_APPROVAL</span> <span class="o">=</span> <span class="s2">&quot;require_approval&quot;</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Action</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an action an agent wants to perform&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">tuple</span><span class="p">)</span>
+    <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">)</span>
+    <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default-agent&quot;</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PolicyResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Result of a policy evaluation&quot;&quot;&quot;</span>
+    <span class="n">decision</span><span class="p">:</span> <span class="n">Decision</span>
+    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">policy_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">is_terminal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AuditEntry</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An entry in the audit log&quot;&quot;&quot;</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">action</span><span class="p">:</span> <span class="n">Action</span>
+    <span class="n">decision</span><span class="p">:</span> <span class="n">Decision</span>
+    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">policy_matched</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># POLICY ENGINE</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PolicyRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for policy rules&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PolicyResult</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the action against this rule. Returns None if rule doesn&#39;t apply.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FilesystemPolicy</span><span class="p">(</span><span class="n">PolicyRule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Policy for filesystem access control&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allowed_paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">denied_paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;filesystem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowed_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">allowed_paths</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">denied_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">denied_paths</span><span class="p">]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PolicyResult</span><span class="p">]:</span>
+        <span class="c1"># Check if action involves file paths</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">action</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file_path&quot;</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">action</span><span class="o">.</span><span class="n">args</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Rule doesn&#39;t apply</span>
+        
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        
+        <span class="c1"># Check denied paths first</span>
+        <span class="k">for</span> <span class="n">denied</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">denied_paths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">denied</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="n">PolicyResult</span><span class="p">(</span>
+                    <span class="n">decision</span><span class="o">=</span><span class="n">Decision</span><span class="o">.</span><span class="n">DENY</span><span class="p">,</span>
+                    <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Path &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; matches denied pattern &#39;</span><span class="si">{</span><span class="n">denied</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                    <span class="n">policy_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">)</span>
+        
+        <span class="c1"># Check if path is in allowed paths</span>
+        <span class="k">for</span> <span class="n">allowed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_paths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">allowed</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="n">PolicyResult</span><span class="p">(</span>
+                    <span class="n">decision</span><span class="o">=</span><span class="n">Decision</span><span class="o">.</span><span class="n">ALLOW</span><span class="p">,</span>
+                    <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Path &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; is within allowed directory &#39;</span><span class="si">{</span><span class="n">allowed</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                    <span class="n">policy_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">)</span>
+        
+        <span class="c1"># Default deny if not explicitly allowed</span>
+        <span class="k">return</span> <span class="n">PolicyResult</span><span class="p">(</span>
+            <span class="n">decision</span><span class="o">=</span><span class="n">Decision</span><span class="o">.</span><span class="n">DENY</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Path &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; is outside allowed directories&quot;</span><span class="p">,</span>
+            <span class="n">policy_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NetworkPolicy</span><span class="p">(</span><span class="n">PolicyRule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Policy for network access control&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allowed_domains</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">block_all_others</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;network&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowed_domains</span> <span class="o">=</span> <span class="n">allowed_domains</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_all_others</span> <span class="o">=</span> <span class="n">block_all_others</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PolicyResult</span><span class="p">]:</span>
+        <span class="c1"># Check if action involves URLs or domains</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;endpoint&quot;</span><span class="p">,</span> <span class="s2">&quot;domain&quot;</span><span class="p">,</span> <span class="s2">&quot;host&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">action</span><span class="o">.</span><span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">break</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
+            <span class="c1"># Check args for URL patterns</span>
+            <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">action</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;http://&quot;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="ow">or</span> <span class="s2">&quot;https://&quot;</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">):</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="n">arg</span>
+                    <span class="k">break</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Rule doesn&#39;t apply</span>
+        
+        <span class="c1"># Extract domain from URL</span>
+        <span class="n">domain_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;https?://([^/]+)&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">domain_match</span><span class="p">:</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="n">domain_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="n">url</span>
+        
+        <span class="c1"># Check if domain is allowed</span>
+        <span class="k">for</span> <span class="n">allowed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_domains</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">domain</span> <span class="o">==</span> <span class="n">allowed</span> <span class="ow">or</span> <span class="n">domain</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">allowed</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">PolicyResult</span><span class="p">(</span>
+                    <span class="n">decision</span><span class="o">=</span><span class="n">Decision</span><span class="o">.</span><span class="n">ALLOW</span><span class="p">,</span>
+                    <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Domain &#39;</span><span class="si">{</span><span class="n">domain</span><span class="si">}</span><span class="s2">&#39; is in allowlist&quot;</span><span class="p">,</span>
+                    <span class="n">policy_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_all_others</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PolicyResult</span><span class="p">(</span>
+                <span class="n">decision</span><span class="o">=</span><span class="n">Decision</span><span class="o">.</span><span class="n">DENY</span><span class="p">,</span>
+                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Domain &#39;</span><span class="si">{</span><span class="n">domain</span><span class="si">}</span><span class="s2">&#39; not in allowlist&quot;</span><span class="p">,</span>
+                <span class="n">policy_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+            <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RateLimitPolicy</span><span class="p">(</span><span class="n">PolicyRule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Policy for rate limiting agent actions&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_actions_per_minute</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;rate_limit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_actions_per_minute</span> <span class="o">=</span> <span class="n">max_actions_per_minute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PolicyResult</span><span class="p">]:</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="n">cutoff</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Clean old entries</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="n">cutoff</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_actions_per_minute</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PolicyResult</span><span class="p">(</span>
+                <span class="n">decision</span><span class="o">=</span><span class="n">Decision</span><span class="o">.</span><span class="n">DENY</span><span class="p">,</span>
+                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Rate limit exceeded: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_actions_per_minute</span><span class="si">}</span><span class="s2"> actions per minute&quot;</span><span class="p">,</span>
+                <span class="n">policy_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+            <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Allow - doesn&#39;t block</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ApprovalRequiredPolicy</span><span class="p">(</span><span class="n">PolicyRule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Policy requiring human approval for certain actions&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions_requiring_approval</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;approval_required&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions_requiring_approval</span> <span class="o">=</span> <span class="n">actions_requiring_approval</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PolicyResult</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions_requiring_approval</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">PolicyResult</span><span class="p">(</span>
+                <span class="n">decision</span><span class="o">=</span><span class="n">Decision</span><span class="o">.</span><span class="n">REQUIRE_APPROVAL</span><span class="p">,</span>
+                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Action &#39;</span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; requires human approval&quot;</span><span class="p">,</span>
+                <span class="n">policy_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PolicyEngine</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Central policy evaluation engine&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PolicyRule</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audit_log</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AuditEntry</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">PolicyRule</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a policy rule to the engine&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PolicyResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate an action against all policy rules&quot;&quot;&quot;</span>
+        <span class="n">allow_result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">decision</span> <span class="o">==</span> <span class="n">Decision</span><span class="o">.</span><span class="n">ALLOW</span><span class="p">:</span>
+                <span class="c1"># An allow is not final: a later rule may still deny the action</span>
+                <span class="c1"># or require approval for it. Remember the first allow but keep</span>
+                <span class="c1"># evaluating so deny/approval rules can override it.</span>
+                <span class="k">if</span> <span class="n">allow_result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">allow_result</span> <span class="o">=</span> <span class="n">result</span>
+                <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_audit</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">allow_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_audit</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">allow_result</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">allow_result</span>
+
+        <span class="c1"># Default allow if no rule blocks</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">PolicyResult</span><span class="p">(</span>
+            <span class="n">decision</span><span class="o">=</span><span class="n">Decision</span><span class="o">.</span><span class="n">ALLOW</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;No policy rule blocked this action&quot;</span><span class="p">,</span>
+            <span class="n">policy_name</span><span class="o">=</span><span class="s2">&quot;default&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_audit</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_log_audit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">PolicyResult</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log action and decision to audit trail&quot;&quot;&quot;</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">AuditEntry</span><span class="p">(</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
+            <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span>
+            <span class="n">decision</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">decision</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span>
+            <span class="n">policy_matched</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">policy_name</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audit_log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AUDIT: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">decision</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_audit_log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get audit log as serializable dictionaries&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;action_args&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">kwargs</span><span class="p">),</span>
+                <span class="s2">&quot;decision&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">decision</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span>
+                <span class="s2">&quot;policy_matched&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">policy_matched</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">audit_log</span>
+        <span class="p">]</span>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PolicyEngine&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a PolicyEngine from YAML configuration&quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">yaml_content</span><span class="p">)</span>
+        <span class="n">engine</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+        
+        <span class="n">policies</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policies&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;filesystem&quot;</span> <span class="ow">in</span> <span class="n">policies</span><span class="p">:</span>
+            <span class="n">fs</span> <span class="o">=</span> <span class="n">policies</span><span class="p">[</span><span class="s2">&quot;filesystem&quot;</span><span class="p">]</span>
+            <span class="n">engine</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">FilesystemPolicy</span><span class="p">(</span>
+                <span class="n">allowed_paths</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;allowed_paths&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                <span class="n">denied_paths</span><span class="o">=</span><span class="n">fs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;denied_paths&quot;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="p">))</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;network&quot;</span> <span class="ow">in</span> <span class="n">policies</span><span class="p">:</span>
+            <span class="n">net</span> <span class="o">=</span> <span class="n">policies</span><span class="p">[</span><span class="s2">&quot;network&quot;</span><span class="p">]</span>
+            <span class="n">engine</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">NetworkPolicy</span><span class="p">(</span>
+                <span class="n">allowed_domains</span><span class="o">=</span><span class="n">net</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;allowed_domains&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                <span class="n">block_all_others</span><span class="o">=</span><span class="n">net</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block_all_others&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="p">))</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;execution&quot;</span> <span class="ow">in</span> <span class="n">policies</span><span class="p">:</span>
+            <span class="n">exe</span> <span class="o">=</span> <span class="n">policies</span><span class="p">[</span><span class="s2">&quot;execution&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;max_actions_per_minute&quot;</span> <span class="ow">in</span> <span class="n">exe</span><span class="p">:</span>
+                <span class="n">engine</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">RateLimitPolicy</span><span class="p">(</span><span class="n">exe</span><span class="p">[</span><span class="s2">&quot;max_actions_per_minute&quot;</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="s2">&quot;require_approval_for&quot;</span> <span class="ow">in</span> <span class="n">exe</span><span class="p">:</span>
+                <span class="n">engine</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">ApprovalRequiredPolicy</span><span class="p">(</span><span class="n">exe</span><span class="p">[</span><span class="s2">&quot;require_approval_for&quot;</span><span class="p">]))</span>
+        
+        <span class="k">return</span> <span class="n">engine</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># GOVERNANCE WRAPPER</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PolicyViolation</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an action violates a policy&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_human_approval</span><span class="p">(</span><span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get human approval for an action (interactive prompt)&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">⏸️  APPROVAL REQUIRED&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Action: </span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Args: </span><span class="si">{</span><span class="n">action</span><span class="o">.</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;   Approve? [y/N]: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">response</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">governed_tool</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">:</span> <span class="n">PolicyEngine</span><span class="p">,</span> <span class="n">require_interactive_approval</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator that wraps a tool function with governance checks.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        policy_engine: The PolicyEngine to use for evaluation</span>
+<span class="sd">        require_interactive_approval: If True, prompt for approval when needed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="c1"># Create action representation</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span>
+                <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># Evaluate against policies</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">policy_engine</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">decision</span> <span class="o">==</span> <span class="n">Decision</span><span class="o">.</span><span class="n">DENY</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PolicyViolation</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ DENIED: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">decision</span> <span class="o">==</span> <span class="n">Decision</span><span class="o">.</span><span class="n">REQUIRE_APPROVAL</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">require_interactive_approval</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">get_human_approval</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="n">PolicyViolation</span><span class="p">(</span><span class="s2">&quot;❌ DENIED: Human rejected the action&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">PolicyViolation</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⏸️ PENDING: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Action is allowed - execute</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ ALLOWED: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">wrapper</span>
+    <span class="k">return</span> <span class="n">decorator</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># EXAMPLE TOOLS (to be governed)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_governed_tools</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">:</span> <span class="n">PolicyEngine</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a set of governed tools for the agent&quot;&quot;&quot;</span>
+    
+    <span class="nd">@governed_tool</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read contents of a file&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    
+    <span class="nd">@governed_tool</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write content to a file&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Successfully wrote </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="nd">@governed_tool</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete a file&quot;&quot;&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Successfully deleted </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="nd">@governed_tool</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">web_request</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a web request (simulated)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Simulated response from </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="nd">@governed_tool</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_shell</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute a shell command (simulated for safety)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Simulated execution of: </span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;read_file&quot;</span><span class="p">:</span> <span class="n">read_file</span><span class="p">,</span>
+        <span class="s2">&quot;write_file&quot;</span><span class="p">:</span> <span class="n">write_file</span><span class="p">,</span>
+        <span class="s2">&quot;delete_file&quot;</span><span class="p">:</span> <span class="n">delete_file</span><span class="p">,</span>
+        <span class="s2">&quot;web_request&quot;</span><span class="p">:</span> <span class="n">web_request</span><span class="p">,</span>
+        <span class="s2">&quot;execute_shell&quot;</span><span class="p">:</span> <span class="n">execute_shell</span>
+    <span class="p">}</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># DEMO: SIMPLE AGENT WITH GOVERNANCE</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GovernedAgent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A simple agent with governance layer&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy_engine</span><span class="p">:</span> <span class="n">PolicyEngine</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy_engine</span> <span class="o">=</span> <span class="n">policy_engine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tools</span> <span class="o">=</span> <span class="n">create_governed_tools</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_request</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process a user request with governance&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Create system prompt with available tools</span>
+        <span class="n">system_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a helpful assistant with access to the following tools:</span>
+<span class="s2">- read_file(path): Read a file</span>
+<span class="s2">- write_file(path, content): Write to a file  </span>
+<span class="s2">- delete_file(path): Delete a file</span>
+<span class="s2">- web_request(url): Make a web request</span>
+<span class="s2">- execute_shell(command): Execute a shell command</span>
+
+<span class="s2">Analyze the user&#39;s request and respond with the tool call you would make.</span>
+<span class="s2">Format: TOOL: tool_name(arg1=&quot;value1&quot;, arg2=&quot;value2&quot;)</span>
+
+<span class="s2">If no tool is needed, just respond normally.&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Get LLM response</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">system_prompt</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">user_request</span><span class="p">}</span>
+            <span class="p">],</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="mi">500</span>
+        <span class="p">)</span>
+        
+        <span class="n">llm_response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🤖 Agent response: </span><span class="si">{</span><span class="n">llm_response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Parse and execute tool call if present</span>
+        <span class="k">if</span> <span class="s2">&quot;TOOL:&quot;</span> <span class="ow">in</span> <span class="n">llm_response</span><span class="p">:</span>
+            <span class="n">tool_line</span> <span class="o">=</span> <span class="n">llm_response</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;TOOL:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_tool_call</span><span class="p">(</span><span class="n">tool_line</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">llm_response</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_execute_tool_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_call</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse and execute a tool call string&quot;&quot;&quot;</span>
+        <span class="c1"># Simple parser for tool_name(kwargs)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\w+)\((.*)\)&quot;</span><span class="p">,</span> <span class="n">tool_call</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Could not parse tool call: </span><span class="si">{</span><span class="n">tool_call</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+        <span class="n">tool_name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">args_str</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Parse kwargs</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;=&quot;</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">:</span>
+                <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">tool_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Unknown tool: </span><span class="si">{</span><span class="n">tool_name</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">[</span><span class="n">tool_name</span><span class="p">](</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Tool result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">except</span> <span class="n">PolicyViolation</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Tool error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># MAIN DEMO</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🛡️ AI Agent Governance Demo&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="c1"># Define policy configuration</span>
+    <span class="n">policy_yaml</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">policies:</span>
+<span class="s2">  filesystem:</span>
+<span class="s2">    allowed_paths: </span>
+<span class="s2">      - /workspace</span>
+<span class="s2">      - /tmp</span>
+<span class="s2">    denied_paths:</span>
+<span class="s2">      - /etc</span>
+<span class="s2">      - /home</span>
+<span class="s2">      - ~/.ssh</span>
+<span class="s2">      </span>
+<span class="s2">  network:</span>
+<span class="s2">    allowed_domains:</span>
+<span class="s2">      - api.openai.com</span>
+<span class="s2">      - api.github.com</span>
+<span class="s2">    block_all_others: true</span>
+<span class="s2">    </span>
+<span class="s2">  execution:</span>
+<span class="s2">    max_actions_per_minute: 60</span>
+<span class="s2">    require_approval_for:</span>
+<span class="s2">      - delete_file</span>
+<span class="s2">      - execute_shell</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📋 Loading policy configuration...&quot;</span><span class="p">)</span>
+    <span class="n">policy_engine</span> <span class="o">=</span> <span class="n">PolicyEngine</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="n">policy_yaml</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Policy engine initialized with rules:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">policy_engine</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   - </span><span class="si">{</span><span class="n">rule</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create governed tools</span>
+    <span class="n">tools</span> <span class="o">=</span> <span class="n">create_governed_tools</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">)</span>
+    
+    <span class="c1"># Demo: Test various actions</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📝 Testing Governance Layer&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="n">test_cases</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;read_file&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/passwd&quot;</span><span class="p">}),</span>
+        <span class="p">(</span><span class="s2">&quot;write_file&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/workspace/report.md&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;# Analysis Report</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">}),</span>
+        <span class="p">(</span><span class="s2">&quot;web_request&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://api.github.com/users&quot;</span><span class="p">}),</span>
+        <span class="p">(</span><span class="s2">&quot;web_request&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://unknown-site.com/api&quot;</span><span class="p">}),</span>
+        <span class="p">(</span><span class="s2">&quot;read_file&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/workspace/data.txt&quot;</span><span class="p">}),</span>
+    <span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">tool_name</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🤖 Testing: </span><span class="si">{</span><span class="n">tool_name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># We need to create a temp file for the read test</span>
+            <span class="k">if</span> <span class="n">tool_name</span> <span class="o">==</span> <span class="s2">&quot;read_file&quot;</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/workspace/data.txt&quot;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;/workspace&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/workspace/data.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Test data&quot;</span><span class="p">)</span>
+            
+            <span class="n">result</span> <span class="o">=</span> <span class="n">tools</span><span class="p">[</span><span class="n">tool_name</span><span class="p">](</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">PolicyViolation</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Print audit log</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📊 Audit Log&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">policy_engine</span><span class="o">.</span><span class="n">get_audit_log</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;decision&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">][:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Demo with LLM agent (optional - requires API key)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🤖 LLM Agent Demo (with governance)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+        
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">GovernedAgent</span><span class="p">(</span><span class="n">policy_engine</span><span class="p">)</span>
+        
+        <span class="n">demo_requests</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;Read the contents of /etc/passwd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Write a summary to /workspace/summary.md&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;Make a request to api.github.com to get user info&quot;</span>
+        <span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">demo_requests</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">👤 User: </span><span class="si">{</span><span class="n">request</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📤 Result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">💡 Set OPENAI_API_KEY to run the full LLM agent demo&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ Demo complete!&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-single-agent-apps/ai-agent-governance/ai_agent_governance.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">26 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>openai&gt;=1.0.0
+pyyaml&gt;=6.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-single-agent-apps/ai-agent-governance/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li><li><a href="../../../lecons/11-integrating-with-function-calling/index.html">11 · Intégrer des services externes avec l&#x27;appel de fonctions</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-single-agent-apps/ai-agent-governance">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/rag-tutorials/vision-rag/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Vision RAG (Cohere Embed-4)</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-single-agent-apps/ai-consultant-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Agent consultant (Google ADK)</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/single_agent_apps/ai_agent_governance" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/single_agent_apps/ai_agent_governance</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#how-it-works">How It Works</a></li><li class="toc__item toc__item--h2"><a href="#requirements">Requirements</a></li><li class="toc__item toc__item--h2"><a href="#installation">Installation</a></li><li class="toc__item toc__item--h2"><a href="#usage">Usage</a></li><li class="toc__item toc__item--h2"><a href="#example-policy-configuration">Example Policy Configuration</a></li><li class="toc__item toc__item--h2"><a href="#example-output">Example Output</a></li><li class="toc__item toc__item--h2"><a href="#technical-details">Technical Details</a></li><li class="toc__item toc__item--h3"><a href="#policy-engine">Policy Engine</a></li><li class="toc__item toc__item--h3"><a href="#action-interception">Action Interception</a></li><li class="toc__item toc__item--h3"><a href="#audit-logging">Audit Logging</a></li><li class="toc__item toc__item--h2"><a href="#key-concepts-learned">Key Concepts Learned</a></li><li class="toc__item toc__item--h2"><a href="#extending-the-tutorial">Extending the Tutorial</a></li><li class="toc__item toc__item--h2"><a href="#related-projects">Related Projects</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

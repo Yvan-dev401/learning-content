@@ -33,7 +33,10 @@ def main() -> int:
         print("docs/ absent — lancez `python3 tools/build.py`.", file=sys.stderr)
         return 1
 
-    pages = sorted(DOCS.rglob("*.html"))
+    # `docs/assets/` contient le code source copié des projets : des .html qui appartiennent
+    # à ces projets, pas au site. Les vérifier n'aurait aucun sens.
+    pages = sorted(p for p in DOCS.rglob("*.html")
+                   if "assets" not in p.relative_to(DOCS).parts)
     cache: dict[Path, str] = {p: p.read_text(encoding="utf-8") for p in pages}
     ids: dict[Path, set[str]] = {p: anchors(h) for p, h in cache.items()}
 
@@ -87,6 +90,57 @@ def main() -> int:
         if not (DOCS / "parcours" / track["id"] / "index.html").exists():
             problems.append(f"parcours absent du site : {track['id']}")
 
+    # Ateliers : chaque projet et chaque catégorie doit avoir sa page, et son code publié.
+    apps = json.loads((CONTENT / "_apps.json").read_text(encoding="utf-8")) \
+        if (CONTENT / "_apps.json").is_file() else {"categories": {}, "projects": {}}
+    apps_meta = json.loads((CONTENT / "_apps_meta.json").read_text(encoding="utf-8")) \
+        if (CONTENT / "_apps_meta.json").is_file() else {"categories": {}, "projects": {}}
+    for cat in apps["categories"]:
+        if not (DOCS / "ateliers" / cat / "index.html").exists():
+            problems.append(f"catégorie d'ateliers absente du site : {cat}")
+        if cat not in apps_meta["categories"]:
+            problems.append(f"catégorie sans habillage français : {cat}")
+    for pid, proj in apps["projects"].items():
+        if not (DOCS / "ateliers" / pid / "index.html").exists():
+            problems.append(f"atelier absent du site : {pid}")
+        for rel in proj["code"]:
+            if not (DOCS / "assets" / "code" / "ateliers" / pid / rel).exists():
+                problems.append(f"code d'atelier non publié : {pid}/{rel}")
+
+    # Cohérence des tags : tout tag posé à la main doit exister au vocabulaire.
+    vocab = set(meta.get("tags", {}).get("values", {}))
+    groups = set(meta.get("tags", {}).get("groups", {}))
+    for t, v in meta.get("tags", {}).get("values", {}).items():
+        if v["group"] not in groups:
+            problems.append(f"tag « {t} » rattaché à un groupe inconnu : {v['group']}")
+    declared = [(f"leçon {k}", t) for k, v in meta["lessons"].items() for t in v.get("tags", [])]
+    declared += [(f"catégorie {k}", t) for k, v in apps_meta["categories"].items()
+                 for t in v.get("defaults", {}).values()]
+    declared += [(f"atelier {k}", t) for k, v in apps_meta["projects"].items()
+                 for t in v.get("tags", [])]
+    for where, t in declared:
+        if t not in vocab:
+            problems.append(f"tag inconnu dans {where} : {t}")
+
+    # Services : chaque motif doit compiler, et chaque alternative avoir un lien.
+    services = json.loads((CONTENT / "_services.json").read_text(encoding="utf-8")) \
+        if (CONTENT / "_services.json").is_file() else {"categories": {}, "services": {}}
+    for sid, sv in services["services"].items():
+        if sv["category"] not in services["categories"]:
+            problems.append(f"service « {sid} » dans une catégorie inconnue : {sv['category']}")
+        if sv["cost"] not in services.get("cost_labels", {}):
+            problems.append(f"service « {sid} » avec un coût inconnu : {sv['cost']}")
+        for pat in sv["detect"]:
+            try:
+                re.compile(pat)
+            except re.error as exc:
+                problems.append(f"motif invalide pour « {sid} » : {pat} ({exc})")
+        if sv["cost"] != "gratuit" and not sv["free"]:
+            problems.append(f"service payant sans alternative : {sid}")
+        for f in sv["free"]:
+            if not f.get("url", "").startswith("http"):
+                problems.append(f"alternative sans lien valide dans « {sid} » : {f.get('name')}")
+
     # Images orphelines : présentes dans assets/images mais jamais référencées.
     referenced = set()
     for html in cache.values():
@@ -100,6 +154,8 @@ def main() -> int:
     print(f"Pages HTML analysées : {len(pages)}")
     print(f"Liens internes vérifiés : {checked}")
     print(f"Leçons publiées : {len(lessons)} · parcours : {len(meta['tracks'])}")
+    print(f"Ateliers publiés : {len(apps['projects'])} · catégories : {len(apps['categories'])}")
+    print(f"Services décrits : {len(services['services'])} · tags au vocabulaire : {len(vocab)}")
     if orphans:
         print(f"Images non référencées ({len(orphans)}) : {', '.join(orphans[:8])}"
               + (" …" if len(orphans) > 8 else ""))

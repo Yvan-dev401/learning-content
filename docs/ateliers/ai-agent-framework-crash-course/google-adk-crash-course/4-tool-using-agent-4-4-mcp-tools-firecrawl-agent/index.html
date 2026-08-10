@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔥 Firecrawl Agent - Advanced Web Scraping with MCP — Cours intensif Google ADK</title>
+<meta name="description" content="🔥 Firecrawl Agent - Advanced Web Scraping with MCP — page de l&#x27;atelier Cours intensif Google ADK.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<link rel="stylesheet" href="../../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/index.html">Cours intensifs sur les frameworks</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/google-adk-crash-course/index.html">Cours intensif Google ADK</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page de l'atelier Cours intensif Google ADK</p>
+</header>
+<article class="prose">
+<h1 id="firecrawl-agent-advanced-web-scraping-with-mcp">🔥 Firecrawl Agent - Advanced Web Scraping with MCP<a class="anchor" href="#firecrawl-agent-advanced-web-scraping-with-mcp" aria-label="Lien vers cette section">#</a></h1>
+<p>Welcome to the <strong>Firecrawl MCP Agent</strong>! This powerful agent demonstrates how to integrate Firecrawl's advanced web scraping capabilities with Google ADK through the Model Context Protocol (MCP).</p>
+<h2 id="what-youll-learn">🌟 What You'll Learn<a class="anchor" href="#what-youll-learn" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Firecrawl Integration</strong>: Connect to Firecrawl's comprehensive web scraping platform</li>
+<li><strong>Advanced Web Scraping</strong>: Single page, batch processing, and full website crawling</li>
+<li><strong>AI-Powered Extraction</strong>: Use LLMs to extract structured data from web content</li>
+<li><strong>Research Capabilities</strong>: Conduct deep web research with multi-source analysis</li>
+<li><strong>Real-world Applications</strong>: Practical examples for data extraction and research</li>
+</ul>
+<h2 id="key-features">🚀 Key Features<a class="anchor" href="#key-features" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="comprehensive-toolset">🔧 Comprehensive Toolset<a class="anchor" href="#comprehensive-toolset" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Single Page Scraping</strong>: Extract content from individual URLs with advanced options</li>
+<li><strong>Batch Processing</strong>: Efficiently scrape multiple URLs with parallel processing</li>
+<li><strong>Website Mapping</strong>: Discover all URLs on a website for exploration</li>
+<li><strong>Web Search</strong>: Search the web and extract content from results</li>
+<li><strong>Full Site Crawling</strong>: Perform comprehensive website analysis with depth control</li>
+<li><strong>Structured Extraction</strong>: Use AI to extract specific data points from pages</li>
+<li><strong>Deep Research</strong>: Conduct in-depth research with multi-source analysis</li>
+<li><strong>LLMs.txt Generation</strong>: Create standardized AI interaction guidelines for domains</li>
+</ul>
+<h3 id="advanced-capabilities">🌍 Advanced Capabilities<a class="anchor" href="#advanced-capabilities" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Automatic Rate Limiting</strong>: Built-in retry logic and backoff strategies</li>
+<li><strong>Multiple Output Formats</strong>: Support for Markdown, HTML, and JSON</li>
+<li><strong>Content Filtering</strong>: Advanced options for content selection and exclusion</li>
+<li><strong>Mobile/Desktop Rendering</strong>: Choose between different rendering modes</li>
+<li><strong>Authentication Support</strong>: Handle sites requiring login credentials</li>
+<li><strong>JavaScript Rendering</strong>: Full support for dynamic content</li>
+</ul>
+<h2 id="prerequisites">📋 Prerequisites<a class="anchor" href="#prerequisites" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="required-dependencies">Required Dependencies<a class="anchor" href="#required-dependencies" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>
+<p><strong>Node.js</strong>: Required for the Firecrawl MCP server</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Install Node.js if not already installed</span>
+<span class="c1"># Visit https://nodejs.org/ for installation instructions</span>
+</pre></div>
+</div></li>
+<li>
+<p><strong>Firecrawl API Key</strong>: Get your API key from <a href="https://firecrawl.dev" target="_blank" rel="noopener noreferrer">Firecrawl.dev</a></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Set your API key as an environment variable</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FIRECRAWL_API_KEY</span><span class="o">=</span>your_api_key_here
+</pre></div>
+</div></li>
+<li>
+<p><strong>Google ADK Dependencies</strong>: Ensure you have the required packages</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>../requirements.txt
+</pre></div>
+</div></li>
+</ol>
+<h2 id="setup-instructions">🛠️ Setup Instructions<a class="anchor" href="#setup-instructions" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="1-environment-configuration">1. Environment Configuration<a class="anchor" href="#1-environment-configuration" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Set your Firecrawl API key</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FIRECRAWL_API_KEY</span><span class="o">=</span>fc-your_api_key_here
+
+<span class="c1"># Optional: Configure retry settings</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FIRECRAWL_RETRY_MAX_ATTEMPTS</span><span class="o">=</span><span class="m">5</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FIRECRAWL_RETRY_INITIAL_DELAY</span><span class="o">=</span><span class="m">2000</span>
+</pre></div>
+</div><h3 id="2-install-dependencies">2. Install Dependencies<a class="anchor" href="#2-install-dependencies" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># From the tutorials root directory</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div><h3 id="3-run-the-agent">3. Run the Agent<a class="anchor" href="#3-run-the-agent" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># From the tutorials root directory</span>
+adk<span class="w"> </span>web
+</pre></div>
+</div><p>Then select <code>firecrawl_mcp_agent</code> from the dropdown menu.</p>
+<h2 id="usage-examples">🎯 Usage Examples<a class="anchor" href="#usage-examples" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="basic-web-scraping">Basic Web Scraping<a class="anchor" href="#basic-web-scraping" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: &quot;Scrape the homepage of https://example.com&quot;
+Agent: Uses firecrawl_scrape to extract clean content in Markdown format
+</pre></div>
+</div><h3 id="batch-url-processing">Batch URL Processing<a class="anchor" href="#batch-url-processing" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: &quot;Extract content from these three articles: [url1, url2, url3]&quot;
+Agent: Uses firecrawl_batch_scrape for efficient parallel processing
+</pre></div>
+</div><h3 id="website-discovery">Website Discovery<a class="anchor" href="#website-discovery" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: &quot;Find all blog post URLs on https://blog.example.com&quot;
+Agent: Uses firecrawl_map to discover and list all available URLs
+</pre></div>
+</div><h3 id="web-search-extraction">Web Search &amp; Extraction<a class="anchor" href="#web-search-extraction" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: &quot;Search for research papers on AI Agents in the last 4 weeks and extract key information&quot;
+Agent: Uses firecrawl_search to find relevant papers and extract summaries
+</pre></div>
+</div><h3 id="structured-data-extraction">Structured Data Extraction<a class="anchor" href="#structured-data-extraction" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: &quot;Extract product details (name, price, description) from this e-commerce page&quot;
+Agent: Uses firecrawl_extract with custom schema for structured data
+</pre></div>
+</div><h3 id="deep-research">Deep Research<a class="anchor" href="#deep-research" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: &quot;Perform comprehensive research on sustainable energy technologies&quot;
+Agent: Uses firecrawl_deep_research for multi-source analysis and synthesis
+</pre></div>
+</div><h3 id="website-crawling">Website Crawling<a class="anchor" href="#website-crawling" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>User: &quot;Crawl the documentation section of https://docs.example.com&quot;
+Agent: Uses firecrawl_crawl with appropriate depth and filtering
+</pre></div>
+</div><h2 id="available-tools">🔧 Available Tools<a class="anchor" href="#available-tools" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="core-scraping-tools">Core Scraping Tools<a class="anchor" href="#core-scraping-tools" aria-label="Lien vers cette section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>firecrawl_scrape</code></td>
+<td>Single page extraction</td>
+<td>Known URLs, specific pages</td>
+</tr>
+<tr>
+<td><code>firecrawl_batch_scrape</code></td>
+<td>Multiple URL processing</td>
+<td>Lists of URLs, parallel extraction</td>
+</tr>
+<tr>
+<td><code>firecrawl_map</code></td>
+<td>URL discovery</td>
+<td>Exploring site structure</td>
+</tr>
+</tbody>
+</table>
+<h3 id="advanced-tools">Advanced Tools<a class="anchor" href="#advanced-tools" aria-label="Lien vers cette section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>firecrawl_search</code></td>
+<td>Web search + extraction</td>
+<td>Finding relevant content</td>
+</tr>
+<tr>
+<td><code>firecrawl_crawl</code></td>
+<td>Full site crawling</td>
+<td>Comprehensive site analysis</td>
+</tr>
+<tr>
+<td><code>firecrawl_extract</code></td>
+<td>Structured data extraction</td>
+<td>Specific data points</td>
+</tr>
+<tr>
+<td><code>firecrawl_deep_research</code></td>
+<td>Multi-source research</td>
+<td>Complex research tasks</td>
+</tr>
+</tbody>
+</table>
+<h3 id="utility-tools">Utility Tools<a class="anchor" href="#utility-tools" aria-label="Lien vers cette section">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>firecrawl_generate_llmstxt</code></td>
+<td>LLMs.txt generation</td>
+<td>AI interaction guidelines</td>
+</tr>
+<tr>
+<td><code>firecrawl_check_crawl_status</code></td>
+<td>Monitor crawl progress</td>
+<td>Long-running operations</td>
+</tr>
+<tr>
+<td><code>firecrawl_check_batch_status</code></td>
+<td>Monitor batch progress</td>
+<td>Batch operation tracking</td>
+</tr>
+</tbody>
+</table>
+<h2 id="best-practices">💡 Best Practices<a class="anchor" href="#best-practices" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="tool-selection-guide">Tool Selection Guide<a class="anchor" href="#tool-selection-guide" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Single URL</strong>: Use <code>firecrawl_scrape</code></li>
+<li><strong>Multiple known URLs</strong>: Use <code>firecrawl_batch_scrape</code></li>
+<li><strong>Discover URLs</strong>: Use <code>firecrawl_map</code> first</li>
+<li><strong>Search the web</strong>: Use <code>firecrawl_search</code></li>
+<li><strong>Structured data</strong>: Use <code>firecrawl_extract</code></li>
+<li><strong>Deep research</strong>: Use <code>firecrawl_deep_research</code></li>
+<li><strong>Full site analysis</strong>: Use <code>firecrawl_crawl</code> (with limits)</li>
+</ul>
+<h3 id="performance-optimization">Performance Optimization<a class="anchor" href="#performance-optimization" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Use batch operations for multiple URLs instead of individual scrapes</li>
+<li>Set appropriate limits for crawl operations to avoid timeouts</li>
+<li>Monitor long-running operations with status check tools</li>
+<li>Respect rate limits and be considerate of target websites</li>
+</ul>
+<h3 id="content-quality">Content Quality<a class="anchor" href="#content-quality" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Use <code>onlyMainContent: true</code> to extract clean content</li>
+<li>Leverage content filtering options for better results</li>
+<li>Choose appropriate output formats (Markdown for text, JSON for data)</li>
+<li>Use structured extraction for specific data requirements</li>
+</ul>
+<h2 id="configuration-options">⚙️ Configuration Options<a class="anchor" href="#configuration-options" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="scraping-parameters">Scraping Parameters<a class="anchor" href="#scraping-parameters" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Example configuration for scrape operations</span>
+<span class="p">{</span>
+    <span class="s2">&quot;formats&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;markdown&quot;</span><span class="p">],</span>           <span class="c1"># Output format</span>
+    <span class="s2">&quot;onlyMainContent&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>          <span class="c1"># Extract main content only</span>
+    <span class="s2">&quot;waitFor&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>                  <span class="c1"># Wait time for page load</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mi">30000</span><span class="p">,</span>                 <span class="c1"># Request timeout</span>
+    <span class="s2">&quot;mobile&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>                  <span class="c1"># Use mobile rendering</span>
+    <span class="s2">&quot;includeTags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;article&quot;</span><span class="p">,</span> <span class="s2">&quot;main&quot;</span><span class="p">],</span> <span class="c1"># Include specific HTML tags</span>
+    <span class="s2">&quot;excludeTags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;nav&quot;</span><span class="p">,</span> <span class="s2">&quot;footer&quot;</span><span class="p">]</span>    <span class="c1"># Exclude specific HTML tags</span>
+<span class="p">}</span>
+</pre></div>
+</div><h3 id="batch-processing">Batch Processing<a class="anchor" href="#batch-processing" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Example batch configuration</span>
+<span class="p">{</span>
+    <span class="s2">&quot;maxUrls&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>                    <span class="c1"># Maximum URLs to process</span>
+    <span class="s2">&quot;parallelLimit&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>               <span class="c1"># Parallel processing limit</span>
+    <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;formats&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;markdown&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;onlyMainContent&quot;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div><h3 id="crawling-parameters">Crawling Parameters<a class="anchor" href="#crawling-parameters" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Example crawl configuration</span>
+<span class="p">{</span>
+    <span class="s2">&quot;maxDepth&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>                    <span class="c1"># Crawl depth limit</span>
+    <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>                     <span class="c1"># Maximum pages to crawl</span>
+    <span class="s2">&quot;allowExternalLinks&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>      <span class="c1"># Stay within domain</span>
+    <span class="s2">&quot;deduplicateSimilarURLs&quot;</span><span class="p">:</span> <span class="kc">True</span>    <span class="c1"># Remove duplicate content</span>
+<span class="p">}</span>
+</pre></div>
+</div><h2 id="important-notes">🚨 Important Notes<a class="anchor" href="#important-notes" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="rate-limiting">Rate Limiting<a class="anchor" href="#rate-limiting" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Firecrawl includes automatic rate limiting and retry logic</li>
+<li>Batch operations are queued and may take time to complete</li>
+<li>Monitor operation status for long-running tasks</li>
+</ul>
+<h3 id="resource-management">Resource Management<a class="anchor" href="#resource-management" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Crawl operations can be resource-intensive</li>
+<li>Set appropriate limits to avoid timeouts or excessive token usage</li>
+<li>Use batch status checks for large operations</li>
+</ul>
+<h3 id="api-usage">API Usage<a class="anchor" href="#api-usage" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Requires a valid Firecrawl API key for cloud operations</li>
+<li>Consider self-hosted deployment for high-volume usage</li>
+<li>Monitor credit usage through the Firecrawl dashboard</li>
+</ul>
+<h2 id="troubleshooting">🔍 Troubleshooting<a class="anchor" href="#troubleshooting" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="common-issues">Common Issues<a class="anchor" href="#common-issues" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>Connection Errors</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Check Node.js installation</span>
+node<span class="w"> </span>--version
+
+<span class="c1"># Test Firecrawl MCP server</span>
+npx<span class="w"> </span>-y<span class="w"> </span>firecrawl-mcp
+</pre></div>
+</div><p><strong>API Key Issues</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Verify API key is set</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$FIRECRAWL_API_KEY</span>
+
+<span class="c1"># Test API key validity</span>
+curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$FIRECRAWL_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span>https://api.firecrawl.dev/v1/scrape
+</pre></div>
+</div><p><strong>Tool Not Found</strong></p>
+<ul>
+<li>Ensure ADK MCP server is properly configured</li>
+<li>Check that Node.js is installed and accessible</li>
+<li>Verify the Firecrawl MCP package can be installed</li>
+</ul>
+<h3 id="debug-commands">Debug Commands<a class="anchor" href="#debug-commands" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Test MCP server connection</span>
+npx<span class="w"> </span>@modelcontextprotocol/inspector
+
+<span class="c1"># Run agent with debug output</span>
+adk<span class="w"> </span>web<span class="w"> </span>--debug
+</pre></div>
+</div><h2 id="additional-resources">📚 Additional Resources<a class="anchor" href="#additional-resources" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong><a href="https://docs.firecrawl.dev" target="_blank" rel="noopener noreferrer">Firecrawl Documentation</a></strong> - Complete API reference</li>
+<li><strong><a href="https://github.com/mendableai/firecrawl-mcp-server" target="_blank" rel="noopener noreferrer">Firecrawl MCP Server</a></strong> - Source code and examples</li>
+<li><strong><a href="https://modelcontextprotocol.io/docs/spec" target="_blank" rel="noopener noreferrer">MCP Specification</a></strong> - Protocol details</li>
+<li><strong><a href="https://google.github.io/adk-docs/tools/mcp-tools/" target="_blank" rel="noopener noreferrer">ADK MCP Documentation</a></strong> - Integration guide</li>
+</ul>
+<h2 id="real-world-applications">🎯 Real-World Applications<a class="anchor" href="#real-world-applications" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="data-collection-research">Data Collection &amp; Research<a class="anchor" href="#data-collection-research" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Market research and competitor analysis</li>
+<li>Academic research and paper collection</li>
+<li>News monitoring and trend analysis</li>
+<li>Product catalog extraction</li>
+<li>Social media content analysis</li>
+</ul>
+<h3 id="content-management">Content Management<a class="anchor" href="#content-management" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Website migration and content auditing</li>
+<li>SEO analysis and optimization</li>
+<li>Content quality assessment</li>
+<li>Documentation extraction</li>
+<li>Knowledge base creation</li>
+</ul>
+<h3 id="business-intelligence">Business Intelligence<a class="anchor" href="#business-intelligence" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Lead generation and contact extraction</li>
+<li>Price monitoring and comparison</li>
+<li>Review and sentiment analysis</li>
+<li>Industry trend tracking</li>
+<li>Regulatory compliance monitoring</li>
+</ul>
+
+</article>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/blob/main/ai_agent_framework_crash_course/google_adk_crash_course/4_tool_using_agent/4_4_mcp_tools/firecrawl_agent/README.md" target="_blank" rel="noopener noreferrer">
+    ai_agent_framework_crash_course/google_adk_crash_course/4_tool_using_agent/4_4_mcp_tools/firecrawl_agent/README.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#what-youll-learn">🌟 What You&#x27;ll Learn</a></li><li class="toc__item toc__item--h2"><a href="#key-features">🚀 Key Features</a></li><li class="toc__item toc__item--h3"><a href="#comprehensive-toolset">🔧 Comprehensive Toolset</a></li><li class="toc__item toc__item--h3"><a href="#advanced-capabilities">🌍 Advanced Capabilities</a></li><li class="toc__item toc__item--h2"><a href="#prerequisites">📋 Prerequisites</a></li><li class="toc__item toc__item--h3"><a href="#required-dependencies">Required Dependencies</a></li><li class="toc__item toc__item--h2"><a href="#setup-instructions">🛠️ Setup Instructions</a></li><li class="toc__item toc__item--h3"><a href="#1-environment-configuration">1. Environment Configuration</a></li><li class="toc__item toc__item--h3"><a href="#2-install-dependencies">2. Install Dependencies</a></li><li class="toc__item toc__item--h3"><a href="#3-run-the-agent">3. Run the Agent</a></li><li class="toc__item toc__item--h2"><a href="#usage-examples">🎯 Usage Examples</a></li><li class="toc__item toc__item--h3"><a href="#basic-web-scraping">Basic Web Scraping</a></li><li class="toc__item toc__item--h3"><a href="#batch-url-processing">Batch URL Processing</a></li><li class="toc__item toc__item--h3"><a href="#website-discovery">Website Discovery</a></li><li class="toc__item toc__item--h3"><a href="#web-search-extraction">Web Search &amp; Extraction</a></li><li class="toc__item toc__item--h3"><a href="#structured-data-extraction">Structured Data Extraction</a></li><li class="toc__item toc__item--h3"><a href="#deep-research">Deep Research</a></li><li class="toc__item toc__item--h3"><a href="#website-crawling">Website Crawling</a></li><li class="toc__item toc__item--h2"><a href="#available-tools">🔧 Available Tools</a></li><li class="toc__item toc__item--h3"><a href="#core-scraping-tools">Core Scraping Tools</a></li><li class="toc__item toc__item--h3"><a href="#advanced-tools">Advanced Tools</a></li><li class="toc__item toc__item--h3"><a href="#utility-tools">Utility Tools</a></li><li class="toc__item toc__item--h2"><a href="#best-practices">💡 Best Practices</a></li><li class="toc__item toc__item--h3"><a href="#tool-selection-guide">Tool Selection Guide</a></li><li class="toc__item toc__item--h3"><a href="#performance-optimization">Performance Optimization</a></li><li class="toc__item toc__item--h3"><a href="#content-quality">Content Quality</a></li><li class="toc__item toc__item--h2"><a href="#configuration-options">⚙️ Configuration Options</a></li><li class="toc__item toc__item--h3"><a href="#scraping-parameters">Scraping Parameters</a></li><li class="toc__item toc__item--h3"><a href="#batch-processing">Batch Processing</a></li><li class="toc__item toc__item--h3"><a href="#crawling-parameters">Crawling Parameters</a></li><li class="toc__item toc__item--h2"><a href="#important-notes">🚨 Important Notes</a></li><li class="toc__item toc__item--h3"><a href="#rate-limiting">Rate Limiting</a></li><li class="toc__item toc__item--h3"><a href="#resource-management">Resource Management</a></li><li class="toc__item toc__item--h3"><a href="#api-usage">API Usage</a></li><li class="toc__item toc__item--h2"><a href="#troubleshooting">🔍 Troubleshooting</a></li><li class="toc__item toc__item--h3"><a href="#common-issues">Common Issues</a></li><li class="toc__item toc__item--h3"><a href="#debug-commands">Debug Commands</a></li><li class="toc__item toc__item--h2"><a href="#additional-resources">📚 Additional Resources</a></li><li class="toc__item toc__item--h2"><a href="#real-world-applications">🎯 Real-World Applications</a></li><li class="toc__item toc__item--h3"><a href="#data-collection-research">Data Collection &amp; Research</a></li><li class="toc__item toc__item--h3"><a href="#content-management">Content Management</a></li><li class="toc__item toc__item--h3"><a href="#business-intelligence">Business Intelligence</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

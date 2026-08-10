@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>⚡ Realtime Voice Agent — Cours intensif OpenAI Agents SDK</title>
+<meta name="description" content="⚡ Realtime Voice Agent — page de l&#x27;atelier Cours intensif OpenAI Agents SDK.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../../assets/style.css">
+<link rel="stylesheet" href="../../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/index.html">Cours intensifs sur les frameworks</a> <span aria-hidden="true">›</span>
+  <a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/index.html">Cours intensif OpenAI Agents SDK</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page de l'atelier Cours intensif OpenAI Agents SDK</p>
+</header>
+<article class="prose">
+<h1 id="realtime-voice-agent">⚡ Realtime Voice Agent<a class="anchor" href="#realtime-voice-agent" aria-label="Lien vers cette section">#</a></h1>
+<p>A basic realtime voice agent example using OpenAI's Realtime API. This demonstrates the core components for ultra-low latency voice conversations with minimal setup.</p>
+<h2 id="what-this-demonstrates">🎯 What This Demonstrates<a class="anchor" href="#what-this-demonstrates" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Core Realtime Components</strong>: RealtimeAgent, RealtimeRunner, and RealtimeSession</li>
+<li><strong>Basic Voice Conversation</strong>: Ultra-low latency voice interaction</li>
+<li><strong>Function Tools</strong>: Simple tools callable during voice conversation</li>
+<li><strong>Agent Handoffs</strong>: Basic handoff to specialized agent</li>
+<li><strong>Event Handling</strong>: Essential event processing for realtime sessions</li>
+</ul>
+<h2 id="core-concept-realtime-voice-processing">🧠 Core Concept: Realtime Voice Processing<a class="anchor" href="#core-concept-realtime-voice-processing" aria-label="Lien vers cette section">#</a></h2>
+<p>Realtime agents provide <strong>ultra-low latency voice conversation</strong> using OpenAI's Realtime API. Unlike traditional voice pipelines, realtime agents maintain persistent WebSocket connections for immediate audio processing. Think of realtime agents as <strong>live conversation partners</strong> that:</p>
+<ul>
+<li>Process audio and respond instantly with minimal latency</li>
+<li>Handle interruptions gracefully during conversation</li>
+<li>Maintain persistent connections for natural dialogue flow</li>
+<li>Support real-time tool execution and agent handoffs</li>
+<li>Apply safety guardrails during live generation</li>
+</ul>
+<p>Based on the <a href="https://openai.github.io/openai-agents-python/realtime/quickstart/" target="_blank" rel="noopener noreferrer">official documentation</a>, realtime agents enable natural voice conversations with the lowest possible latency.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│                   REALTIME VOICE WORKFLOW                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  🎤 LIVE AUDIO INPUT                                        |
+│       │                                                     │
+│       ▼                                                     │
+│  ┌─────────────┐    1. WEBSOCKET CONNECTION                 │
+│  │ PERSISTENT  │    ◦ Continuous audio streaming            │
+│  │ CONNECTION  │    ◦ Ultra-low latency pipeline            │
+│  └─────────────┘    ◦ Real-time processing                  │
+│       │                                                     │
+│       ▼                                                     │
+│  ┌─────────────┐    2. INSTANT PROCESSING                   │
+│  │ REALTIME    │    ◦ Immediate speech recognition          │
+│  │ AGENTS      │    ◦ Live agent reasoning                  │
+│  └─────────────┘    ◦ Real-time tool execution              │
+│       │                                                     │
+│       ▼                                                     │
+│  ┌─────────────┐    3. IMMEDIATE RESPONSE                   │
+│  │   LIVE      │    ◦ Real-time audio generation            │
+│  │ RESPONSE    │    ◦ Streaming audio output                │
+│  └─────────────┘    ◦ Interruption handling                 │
+│       │                                                     │
+│       ▼                                                     │
+│  🔊 INSTANT AUDIO OUTPUT                                    |
+│                                                             │
+│  ↺ CONTINUOUS CONVERSATION LOOP                             │
+└─────────────────────────────────────────────────────────────┘
+</pre></div>
+</div><h2 id="quick-start">🚀 Quick Start<a class="anchor" href="#quick-start" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p><strong>Install OpenAI Agents SDK</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>openai-agents
+</pre></div>
+</div></li>
+<li>
+<p><strong>Set up environment</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>cp<span class="w"> </span>env.example<span class="w"> </span>.env
+<span class="c1"># Edit .env and add your OpenAI API key</span>
+</pre></div>
+</div></li>
+<li>
+<p><strong>Run the basic realtime agent</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python<span class="w"> </span>agent.py
+</pre></div>
+</div></li>
+<li>
+<p><strong>Start talking</strong>: The agent will respond in real-time. Try:</p>
+<ul>
+<li>&quot;What's the weather in Paris?&quot;</li>
+<li>&quot;Book appointment tomorrow at 2pm&quot;</li>
+</ul>
+</li>
+</ol>
+<h2 id="what-this-example-includes">🧪 What This Example Includes<a class="anchor" href="#what-this-example-includes" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="core-realtime-components"><strong>Core Realtime Components</strong><a class="anchor" href="#core-realtime-components" aria-label="Lien vers cette section">#</a></h3>
+<p>Based on the <a href="https://openai.github.io/openai-agents-python/realtime/guide/" target="_blank" rel="noopener noreferrer">official guide</a>:</p>
+<ul>
+<li><strong>RealtimeAgent</strong>: Agent with instructions, tools, and handoffs</li>
+<li><strong>RealtimeRunner</strong>: Manages configuration and returns sessions</li>
+<li><strong>RealtimeSession</strong>: Single conversation session with event streaming</li>
+</ul>
+<h3 id="basic-function-tools"><strong>Basic Function Tools</strong><a class="anchor" href="#basic-function-tools" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><code>get_weather(city)</code>: Simple weather information</li>
+<li><code>book_appointment(date, time, service)</code>: Basic appointment booking</li>
+</ul>
+<h3 id="simple-agent-handoff"><strong>Simple Agent Handoff</strong><a class="anchor" href="#simple-agent-handoff" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Main Assistant</strong>: General conversation agent</li>
+<li><strong>Billing Agent</strong>: Specialized billing support (demonstrates handoff pattern)</li>
+</ul>
+<h3 id="essential-event-handling"><strong>Essential Event Handling</strong><a class="anchor" href="#essential-event-handling" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Audio Transcripts</strong>: User and assistant speech transcription</li>
+<li><strong>Tool Calls</strong>: Function execution notifications</li>
+<li><strong>Error Events</strong>: Basic error handling</li>
+</ul>
+<h2 id="example-voice-interactions">🎯 Example Voice Interactions<a class="anchor" href="#example-voice-interactions" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="basic-conversation"><strong>Basic Conversation</strong><a class="anchor" href="#basic-conversation" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>&quot;What's the weather in Paris?&quot; → Tool call with instant response</li>
+<li>&quot;Book appointment tomorrow at 2pm&quot; → Appointment booking tool</li>
+</ul>
+<h3 id="agent-handoff"><strong>Agent Handoff</strong><a class="anchor" href="#agent-handoff" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>&quot;I need help with billing&quot; → Handoff to billing support agent</li>
+</ul>
+<h2 id="key-implementation-patterns">🔧 Key Implementation Patterns<a class="anchor" href="#key-implementation-patterns" aria-label="Lien vers cette section">#</a></h2>
+<p>Based on the <a href="https://openai.github.io/openai-agents-python/realtime/guide/" target="_blank" rel="noopener noreferrer">official guide</a>:</p>
+<h3 id="1-create-realtimeagent"><strong>1. Create RealtimeAgent</strong><a class="anchor" href="#1-create-realtimeagent" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">agents.realtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">RealtimeAgent</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">RealtimeAgent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Assistant&quot;</span><span class="p">,</span>
+    <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;You are a helpful voice assistant...&quot;</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_weather</span><span class="p">,</span> <span class="n">book_appointment</span><span class="p">],</span>
+    <span class="n">handoffs</span><span class="o">=</span><span class="p">[</span><span class="n">realtime_handoff</span><span class="p">(</span><span class="n">billing_agent</span><span class="p">)]</span>
+<span class="p">)</span>
+</pre></div>
+</div><h3 id="2-set-up-realtimerunner"><strong>2. Set up RealtimeRunner</strong><a class="anchor" href="#2-set-up-realtimerunner" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">agents.realtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">RealtimeRunner</span>
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">RealtimeRunner</span><span class="p">(</span>
+    <span class="n">starting_agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;model_settings&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o-realtime-preview&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;voice&quot;</span><span class="p">:</span> <span class="s2">&quot;alloy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;modalities&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;audio&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div><h3 id="3-start-session-and-handle-events"><strong>3. Start Session and Handle Events</strong><a class="anchor" href="#3-start-session-and-handle-events" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">session</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">session</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;response.audio_transcript.done&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Assistant: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">transcript</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div><h2 id="basic-realtime-concepts">💡 Basic Realtime Concepts<a class="anchor" href="#basic-realtime-concepts" aria-label="Lien vers cette section">#</a></h2>
+<p>From the <a href="https://openai.github.io/openai-agents-python/realtime/guide/" target="_blank" rel="noopener noreferrer">official guide</a>:</p>
+<ol>
+<li><strong>Session Flow</strong>: Create agents → Set up runner → Start session → Handle events</li>
+<li><strong>Event Handling</strong>: Listen for audio transcripts, tool calls, and errors</li>
+<li><strong>Voice Configuration</strong>: Choose from 6 voices (alloy, echo, fable, onyx, nova, shimmer)</li>
+<li><strong>Turn Detection</strong>: Server-side voice activity detection for natural conversation</li>
+</ol>
+<h2 id="realtime-vs-traditional-voice-comparison">📊 Realtime vs Traditional Voice Comparison<a class="anchor" href="#realtime-vs-traditional-voice-comparison" aria-label="Lien vers cette section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Traditional Voice</th>
+<th>Realtime Voice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Latency</strong></td>
+<td>2-5 seconds</td>
+<td>&lt;500ms</td>
+</tr>
+<tr>
+<td><strong>Connection</strong></td>
+<td>Request/Response</td>
+<td>Persistent WebSocket</td>
+</tr>
+<tr>
+<td><strong>Interruptions</strong></td>
+<td>Limited</td>
+<td>Natural handling</td>
+</tr>
+<tr>
+<td><strong>Audio Processing</strong></td>
+<td>Batched</td>
+<td>Streaming</td>
+</tr>
+<tr>
+<td><strong>Tool Execution</strong></td>
+<td>Turn-based</td>
+<td>Real-time</td>
+</tr>
+<tr>
+<td><strong>Conversation Flow</strong></td>
+<td>Structured</td>
+<td>Natural</td>
+</tr>
+<tr>
+<td><strong>API</strong></td>
+<td>REST endpoints</td>
+<td>WebSocket events</td>
+</tr>
+</tbody>
+</table>
+<h2 id="advanced-realtime-features">🌟 Advanced Realtime Features<a class="anchor" href="#advanced-realtime-features" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="voice-activity-detection-vad"><strong>Voice Activity Detection (VAD)</strong><a class="anchor" href="#voice-activity-detection-vad" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Server VAD</strong>: OpenAI's optimized speech detection</li>
+<li><strong>Configurable Thresholds</strong>: Adjust sensitivity for different environments</li>
+<li><strong>Silence Detection</strong>: Intelligent turn boundary detection</li>
+<li><strong>Prefix Padding</strong>: Capture speech start accurately</li>
+</ul>
+<h3 id="audio-configuration-options"><strong>Audio Configuration Options</strong><a class="anchor" href="#audio-configuration-options" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Voice Selection</strong>: Choose from 6 different voices (alloy, echo, fable, onyx, nova, shimmer)</li>
+<li><strong>Audio Formats</strong>: Support for PCM16, G.711 μ-law, and G.711 A-law</li>
+<li><strong>Transcription Models</strong>: Whisper integration for speech-to-text</li>
+<li><strong>Multi-Modal Support</strong>: Text and audio modalities</li>
+</ul>
+<h3 id="real-time-guardrails"><strong>Real-Time Guardrails</strong><a class="anchor" href="#real-time-guardrails" aria-label="Lien vers cette section">#</a></h3>
+<p>Based on the <a href="https://openai.github.io/openai-agents-python/realtime/guide/" target="_blank" rel="noopener noreferrer">guide documentation</a>, realtime guardrails are:</p>
+<ul>
+<li><strong>Debounced</strong>: Run periodically (not on every word) for performance</li>
+<li><strong>Configurable</strong>: Adjustable debounce length (default 100 characters)</li>
+<li><strong>Non-Blocking</strong>: Don't raise exceptions, generate events instead</li>
+<li><strong>Real-Time</strong>: Can interrupt responses immediately when triggered</li>
+</ul>
+<h3 id="session-event-types"><strong>Session Event Types</strong><a class="anchor" href="#session-event-types" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Audio Events</strong>: <code>response.audio.delta</code>, <code>response.audio.done</code></li>
+<li><strong>Transcription Events</strong>: <code>response.audio_transcript.done</code>, <code>input_audio_transcription.completed</code></li>
+<li><strong>Tool Events</strong>: <code>response.function_call_arguments.done</code></li>
+<li><strong>Lifecycle Events</strong>: <code>session.created</code>, <code>session.updated</code>, <code>response.done</code></li>
+<li><strong>Error Events</strong>: <code>error</code>, <code>guardrail_tripped</code></li>
+</ul>
+<h2 id="requirements-dependencies">🚨 Requirements &amp; Dependencies<a class="anchor" href="#requirements-dependencies" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="core-dependencies"><strong>Core Dependencies</strong><a class="anchor" href="#core-dependencies" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><code>openai-agents&gt;=1.0.0</code>: OpenAI Agents SDK with realtime support</li>
+<li><code>python-dotenv&gt;=1.0.0</code>: Environment variable management</li>
+<li>Python 3.9 or higher (required for realtime features)</li>
+</ul>
+<h3 id="api-requirements"><strong>API Requirements</strong><a class="anchor" href="#api-requirements" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>OpenAI API Key</strong>: Required for Realtime API access</li>
+<li><strong>Model Access</strong>: Access to <code>gpt-4o-realtime-preview</code> model</li>
+<li><strong>WebSocket Support</strong>: Stable internet connection for persistent connections</li>
+</ul>
+<h3 id="system-requirements"><strong>System Requirements</strong><a class="anchor" href="#system-requirements" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Real-Time Capable</strong>: Low-latency network connection</li>
+<li><strong>Audio Hardware</strong>: Microphone and speakers for voice interaction</li>
+<li><strong>Processing Power</strong>: Sufficient CPU for real-time audio processing</li>
+</ul>
+<h2 id="configuration-options">🔧 Configuration Options<a class="anchor" href="#configuration-options" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="model-settings"><strong>Model Settings</strong><a class="anchor" href="#model-settings" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="s2">&quot;model_settings&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o-realtime-preview&quot;</span><span class="p">,</span>  <span class="c1"># Realtime model</span>
+    <span class="s2">&quot;voice&quot;</span><span class="p">:</span> <span class="s2">&quot;alloy&quot;</span><span class="p">,</span>                         <span class="c1"># Voice selection</span>
+    <span class="s2">&quot;modalities&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;audio&quot;</span><span class="p">],</span>          <span class="c1"># Supported modalities</span>
+    <span class="s2">&quot;input_audio_format&quot;</span><span class="p">:</span> <span class="s2">&quot;pcm16&quot;</span><span class="p">,</span>           <span class="c1"># Audio input format</span>
+    <span class="s2">&quot;output_audio_format&quot;</span><span class="p">:</span> <span class="s2">&quot;pcm16&quot;</span>           <span class="c1"># Audio output format</span>
+<span class="p">}</span>
+</pre></div>
+</div><h3 id="turn-detection-settings"><strong>Turn Detection Settings</strong><a class="anchor" href="#turn-detection-settings" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="s2">&quot;turn_detection&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;server_vad&quot;</span><span class="p">,</span>           <span class="c1"># Voice activity detection</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>               <span class="c1"># Detection sensitivity (0.0-1.0)</span>
+    <span class="s2">&quot;prefix_padding_ms&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>       <span class="c1"># Audio padding before speech</span>
+    <span class="s2">&quot;silence_duration_ms&quot;</span><span class="p">:</span> <span class="mi">200</span>      <span class="c1"># Silence to detect turn end</span>
+<span class="p">}</span>
+</pre></div>
+</div><h3 id="transcription-configuration"><strong>Transcription Configuration</strong><a class="anchor" href="#transcription-configuration" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="s2">&quot;input_audio_transcription&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;whisper-1&quot;</span><span class="p">,</span>           <span class="c1"># Transcription model</span>
+    <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>               <span class="c1"># Language preference</span>
+    <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom prompt...&quot;</span>    <span class="c1"># Domain-specific terms</span>
+<span class="p">}</span>
+</pre></div>
+</div><h2 id="safety-and-guardrails">🛡️ Safety and Guardrails<a class="anchor" href="#safety-and-guardrails" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="real-time-safety-features"><strong>Real-Time Safety Features</strong><a class="anchor" href="#real-time-safety-features" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Debounced Processing</strong>: Guardrails run periodically for performance</li>
+<li><strong>Immediate Intervention</strong>: Can interrupt unsafe responses in real-time</li>
+<li><strong>Event-Based Alerts</strong>: Generate <code>guardrail_tripped</code> events instead of exceptions</li>
+<li><strong>Configurable Sensitivity</strong>: Adjust debounce length based on requirements</li>
+</ul>
+<h3 id="safety-implementation"><strong>Safety Implementation</strong><a class="anchor" href="#safety-implementation" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nd">@output_guardrail</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sensitive_data_guardrail</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GuardrailFunctionOutput</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">contains_sensitive_data</span><span class="p">(</span><span class="n">output</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">GuardrailFunctionOutput</span><span class="p">(</span>
+            <span class="n">tripwire_triggered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">output_info</span><span class="o">=</span><span class="s2">&quot;Blocked sensitive data&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">GuardrailFunctionOutput</span><span class="p">(</span><span class="n">tripwire_triggered</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div><h2 id="production-considerations">🎯 Production Considerations<a class="anchor" href="#production-considerations" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="performance-optimization"><strong>Performance Optimization</strong><a class="anchor" href="#performance-optimization" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Connection Management</strong>: Maintain persistent WebSocket connections</li>
+<li><strong>Error Recovery</strong>: Implement automatic reconnection logic</li>
+<li><strong>Resource Monitoring</strong>: Track memory and CPU usage during sessions</li>
+<li><strong>Event Processing</strong>: Optimize event handling for high-throughput scenarios</li>
+</ul>
+<h3 id="scalability-patterns"><strong>Scalability Patterns</strong><a class="anchor" href="#scalability-patterns" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Session Isolation</strong>: Each user gets independent realtime sessions</li>
+<li><strong>Load Balancing</strong>: Distribute sessions across multiple instances</li>
+<li><strong>Connection Pooling</strong>: Manage WebSocket connections efficiently</li>
+<li><strong>Graceful Shutdown</strong>: Handle session cleanup properly</li>
+</ul>
+<h3 id="monitoring-and-analytics"><strong>Monitoring and Analytics</strong><a class="anchor" href="#monitoring-and-analytics" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Event Tracking</strong>: Monitor all realtime events for insights</li>
+<li><strong>Performance Metrics</strong>: Track latency, throughput, and error rates</li>
+<li><strong>User Analytics</strong>: Analyze conversation patterns and success rates</li>
+<li><strong>Safety Metrics</strong>: Monitor guardrail activation and effectiveness</li>
+</ul>
+<h2 id="beta-considerations">🚨 Beta Considerations<a class="anchor" href="#beta-considerations" aria-label="Lien vers cette section">#</a></h2>
+<p>As noted in the <a href="https://openai.github.io/openai-agents-python/realtime/quickstart/" target="_blank" rel="noopener noreferrer">official documentation</a>, realtime agents are currently in beta. Consider:</p>
+<ul>
+<li><strong>API Stability</strong>: Expect potential breaking changes as the API evolves</li>
+<li><strong>Feature Development</strong>: New capabilities may be added regularly</li>
+<li><strong>Testing Requirements</strong>: Thorough testing recommended before production deployment</li>
+<li><strong>Feedback Channels</strong>: Provide feedback to help improve the realtime experience</li>
+</ul>
+<h2 id="pro-tips">💡 Pro Tips<a class="anchor" href="#pro-tips" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Start Simple</strong>: Begin with basic realtime conversation before adding complex features</li>
+<li><strong>Monitor Events</strong>: Use comprehensive event logging to understand behavior</li>
+<li><strong>Optimize Guardrails</strong>: Balance safety with real-time performance requirements</li>
+<li><strong>Test Interruptions</strong>: Ensure natural handling of conversation interruptions</li>
+<li><strong>Plan for Scale</strong>: Design session management for production workloads</li>
+</ul>
+<h2 id="related-documentation">🔗 Related Documentation<a class="anchor" href="#related-documentation" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong><a href="https://openai.github.io/openai-agents-python/realtime/quickstart/" target="_blank" rel="noopener noreferrer">Realtime Quickstart</a></strong>: Official getting started guide</li>
+<li><strong><a href="https://openai.github.io/openai-agents-python/realtime/guide/" target="_blank" rel="noopener noreferrer">Realtime Guide</a></strong>: Comprehensive realtime documentation</li>
+<li><strong><a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/11-voice/index.html">Voice Agents</a></strong>: Overview of all voice agent capabilities</li>
+<li><strong><a href="../../../../ateliers/ai-agent-framework-crash-course/openai-sdk-crash-course/1-starter-agent/index.html">Agent Fundamentals</a></strong>: Basic agent concepts</li>
+</ul>
+<h2 id="troubleshooting">🎯 Troubleshooting<a class="anchor" href="#troubleshooting" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="common-issues"><strong>Common Issues</strong><a class="anchor" href="#common-issues" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>High Latency</strong>: Check network connection and WebSocket stability</li>
+<li><strong>Audio Quality</strong>: Verify microphone settings and audio formats</li>
+<li><strong>Event Processing</strong>: Monitor event handling performance and errors</li>
+<li><strong>Guardrail Performance</strong>: Optimize debounce settings for real-time requirements</li>
+<li><strong>Model Access</strong>: Ensure access to <code>gpt-4o-realtime-preview</code> model</li>
+</ul>
+<h3 id="debug-strategies"><strong>Debug Strategies</strong><a class="anchor" href="#debug-strategies" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Event Logging</strong>: Enable comprehensive event debugging</li>
+<li><strong>Connection Monitoring</strong>: Track WebSocket connection health</li>
+<li><strong>Performance Profiling</strong>: Monitor CPU and memory usage during sessions</li>
+<li><strong>Audio Pipeline</strong>: Verify audio input/output processing</li>
+</ul>
+<h2 id="next-steps">🚀 Next Steps<a class="anchor" href="#next-steps" aria-label="Lien vers cette section">#</a></h2>
+<p>After mastering realtime voice agents:</p>
+<ul>
+<li><strong>Production Deployment</strong>: Scale realtime agents for production use</li>
+<li><strong>Custom Integrations</strong>: Build realtime voice into existing applications</li>
+<li><strong>Advanced Features</strong>: Explore cutting-edge realtime capabilities</li>
+<li><strong>Multi-Modal Experiences</strong>: Combine realtime voice with other modalities</li>
+</ul>
+
+</article>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/blob/main/ai_agent_framework_crash_course/openai_sdk_crash_course/11_voice/realtime/README.md" target="_blank" rel="noopener noreferrer">
+    ai_agent_framework_crash_course/openai_sdk_crash_course/11_voice/realtime/README.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#what-this-demonstrates">🎯 What This Demonstrates</a></li><li class="toc__item toc__item--h2"><a href="#core-concept-realtime-voice-processing">🧠 Core Concept: Realtime Voice Processing</a></li><li class="toc__item toc__item--h2"><a href="#quick-start">🚀 Quick Start</a></li><li class="toc__item toc__item--h2"><a href="#what-this-example-includes">🧪 What This Example Includes</a></li><li class="toc__item toc__item--h3"><a href="#core-realtime-components">**Core Realtime Components**</a></li><li class="toc__item toc__item--h3"><a href="#basic-function-tools">**Basic Function Tools**</a></li><li class="toc__item toc__item--h3"><a href="#simple-agent-handoff">**Simple Agent Handoff**</a></li><li class="toc__item toc__item--h3"><a href="#essential-event-handling">**Essential Event Handling**</a></li><li class="toc__item toc__item--h2"><a href="#example-voice-interactions">🎯 Example Voice Interactions</a></li><li class="toc__item toc__item--h3"><a href="#basic-conversation">**Basic Conversation**</a></li><li class="toc__item toc__item--h3"><a href="#agent-handoff">**Agent Handoff**</a></li><li class="toc__item toc__item--h2"><a href="#key-implementation-patterns">🔧 Key Implementation Patterns</a></li><li class="toc__item toc__item--h3"><a href="#1-create-realtimeagent">**1. Create RealtimeAgent**</a></li><li class="toc__item toc__item--h3"><a href="#2-set-up-realtimerunner">**2. Set up RealtimeRunner**</a></li><li class="toc__item toc__item--h3"><a href="#3-start-session-and-handle-events">**3. Start Session and Handle Events**</a></li><li class="toc__item toc__item--h2"><a href="#basic-realtime-concepts">💡 Basic Realtime Concepts</a></li><li class="toc__item toc__item--h2"><a href="#realtime-vs-traditional-voice-comparison">📊 Realtime vs Traditional Voice Comparison</a></li><li class="toc__item toc__item--h2"><a href="#advanced-realtime-features">🌟 Advanced Realtime Features</a></li><li class="toc__item toc__item--h3"><a href="#voice-activity-detection-vad">**Voice Activity Detection (VAD)**</a></li><li class="toc__item toc__item--h3"><a href="#audio-configuration-options">**Audio Configuration Options**</a></li><li class="toc__item toc__item--h3"><a href="#real-time-guardrails">**Real-Time Guardrails**</a></li><li class="toc__item toc__item--h3"><a href="#session-event-types">**Session Event Types**</a></li><li class="toc__item toc__item--h2"><a href="#requirements-dependencies">🚨 Requirements &amp; Dependencies</a></li><li class="toc__item toc__item--h3"><a href="#core-dependencies">**Core Dependencies**</a></li><li class="toc__item toc__item--h3"><a href="#api-requirements">**API Requirements**</a></li><li class="toc__item toc__item--h3"><a href="#system-requirements">**System Requirements**</a></li><li class="toc__item toc__item--h2"><a href="#configuration-options">🔧 Configuration Options</a></li><li class="toc__item toc__item--h3"><a href="#model-settings">**Model Settings**</a></li><li class="toc__item toc__item--h3"><a href="#turn-detection-settings">**Turn Detection Settings**</a></li><li class="toc__item toc__item--h3"><a href="#transcription-configuration">**Transcription Configuration**</a></li><li class="toc__item toc__item--h2"><a href="#safety-and-guardrails">🛡️ Safety and Guardrails</a></li><li class="toc__item toc__item--h3"><a href="#real-time-safety-features">**Real-Time Safety Features**</a></li><li class="toc__item toc__item--h3"><a href="#safety-implementation">**Safety Implementation**</a></li><li class="toc__item toc__item--h2"><a href="#production-considerations">🎯 Production Considerations</a></li><li class="toc__item toc__item--h3"><a href="#performance-optimization">**Performance Optimization**</a></li><li class="toc__item toc__item--h3"><a href="#scalability-patterns">**Scalability Patterns**</a></li><li class="toc__item toc__item--h3"><a href="#monitoring-and-analytics">**Monitoring and Analytics**</a></li><li class="toc__item toc__item--h2"><a href="#beta-considerations">🚨 Beta Considerations</a></li><li class="toc__item toc__item--h2"><a href="#pro-tips">💡 Pro Tips</a></li><li class="toc__item toc__item--h2"><a href="#related-documentation">🔗 Related Documentation</a></li><li class="toc__item toc__item--h2"><a href="#troubleshooting">🎯 Troubleshooting</a></li><li class="toc__item toc__item--h3"><a href="#common-issues">**Common Issues**</a></li><li class="toc__item toc__item--h3"><a href="#debug-strategies">**Debug Strategies**</a></li><li class="toc__item toc__item--h2"><a href="#next-steps">🚀 Next Steps</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../../assets/app.js" defer></script>
+</body>
+</html>

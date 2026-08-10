@@ -1,0 +1,1152 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coach financier (Google ADK) — atelier</title>
+<meta name="description" content="Budget, dettes et épargne traités chacun par un agent dédié.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html">Applications multi-agents</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🕸️</span> Applications multi-agents</p>
+  <h1 class="pagehead__title">Coach financier (Google ADK)</h1>
+  <p class="pagehead__summary">Budget, dettes et épargne traités chacun par un agent dédié.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#palier-gratuit" title="Des comptes sont nécessaires, mais leur offre gratuite couvre l&#x27;exercice."><span class="tag__icon" aria-hidden="true">🧪</span><span class="tag__label">Palier gratuit suffisant</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio / Gemini</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Palier gratuit confortable, sans carte bancaire. Convient à la quasi-totalité des ateliers.</p><ul class="alts__list"><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Le palier gratuit suffit</a> — Créez la clé dans AI Studio : aucune carte n&#x27;est demandée.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Si vous dépassez le quota, un modèle local prend le relais.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Multi-Agent Financial Analysis System</li><li>Budget Analysis Agent: Analyzes spending patterns and recommends optimizations</li><li>Savings Strategy Agent: Creates personalized savings plans and emergency fund strategies</li><li>Debt Reduction Agent: Develops optimized debt payoff strategies using avalanche and snowball methods</li><li>Expense Analysis:</li><li>Supports both CSV upload and manual expense entry</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="ai-financial-coach-agent-with-google-adk">AI Financial Coach Agent with Google ADK 💰<a class="anchor" href="#ai-financial-coach-agent-with-google-adk" aria-label="Lien vers cette section">#</a></h1>
+<h3 id="free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial<a class="anchor" href="#free-step-by-step-tutorial" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>👉 <a href="https://www.theunwindai.com/p/build-a-multi-agent-personal-finance-coach" target="_blank" rel="noopener noreferrer">Click here to follow our complete step-by-step tutorial</a> and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.</strong></p>
+<p>The <strong>AI Financial Coach</strong> is a personalized financial advisor powered by Google's ADK (Agent Development Kit) framework. This app provides comprehensive financial analysis and recommendations based on user inputs including income, expenses, debts, and financial goals.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>
+<p><strong>Multi-Agent Financial Analysis System</strong></p>
+<ul>
+<li>Budget Analysis Agent: Analyzes spending patterns and recommends optimizations</li>
+<li>Savings Strategy Agent: Creates personalized savings plans and emergency fund strategies</li>
+<li>Debt Reduction Agent: Develops optimized debt payoff strategies using avalanche and snowball methods</li>
+</ul>
+</li>
+<li>
+<p><strong>Expense Analysis</strong>:</p>
+<ul>
+<li>Supports both CSV upload and manual expense entry</li>
+<li>CSV transaction analysis with date, category, and amount tracking</li>
+<li>Visual breakdown of spending by category</li>
+<li>Automated expense categorization and pattern detection</li>
+</ul>
+</li>
+<li>
+<p><strong>Savings Recommendations</strong>:</p>
+<ul>
+<li>Emergency fund sizing and building strategies</li>
+<li>Custom savings allocations across different goals</li>
+<li>Practical automation techniques for consistent saving</li>
+<li>Progress tracking and milestone recommendations</li>
+</ul>
+</li>
+<li>
+<p><strong>Debt Management</strong>:</p>
+<ul>
+<li>Multiple debt handling with interest rate optimization</li>
+<li>Comparison between avalanche and snowball methods</li>
+<li>Visual debt payoff timeline and interest savings analysis</li>
+<li>Actionable debt reduction recommendations</li>
+</ul>
+</li>
+<li>
+<p><strong>Interactive Visualizations</strong>:</p>
+<ul>
+<li>Pie charts for expense breakdown</li>
+<li>Bar charts for income vs. expenses</li>
+<li>Debt comparison graphs</li>
+<li>Progress tracking metrics</li>
+</ul>
+</li>
+</ul>
+<h2 id="how-to-run">How to Run<a class="anchor" href="#how-to-run" aria-label="Lien vers cette section">#</a></h2>
+<p>Follow the steps below to set up and run the application:</p>
+<ol>
+<li>
+<p><strong>Get API Key</strong>:</p>
+<ul>
+<li>Get a free Gemini API Key from Google AI Studio: https://aistudio.google.com/apikey</li>
+<li>Create a <code>.env</code> file in the project root and add your API key:<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>GOOGLE_API_KEY=your_api_key_here
+</pre></div>
+</div></li>
+</ul>
+</li>
+<li>
+<p><strong>Clone the Repository</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>awesome-llm-apps/advanced_ai_agents/multi_agent_apps/ai_financial_coach_agent/
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install Dependencies</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Run the Streamlit App</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>ai_financial_coach_agent.py
+</pre></div>
+</div></li>
+</ol>
+<h2 id="csv-file-format">CSV File Format<a class="anchor" href="#csv-file-format" aria-label="Lien vers cette section">#</a></h2>
+<p>The application accepts CSV files with the following required columns:</p>
+<ul>
+<li><code>Date</code>: Transaction date in YYYY-MM-DD format</li>
+<li><code>Category</code>: Expense category</li>
+<li><code>Amount</code>: Transaction amount (supports currency symbols and comma formatting)</li>
+</ul>
+<p>Example:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">csv</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>Date,Category,Amount
+2024-01-01,Housing,1200.00
+2024-01-02,Food,150.50
+2024-01-03,Transportation,45.00
+</pre></div>
+</div><p>A template CSV file can be downloaded directly from the application's sidebar.</p>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-ai-financial-coach-agent-py"><summary class="codefile__head"><span class="codefile__name">ai_financial_coach_agent.py</span><span class="codefile__size">41 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.express</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">px</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">LlmAgent</span><span class="p">,</span> <span class="n">SequentialAgent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.sessions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemorySessionService</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.runners</span><span class="w"> </span><span class="kn">import</span> <span class="n">Runner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">APP_NAME</span> <span class="o">=</span> <span class="s2">&quot;finance_advisor&quot;</span>
+<span class="n">USER_ID</span> <span class="o">=</span> <span class="s2">&quot;default_user&quot;</span>
+
+<span class="c1"># Pydantic models for output schemas</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpendingCategory</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">category</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Expense category name&quot;</span><span class="p">)</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Amount spent in this category&quot;</span><span class="p">)</span>
+    <span class="n">percentage</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Percentage of total spending&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SpendingRecommendation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">category</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Category for recommendation&quot;</span><span class="p">)</span>
+    <span class="n">recommendation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recommendation details&quot;</span><span class="p">)</span>
+    <span class="n">potential_savings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Estimated monthly savings&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BudgetAnalysis</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">total_expenses</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Total monthly expenses&quot;</span><span class="p">)</span>
+    <span class="n">monthly_income</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Monthly income&quot;</span><span class="p">)</span>
+    <span class="n">spending_categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SpendingCategory</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Breakdown of spending by category&quot;</span><span class="p">)</span>
+    <span class="n">recommendations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SpendingRecommendation</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Spending recommendations&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EmergencyFund</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">recommended_amount</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recommended emergency fund size&quot;</span><span class="p">)</span>
+    <span class="n">current_amount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Current emergency fund (if any)&quot;</span><span class="p">)</span>
+    <span class="n">current_status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Status assessment of emergency fund&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SavingsRecommendation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">category</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Savings category&quot;</span><span class="p">)</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recommended monthly amount&quot;</span><span class="p">)</span>
+    <span class="n">rationale</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Explanation for this recommendation&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AutomationTechnique</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of automation technique&quot;</span><span class="p">)</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Details of how to implement&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SavingsStrategy</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">emergency_fund</span><span class="p">:</span> <span class="n">EmergencyFund</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Emergency fund recommendation&quot;</span><span class="p">)</span>
+    <span class="n">recommendations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SavingsRecommendation</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Savings allocation recommendations&quot;</span><span class="p">)</span>
+    <span class="n">automation_techniques</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">AutomationTechnique</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Automation techniques to help save&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Debt</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of debt&quot;</span><span class="p">)</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Current balance&quot;</span><span class="p">)</span>
+    <span class="n">interest_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Annual interest rate (%)&quot;</span><span class="p">)</span>
+    <span class="n">min_payment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Minimum monthly payment&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PayoffPlan</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">total_interest</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Total interest paid&quot;</span><span class="p">)</span>
+    <span class="n">months_to_payoff</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Months until debt-free&quot;</span><span class="p">)</span>
+    <span class="n">monthly_payment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recommended monthly payment&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PayoffPlans</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">avalanche</span><span class="p">:</span> <span class="n">PayoffPlan</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Highest interest first method&quot;</span><span class="p">)</span>
+    <span class="n">snowball</span><span class="p">:</span> <span class="n">PayoffPlan</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Smallest balance first method&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DebtRecommendation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Title of recommendation&quot;</span><span class="p">)</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Details of recommendation&quot;</span><span class="p">)</span>
+    <span class="n">impact</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Expected impact of this action&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DebtReduction</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">total_debt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Total debt amount&quot;</span><span class="p">)</span>
+    <span class="n">debts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Debt</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of all debts&quot;</span><span class="p">)</span>
+    <span class="n">payoff_plans</span><span class="p">:</span> <span class="n">PayoffPlans</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Debt payoff strategies&quot;</span><span class="p">)</span>
+    <span class="n">recommendations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">DebtRecommendation</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recommendations for debt reduction&quot;</span><span class="p">)</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+<span class="n">GEMINI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GOOGLE_API_KEY&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_json_safely</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default_value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Safely parse JSON data with error handling&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">data</span>
+    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default_value</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FinanceAdvisorSystem</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_service</span> <span class="o">=</span> <span class="n">InMemorySessionService</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">budget_analysis_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;BudgetAnalysisAgent&quot;</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Analyzes financial data to categorize spending patterns and recommend budget improvements&quot;</span><span class="p">,</span>
+            <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;You are a Budget Analysis Agent specialized in reviewing financial transactions and expenses.</span>
+<span class="s2">You are the first agent in a sequence of three financial advisor agents.</span>
+
+<span class="s2">Your tasks:</span>
+<span class="s2">1. Analyze income, transactions, and expenses in detail</span>
+<span class="s2">2. Categorize spending into logical groups with clear breakdown</span>
+<span class="s2">3. Identify spending patterns and trends across categories</span>
+<span class="s2">4. Suggest specific areas where spending could be reduced with concrete suggestions</span>
+<span class="s2">5. Provide actionable recommendations with specific, quantified potential savings amounts</span>
+
+<span class="s2">Consider:</span>
+<span class="s2">- Number of dependants when evaluating household expenses</span>
+<span class="s2">- Typical spending ratios for the income level (housing 30%, food 15%, etc.)</span>
+<span class="s2">- Essential vs discretionary spending with clear separation</span>
+<span class="s2">- Seasonal spending patterns if data spans multiple months</span>
+
+<span class="s2">For spending categories, include ALL expenses from the user&#39;s data, ensure percentages add up to 100%,</span>
+<span class="s2">and make sure every expense is categorized.</span>
+
+<span class="s2">For recommendations:</span>
+<span class="s2">- Provide at least 3-5 specific, actionable recommendations with estimated savings</span>
+<span class="s2">- Explain the reasoning behind each recommendation</span>
+<span class="s2">- Consider the impact on quality of life and long-term financial health</span>
+<span class="s2">- Suggest specific implementation steps for each recommendation</span>
+
+<span class="s2">IMPORTANT: Store your analysis in state[&#39;budget_analysis&#39;] for use by subsequent agents.&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">output_schema</span><span class="o">=</span><span class="n">BudgetAnalysis</span><span class="p">,</span>
+            <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;budget_analysis&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">savings_strategy_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SavingsStrategyAgent&quot;</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recommends optimal savings strategies based on income, expenses, and financial goals&quot;</span><span class="p">,</span>
+            <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;You are a Savings Strategy Agent specialized in creating personalized savings plans.</span>
+<span class="s2">You are the second agent in the sequence. READ the budget analysis from state[&#39;budget_analysis&#39;] first.</span>
+
+<span class="s2">Your tasks:</span>
+<span class="s2">1. Review the budget analysis results from state[&#39;budget_analysis&#39;]</span>
+<span class="s2">2. Recommend comprehensive savings strategies based on the analysis</span>
+<span class="s2">3. Calculate optimal emergency fund size based on expenses and dependants</span>
+<span class="s2">4. Suggest appropriate savings allocation across different purposes</span>
+<span class="s2">5. Recommend practical automation techniques for saving consistently</span>
+
+<span class="s2">Consider:</span>
+<span class="s2">- Risk factors based on job stability and dependants</span>
+<span class="s2">- Balancing immediate needs with long-term financial health</span>
+<span class="s2">- Progressive savings rates as discretionary income increases</span>
+<span class="s2">- Multiple savings goals (emergency, retirement, specific purchases)</span>
+<span class="s2">- Areas of potential savings identified in the budget analysis</span>
+
+<span class="s2">IMPORTANT: Store your strategy in state[&#39;savings_strategy&#39;] for use by the Debt Reduction Agent.&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">output_schema</span><span class="o">=</span><span class="n">SavingsStrategy</span><span class="p">,</span>
+            <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;savings_strategy&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">debt_reduction_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;DebtReductionAgent&quot;</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Creates optimized debt payoff plans to minimize interest paid and time to debt freedom&quot;</span><span class="p">,</span>
+            <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;You are a Debt Reduction Agent specialized in creating debt payoff strategies.</span>
+<span class="s2">You are the final agent in the sequence. READ both state[&#39;budget_analysis&#39;] and state[&#39;savings_strategy&#39;] first.</span>
+
+<span class="s2">Your tasks:</span>
+<span class="s2">1. Review both budget analysis and savings strategy from the state</span>
+<span class="s2">2. Analyze debts by interest rate, balance, and minimum payments</span>
+<span class="s2">3. Create prioritized debt payoff plans (avalanche and snowball methods)</span>
+<span class="s2">4. Calculate total interest paid and time to debt freedom</span>
+<span class="s2">5. Suggest debt consolidation or refinancing opportunities</span>
+<span class="s2">6. Provide specific recommendations to accelerate debt payoff</span>
+
+<span class="s2">Consider:</span>
+<span class="s2">- Cash flow constraints from the budget analysis</span>
+<span class="s2">- Emergency fund and savings goals from the savings strategy</span>
+<span class="s2">- Psychological factors (quick wins vs mathematical optimization)</span>
+<span class="s2">- Credit score impact and improvement opportunities</span>
+
+<span class="s2">IMPORTANT: Store your final plan in state[&#39;debt_reduction&#39;] and ensure it aligns with the previous analyses.&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">output_schema</span><span class="o">=</span><span class="n">DebtReduction</span><span class="p">,</span>
+            <span class="n">output_key</span><span class="o">=</span><span class="s2">&quot;debt_reduction&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinator_agent</span> <span class="o">=</span> <span class="n">SequentialAgent</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FinanceCoordinatorAgent&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Coordinates specialized finance agents to provide comprehensive financial advice&quot;</span><span class="p">,</span>
+            <span class="n">sub_agents</span><span class="o">=</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">budget_analysis_agent</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">savings_strategy_agent</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">debt_reduction_agent</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="p">(</span>
+            <span class="n">agent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinator_agent</span><span class="p">,</span>
+            <span class="n">app_name</span><span class="o">=</span><span class="n">APP_NAME</span><span class="p">,</span>
+            <span class="n">session_service</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">session_service</span>
+        <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">analyze_finances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">financial_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">session_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;finance_session_</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">initial_state</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;monthly_income&quot;</span><span class="p">:</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;monthly_income&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="s2">&quot;dependants&quot;</span><span class="p">:</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dependants&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="s2">&quot;transactions&quot;</span><span class="p">:</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transactions&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                <span class="s2">&quot;manual_expenses&quot;</span><span class="p">:</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;manual_expenses&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+                <span class="s2">&quot;debts&quot;</span><span class="p">:</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debts&quot;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="p">}</span>
+            
+            <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_service</span><span class="o">.</span><span class="n">create_session</span><span class="p">(</span>
+                <span class="n">app_name</span><span class="o">=</span><span class="n">APP_NAME</span><span class="p">,</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">USER_ID</span><span class="p">,</span>
+                <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
+                <span class="n">state</span><span class="o">=</span><span class="n">initial_state</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transactions&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_transactions</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;manual_expenses&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_manual_expenses</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+            
+            <span class="n">default_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_default_results</span><span class="p">(</span><span class="n">financial_data</span><span class="p">)</span>
+            
+            <span class="n">user_content</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Content</span><span class="p">(</span>
+                <span class="n">role</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span>
+                <span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">financial_data</span><span class="p">))]</span>
+            <span class="p">)</span>
+            
+            <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">run_async</span><span class="p">(</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">USER_ID</span><span class="p">,</span>
+                <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
+                <span class="n">new_message</span><span class="o">=</span><span class="n">user_content</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">is_final_response</span><span class="p">()</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">author</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinator_agent</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="k">break</span>
+            
+            <span class="n">updated_session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_service</span><span class="o">.</span><span class="n">get_session</span><span class="p">(</span>
+                <span class="n">app_name</span><span class="o">=</span><span class="n">APP_NAME</span><span class="p">,</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">USER_ID</span><span class="p">,</span>
+                <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span>
+            <span class="p">)</span>
+            
+            <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;budget_analysis&quot;</span><span class="p">,</span> <span class="s2">&quot;savings_strategy&quot;</span><span class="p">,</span> <span class="s2">&quot;debt_reduction&quot;</span><span class="p">]:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">updated_session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_json_safely</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">default_results</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="k">if</span> <span class="n">value</span> <span class="k">else</span> <span class="n">default_results</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            
+            <span class="k">return</span> <span class="n">results</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during finance analysis: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session_service</span><span class="o">.</span><span class="n">delete_session</span><span class="p">(</span>
+                <span class="n">app_name</span><span class="o">=</span><span class="n">APP_NAME</span><span class="p">,</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">USER_ID</span><span class="p">,</span>
+                <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span>
+            <span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_preprocess_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="n">transactions</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transactions&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">transactions</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;Date&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;Category&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;Amount&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">category_spending</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Category&#39;</span><span class="p">)[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;category_spending&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">category_spending</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;total_spending&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_preprocess_manual_expenses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="n">manual_expenses</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;manual_expenses&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">manual_expenses</span> <span class="ow">or</span> <span class="n">manual_expenses</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;total_manual_spending&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">manual_expenses</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="s2">&quot;manual_category_spending&quot;</span><span class="p">:</span> <span class="n">manual_expenses</span>
+        <span class="p">})</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_default_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">financial_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">monthly_income</span> <span class="o">=</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;monthly_income&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">expenses</span> <span class="o">=</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;manual_expenses&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        
+        <span class="c1"># Ensure expenses is not None</span>
+        <span class="k">if</span> <span class="n">expenses</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">expenses</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">expenses</span> <span class="ow">and</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transactions&quot;</span><span class="p">):</span>
+            <span class="n">expenses</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">transaction</span> <span class="ow">in</span> <span class="n">financial_data</span><span class="p">[</span><span class="s2">&quot;transactions&quot;</span><span class="p">]:</span>
+                <span class="n">category</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Category&quot;</span><span class="p">,</span> <span class="s2">&quot;Uncategorized&quot;</span><span class="p">)</span>
+                <span class="n">amount</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Amount&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">expenses</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="n">expenses</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">amount</span>
+        
+        <span class="n">total_expenses</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">expenses</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;budget_analysis&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;total_expenses&quot;</span><span class="p">:</span> <span class="n">total_expenses</span><span class="p">,</span>
+                <span class="s2">&quot;monthly_income&quot;</span><span class="p">:</span> <span class="n">monthly_income</span><span class="p">,</span>
+                <span class="s2">&quot;spending_categories&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="n">cat</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">amt</span><span class="p">,</span> <span class="s2">&quot;percentage&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">amt</span> <span class="o">/</span> <span class="n">total_expenses</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="k">if</span> <span class="n">total_expenses</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">}</span>
+                    <span class="k">for</span> <span class="n">cat</span><span class="p">,</span> <span class="n">amt</span> <span class="ow">in</span> <span class="n">expenses</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;recommendations&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;General&quot;</span><span class="p">,</span> <span class="s2">&quot;recommendation&quot;</span><span class="p">:</span> <span class="s2">&quot;Consider reviewing your expenses carefully&quot;</span><span class="p">,</span> <span class="s2">&quot;potential_savings&quot;</span><span class="p">:</span> <span class="n">total_expenses</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;savings_strategy&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;emergency_fund&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;recommended_amount&quot;</span><span class="p">:</span> <span class="n">total_expenses</span> <span class="o">*</span> <span class="mi">6</span><span class="p">,</span>
+                    <span class="s2">&quot;current_amount&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;current_status&quot;</span><span class="p">:</span> <span class="s2">&quot;Not started&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;recommendations&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;Emergency Fund&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">total_expenses</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;rationale&quot;</span><span class="p">:</span> <span class="s2">&quot;Build emergency fund first&quot;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;Retirement&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">monthly_income</span> <span class="o">*</span> <span class="mf">0.15</span><span class="p">,</span> <span class="s2">&quot;rationale&quot;</span><span class="p">:</span> <span class="s2">&quot;Long-term savings&quot;</span><span class="p">}</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;automation_techniques&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Automatic Transfer&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Set up automatic transfers on payday&quot;</span><span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;debt_reduction&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;total_debt&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">debt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">debt</span> <span class="ow">in</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debts&quot;</span><span class="p">,</span> <span class="p">[])),</span>
+                <span class="s2">&quot;debts&quot;</span><span class="p">:</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debts&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+                <span class="s2">&quot;payoff_plans&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;avalanche&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;total_interest&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">debt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">debt</span> <span class="ow">in</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debts&quot;</span><span class="p">,</span> <span class="p">[]))</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">,</span>
+                        <span class="s2">&quot;months_to_payoff&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+                        <span class="s2">&quot;monthly_payment&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">debt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">debt</span> <span class="ow">in</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debts&quot;</span><span class="p">,</span> <span class="p">[]))</span> <span class="o">/</span> <span class="mi">24</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;snowball&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;total_interest&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">debt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">debt</span> <span class="ow">in</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debts&quot;</span><span class="p">,</span> <span class="p">[]))</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">,</span>
+                        <span class="s2">&quot;months_to_payoff&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+                        <span class="s2">&quot;monthly_payment&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">debt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">debt</span> <span class="ow">in</span> <span class="n">financial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debts&quot;</span><span class="p">,</span> <span class="p">[]))</span> <span class="o">/</span> <span class="mi">24</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;recommendations&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Increase Payments&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Increase your monthly payments&quot;</span><span class="p">,</span> <span class="s2">&quot;impact&quot;</span><span class="p">:</span> <span class="s2">&quot;Reduces total interest paid&quot;</span><span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">display_budget_analysis</span><span class="p">(</span><span class="n">analysis</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">analysis</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">analysis</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">analysis</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to parse budget analysis results&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">analysis</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Invalid budget analysis format&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;spending_categories&quot;</span> <span class="ow">in</span> <span class="n">analysis</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Spending by Category&quot;</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span>
+            <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;amount&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">analysis</span><span class="p">[</span><span class="s2">&quot;spending_categories&quot;</span><span class="p">]],</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">analysis</span><span class="p">[</span><span class="s2">&quot;spending_categories&quot;</span><span class="p">]],</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Your Spending Breakdown&quot;</span>
+        <span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;total_expenses&quot;</span> <span class="ow">in</span> <span class="n">analysis</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Income vs. Expenses&quot;</span><span class="p">)</span>
+        <span class="n">income</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;monthly_income&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">expenses</span> <span class="o">=</span> <span class="n">analysis</span><span class="p">[</span><span class="s2">&quot;total_expenses&quot;</span><span class="p">]</span>
+        <span class="n">surplus_deficit</span> <span class="o">=</span> <span class="n">income</span> <span class="o">-</span> <span class="n">expenses</span>
+        
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Income&quot;</span><span class="p">,</span> <span class="s2">&quot;Expenses&quot;</span><span class="p">],</span> 
+                            <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">income</span><span class="p">,</span> <span class="n">expenses</span><span class="p">],</span>
+                            <span class="n">marker_color</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">]))</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Monthly Income vs. Expenses&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Monthly Surplus/Deficit&quot;</span><span class="p">,</span> 
+                  <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">surplus_deficit</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> 
+                  <span class="n">delta</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">surplus_deficit</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;recommendations&quot;</span> <span class="ow">in</span> <span class="n">analysis</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Spending Reduction Recommendations&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">analysis</span><span class="p">[</span><span class="s2">&quot;recommendations&quot;</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**</span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">**: </span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;recommendation&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;potential_savings&quot;</span> <span class="ow">in</span> <span class="n">rec</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Potential Monthly Savings&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;potential_savings&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">display_savings_strategy</span><span class="p">(</span><span class="n">strategy</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">strategy</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">strategy</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">strategy</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to parse savings strategy results&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">strategy</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Invalid savings strategy format&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Savings Recommendations&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;emergency_fund&quot;</span> <span class="ow">in</span> <span class="n">strategy</span><span class="p">:</span>
+        <span class="n">ef</span> <span class="o">=</span> <span class="n">strategy</span><span class="p">[</span><span class="s2">&quot;emergency_fund&quot;</span><span class="p">]</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;### Emergency Fund&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Recommended Size**: $</span><span class="si">{</span><span class="n">ef</span><span class="p">[</span><span class="s1">&#39;recommended_amount&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Current Status**: </span><span class="si">{</span><span class="n">ef</span><span class="p">[</span><span class="s1">&#39;current_status&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="s2">&quot;current_amount&quot;</span> <span class="ow">in</span> <span class="n">ef</span> <span class="ow">and</span> <span class="s2">&quot;recommended_amount&quot;</span> <span class="ow">in</span> <span class="n">ef</span><span class="p">:</span>
+            <span class="n">progress</span> <span class="o">=</span> <span class="n">ef</span><span class="p">[</span><span class="s2">&quot;current_amount&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">ef</span><span class="p">[</span><span class="s2">&quot;recommended_amount&quot;</span><span class="p">]</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">progress</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">ef</span><span class="p">[</span><span class="s1">&#39;current_amount&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> of $</span><span class="si">{</span><span class="n">ef</span><span class="p">[</span><span class="s1">&#39;recommended_amount&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;recommendations&quot;</span> <span class="ow">in</span> <span class="n">strategy</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Recommended Savings Allocations&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">strategy</span><span class="p">[</span><span class="s2">&quot;recommendations&quot;</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**</span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">**: $</span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">/month&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;rationale&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;automation_techniques&quot;</span> <span class="ow">in</span> <span class="n">strategy</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Automation Techniques&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">technique</span> <span class="ow">in</span> <span class="n">strategy</span><span class="p">[</span><span class="s2">&quot;automation_techniques&quot;</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**</span><span class="si">{</span><span class="n">technique</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">**: </span><span class="si">{</span><span class="n">technique</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">display_debt_reduction</span><span class="p">(</span><span class="n">plan</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">plan</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">plan</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to parse debt reduction results&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">plan</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Invalid debt reduction format&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;total_debt&quot;</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Total Debt&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">plan</span><span class="p">[</span><span class="s1">&#39;total_debt&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;debts&quot;</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Your Debts&quot;</span><span class="p">)</span>
+        <span class="n">debt_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">plan</span><span class="p">[</span><span class="s2">&quot;debts&quot;</span><span class="p">])</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">debt_df</span><span class="p">)</span>
+        
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">debt_df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;interest_rate&quot;</span><span class="p">,</span>
+                    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Debt&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;Amount ($)&quot;</span><span class="p">,</span> <span class="s2">&quot;interest_rate&quot;</span><span class="p">:</span> <span class="s2">&quot;Interest Rate (%)&quot;</span><span class="p">},</span>
+                    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Debt Breakdown&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;payoff_plans&quot;</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Debt Payoff Plans&quot;</span><span class="p">)</span>
+        <span class="n">tabs</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">&quot;Avalanche Method&quot;</span><span class="p">,</span> <span class="s2">&quot;Snowball Method&quot;</span><span class="p">,</span> <span class="s2">&quot;Comparison&quot;</span><span class="p">])</span>
+        
+        <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Avalanche Method (Highest Interest First)&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;avalanche&quot;</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;payoff_plans&quot;</span><span class="p">]:</span>
+                <span class="n">avalanche</span> <span class="o">=</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;payoff_plans&quot;</span><span class="p">][</span><span class="s2">&quot;avalanche&quot;</span><span class="p">]</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Total Interest Paid**: $</span><span class="si">{</span><span class="n">avalanche</span><span class="p">[</span><span class="s1">&#39;total_interest&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Time to Debt Freedom**: </span><span class="si">{</span><span class="n">avalanche</span><span class="p">[</span><span class="s1">&#39;months_to_payoff&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> months&quot;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="s2">&quot;monthly_payment&quot;</span> <span class="ow">in</span> <span class="n">avalanche</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Recommended Monthly Payment**: $</span><span class="si">{</span><span class="n">avalanche</span><span class="p">[</span><span class="s1">&#39;monthly_payment&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Snowball Method (Smallest Balance First)&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;snowball&quot;</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;payoff_plans&quot;</span><span class="p">]:</span>
+                <span class="n">snowball</span> <span class="o">=</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;payoff_plans&quot;</span><span class="p">][</span><span class="s2">&quot;snowball&quot;</span><span class="p">]</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Total Interest Paid**: $</span><span class="si">{</span><span class="n">snowball</span><span class="p">[</span><span class="s1">&#39;total_interest&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Time to Debt Freedom**: </span><span class="si">{</span><span class="n">snowball</span><span class="p">[</span><span class="s1">&#39;months_to_payoff&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> months&quot;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="s2">&quot;monthly_payment&quot;</span> <span class="ow">in</span> <span class="n">snowball</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Recommended Monthly Payment**: $</span><span class="si">{</span><span class="n">snowball</span><span class="p">[</span><span class="s1">&#39;monthly_payment&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Method Comparison&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;avalanche&quot;</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;payoff_plans&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="s2">&quot;snowball&quot;</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;payoff_plans&quot;</span><span class="p">]:</span>
+                <span class="n">avalanche</span> <span class="o">=</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;payoff_plans&quot;</span><span class="p">][</span><span class="s2">&quot;avalanche&quot;</span><span class="p">]</span>
+                <span class="n">snowball</span> <span class="o">=</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;payoff_plans&quot;</span><span class="p">][</span><span class="s2">&quot;snowball&quot;</span><span class="p">]</span>
+                
+                <span class="n">comparison_data</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;Method&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Avalanche&quot;</span><span class="p">,</span> <span class="s2">&quot;Snowball&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;Total Interest&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">avalanche</span><span class="p">[</span><span class="s2">&quot;total_interest&quot;</span><span class="p">],</span> <span class="n">snowball</span><span class="p">[</span><span class="s2">&quot;total_interest&quot;</span><span class="p">]],</span>
+                    <span class="s2">&quot;Months to Payoff&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">avalanche</span><span class="p">[</span><span class="s2">&quot;months_to_payoff&quot;</span><span class="p">],</span> <span class="n">snowball</span><span class="p">[</span><span class="s2">&quot;months_to_payoff&quot;</span><span class="p">]]</span>
+                <span class="p">}</span>
+                <span class="n">comparison_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">comparison_data</span><span class="p">)</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">comparison_df</span><span class="p">)</span>
+                
+                <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Total Interest&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">comparison_df</span><span class="p">[</span><span class="s2">&quot;Method&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">comparison_df</span><span class="p">[</span><span class="s2">&quot;Total Interest&quot;</span><span class="p">]),</span>
+                    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Months to Payoff&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">comparison_df</span><span class="p">[</span><span class="s2">&quot;Method&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">comparison_df</span><span class="p">[</span><span class="s2">&quot;Months to Payoff&quot;</span><span class="p">])</span>
+                <span class="p">])</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">barmode</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Debt Payoff Method Comparison&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;recommendations&quot;</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Debt Reduction Recommendations&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;recommendations&quot;</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**</span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">**: </span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;impact&quot;</span> <span class="ow">in</span> <span class="n">rec</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_Impact: </span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;impact&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_csv_transactions</span><span class="p">(</span><span class="n">file_content</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse CSV file content into a list of transactions&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Read CSV content</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">file_content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)))</span>
+        
+        <span class="c1"># Validate required columns</span>
+        <span class="n">required_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="s1">&#39;Category&#39;</span><span class="p">,</span> <span class="s1">&#39;Amount&#39;</span><span class="p">]</span>
+        <span class="n">missing_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">missing_columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required columns: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Convert date strings to datetime and then to string format YYYY-MM-DD</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Convert amount strings to float, handling currency symbols and commas</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[\$,]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        
+        <span class="c1"># Group by category and calculate totals</span>
+        <span class="n">category_totals</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Category&#39;</span><span class="p">)[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        
+        <span class="c1"># Convert to list of dictionaries</span>
+        <span class="n">transactions</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;transactions&#39;</span><span class="p">:</span> <span class="n">transactions</span><span class="p">,</span>
+            <span class="s1">&#39;category_totals&#39;</span><span class="p">:</span> <span class="n">category_totals</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error parsing CSV file: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_csv_format</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate CSV file format and content&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">dialect</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">Sniffer</span><span class="p">()</span><span class="o">.</span><span class="n">sniff</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">has_header</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">Sniffer</span><span class="p">()</span><span class="o">.</span><span class="n">has_header</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Reset file pointer</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_header</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;CSV file must have headers&quot;</span>
+            
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">content</span><span class="p">))</span>
+        <span class="n">required_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="s1">&#39;Category&#39;</span><span class="p">,</span> <span class="s1">&#39;Amount&#39;</span><span class="p">]</span>
+        <span class="n">missing_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">missing_columns</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Missing required columns: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            
+        <span class="c1"># Validate date format</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Invalid date format in Date column&quot;</span>
+            
+        <span class="c1"># Validate amount format (should be numeric after removing currency symbols)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[\$,]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Invalid amount format in Amount column&quot;</span>
+            
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;CSV format is valid&quot;</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Invalid CSV format: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">display_csv_preview</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display a preview of the CSV data with basic statistics&quot;&quot;&quot;</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;CSV Data Preview&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Show basic statistics</span>
+    <span class="n">total_transactions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">total_amount</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    
+    <span class="c1"># Convert dates for display</span>
+    <span class="n">df_dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span>
+    <span class="n">date_range</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df_dates</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">df_dates</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Total Transactions&quot;</span><span class="p">,</span> <span class="n">total_transactions</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Total Amount&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">total_amount</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Date Range&quot;</span><span class="p">,</span> <span class="n">date_range</span><span class="p">)</span>
+    
+    <span class="c1"># Show category breakdown</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Spending by Category&quot;</span><span class="p">)</span>
+    <span class="n">category_totals</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Category&#39;</span><span class="p">)[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">category_totals</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Category&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Amount&#39;</span><span class="p">,</span> <span class="s1">&#39;Transaction Count&#39;</span><span class="p">]</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">category_totals</span><span class="p">)</span>
+    
+    <span class="c1"># Show sample transactions</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Sample Transactions&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span>
+        <span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;AI Financial Coach with Google ADK&quot;</span><span class="p">,</span>
+        <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">,</span>
+        <span class="n">initial_sidebar_state</span><span class="o">=</span><span class="s2">&quot;expanded&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Sidebar with API key info and CSV template</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🔑 Setup &amp; Templates&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;📝 Please ensure you have your Gemini API key in the .env file:</span><span class="se">\n</span><span class="s2">```</span><span class="se">\n</span><span class="s2">GOOGLE_API_KEY=your_api_key_here</span><span class="se">\n</span><span class="s2">```&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">&quot;This application uses Google&#39;s ADK (Agent Development Kit) and Gemini AI to provide personalized financial advice.&quot;</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+        
+        <span class="c1"># Add CSV template download</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 CSV Template&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Download the template CSV file with the required format:</span>
+<span class="s2">        - Date (YYYY-MM-DD)</span>
+<span class="s2">        - Category</span>
+<span class="s2">        - Amount (numeric)</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Create sample CSV content</span>
+        <span class="n">sample_csv</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Date,Category,Amount</span>
+<span class="s2">2024-01-01,Housing,1200.00</span>
+<span class="s2">2024-01-02,Food,150.50</span>
+<span class="s2">2024-01-03,Transportation,45.00&quot;&quot;&quot;</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">download_button</span><span class="p">(</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;📥 Download CSV Template&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">sample_csv</span><span class="p">,</span>
+            <span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;expense_template.csv&quot;</span><span class="p">,</span>
+            <span class="n">mime</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">GEMINI_API_KEY</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;🔑 GOOGLE_API_KEY not found in environment variables. Please add it to your .env file.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Main content</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;📊 AI Financial Coach with Google ADK&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">&quot;Powered by Google&#39;s Agent Development Kit (ADK) and Gemini AI&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;This tool analyzes your financial data and provides tailored recommendations for budgeting, savings, and debt management using multiple specialized AI agents.&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+    
+    <span class="c1"># Create tabs for different sections</span>
+    <span class="n">input_tab</span><span class="p">,</span> <span class="n">about_tab</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">&quot;💼 Financial Information&quot;</span><span class="p">,</span> <span class="s2">&quot;ℹ️ About&quot;</span><span class="p">])</span>
+    
+    <span class="k">with</span> <span class="n">input_tab</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Enter Your Financial Information&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">&quot;All data is processed locally and not stored anywhere.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Income and Dependants section in a container</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">container</span><span class="p">():</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;💰 Income &amp; Household&quot;</span><span class="p">)</span>
+            <span class="n">income_col</span><span class="p">,</span> <span class="n">dependants_col</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">with</span> <span class="n">income_col</span><span class="p">:</span>
+                <span class="n">monthly_income</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span>
+                    <span class="s2">&quot;Monthly Income ($)&quot;</span><span class="p">,</span>
+                    <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                    <span class="n">step</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
+                    <span class="n">value</span><span class="o">=</span><span class="mf">3000.0</span><span class="p">,</span>
+                    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;income&quot;</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter your total monthly income after taxes&quot;</span>
+                <span class="p">)</span>
+            <span class="k">with</span> <span class="n">dependants_col</span><span class="p">:</span>
+                <span class="n">dependants</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span>
+                    <span class="s2">&quot;Number of Dependants&quot;</span><span class="p">,</span>
+                    <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;dependants&quot;</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Include all dependants in your household&quot;</span>
+                <span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+        
+        <span class="c1"># Expenses section</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">container</span><span class="p">():</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;💳 Expenses&quot;</span><span class="p">)</span>
+            <span class="n">expense_option</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">radio</span><span class="p">(</span>
+                <span class="s2">&quot;How would you like to enter your expenses?&quot;</span><span class="p">,</span>
+                <span class="p">(</span><span class="s2">&quot;📤 Upload CSV Transactions&quot;</span><span class="p">,</span> <span class="s2">&quot;✍️ Enter Manually&quot;</span><span class="p">),</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;expense_option&quot;</span><span class="p">,</span>
+                <span class="n">horizontal</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            
+            <span class="n">transaction_file</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">manual_expenses</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">use_manual_expenses</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">transactions_df</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">expense_option</span> <span class="o">==</span> <span class="s2">&quot;📤 Upload CSV Transactions&quot;</span><span class="p">:</span>
+                <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    #### Upload your transaction data</span>
+<span class="s2">                    Your CSV file should have these columns:</span>
+<span class="s2">                    - 📅 Date (YYYY-MM-DD)</span>
+<span class="s2">                    - 📝 Category</span>
+<span class="s2">                    - 💲 Amount</span>
+<span class="s2">                    &quot;&quot;&quot;</span><span class="p">)</span>
+                    
+                    <span class="n">transaction_file</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">file_uploader</span><span class="p">(</span>
+                        <span class="s2">&quot;Choose your CSV file&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;csv&quot;</span><span class="p">],</span>
+                        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;transaction_file&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Upload a CSV file containing your transactions&quot;</span>
+                    <span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">transaction_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Validate CSV format</span>
+                    <span class="n">is_valid</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">validate_csv_format</span><span class="p">(</span><span class="n">transaction_file</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="c1"># Parse CSV content</span>
+                            <span class="n">transaction_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                            <span class="n">file_content</span> <span class="o">=</span> <span class="n">transaction_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                            <span class="n">parsed_data</span> <span class="o">=</span> <span class="n">parse_csv_transactions</span><span class="p">(</span><span class="n">file_content</span><span class="p">)</span>
+                            
+                            <span class="c1"># Create DataFrame</span>
+                            <span class="n">transactions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">parsed_data</span><span class="p">[</span><span class="s1">&#39;transactions&#39;</span><span class="p">])</span>
+                            
+                            <span class="c1"># Display preview</span>
+                            <span class="n">display_csv_preview</span><span class="p">(</span><span class="n">transactions_df</span><span class="p">)</span>
+                            
+                            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ Transaction file uploaded and validated successfully!&quot;</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error processing CSV file: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">transactions_df</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                        <span class="n">transactions_df</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">use_manual_expenses</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Enter your monthly expenses by category&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Define expense categories with emojis</span>
+                <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="p">(</span><span class="s2">&quot;🏠 Housing&quot;</span><span class="p">,</span> <span class="s2">&quot;Housing&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;🔌 Utilities&quot;</span><span class="p">,</span> <span class="s2">&quot;Utilities&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;🍽️ Food&quot;</span><span class="p">,</span> <span class="s2">&quot;Food&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;🚗 Transportation&quot;</span><span class="p">,</span> <span class="s2">&quot;Transportation&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;🏥 Healthcare&quot;</span><span class="p">,</span> <span class="s2">&quot;Healthcare&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;🎭 Entertainment&quot;</span><span class="p">,</span> <span class="s2">&quot;Entertainment&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;👤 Personal&quot;</span><span class="p">,</span> <span class="s2">&quot;Personal&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;💰 Savings&quot;</span><span class="p">,</span> <span class="s2">&quot;Savings&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;📦 Other&quot;</span><span class="p">,</span> <span class="s2">&quot;Other&quot;</span><span class="p">)</span>
+                <span class="p">]</span>
+                
+                <span class="c1"># Create three columns for better layout</span>
+                <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span><span class="p">]</span>
+                
+                <span class="c1"># Distribute categories across columns</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">emoji_cat</span><span class="p">,</span> <span class="n">cat</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+                    <span class="k">with</span> <span class="n">cols</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="mi">3</span><span class="p">]:</span>
+                        <span class="n">manual_expenses</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span>
+                            <span class="n">emoji_cat</span><span class="p">,</span>
+                            <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                            <span class="n">step</span><span class="o">=</span><span class="mf">50.0</span><span class="p">,</span>
+                            <span class="n">value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                            <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;manual_</span><span class="si">{</span><span class="n">cat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Enter your monthly </span><span class="si">{</span><span class="n">cat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2"> expenses&quot;</span>
+                        <span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">manual_expenses</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">manual_expenses</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### 📊 Summary of Entered Expenses&quot;</span><span class="p">)</span>
+                    <span class="n">manual_df_disp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+                        <span class="s1">&#39;Category&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">manual_expenses</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                        <span class="s1">&#39;Amount&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">manual_expenses</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                    <span class="p">})</span>
+                    <span class="n">manual_df_disp</span> <span class="o">=</span> <span class="n">manual_df_disp</span><span class="p">[</span><span class="n">manual_df_disp</span><span class="p">[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">manual_df_disp</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span>
+                                <span class="n">manual_df_disp</span><span class="p">,</span>
+                                <span class="n">column_config</span><span class="o">=</span><span class="p">{</span>
+                                    <span class="s2">&quot;Category&quot;</span><span class="p">:</span> <span class="s2">&quot;Category&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;Amount&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">column_config</span><span class="o">.</span><span class="n">NumberColumn</span><span class="p">(</span>
+                                        <span class="s2">&quot;Amount&quot;</span><span class="p">,</span>
+                                        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">%.2f</span><span class="s2">&quot;</span>
+                                    <span class="p">)</span>
+                                <span class="p">},</span>
+                                <span class="n">hide_index</span><span class="o">=</span><span class="kc">True</span>
+                            <span class="p">)</span>
+                        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span>
+                                <span class="s2">&quot;Total Monthly Expenses&quot;</span><span class="p">,</span>
+                                <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">manual_df_disp</span><span class="p">[</span><span class="s1">&#39;Amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+        
+        <span class="c1"># Debt Information section</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">container</span><span class="p">():</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🏦 Debt Information&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Enter your debts to get personalized payoff strategies using both avalanche and snowball methods.&quot;</span><span class="p">)</span>
+            
+            <span class="n">num_debts</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span>
+                <span class="s2">&quot;How many debts do you have?&quot;</span><span class="p">,</span>
+                <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;num_debts&quot;</span>
+            <span class="p">)</span>
+            
+            <span class="n">debts</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">num_debts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Create columns for debts</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">num_debts</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1"># Max 3 columns per row</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_debts</span><span class="p">):</span>
+                    <span class="n">col_idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span>
+                    <span class="k">with</span> <span class="n">cols</span><span class="p">[</span><span class="n">col_idx</span><span class="p">]:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;##### Debt #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">debt_name</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+                            <span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+                            <span class="n">value</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Debt </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;debt_name_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter a name for this debt (e.g., Credit Card, Student Loan)&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">debt_amount</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span>
+                            <span class="s2">&quot;Amount ($)&quot;</span><span class="p">,</span>
+                            <span class="n">min_value</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                            <span class="n">step</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
+                            <span class="n">value</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">,</span>
+                            <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;debt_amount_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter the current balance of this debt&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">interest_rate</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span>
+                            <span class="s2">&quot;Interest Rate (%)&quot;</span><span class="p">,</span>
+                            <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                            <span class="n">max_value</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
+                            <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                            <span class="n">value</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+                            <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;debt_rate_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter the annual interest rate&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">min_payment</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span>
+                            <span class="s2">&quot;Minimum Payment ($)&quot;</span><span class="p">,</span>
+                            <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                            <span class="n">step</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+                            <span class="n">value</span><span class="o">=</span><span class="mf">50.0</span><span class="p">,</span>
+                            <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;debt_min_payment_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enter the minimum monthly payment required&quot;</span>
+                        <span class="p">)</span>
+                        
+                        <span class="n">debts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">debt_name</span><span class="p">,</span>
+                            <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">debt_amount</span><span class="p">,</span>
+                            <span class="s2">&quot;interest_rate&quot;</span><span class="p">:</span> <span class="n">interest_rate</span><span class="p">,</span>
+                            <span class="s2">&quot;min_payment&quot;</span><span class="p">:</span> <span class="n">min_payment</span>
+                        <span class="p">})</span>
+                        
+                        <span class="k">if</span> <span class="n">col_idx</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">num_debts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Add spacing after every 3 debts or last debt</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+        
+        <span class="c1"># Analysis button</span>
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">analyze_button</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span>
+                <span class="s2">&quot;🔄 Analyze My Finances&quot;</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;analyze_button&quot;</span><span class="p">,</span>
+                <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Click to get your personalized financial analysis&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">analyze_button</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">expense_option</span> <span class="o">==</span> <span class="s2">&quot;📤 Upload CSV Transactions&quot;</span> <span class="ow">and</span> <span class="n">transactions_df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please upload a valid transaction CSV file or choose manual entry.&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="n">use_manual_expenses</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">manual_expenses</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">manual_expenses</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No manual expenses entered. Analysis might be limited.&quot;</span><span class="p">)</span>
+
+            <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Financial Analysis Results&quot;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🤖 AI agents are analyzing your financial data...&quot;</span><span class="p">):</span> 
+                <span class="n">financial_data</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;monthly_income&quot;</span><span class="p">:</span> <span class="n">monthly_income</span><span class="p">,</span>
+                    <span class="s2">&quot;dependants&quot;</span><span class="p">:</span> <span class="n">dependants</span><span class="p">,</span>
+                    <span class="s2">&quot;transactions&quot;</span><span class="p">:</span> <span class="n">transactions_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;records&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">transactions_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;manual_expenses&quot;</span><span class="p">:</span> <span class="n">manual_expenses</span> <span class="k">if</span> <span class="n">use_manual_expenses</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;debts&quot;</span><span class="p">:</span> <span class="n">debts</span>
+                <span class="p">}</span>
+                
+                <span class="n">finance_system</span> <span class="o">=</span> <span class="n">FinanceAdvisorSystem</span><span class="p">()</span>
+                
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">results</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">finance_system</span><span class="o">.</span><span class="n">analyze_finances</span><span class="p">(</span><span class="n">financial_data</span><span class="p">))</span>
+                    
+                    <span class="n">tabs</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">&quot;💰 Budget Analysis&quot;</span><span class="p">,</span> <span class="s2">&quot;📈 Savings Strategy&quot;</span><span class="p">,</span> <span class="s2">&quot;💳 Debt Reduction&quot;</span><span class="p">])</span>
+                    
+                    <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Budget Analysis&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="s2">&quot;budget_analysis&quot;</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">and</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;budget_analysis&quot;</span><span class="p">]:</span>
+                            <span class="n">display_budget_analysis</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;budget_analysis&quot;</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;No budget analysis available.&quot;</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Savings Strategy&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="s2">&quot;savings_strategy&quot;</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">and</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;savings_strategy&quot;</span><span class="p">]:</span>
+                            <span class="n">display_savings_strategy</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;savings_strategy&quot;</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;No savings strategy available.&quot;</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">tabs</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Debt Reduction Plan&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="s2">&quot;debt_reduction&quot;</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">and</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;debt_reduction&quot;</span><span class="p">]:</span>
+                            <span class="n">display_debt_reduction</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;debt_reduction&quot;</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;No debt reduction plan available.&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred during analysis: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">about_tab</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        ### About AI Financial Coach</span>
+<span class="s2">        </span>
+<span class="s2">        This application uses Google&#39;s Agent Development Kit (ADK) to provide comprehensive financial analysis and advice through multiple specialized AI agents:</span>
+<span class="s2">        </span>
+<span class="s2">        1. **🔍 Budget Analysis Agent**</span>
+<span class="s2">           - Analyzes spending patterns</span>
+<span class="s2">           - Identifies areas for cost reduction</span>
+<span class="s2">           - Provides actionable recommendations</span>
+<span class="s2">        </span>
+<span class="s2">        2. **💰 Savings Strategy Agent**</span>
+<span class="s2">           - Creates personalized savings plans</span>
+<span class="s2">           - Calculates emergency fund requirements</span>
+<span class="s2">           - Suggests automation techniques</span>
+<span class="s2">        </span>
+<span class="s2">        3. **💳 Debt Reduction Agent**</span>
+<span class="s2">           - Develops optimal debt payoff strategies</span>
+<span class="s2">           - Compares different repayment methods</span>
+<span class="s2">           - Provides actionable debt reduction tips</span>
+<span class="s2">        </span>
+<span class="s2">        ### Privacy &amp; Security</span>
+<span class="s2">        </span>
+<span class="s2">        - All data is processed locally</span>
+<span class="s2">        - No financial information is stored or transmitted</span>
+<span class="s2">        - Secure API communication with Google&#39;s services</span>
+<span class="s2">        </span>
+<span class="s2">        ### Need Help?</span>
+<span class="s2">        </span>
+<span class="s2">        For support or questions:</span>
+<span class="s2">        - Check the [documentation](https://github.com/Shubhamsaboo/awesome-llm-apps)</span>
+<span class="s2">        - Report issues on [GitHub](https://github.com/Shubhamsaboo/awesome-llm-apps/issues)</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps/ai-financial-coach-agent/ai_financial_coach_agent.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">118 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>google-adk==0.1.0
+streamlit&gt;=1.28.0
+pandas&gt;=2.0.0
+matplotlib&gt;=3.7.0
+numpy==1.26.4
+python-dotenv&gt;=1.0.0
+plotly&gt;=5.15.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps/ai-financial-coach-agent/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-multi-agent-apps/ai-financial-coach-agent">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-multi-agent-apps/ai-email-gtm-outreach-agent/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Campagne de prospection multi-agents</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-multi-agent-apps/ai-home-renovation-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Planificateur de rénovation</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/multi_agent_apps/ai_financial_coach_agent" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/multi_agent_apps/ai_financial_coach_agent</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h3"><a href="#free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial</a></li><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#how-to-run">How to Run</a></li><li class="toc__item toc__item--h2"><a href="#csv-file-format">CSV File Format</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

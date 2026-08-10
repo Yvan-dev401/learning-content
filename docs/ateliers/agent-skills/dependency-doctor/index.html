@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Médecin des dépendances — atelier</title>
+<meta name="description" content="Diagnostique les conflits de versions et propose une sortie.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/agent-skills/index.html">Compétences d&#x27;agent</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🧩</span> Compétences d&#x27;agent</p>
+  <h1 class="pagehead__title">Médecin des dépendances</h1>
+  <p class="pagehead__summary">Diagnostique les conflits de versions et propose une sortie.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#gratuit" title="Rien à payer : tout est local ou couvert par un service gratuit."><span class="tag__icon" aria-hidden="true">🆓</span><span class="tag__label">100 % gratuit</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+
+
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="dependency-doctor-agent-skill">Dependency Doctor Agent Skill<a class="anchor" href="#dependency-doctor-agent-skill" aria-label="Lien vers cette section">#</a></h1>
+<p>Dependency Doctor inspects one dependency manifest for surface-level,
+direct-manifest footguns. It catches unpinned versions, standard-library
+shadowing, obsolete backports, and obvious intra-manifest conflicts; it does
+not diagnose a failed pip or uv dependency resolution. It is a local,
+user-invoked development tool, not a repository CI rule.</p>
+<p><img src="https://github.com/mvanhorn/awesome-llm-apps/releases/download/demo-assets/dependency-doctor.gif" alt="demo" loading="lazy" decoding="async" /></p>
+<h2 id="what-it-checks">What it checks<a class="anchor" href="#what-it-checks" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Python standard-library shadowing pins such as <code>pathlib==1.0.1</code></li>
+<li>Obsolete backports such as <code>dataclasses</code>, <code>typing</code>, <code>enum34</code>, and <code>futures</code></li>
+<li>Dependencies with no usable version constraint</li>
+<li>Duplicate entries and conflicting exact pins</li>
+<li>Fully yanked PyPI releases when <code>--online</code> is explicitly enabled</li>
+</ul>
+<p>The offline core supports <code>requirements.txt</code>, PEP 621 or Poetry
+<code>pyproject.toml</code>, and <code>package.json</code>. It uses only the Python standard library.</p>
+<h2 id="install">Install<a class="anchor" href="#install" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>npx<span class="w"> </span>skills<span class="w"> </span>add<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/agent_skills/dependency-doctor
+</pre></div>
+</div><p>Then ask your agent: <code>check my requirements.txt for dependency problems</code>.</p>
+<h2 id="run-the-script-directly">Run the script directly<a class="anchor" href="#run-the-script-directly" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python3<span class="w"> </span>agent_skills/dependency-doctor/scripts/dep_doctor.py<span class="w"> </span>requirements.txt<span class="w"> </span>--json
+</pre></div>
+</div><p>The default command makes no network calls. To check exact Python pins for
+fully yanked PyPI releases, opt in:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python3<span class="w"> </span>agent_skills/dependency-doctor/scripts/dep_doctor.py<span class="w"> </span>requirements.txt<span class="w"> </span>--json<span class="w"> </span>--online
+</pre></div>
+</div><p>The doctor reports findings and suggested fixes but does not edit the manifest.
+Run the eval from a clone before installing:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python3<span class="w"> </span>agent_skills/evals/dependency-doctor/test_dep_doctor.py
+</pre></div>
+</div><h2 id="scope">Scope<a class="anchor" href="#scope" aria-label="Lien vers cette section">#</a></h2>
+<p>This focused check does not resolve a complete dependency graph and does not
+query a vulnerability database. Use the project's approved audit tool for CVE
+coverage. Ask before enabling the PyPI lookup or applying any suggested fix.</p>
+<p>Apache-2.0. Last verified: July 2026.</p>
+
+</article>
+<section class="subpages"><h2 id="pages-de-l-atelier">Pages de cet atelier<a class="anchor" href="#pages-de-l-atelier" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../ateliers/agent-skills/dependency-doctor/skill/index.html">Dependency Doctor</a></li><li><a href="../../../ateliers/agent-skills/dependency-doctor/references-dependency-pitfalls/index.html">Dependency pitfalls</a></li></ul></section>
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="scripts"><details class="codefile" id="code-scripts-dep-doctor-py"><summary class="codefile__head"><span class="codefile__name">scripts/dep_doctor.py</span><span class="codefile__size">18 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;Diagnose dependency manifest footguns with an offline-first core.</span>
+
+<span class="sd">Supported inputs are requirements.txt, pyproject.toml, and package.json.</span>
+<span class="sd">The default run reads only the selected file. Passing --online explicitly adds</span>
+<span class="sd">PyPI lookups for exact Python pins so fully yanked releases can be reported.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># SPDX-License-Identifier: Apache-2.0</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+
+<span class="n">PYTHON_NAME_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;^([A-Za-z0-9][A-Za-z0-9._-]*)(?:\[[^\]]+\])?\s*(.*)$&quot;</span>
+<span class="p">)</span>
+<span class="n">EXACT_PIN_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?:^|,)\s*==\s*([^,;\s]+)&quot;</span><span class="p">)</span>
+<span class="n">NPM_UNPINNED_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(?:|\*|latest|[xX](?:\.[xX*]){0,2})$&quot;</span><span class="p">)</span>
+<span class="n">PYTHON_MARKER_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;^python_(full_)?version\s*(==|!=|&lt;=|&gt;=|&lt;|&gt;)\s*[&#39;</span><span class="se">\&quot;</span><span class="s2">](\d+(?:\.\d+){1,2})[&#39;</span><span class="se">\&quot;</span><span class="s2">]$&quot;</span><span class="p">,</span>
+    <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">BACKPORTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;asyncio&quot;</span><span class="p">:</span> <span class="s2">&quot;Python 3.4 and newer include asyncio in the standard library.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;configparser&quot;</span><span class="p">:</span> <span class="s2">&quot;Python 3 includes configparser in the standard library.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dataclasses&quot;</span><span class="p">:</span> <span class="s2">&quot;Python 3.7 and newer include dataclasses in the standard library.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;enum34&quot;</span><span class="p">:</span> <span class="s2">&quot;Python 3.4 and newer include enum in the standard library.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;functools32&quot;</span><span class="p">:</span> <span class="s2">&quot;Modern Python includes the relevant functools features.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;futures&quot;</span><span class="p">:</span> <span class="s2">&quot;Python 3.2 and newer include concurrent.futures.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ipaddress&quot;</span><span class="p">:</span> <span class="s2">&quot;Python 3.3 and newer include ipaddress in the standard library.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pathlib&quot;</span><span class="p">:</span> <span class="s2">&quot;Python 3.4 and newer include pathlib in the standard library.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;singledispatch&quot;</span><span class="p">:</span> <span class="s2">&quot;Python 3.4 and newer include functools.singledispatch.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;subprocess32&quot;</span><span class="p">:</span> <span class="s2">&quot;Modern Python includes the maintained subprocess implementation.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;typing&quot;</span><span class="p">:</span> <span class="s2">&quot;Python 3.5 and newer include typing in the standard library.&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the normalized package name used for grouping.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[-_.]+&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">new_entry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">ecosystem</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the internal representation shared by all manifest parsers.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;package&quot;</span><span class="p">:</span> <span class="n">normalize_name</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+        <span class="s2">&quot;spec&quot;</span><span class="p">:</span> <span class="n">spec</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+        <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="n">line</span><span class="p">,</span>
+        <span class="s2">&quot;ecosystem&quot;</span><span class="p">:</span> <span class="n">ecosystem</span><span class="p">,</span>
+        <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="n">marker</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_python_requirement</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">ecosystem</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse the useful subset of a PEP 508 requirement without packaging.&quot;&quot;&quot;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+#&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">requirement</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">marker</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">PYTHON_NAME_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">requirement</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">spec</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">):</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">new_entry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">ecosystem</span><span class="p">,</span> <span class="n">marker</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">line_locator</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a function that locates repeated package names in source order.&quot;&quot;&quot;</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">cursors</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">match_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">locate</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">match_cache</span><span class="p">:</span>
+            <span class="n">package_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+                <span class="sa">r</span><span class="s2">&quot;(?&lt;![A-Za-z0-9_.@/-])</span><span class="si">%s</span><span class="s2">(?![A-Za-z0-9_.@/-])&quot;</span> <span class="o">%</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+                <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">match_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">number</span>
+                <span class="k">for</span> <span class="n">number</span><span class="p">,</span> <span class="n">source_line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">package_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">source_line</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">match_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">cursors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">cursors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">matches</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">matches</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">matches</span> <span class="k">else</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">locate</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_requirements</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read one requirement per physical line.&quot;&quot;&quot;</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line_number</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(),</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">parse_python_requirement</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">line_number</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="p">:</span>
+            <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">entries</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_pyproject</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read PEP 621 and common Poetry dependency tables with tomllib.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">tomllib</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">tomllib</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;could not parse pyproject.toml: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">error</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+    <span class="n">locate</span> <span class="o">=</span> <span class="n">line_locator</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">project</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dependencies&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[])</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;optional-dependencies&quot;</span><span class="p">,</span> <span class="p">{})</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">group</span> <span class="ow">or</span> <span class="p">[])</span>
+
+    <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">parse_python_requirement</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">locate</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">entry</span><span class="p">:</span>
+                <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+    <span class="n">poetry</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;poetry&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dependencies&quot;</span><span class="p">,</span> <span class="p">{})</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">poetry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">normalize_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;python&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[0-9]+(?:\.[0-9A-Za-z-]+){0,3}$&quot;</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="s2">&quot;==&quot;</span> <span class="o">+</span> <span class="n">spec</span>
+        <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_entry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">locate</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s2">&quot;python&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">entries</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_package_json</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read dependency sections from package.json.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;could not parse package.json: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">error</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+    <span class="n">locate</span> <span class="o">=</span> <span class="n">line_locator</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sections</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;dependencies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;devDependencies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;optionalDependencies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;peerDependencies&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
+        <span class="n">dependencies</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="p">{})</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dependencies</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_entry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">locate</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s2">&quot;npm&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">entries</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_manifest</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Select a parser from the manifest name.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;could not read </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">error</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;package.json&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">load_package_json</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">load_pyproject</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;requirements.txt&quot;</span> <span class="ow">or</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.txt&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">load_requirements</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unsupported manifest; use requirements.txt, pyproject.toml, or package.json&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">has_version_spec</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether an entry constrains or directly identifies a version.&quot;&quot;&quot;</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;ecosystem&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;npm&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">NPM_UNPINNED_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">spec</span> <span class="ow">and</span> <span class="n">spec</span> <span class="o">!=</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">marker_applies</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate simple Python-version markers, conservatively keeping others.&quot;&quot;&quot;</span>
+    <span class="n">marker</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">marker</span> <span class="ow">or</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;ecosystem&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;python&quot;</span> <span class="ow">or</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+or\s+&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+and\s+&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">PYTHON_MARKER_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">clause</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">full_version</span><span class="p">,</span> <span class="n">comparison</span><span class="p">,</span> <span class="n">requested</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="mi">3</span> <span class="k">if</span> <span class="n">full_version</span> <span class="k">else</span> <span class="mi">2</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="n">width</span><span class="p">])</span>
+        <span class="n">requested_parts</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">requested</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="p">(</span><span class="n">requested_parts</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span> <span class="o">*</span> <span class="n">width</span><span class="p">)[:</span><span class="n">width</span><span class="p">]</span>
+        <span class="n">comparisons</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;==&quot;</span><span class="p">:</span> <span class="n">current</span> <span class="o">==</span> <span class="n">target</span><span class="p">,</span>
+            <span class="s2">&quot;!=&quot;</span><span class="p">:</span> <span class="n">current</span> <span class="o">!=</span> <span class="n">target</span><span class="p">,</span>
+            <span class="s2">&quot;&lt;=&quot;</span><span class="p">:</span> <span class="n">current</span> <span class="o">&lt;=</span> <span class="n">target</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;=&quot;</span><span class="p">:</span> <span class="n">current</span> <span class="o">&gt;=</span> <span class="n">target</span><span class="p">,</span>
+            <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span> <span class="n">current</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;&quot;</span><span class="p">:</span> <span class="n">current</span> <span class="o">&gt;</span> <span class="n">target</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">comparisons</span><span class="p">[</span><span class="n">comparison</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">non_python_version_marker</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return normalized marker clauses that describe a non-Python axis.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;ecosystem&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;python&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">clauses</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+(?:and|or)\s+&quot;</span><span class="p">,</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">],</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="n">non_python_clauses</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">clause</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">clauses</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">PYTHON_MARKER_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">clause</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="s2">&quot; &amp;&amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">non_python_clauses</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">has_differing_non_python_markers</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether entries are split across distinct non-Python markers.&quot;&quot;&quot;</span>
+    <span class="n">left_marker</span> <span class="o">=</span> <span class="n">non_python_version_marker</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+    <span class="n">right_marker</span> <span class="o">=</span> <span class="n">non_python_version_marker</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">left_marker</span> <span class="ow">and</span> <span class="n">right_marker</span> <span class="ow">and</span> <span class="n">left_marker</span> <span class="o">!=</span> <span class="n">right_marker</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">exact_pin</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exact version, or None for ranges and direct references.&quot;&quot;&quot;</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;ecosystem&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;npm&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[0-9]+(?:\.[0-9A-Za-z-]+){0,3}$&quot;</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">spec</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">EXACT_PIN_RE</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span> <span class="ow">and</span> <span class="s2">&quot;*&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_finding</span><span class="p">(</span><span class="n">severity</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">why</span><span class="p">,</span> <span class="n">fix</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create one finding in the public JSON shape.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;severity&quot;</span><span class="p">:</span> <span class="n">severity</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="n">kind</span><span class="p">,</span>
+        <span class="s2">&quot;package&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;why&quot;</span><span class="p">:</span> <span class="n">why</span><span class="p">,</span>
+        <span class="s2">&quot;fix&quot;</span><span class="p">:</span> <span class="n">fix</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">offline_findings</span><span class="p">(</span><span class="n">entries</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run checks that read no state beyond the selected manifest.&quot;&quot;&quot;</span>
+    <span class="n">findings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">stdlib_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdlib_module_names&quot;</span><span class="p">,</span> <span class="p">()))</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="n">package</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">]</span>
+        <span class="n">remove_instead_of_pin</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;ecosystem&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;python&quot;</span><span class="p">:</span>
+            <span class="n">module_name</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">BACKPORTS</span><span class="p">:</span>
+                <span class="c1"># A known backport is the more specific, actionable root cause.</span>
+                <span class="n">remove_instead_of_pin</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_finding</span><span class="p">(</span>
+                    <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;abandoned-backport&quot;</span><span class="p">,</span>
+                    <span class="n">entry</span><span class="p">,</span>
+                    <span class="n">BACKPORTS</span><span class="p">[</span><span class="n">package</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; The old backport can conflict with supported runtimes.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Remove </span><span class="si">%s</span><span class="s2"> on supported Python versions. If an older runtime is required, guard the backport with a Python-version marker.&quot;</span>
+                    <span class="o">%</span> <span class="n">package</span><span class="p">,</span>
+                <span class="p">))</span>
+            <span class="k">elif</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">stdlib_names</span><span class="p">:</span>
+                <span class="n">remove_instead_of_pin</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_finding</span><span class="p">(</span>
+                    <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;stdlib-shadowing&quot;</span><span class="p">,</span>
+                    <span class="n">entry</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is provided by this Python runtime. Installing a package with the same name can shadow the maintained standard-library module.&quot;</span>
+                    <span class="o">%</span> <span class="n">package</span><span class="p">,</span>
+                    <span class="s2">&quot;Remove </span><span class="si">%s</span><span class="s2"> from the manifest and import the standard-library module directly.&quot;</span>
+                    <span class="o">%</span> <span class="n">package</span><span class="p">,</span>
+                <span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_version_spec</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">remove_instead_of_pin</span><span class="p">:</span>
+                <span class="n">fix</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;Do not add a pin for </span><span class="si">%s</span><span class="s2">. Remove it on supported Python versions, &quot;</span>
+                    <span class="s2">&quot;or guard a required backport with a Python-version marker.&quot;</span> <span class="o">%</span> <span class="n">package</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fix</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;Pin </span><span class="si">%s</span><span class="s2"> to a reviewed version after checking the version installed &quot;</span>
+                    <span class="s2">&quot;in the working environment.&quot;</span> <span class="o">%</span> <span class="n">package</span>
+                <span class="p">)</span>
+            <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_finding</span><span class="p">(</span>
+                <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;unpinned&quot;</span><span class="p">,</span>
+                <span class="n">entry</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has no usable version constraint, so a future install can resolve to different code.&quot;</span>
+                <span class="o">%</span> <span class="n">package</span><span class="p">,</span>
+                <span class="n">fix</span><span class="p">,</span>
+            <span class="p">))</span>
+
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="n">grouped</span><span class="p">[(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;ecosystem&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">])]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">_ecosystem</span><span class="p">,</span> <span class="n">package</span><span class="p">),</span> <span class="n">package_entries</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">package_entries</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">conflicting_pairs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">package_entries</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">exact_pin</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">exact_pin</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">exact_pin</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">!=</span> <span class="n">exact_pin</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">has_differing_non_python_markers</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">package_entries</span><span class="p">)</span>
+        <span class="n">representative</span> <span class="o">=</span> <span class="n">package_entries</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">conflicting_pairs</span><span class="p">:</span>
+            <span class="n">conflict_entries</span> <span class="o">=</span> <span class="n">conflicting_pairs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">conflict_lines</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">conflict_entries</span><span class="p">)</span>
+            <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_finding</span><span class="p">(</span>
+                <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;conflicting-constraints&quot;</span><span class="p">,</span>
+                <span class="n">conflict_entries</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is pinned to incompatible exact versions on lines </span><span class="si">%s</span><span class="s2">.&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">conflict_lines</span><span class="p">),</span>
+                <span class="s2">&quot;Choose one compatible version for </span><span class="si">%s</span><span class="s2"> and keep a single constraint.&quot;</span>
+                <span class="o">%</span> <span class="n">package</span><span class="p">,</span>
+            <span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">package_entries</span><span class="p">}</span>
+            <span class="n">detail</span> <span class="o">=</span> <span class="s2">&quot;the same constraint&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;separate constraints&quot;</span>
+            <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_finding</span><span class="p">(</span>
+                <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;duplicate-constraint&quot;</span><span class="p">,</span>
+                <span class="n">representative</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> appears on lines </span><span class="si">%s</span><span class="s2"> with </span><span class="si">%s</span><span class="s2">. Multiple entries are easy to update inconsistently.&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">detail</span><span class="p">),</span>
+                <span class="s2">&quot;Keep one </span><span class="si">%s</span><span class="s2"> entry and combine any compatible constraints on that line.&quot;</span>
+                <span class="o">%</span> <span class="n">package</span><span class="p">,</span>
+            <span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">findings</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">online_findings</span><span class="p">(</span><span class="n">entries</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Query PyPI only for exact pins after the user passes --online.&quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+
+    <span class="n">findings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">checked</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">exact_pin</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">],</span> <span class="n">version</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;ecosystem&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;python&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">version</span> <span class="ow">or</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">checked</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">checked</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://pypi.org/pypi/</span><span class="si">%s</span><span class="s2">/json&quot;</span> <span class="o">%</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">],</span> <span class="n">safe</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;dependency-doctor/1.0&quot;</span><span class="p">})</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+                <span class="n">payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_finding</span><span class="p">(</span>
+                <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;online-check-failed&quot;</span><span class="p">,</span>
+                <span class="n">entry</span><span class="p">,</span>
+                <span class="s2">&quot;PyPI could not be checked for </span><span class="si">%s</span><span class="s2">==</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">],</span> <span class="n">version</span><span class="p">,</span> <span class="n">error</span><span class="p">),</span>
+                <span class="s2">&quot;Retry with --online when PyPI is reachable, or inspect the release on PyPI manually.&quot;</span><span class="p">,</span>
+            <span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="n">files</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;releases&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="n">files</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">file_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yanked&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">file_info</span> <span class="ow">in</span> <span class="n">files</span><span class="p">):</span>
+            <span class="n">reasons</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span>
+                <span class="n">file_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yanked_reason&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">file_info</span> <span class="ow">in</span> <span class="n">files</span>
+                <span class="k">if</span> <span class="n">file_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;yanked_reason&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="p">})</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot; PyPI reason: &quot;</span> <span class="o">+</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">reasons</span><span class="p">))</span> <span class="k">if</span> <span class="n">reasons</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_finding</span><span class="p">(</span>
+                <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;yanked-release&quot;</span><span class="p">,</span>
+                <span class="n">entry</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">==</span><span class="si">%s</span><span class="s2"> is fully yanked on PyPI.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">],</span> <span class="n">version</span><span class="p">,</span> <span class="n">reason</span><span class="p">),</span>
+                <span class="s2">&quot;Choose a non-yanked release of </span><span class="si">%s</span><span class="s2">, test it, and update the exact pin.&quot;</span>
+                <span class="o">%</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">],</span>
+            <span class="p">))</span>
+    <span class="k">return</span> <span class="n">findings</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_report</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">use_online</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the checks and assemble the deterministic report.&quot;&quot;&quot;</span>
+    <span class="n">active_entries</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span> <span class="k">if</span> <span class="n">marker_applies</span><span class="p">(</span><span class="n">entry</span><span class="p">)]</span>
+    <span class="n">findings</span> <span class="o">=</span> <span class="n">offline_findings</span><span class="p">(</span><span class="n">active_entries</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_online</span><span class="p">:</span>
+        <span class="n">findings</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">online_findings</span><span class="p">(</span><span class="n">active_entries</span><span class="p">))</span>
+    <span class="n">findings</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">]))</span>
+    <span class="n">severity_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;severity&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">findings</span><span class="p">)</span>
+    <span class="n">kind_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">findings</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+        <span class="s2">&quot;findings&quot;</span><span class="p">:</span> <span class="n">findings</span><span class="p">,</span>
+        <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">findings</span><span class="p">),</span>
+            <span class="s2">&quot;by_severity&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">severity_counts</span><span class="o">.</span><span class="n">items</span><span class="p">())),</span>
+            <span class="s2">&quot;by_kind&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">kind_counts</span><span class="o">.</span><span class="n">items</span><span class="p">())),</span>
+            <span class="s2">&quot;online&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">use_online</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_human</span><span class="p">(</span><span class="n">report</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a compact report for direct terminal use.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dependency Doctor: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">report</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">report</span><span class="p">[</span><span class="s2">&quot;findings&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No findings.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">report</span><span class="p">[</span><span class="s2">&quot;findings&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">%s</span><span class="s2"> [</span><span class="si">%s</span><span class="s2">] </span><span class="si">%s</span><span class="s2"> (line </span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">item</span><span class="p">[</span><span class="s2">&quot;severity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">]</span>
+        <span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Why: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;why&quot;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Fix: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;fix&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Summary: </span><span class="si">%d</span><span class="s2"> finding(s)&quot;</span> <span class="o">%</span> <span class="n">report</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">][</span><span class="s2">&quot;total&quot;</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Diagnose dependency manifests locally; PyPI checks are opt-in.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;manifest&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;requirements.txt, pyproject.toml, or package.json&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;as_json&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;emit JSON&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--online&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;query PyPI for fully yanked exact Python releases&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">manifest</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="n">load_manifest</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">build_report</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">use_online</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">online</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">as_json</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">report</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">print_human</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/agent-skills/dependency-doctor/scripts/dep_doctor.py" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:agent-skills/dependency-doctor">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/agent-skills/commit-archaeologist/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Archéologue des commits</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/agent-skills/project-graveyard/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Cimetière de projets</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/agent_skills/dependency-doctor" target="_blank" rel="noopener noreferrer">
+    agent_skills/dependency-doctor</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#what-it-checks">What it checks</a></li><li class="toc__item toc__item--h2"><a href="#install">Install</a></li><li class="toc__item toc__item--h2"><a href="#run-the-script-directly">Run the script directly</a></li><li class="toc__item toc__item--h2"><a href="#scope">Scope</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

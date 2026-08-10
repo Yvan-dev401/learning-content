@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Couche de confiance entre agents — atelier</title>
+<meta name="description" content="Comment des agents s&#x27;authentifient et se vérifient mutuellement. Un sujet de sécurité encore peu traité.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html">Applications multi-agents</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🕸️</span> Applications multi-agents</p>
+  <h1 class="pagehead__title">Couche de confiance entre agents</h1>
+  <p class="pagehead__summary">Comment des agents s&#x27;authentifient et se vérifient mutuellement. Un sujet de sécurité encore peu traité.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#tres-demande" title="Compétence fréquemment attendue sur les offres d&#x27;emploi en IA."><span class="tag__icon" aria-hidden="true">🔥</span><span class="tag__label">Très demandé</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Agent Identity: Each agent has a verifiable identity with a human sponsor</li><li>Trust Scoring: Behavioral monitoring with a 0-1000 trust score</li><li>Delegation Chains: Cryptographically narrow scope when delegating tasks</li><li>Policy Enforcement: Enforce compliance rules across agent interactions</li><li>Audit Trail: Full observability of agent-to-agent communications</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="multi-agent-trust-layer-secure-agent-to-agent-communication">🤝 Multi-Agent Trust Layer - Secure Agent-to-Agent Communication<a class="anchor" href="#multi-agent-trust-layer-secure-agent-to-agent-communication" aria-label="Lien vers cette section">#</a></h1>
+<p>Learn how to build a trust layer for multi-agent systems that enables secure delegation, trust scoring, and policy enforcement between AI agents.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Agent Identity</strong>: Each agent has a verifiable identity with a human sponsor</li>
+<li><strong>Trust Scoring</strong>: Behavioral monitoring with a 0-1000 trust score</li>
+<li><strong>Delegation Chains</strong>: Cryptographically narrow scope when delegating tasks</li>
+<li><strong>Policy Enforcement</strong>: Enforce compliance rules across agent interactions</li>
+<li><strong>Audit Trail</strong>: Full observability of agent-to-agent communications</li>
+</ul>
+<h2 id="how-it-works">How It Works<a class="anchor" href="#how-it-works" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>┌─────────────────┐         ┌─────────────────┐
+│   Agent A       │◀───────▶│   Trust Layer   │
+│  (Orchestrator) │   TLS   │                 │
+└─────────────────┘         │  • Identity     │
+                            │  • Trust Score  │
+┌─────────────────┐         │  • Delegation   │
+│   Agent B       │◀───────▶│  • Policy       │
+│  (Specialist)   │   TLS   │  • Audit        │
+└─────────────────┘         └─────────────────┘
+</pre></div>
+</div><ol>
+<li><strong>Registration</strong>: Agents register with verified identity and human sponsor</li>
+<li><strong>Trust Establishment</strong>: Initial trust score based on sponsor reputation</li>
+<li><strong>Delegation</strong>: Parent agents can delegate tasks with narrowed permissions</li>
+<li><strong>Monitoring</strong>: All actions are tracked and trust scores updated</li>
+<li><strong>Enforcement</strong>: Policies determine what each agent can do</li>
+</ol>
+<h2 id="requirements">Requirements<a class="anchor" href="#requirements" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Python 3.8+</li>
+<li>OpenAI API key (or any LLM provider)</li>
+<li>Required Python packages (see <code>requirements.txt</code>)</li>
+</ul>
+<h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p>Clone this repository:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>advanced_ai_agents/multi_agent_apps/multi_agent_trust_layer
+</pre></div>
+</div></li>
+<li>
+<p>Install the required packages:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+</ol>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p>Set your API key:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your-openai-api-key
+</pre></div>
+</div></li>
+<li>
+<p>Run the trust layer demo:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>python<span class="w"> </span>multi_agent_trust_layer.py
+</pre></div>
+</div></li>
+<li>
+<p>Watch agents interact through the trust layer with full observability.</p>
+</li>
+</ol>
+<h2 id="example-agent-delegation-chain">Example: Agent Delegation Chain<a class="anchor" href="#example-agent-delegation-chain" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Orchestrator agent creates a delegation for a specialist</span>
+<span class="n">delegation</span> <span class="o">=</span> <span class="n">trust_layer</span><span class="o">.</span><span class="n">create_delegation</span><span class="p">(</span>
+    <span class="n">from_agent</span><span class="o">=</span><span class="s2">&quot;orchestrator-001&quot;</span><span class="p">,</span>
+    <span class="n">to_agent</span><span class="o">=</span><span class="s2">&quot;researcher-002&quot;</span><span class="p">,</span>
+    <span class="n">scope</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;allowed_actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span> <span class="s2">&quot;summarize&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;max_tokens&quot;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+        <span class="s2">&quot;time_limit_minutes&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="s2">&quot;allowed_domains&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;arxiv.org&quot;</span><span class="p">,</span> <span class="s2">&quot;github.com&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="n">task_description</span><span class="o">=</span><span class="s2">&quot;Research recent papers on AI safety&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Researcher can only perform actions within the delegated scope</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">researcher</span><span class="o">.</span><span class="n">execute_with_delegation</span><span class="p">(</span>
+    <span class="n">delegation</span><span class="o">=</span><span class="n">delegation</span><span class="p">,</span>
+    <span class="n">action</span><span class="o">=</span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;AI safety papers 2024&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div><h2 id="trust-score-system">Trust Score System<a class="anchor" href="#trust-score-system" aria-label="Lien vers cette section">#</a></h2>
+<p>Trust scores range from 0-1000:</p>
+<table>
+<thead>
+<tr>
+<th>Score Range</th>
+<th>Level</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>900-1000</td>
+<td>Trusted</td>
+<td>Full access within role</td>
+</tr>
+<tr>
+<td>700-899</td>
+<td>Standard</td>
+<td>Normal operations</td>
+</tr>
+<tr>
+<td>500-699</td>
+<td>Probation</td>
+<td>Limited actions, extra logging</td>
+</tr>
+<tr>
+<td>300-499</td>
+<td>Restricted</td>
+<td>Human approval required</td>
+</tr>
+<tr>
+<td>0-299</td>
+<td>Suspended</td>
+<td>No autonomous actions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="score-updates">Score Updates<a class="anchor" href="#score-updates" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Positive behaviors increase trust</span>
+<span class="o">+</span><span class="mi">10</span><span class="p">:</span> <span class="n">Successfully</span> <span class="n">completed</span> <span class="n">delegated</span> <span class="n">task</span>
+<span class="o">+</span><span class="mi">5</span><span class="p">:</span>  <span class="n">Stayed</span> <span class="n">within</span> <span class="n">scope</span> <span class="n">boundaries</span>
+<span class="o">+</span><span class="mi">2</span><span class="p">:</span>  <span class="n">Provided</span> <span class="n">accurate</span> <span class="n">information</span>
+
+<span class="c1"># Negative behaviors decrease trust</span>
+<span class="o">-</span><span class="mi">50</span><span class="p">:</span> <span class="n">Attempted</span> <span class="n">action</span> <span class="n">outside</span> <span class="n">scope</span>
+<span class="o">-</span><span class="mi">30</span><span class="p">:</span> <span class="n">Provided</span> <span class="n">inaccurate</span> <span class="n">information</span>
+<span class="o">-</span><span class="mi">20</span><span class="p">:</span> <span class="n">Exceeded</span> <span class="n">resource</span> <span class="n">limits</span>
+<span class="o">-</span><span class="mi">100</span><span class="p">:</span> <span class="n">Security</span> <span class="n">violation</span>
+</pre></div>
+</div><h2 id="example-output">Example Output<a class="anchor" href="#example-output" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>🤝 Multi-Agent Trust Layer Demo
+================================
+
+📋 Registering agents...
+✅ Registered: orchestrator-001 (Human Sponsor: alice@company.com)
+✅ Registered: researcher-002 (Human Sponsor: bob@company.com)
+✅ Registered: writer-003 (Human Sponsor: carol@company.com)
+
+🔐 Creating delegation chain...
+✅ Delegation: orchestrator-001 → researcher-002
+   Scope: web_search, summarize
+   Time Limit: 30 minutes
+
+🤖 Agent researcher-002 executing: web_search
+   Query: &quot;AI safety papers 2024&quot;
+✅ Action ALLOWED (within delegated scope)
+   Trust Score: 850 → 860 (+10)
+
+🤖 Agent researcher-002 executing: send_email
+❌ Action DENIED (not in delegated scope)
+   Trust Score: 860 → 810 (-50)
+
+📊 Trust Scores:
+   orchestrator-001: 900 (Trusted)
+   researcher-002: 810 (Standard)
+   writer-003: 850 (Standard)
+</pre></div>
+</div><h2 id="key-concepts">Key Concepts<a class="anchor" href="#key-concepts" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="1-agent-identity">1. Agent Identity<a class="anchor" href="#1-agent-identity" aria-label="Lien vers cette section">#</a></h3>
+<p>Every agent has a cryptographic identity tied to a human sponsor:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentIdentity</span><span class="p">:</span>
+    <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">public_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">human_sponsor</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Accountable human</span>
+    <span class="n">organization</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">roles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+</pre></div>
+</div><h3 id="2-delegation-chains">2. Delegation Chains<a class="anchor" href="#2-delegation-chains" aria-label="Lien vers cette section">#</a></h3>
+<p>Delegations form a chain where each link can only narrow scope:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nd">@dataclass</span>  
+<span class="k">class</span><span class="w"> </span><span class="nc">Delegation</span><span class="p">:</span>
+    <span class="n">delegation_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">parent_agent</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">child_agent</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="n">DelegationScope</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Signed by parent</span>
+    <span class="n">parent_delegation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># Links to parent&#39;s delegation</span>
+</pre></div>
+</div><h3 id="3-policy-enforcement">3. Policy Enforcement<a class="anchor" href="#3-policy-enforcement" aria-label="Lien vers cette section">#</a></h3>
+<p>Policies define what agents can do based on trust and role:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">policies</span><span class="p">:</span>
+  <span class="n">researcher</span><span class="p">:</span>
+    <span class="n">base_trust_required</span><span class="p">:</span> <span class="mi">500</span>
+    <span class="n">allowed_actions</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">web_search</span>
+      <span class="o">-</span> <span class="n">read_document</span>
+      <span class="o">-</span> <span class="n">summarize</span>
+    <span class="n">denied_actions</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">execute_code</span>
+      <span class="o">-</span> <span class="n">send_email</span>
+    <span class="n">resource_limits</span><span class="p">:</span>
+      <span class="n">max_tokens_per_hour</span><span class="p">:</span> <span class="mi">100000</span>
+      <span class="n">max_api_calls_per_minute</span><span class="p">:</span> <span class="mi">60</span>
+</pre></div>
+</div><h2 id="architecture">Architecture<a class="anchor" href="#architecture" aria-label="Lien vers cette section">#</a></h2>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>┌────────────────────────────────────────────────────┐
+│                   Trust Layer                       │
+├─────────────┬─────────────┬─────────────┬──────────┤
+│  Identity   │  Trust      │  Delegation │  Policy  │
+│  Registry   │  Scoring    │  Manager    │  Engine  │
+├─────────────┴─────────────┴─────────────┴──────────┤
+│                   Audit Logger                      │
+└────────────────────────────────────────────────────┘
+         ▲              ▲              ▲
+         │              │              │
+    ┌────┴────┐    ┌────┴────┐    ┌────┴────┐
+    │ Agent A │    │ Agent B │    │ Agent C │
+    └─────────┘    └─────────┘    └─────────┘
+</pre></div>
+</div><h2 id="extending-the-tutorial">Extending the Tutorial<a class="anchor" href="#extending-the-tutorial" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Add cryptographic signatures for delegation verification</li>
+<li>Implement reputation systems across organizations</li>
+<li>Add real-time trust score visualization</li>
+<li>Connect to external identity providers (OAuth, SAML)</li>
+<li>Implement secure communication channels (mTLS)</li>
+</ul>
+<h2 id="related-projects">Related Projects<a class="anchor" href="#related-projects" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><a href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noopener noreferrer">LangGraph</a> - Multi-agent orchestration</li>
+<li><a href="https://github.com/joaomdmoura/crewAI" target="_blank" rel="noopener noreferrer">CrewAI</a> - Multi-agent framework</li>
+<li><a href="https://github.com/microsoft/autogen" target="_blank" rel="noopener noreferrer">AutoGen</a> - Multi-agent conversations</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-multi-agent-trust-layer-py"><summary class="codefile__head"><span class="codefile__name">multi_agent_trust_layer.py</span><span class="codefile__size">29 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">🤝 Multi-Agent Trust Layer Tutorial</span>
+
+<span class="sd">This tutorial demonstrates how to build a trust layer for multi-agent systems</span>
+<span class="sd">that enables secure delegation, trust scoring, and policy enforcement.</span>
+
+<span class="sd">Key concepts:</span>
+<span class="sd">- Agent identity and registration</span>
+<span class="sd">- Trust scoring based on behavior</span>
+<span class="sd">- Delegation chains with scope narrowing</span>
+<span class="sd">- Policy enforcement across agent interactions</span>
+<span class="sd">- Full audit trail of agent communications</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">secrets</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="c1"># Configure logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># TRUST LEVELS</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TrustLevel</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Trust levels based on score ranges&quot;&quot;&quot;</span>
+    <span class="n">SUSPENDED</span> <span class="o">=</span> <span class="s2">&quot;suspended&quot;</span>      <span class="c1"># 0-299</span>
+    <span class="n">RESTRICTED</span> <span class="o">=</span> <span class="s2">&quot;restricted&quot;</span>    <span class="c1"># 300-499</span>
+    <span class="n">PROBATION</span> <span class="o">=</span> <span class="s2">&quot;probation&quot;</span>      <span class="c1"># 500-699</span>
+    <span class="n">STANDARD</span> <span class="o">=</span> <span class="s2">&quot;standard&quot;</span>        <span class="c1"># 700-899</span>
+    <span class="n">TRUSTED</span> <span class="o">=</span> <span class="s2">&quot;trusted&quot;</span>          <span class="c1"># 900-1000</span>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_score</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TrustLevel&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="mi">900</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">TRUSTED</span>
+        <span class="k">elif</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="mi">700</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">STANDARD</span>
+        <span class="k">elif</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="mi">500</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">PROBATION</span>
+        <span class="k">elif</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="mi">300</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">RESTRICTED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">SUSPENDED</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># CORE DATA STRUCTURES</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentIdentity</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an agent&#39;s verified identity&quot;&quot;&quot;</span>
+    <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">public_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">human_sponsor</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Email of accountable human</span>
+    <span class="n">organization</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">roles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">)</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrustScore</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Agent&#39;s trust score with history&quot;&quot;&quot;</span>
+    <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">score</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># 0-1000</span>
+    <span class="n">level</span><span class="p">:</span> <span class="n">TrustLevel</span>
+    <span class="n">history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">last_updated</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update trust score with bounds checking&quot;&quot;&quot;</span>
+        <span class="n">old_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">+</span> <span class="n">delta</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">TrustLevel</span><span class="o">.</span><span class="n">from_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_updated</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_updated</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s2">&quot;old_score&quot;</span><span class="p">:</span> <span class="n">old_score</span><span class="p">,</span>
+            <span class="s2">&quot;new_score&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
+            <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="n">delta</span><span class="p">,</span>
+            <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="n">reason</span>
+        <span class="p">})</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DelegationScope</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines what an agent can do under a delegation&quot;&quot;&quot;</span>
+    <span class="n">allowed_actions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># None means &quot;every action allowed&quot;</span>
+    <span class="n">denied_actions</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+    <span class="n">allowed_domains</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+    <span class="n">max_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="n">time_limit_minutes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span>
+    <span class="n">max_sub_delegations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Can this agent delegate further?</span>
+    <span class="n">custom_constraints</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">allows_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if an action is allowed under this scope&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">denied_actions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_actions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># None means all allowed</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_actions</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">narrow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child_scope</span><span class="p">:</span> <span class="s2">&quot;DelegationScope&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DelegationScope&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a narrowed scope for sub-delegation&quot;&quot;&quot;</span>
+        <span class="c1"># None (&quot;all&quot;) on either side is the identity for intersection; only a</span>
+        <span class="c1"># real set ∩ real set narrows. Previously an empty intersection collapsed</span>
+        <span class="c1"># to an empty set, which allows_action() then read as &quot;all allowed&quot;.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_actions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">narrowed_actions</span> <span class="o">=</span> <span class="n">child_scope</span><span class="o">.</span><span class="n">allowed_actions</span>
+        <span class="k">elif</span> <span class="n">child_scope</span><span class="o">.</span><span class="n">allowed_actions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">narrowed_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_actions</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">narrowed_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_actions</span> <span class="o">&amp;</span> <span class="n">child_scope</span><span class="o">.</span><span class="n">allowed_actions</span>
+        <span class="k">return</span> <span class="n">DelegationScope</span><span class="p">(</span>
+            <span class="n">allowed_actions</span><span class="o">=</span><span class="n">narrowed_actions</span><span class="p">,</span>
+            <span class="n">denied_actions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">denied_actions</span> <span class="o">|</span> <span class="n">child_scope</span><span class="o">.</span><span class="n">denied_actions</span><span class="p">,</span>
+            <span class="n">allowed_domains</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed_domains</span> <span class="o">&amp;</span> <span class="n">child_scope</span><span class="o">.</span><span class="n">allowed_domains</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_domains</span> <span class="k">else</span> <span class="n">child_scope</span><span class="o">.</span><span class="n">allowed_domains</span><span class="p">,</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_tokens</span><span class="p">,</span> <span class="n">child_scope</span><span class="o">.</span><span class="n">max_tokens</span><span class="p">),</span>
+            <span class="n">time_limit_minutes</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_limit_minutes</span><span class="p">,</span> <span class="n">child_scope</span><span class="o">.</span><span class="n">time_limit_minutes</span><span class="p">),</span>
+            <span class="n">max_sub_delegations</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_sub_delegations</span><span class="p">,</span> <span class="n">child_scope</span><span class="o">.</span><span class="n">max_sub_delegations</span><span class="p">),</span>
+            <span class="n">custom_constraints</span><span class="o">=</span><span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">custom_constraints</span><span class="p">,</span> <span class="o">**</span><span class="n">child_scope</span><span class="o">.</span><span class="n">custom_constraints</span><span class="p">}</span>
+        <span class="p">)</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Delegation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A delegation of authority from one agent to another&quot;&quot;&quot;</span>
+    <span class="n">delegation_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">parent_agent</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">child_agent</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="n">DelegationScope</span>
+    <span class="n">task_description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">expires_at</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Signed by parent agent</span>
+    <span class="n">parent_delegation_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># For chain tracking</span>
+    <span class="n">tokens_used</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">is_revoked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if delegation is still valid&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_revoked</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">expires_at</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens_used</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">max_tokens</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AuditEntry</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Audit log entry for agent interactions&quot;&quot;&quot;</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">action</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">delegation_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">result</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># &quot;allowed&quot;, &quot;denied&quot;, &quot;error&quot;</span>
+    <span class="n">details</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">trust_impact</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># IDENTITY REGISTRY</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IdentityRegistry</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages agent identities&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">identities</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AgentIdentity</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sponsor_to_agents</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identity</span><span class="p">:</span> <span class="n">AgentIdentity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a new agent identity&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">identity</span><span class="o">.</span><span class="n">agent_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">identities</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent </span><span class="si">{</span><span class="n">identity</span><span class="o">.</span><span class="n">agent_id</span><span class="si">}</span><span class="s2"> already registered&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">identities</span><span class="p">[</span><span class="n">identity</span><span class="o">.</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">identity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sponsor_to_agents</span><span class="p">[</span><span class="n">identity</span><span class="o">.</span><span class="n">human_sponsor</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registered agent: </span><span class="si">{</span><span class="n">identity</span><span class="o">.</span><span class="n">agent_id</span><span class="si">}</span><span class="s2"> (sponsor: </span><span class="si">{</span><span class="n">identity</span><span class="o">.</span><span class="n">human_sponsor</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgentIdentity</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get agent identity&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">identities</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">revoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Revoke an agent&#39;s identity&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">agent_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">identities</span><span class="p">:</span>
+            <span class="n">identity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">identities</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sponsor_to_agents</span><span class="p">[</span><span class="n">identity</span><span class="o">.</span><span class="n">human_sponsor</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Revoked agent: </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># TRUST SCORING ENGINE</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TrustScoringEngine</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages trust scores for agents&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Score adjustments for various events</span>
+    <span class="n">SCORE_ADJUSTMENTS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;task_completed&quot;</span><span class="p">:</span> <span class="o">+</span><span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;stayed_in_scope&quot;</span><span class="p">:</span> <span class="o">+</span><span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;accurate_output&quot;</span><span class="p">:</span> <span class="o">+</span><span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;scope_violation_attempt&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span>
+        <span class="s2">&quot;inaccurate_output&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span>
+        <span class="s2">&quot;resource_exceeded&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span>
+        <span class="s2">&quot;security_violation&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
+        <span class="s2">&quot;delegation_success&quot;</span><span class="p">:</span> <span class="o">+</span><span class="mi">15</span><span class="p">,</span>
+        <span class="s2">&quot;delegation_failure&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">25</span><span class="p">,</span>
+    <span class="p">}</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_score</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">700</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TrustScore</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_score</span> <span class="o">=</span> <span class="n">initial_score</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">initial_score</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrustScore</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize trust score for a new agent&quot;&quot;&quot;</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">initial_score</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_score</span>
+        <span class="n">trust_score</span> <span class="o">=</span> <span class="n">TrustScore</span><span class="p">(</span>
+            <span class="n">agent_id</span><span class="o">=</span><span class="n">agent_id</span><span class="p">,</span>
+            <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span>
+            <span class="n">level</span><span class="o">=</span><span class="n">TrustLevel</span><span class="o">.</span><span class="n">from_score</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">trust_score</span>
+        <span class="k">return</span> <span class="n">trust_score</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrustScore</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get agent&#39;s trust score&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">record_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">custom_delta</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Record an event and update trust score&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">agent_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">custom_delta</span> <span class="k">if</span> <span class="n">custom_delta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">SCORE_ADJUSTMENTS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">event_type</span><span class="p">)</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trust update: </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">delta</span><span class="si">:</span><span class="s2">+d</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2">) → </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span><span class="o">.</span><span class="n">score</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">delta</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># DELEGATION MANAGER</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DelegationManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages delegation chains between agents&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identity_registry</span><span class="p">:</span> <span class="n">IdentityRegistry</span><span class="p">,</span> <span class="n">trust_engine</span><span class="p">:</span> <span class="n">TrustScoringEngine</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delegations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Delegation</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_delegations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># agent_id -&gt; [delegation_ids]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">identity_registry</span> <span class="o">=</span> <span class="n">identity_registry</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span> <span class="o">=</span> <span class="n">trust_engine</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_delegation</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">parent_agent</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">child_agent</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">scope</span><span class="p">:</span> <span class="n">DelegationScope</span><span class="p">,</span>
+        <span class="n">task_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">time_limit_minutes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">parent_delegation_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Delegation</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new delegation from parent to child agent&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Verify both agents exist</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">identity_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parent_agent</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parent agent not found: </span><span class="si">{</span><span class="n">parent_agent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">identity_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">child_agent</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Child agent not found: </span><span class="si">{</span><span class="n">child_agent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        
+        <span class="c1"># Check parent&#39;s trust level</span>
+        <span class="n">parent_trust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parent_agent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parent_trust</span> <span class="ow">and</span> <span class="n">parent_trust</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="n">TrustLevel</span><span class="o">.</span><span class="n">SUSPENDED</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Suspended agent cannot delegate: </span><span class="si">{</span><span class="n">parent_agent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        
+        <span class="c1"># If this is a sub-delegation, narrow the scope</span>
+        <span class="k">if</span> <span class="n">parent_delegation_id</span><span class="p">:</span>
+            <span class="n">parent_del</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delegations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parent_delegation_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">parent_del</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">parent_del</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid parent delegation: </span><span class="si">{</span><span class="n">parent_delegation_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">parent_del</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">max_sub_delegations</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No sub-delegations allowed under: </span><span class="si">{</span><span class="n">parent_delegation_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">scope</span> <span class="o">=</span> <span class="n">parent_del</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">narrow</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+        
+        <span class="c1"># Create delegation</span>
+        <span class="n">delegation_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;del-</span><span class="si">{</span><span class="n">secrets</span><span class="o">.</span><span class="n">token_hex</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit_minutes</span> <span class="ow">or</span> <span class="n">scope</span><span class="o">.</span><span class="n">time_limit_minutes</span>
+        
+        <span class="n">delegation</span> <span class="o">=</span> <span class="n">Delegation</span><span class="p">(</span>
+            <span class="n">delegation_id</span><span class="o">=</span><span class="n">delegation_id</span><span class="p">,</span>
+            <span class="n">parent_agent</span><span class="o">=</span><span class="n">parent_agent</span><span class="p">,</span>
+            <span class="n">child_agent</span><span class="o">=</span><span class="n">child_agent</span><span class="p">,</span>
+            <span class="n">scope</span><span class="o">=</span><span class="n">scope</span><span class="p">,</span>
+            <span class="n">task_description</span><span class="o">=</span><span class="n">task_description</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
+            <span class="n">expires_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">time_limit</span><span class="p">),</span>
+            <span class="n">signature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sign_delegation</span><span class="p">(</span><span class="n">parent_agent</span><span class="p">,</span> <span class="n">delegation_id</span><span class="p">),</span>
+            <span class="n">parent_delegation_id</span><span class="o">=</span><span class="n">parent_delegation_id</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">delegations</span><span class="p">[</span><span class="n">delegation_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">delegation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_delegations</span><span class="p">[</span><span class="n">child_agent</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delegation_id</span><span class="p">)</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created delegation: </span><span class="si">{</span><span class="n">parent_agent</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">child_agent</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">delegation_id</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">delegation</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sign_delegation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delegation_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a signature for a delegation (simplified - real impl would use crypto)&quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">delegation_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">16</span><span class="p">]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delegation_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate if an agent can perform an action under their delegation&quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">delegation_id</span><span class="p">:</span>
+            <span class="n">delegation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delegations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">delegation_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">delegation</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">delegation</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">delegation</span><span class="o">.</span><span class="n">child_agent</span> <span class="o">!=</span> <span class="n">agent_id</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="n">delegation</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">allows_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        
+        <span class="c1"># Check if agent has any valid delegation allowing this action</span>
+        <span class="k">for</span> <span class="n">del_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_delegations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_id</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">delegation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delegations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">del_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">delegation</span> <span class="ow">and</span> <span class="n">delegation</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="ow">and</span> <span class="n">delegation</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">allows_action</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">revoke_delegation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delegation_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Revoke a delegation&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">delegation_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">delegations</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delegations</span><span class="p">[</span><span class="n">delegation_id</span><span class="p">]</span><span class="o">.</span><span class="n">is_revoked</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Revoked delegation: </span><span class="si">{</span><span class="n">delegation_id</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_active_delegations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Delegation</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all active delegations for an agent&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delegations</span><span class="p">[</span><span class="n">del_id</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">del_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_delegations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_id</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delegations</span><span class="p">[</span><span class="n">del_id</span><span class="p">]</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span>
+        <span class="p">]</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># POLICY ENGINE</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiAgentPolicyEngine</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enforces policies for multi-agent interactions&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trust_engine</span><span class="p">:</span> <span class="n">TrustScoringEngine</span><span class="p">,</span> <span class="n">delegation_manager</span><span class="p">:</span> <span class="n">DelegationManager</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span> <span class="o">=</span> <span class="n">trust_engine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delegation_manager</span> <span class="o">=</span> <span class="n">delegation_manager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">role_policies</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_role_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a policy for a specific role&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">role_policies</span><span class="p">[</span><span class="n">role</span><span class="p">]</span> <span class="o">=</span> <span class="n">policy</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">roles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">delegation_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate if an action is allowed&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Check trust level</span>
+        <span class="n">trust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">trust</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Agent has no trust score&quot;</span>
+        
+        <span class="k">if</span> <span class="n">trust</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="n">TrustLevel</span><span class="o">.</span><span class="n">SUSPENDED</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Agent is suspended&quot;</span>
+        
+        <span class="c1"># Check role-based policies</span>
+        <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">:</span>
+            <span class="n">policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">role_policies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="p">{})</span>
+            
+            <span class="c1"># Check base trust requirement</span>
+            <span class="n">min_trust</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;base_trust_required&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">trust</span><span class="o">.</span><span class="n">score</span> <span class="o">&lt;</span> <span class="n">min_trust</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Trust score </span><span class="si">{</span><span class="n">trust</span><span class="o">.</span><span class="n">score</span><span class="si">}</span><span class="s2"> below minimum </span><span class="si">{</span><span class="n">min_trust</span><span class="si">}</span><span class="s2"> for role </span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">&quot;</span>
+            
+            <span class="c1"># Check denied actions</span>
+            <span class="k">if</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">policy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;denied_actions&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Action &#39;</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">&#39; denied for role </span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">&quot;</span>
+            
+            <span class="c1"># Check allowed actions (if specified, action must be in list)</span>
+            <span class="n">allowed</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;allowed_actions&quot;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">if</span> <span class="n">allowed</span> <span class="ow">and</span> <span class="n">action</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Action &#39;</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">&#39; not in allowed list for role </span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+        <span class="c1"># Check delegation</span>
+        <span class="k">if</span> <span class="n">delegation_id</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">delegation_manager</span><span class="o">.</span><span class="n">validate_action</span><span class="p">(</span><span class="n">agent_id</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">delegation_id</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Action &#39;</span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">&#39; not allowed under delegation </span><span class="si">{</span><span class="n">delegation_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+        <span class="c1"># Require approval for restricted agents</span>
+        <span class="k">if</span> <span class="n">trust</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="n">TrustLevel</span><span class="o">.</span><span class="n">RESTRICTED</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Agent is restricted - requires human approval&quot;</span>
+        
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Action allowed&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># TRUST LAYER (MAIN INTERFACE)</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TrustLayer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main interface for the multi-agent trust layer&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">identity_registry</span> <span class="o">=</span> <span class="n">IdentityRegistry</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span> <span class="o">=</span> <span class="n">TrustScoringEngine</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delegation_manager</span> <span class="o">=</span> <span class="n">DelegationManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identity_registry</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy_engine</span> <span class="o">=</span> <span class="n">MultiAgentPolicyEngine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delegation_manager</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audit_log</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AuditEntry</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_agent</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">human_sponsor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">organization</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">roles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">initial_trust</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">700</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a new agent with the trust layer&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Generate a key pair (simplified)</span>
+        <span class="n">public_key</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">secrets</span><span class="o">.</span><span class="n">token_hex</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        
+        <span class="n">identity</span> <span class="o">=</span> <span class="n">AgentIdentity</span><span class="p">(</span>
+            <span class="n">agent_id</span><span class="o">=</span><span class="n">agent_id</span><span class="p">,</span>
+            <span class="n">public_key</span><span class="o">=</span><span class="n">public_key</span><span class="p">,</span>
+            <span class="n">human_sponsor</span><span class="o">=</span><span class="n">human_sponsor</span><span class="p">,</span>
+            <span class="n">organization</span><span class="o">=</span><span class="n">organization</span><span class="p">,</span>
+            <span class="n">roles</span><span class="o">=</span><span class="n">roles</span>
+        <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">identity_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">identity</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">agent_id</span><span class="p">,</span> <span class="n">initial_trust</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_delegation</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">from_agent</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">to_agent</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">scope</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">task_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">time_limit_minutes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a delegation from one agent to another&quot;&quot;&quot;</span>
+        
+        <span class="n">delegation_scope</span> <span class="o">=</span> <span class="n">DelegationScope</span><span class="p">(</span>
+            <span class="c1"># An empty/absent allowed_actions means &quot;anything not explicitly denied&quot;</span>
+            <span class="c1"># (see the demo policies), which the None sentinel now represents.</span>
+            <span class="n">allowed_actions</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">scope</span><span class="p">[</span><span class="s2">&quot;allowed_actions&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">scope</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;allowed_actions&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">denied_actions</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">scope</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;denied_actions&quot;</span><span class="p">,</span> <span class="p">[])),</span>
+            <span class="n">allowed_domains</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">scope</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;allowed_domains&quot;</span><span class="p">,</span> <span class="p">[])),</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="n">scope</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_tokens&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span>
+            <span class="n">time_limit_minutes</span><span class="o">=</span><span class="n">time_limit_minutes</span><span class="p">,</span>
+            <span class="n">max_sub_delegations</span><span class="o">=</span><span class="n">scope</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_sub_delegations&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+        <span class="n">delegation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delegation_manager</span><span class="o">.</span><span class="n">create_delegation</span><span class="p">(</span>
+            <span class="n">parent_agent</span><span class="o">=</span><span class="n">from_agent</span><span class="p">,</span>
+            <span class="n">child_agent</span><span class="o">=</span><span class="n">to_agent</span><span class="p">,</span>
+            <span class="n">scope</span><span class="o">=</span><span class="n">delegation_scope</span><span class="p">,</span>
+            <span class="n">task_description</span><span class="o">=</span><span class="n">task_description</span><span class="p">,</span>
+            <span class="n">time_limit_minutes</span><span class="o">=</span><span class="n">time_limit_minutes</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">delegation</span><span class="o">.</span><span class="n">delegation_id</span> <span class="k">if</span> <span class="n">delegation</span> <span class="k">else</span> <span class="kc">None</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">authorize_action</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">delegation_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authorize an action for an agent&quot;&quot;&quot;</span>
+        
+        <span class="n">identity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">identity_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">identity</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_audit</span><span class="p">(</span><span class="n">agent_id</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="s2">&quot;denied&quot;</span><span class="p">,</span> <span class="n">delegation_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;Unknown agent&quot;</span><span class="p">})</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Unknown agent&quot;</span>
+        
+        <span class="n">allowed</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_engine</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+            <span class="n">agent_id</span><span class="o">=</span><span class="n">agent_id</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span>
+            <span class="n">roles</span><span class="o">=</span><span class="n">identity</span><span class="o">.</span><span class="n">roles</span><span class="p">,</span>
+            <span class="n">delegation_id</span><span class="o">=</span><span class="n">delegation_id</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Update trust score based on result</span>
+        <span class="k">if</span> <span class="n">allowed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">record_event</span><span class="p">(</span><span class="n">agent_id</span><span class="p">,</span> <span class="s2">&quot;stayed_in_scope&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">record_event</span><span class="p">(</span><span class="n">agent_id</span><span class="p">,</span> <span class="s2">&quot;scope_violation_attempt&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_audit</span><span class="p">(</span>
+            <span class="n">agent_id</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span>
+            <span class="s2">&quot;allowed&quot;</span> <span class="k">if</span> <span class="n">allowed</span> <span class="k">else</span> <span class="s2">&quot;denied&quot;</span><span class="p">,</span>
+            <span class="n">delegation_id</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="n">reason</span><span class="p">}</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">allowed</span><span class="p">,</span> <span class="n">reason</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">record_task_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delegation_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Record the result of a delegated task&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">record_event</span><span class="p">(</span><span class="n">agent_id</span><span class="p">,</span> <span class="s2">&quot;task_completed&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">record_event</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delegation_manager</span><span class="o">.</span><span class="n">delegations</span><span class="p">[</span><span class="n">delegation_id</span><span class="p">]</span><span class="o">.</span><span class="n">parent_agent</span><span class="p">,</span>
+                <span class="s2">&quot;delegation_success&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">record_event</span><span class="p">(</span><span class="n">agent_id</span><span class="p">,</span> <span class="s2">&quot;delegation_failure&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_trust_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an agent&#39;s trust score&quot;&quot;&quot;</span>
+        <span class="n">trust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">trust</span><span class="o">.</span><span class="n">score</span> <span class="k">if</span> <span class="n">trust</span> <span class="k">else</span> <span class="kc">None</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_trust_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TrustLevel</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an agent&#39;s trust level&quot;&quot;&quot;</span>
+        <span class="n">trust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trust_engine</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">trust</span><span class="o">.</span><span class="n">level</span> <span class="k">if</span> <span class="n">trust</span> <span class="k">else</span> <span class="kc">None</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_log_audit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">delegation_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">details</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log an audit entry&quot;&quot;&quot;</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">AuditEntry</span><span class="p">(</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
+            <span class="n">event_type</span><span class="o">=</span><span class="s2">&quot;action_authorization&quot;</span><span class="p">,</span>
+            <span class="n">agent_id</span><span class="o">=</span><span class="n">agent_id</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span>
+            <span class="n">delegation_id</span><span class="o">=</span><span class="n">delegation_id</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+            <span class="n">details</span><span class="o">=</span><span class="n">details</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audit_log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_audit_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get audit log, optionally filtered by agent&quot;&quot;&quot;</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">audit_log</span>
+        <span class="k">if</span> <span class="n">agent_id</span><span class="p">:</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">agent_id</span> <span class="o">==</span> <span class="n">agent_id</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">event_type</span><span class="p">,</span>
+                <span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">agent_id</span><span class="p">,</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">action</span><span class="p">,</span>
+                <span class="s2">&quot;delegation_id&quot;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">delegation_id</span><span class="p">,</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">result</span><span class="p">,</span>
+                <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">details</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span>
+        <span class="p">]</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># EXAMPLE: GOVERNED MULTI-AGENT SYSTEM</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GovernedAgent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An agent that operates within the trust layer&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">trust_layer</span><span class="p">:</span> <span class="n">TrustLayer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_id</span> <span class="o">=</span> <span class="n">agent_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trust_layer</span> <span class="o">=</span> <span class="n">trust_layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_delegation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute an action through the trust layer&quot;&quot;&quot;</span>
+        
+        <span class="n">allowed</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trust_layer</span><span class="o">.</span><span class="n">authorize_action</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_id</span><span class="p">,</span>
+            <span class="n">action</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_delegation</span>
+        <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">allowed</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Action denied: </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;trust_score&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trust_layer</span><span class="o">.</span><span class="n">get_trust_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_id</span><span class="p">)</span>
+            <span class="p">}</span>
+        
+        <span class="c1"># Simulate action execution</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+            <span class="s2">&quot;trust_score&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trust_layer</span><span class="o">.</span><span class="n">get_trust_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="p">}</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_execute_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simulate executing an action&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Executed </span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2"> with params </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># MAIN DEMO</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🤝 Multi-Agent Trust Layer Demo&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="c1"># Initialize trust layer</span>
+    <span class="n">trust_layer</span> <span class="o">=</span> <span class="n">TrustLayer</span><span class="p">()</span>
+    
+    <span class="c1"># Add role policies</span>
+    <span class="n">trust_layer</span><span class="o">.</span><span class="n">policy_engine</span><span class="o">.</span><span class="n">add_role_policy</span><span class="p">(</span><span class="s2">&quot;researcher&quot;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s2">&quot;base_trust_required&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+        <span class="s2">&quot;allowed_actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span> <span class="s2">&quot;read_document&quot;</span><span class="p">,</span> <span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="s2">&quot;analyze&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;denied_actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;execute_code&quot;</span><span class="p">,</span> <span class="s2">&quot;send_email&quot;</span><span class="p">,</span> <span class="s2">&quot;delete_file&quot;</span><span class="p">]</span>
+    <span class="p">})</span>
+    
+    <span class="n">trust_layer</span><span class="o">.</span><span class="n">policy_engine</span><span class="o">.</span><span class="n">add_role_policy</span><span class="p">(</span><span class="s2">&quot;writer&quot;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s2">&quot;base_trust_required&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
+        <span class="s2">&quot;allowed_actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;write_document&quot;</span><span class="p">,</span> <span class="s2">&quot;edit_document&quot;</span><span class="p">,</span> <span class="s2">&quot;summarize&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;denied_actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;execute_code&quot;</span><span class="p">,</span> <span class="s2">&quot;web_search&quot;</span><span class="p">]</span>
+    <span class="p">})</span>
+    
+    <span class="n">trust_layer</span><span class="o">.</span><span class="n">policy_engine</span><span class="o">.</span><span class="n">add_role_policy</span><span class="p">(</span><span class="s2">&quot;orchestrator&quot;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s2">&quot;base_trust_required&quot;</span><span class="p">:</span> <span class="mi">800</span><span class="p">,</span>
+        <span class="s2">&quot;allowed_actions&quot;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># Can do anything not explicitly denied</span>
+        <span class="s2">&quot;denied_actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;delete_system_files&quot;</span><span class="p">]</span>
+    <span class="p">})</span>
+    
+    <span class="c1"># Register agents</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📋 Registering agents...&quot;</span><span class="p">)</span>
+    
+    <span class="n">trust_layer</span><span class="o">.</span><span class="n">register_agent</span><span class="p">(</span>
+        <span class="n">agent_id</span><span class="o">=</span><span class="s2">&quot;orchestrator-001&quot;</span><span class="p">,</span>
+        <span class="n">human_sponsor</span><span class="o">=</span><span class="s2">&quot;alice@company.com&quot;</span><span class="p">,</span>
+        <span class="n">organization</span><span class="o">=</span><span class="s2">&quot;Acme Corp&quot;</span><span class="p">,</span>
+        <span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;orchestrator&quot;</span><span class="p">],</span>
+        <span class="n">initial_trust</span><span class="o">=</span><span class="mi">900</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Registered: orchestrator-001 (Sponsor: alice@company.com)&quot;</span><span class="p">)</span>
+    
+    <span class="n">trust_layer</span><span class="o">.</span><span class="n">register_agent</span><span class="p">(</span>
+        <span class="n">agent_id</span><span class="o">=</span><span class="s2">&quot;researcher-002&quot;</span><span class="p">,</span>
+        <span class="n">human_sponsor</span><span class="o">=</span><span class="s2">&quot;bob@company.com&quot;</span><span class="p">,</span>
+        <span class="n">organization</span><span class="o">=</span><span class="s2">&quot;Acme Corp&quot;</span><span class="p">,</span>
+        <span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;researcher&quot;</span><span class="p">],</span>
+        <span class="n">initial_trust</span><span class="o">=</span><span class="mi">750</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Registered: researcher-002 (Sponsor: bob@company.com)&quot;</span><span class="p">)</span>
+    
+    <span class="n">trust_layer</span><span class="o">.</span><span class="n">register_agent</span><span class="p">(</span>
+        <span class="n">agent_id</span><span class="o">=</span><span class="s2">&quot;writer-003&quot;</span><span class="p">,</span>
+        <span class="n">human_sponsor</span><span class="o">=</span><span class="s2">&quot;carol@company.com&quot;</span><span class="p">,</span>
+        <span class="n">organization</span><span class="o">=</span><span class="s2">&quot;Acme Corp&quot;</span><span class="p">,</span>
+        <span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;writer&quot;</span><span class="p">],</span>
+        <span class="n">initial_trust</span><span class="o">=</span><span class="mi">700</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Registered: writer-003 (Sponsor: carol@company.com)&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create delegation chain</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🔐 Creating delegation chain...&quot;</span><span class="p">)</span>
+    
+    <span class="n">delegation_id</span> <span class="o">=</span> <span class="n">trust_layer</span><span class="o">.</span><span class="n">create_delegation</span><span class="p">(</span>
+        <span class="n">from_agent</span><span class="o">=</span><span class="s2">&quot;orchestrator-001&quot;</span><span class="p">,</span>
+        <span class="n">to_agent</span><span class="o">=</span><span class="s2">&quot;researcher-002&quot;</span><span class="p">,</span>
+        <span class="n">scope</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;allowed_actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span> <span class="s2">&quot;summarize&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;allowed_domains&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;arxiv.org&quot;</span><span class="p">,</span> <span class="s2">&quot;github.com&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;max_tokens&quot;</span><span class="p">:</span> <span class="mi">50000</span>
+        <span class="p">},</span>
+        <span class="n">task_description</span><span class="o">=</span><span class="s2">&quot;Research recent papers on AI safety&quot;</span><span class="p">,</span>
+        <span class="n">time_limit_minutes</span><span class="o">=</span><span class="mi">30</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Delegation: orchestrator-001 → researcher-002&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   ID: </span><span class="si">{</span><span class="n">delegation_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Scope: web_search, summarize&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Time Limit: 30 minutes&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create governed agents</span>
+    <span class="n">researcher</span> <span class="o">=</span> <span class="n">GovernedAgent</span><span class="p">(</span><span class="s2">&quot;researcher-002&quot;</span><span class="p">,</span> <span class="n">trust_layer</span><span class="p">)</span>
+    <span class="n">researcher</span><span class="o">.</span><span class="n">current_delegation</span> <span class="o">=</span> <span class="n">delegation_id</span>
+    
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">GovernedAgent</span><span class="p">(</span><span class="s2">&quot;writer-003&quot;</span><span class="p">,</span> <span class="n">trust_layer</span><span class="p">)</span>
+    
+    <span class="c1"># Test actions</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🧪 Testing Agent Actions&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="c1"># Test 1: Allowed action within delegation</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🤖 researcher-002: web_search (within scope)&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">researcher</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;AI safety papers 2024&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Result: </span><span class="si">{</span><span class="s1">&#39;✅ ALLOWED&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;❌ DENIED&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Trust Score: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;trust_score&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 2: Denied action outside delegation</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🤖 researcher-002: send_email (outside scope)&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">researcher</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;send_email&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;test@example.com&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Result: </span><span class="si">{</span><span class="s1">&#39;✅ ALLOWED&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;❌ DENIED&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Reason: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Trust Score: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;trust_score&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 3: Writer tries action not in role</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🤖 writer-003: web_search (not in role)&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Result: </span><span class="si">{</span><span class="s1">&#39;✅ ALLOWED&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;❌ DENIED&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Reason: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Trust Score: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;trust_score&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 4: Writer does allowed action</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🤖 writer-003: write_document (in role)&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;write_document&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Report draft&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Result: </span><span class="si">{</span><span class="s1">&#39;✅ ALLOWED&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;❌ DENIED&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Trust Score: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;trust_score&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Show final trust scores</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📊 Final Trust Scores&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">agent_id</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;orchestrator-001&quot;</span><span class="p">,</span> <span class="s2">&quot;researcher-002&quot;</span><span class="p">,</span> <span class="s2">&quot;writer-003&quot;</span><span class="p">]:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">trust_layer</span><span class="o">.</span><span class="n">get_trust_score</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">trust_layer</span><span class="o">.</span><span class="n">get_trust_level</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">level</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Show audit log</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📋 Audit Log&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">trust_layer</span><span class="o">.</span><span class="n">get_audit_log</span><span class="p">():</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;✅&quot;</span> <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;allowed&quot;</span> <span class="k">else</span> <span class="s2">&quot;❌&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;agent_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ Demo complete!&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps/multi-agent-trust-layer/multi_agent_trust_layer.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">14 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>openai&gt;=1.0.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps/multi-agent-trust-layer/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-multi-agent-apps/multi-agent-trust-layer">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-multi-agent-apps/multi-agent-researcher/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Chercheur multi-agents</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-multi-agent-apps/product-launch-intelligence-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Veille sur les lancements produit</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/multi_agent_apps/multi_agent_trust_layer" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/multi_agent_apps/multi_agent_trust_layer</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#how-it-works">How It Works</a></li><li class="toc__item toc__item--h2"><a href="#requirements">Requirements</a></li><li class="toc__item toc__item--h2"><a href="#installation">Installation</a></li><li class="toc__item toc__item--h2"><a href="#usage">Usage</a></li><li class="toc__item toc__item--h2"><a href="#example-agent-delegation-chain">Example: Agent Delegation Chain</a></li><li class="toc__item toc__item--h2"><a href="#trust-score-system">Trust Score System</a></li><li class="toc__item toc__item--h3"><a href="#score-updates">Score Updates</a></li><li class="toc__item toc__item--h2"><a href="#example-output">Example Output</a></li><li class="toc__item toc__item--h2"><a href="#key-concepts">Key Concepts</a></li><li class="toc__item toc__item--h3"><a href="#1-agent-identity">1. Agent Identity</a></li><li class="toc__item toc__item--h3"><a href="#2-delegation-chains">2. Delegation Chains</a></li><li class="toc__item toc__item--h3"><a href="#3-policy-enforcement">3. Policy Enforcement</a></li><li class="toc__item toc__item--h2"><a href="#architecture">Architecture</a></li><li class="toc__item toc__item--h2"><a href="#extending-the-tutorial">Extending the Tutorial</a></li><li class="toc__item toc__item--h2"><a href="#related-projects">Related Projects</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

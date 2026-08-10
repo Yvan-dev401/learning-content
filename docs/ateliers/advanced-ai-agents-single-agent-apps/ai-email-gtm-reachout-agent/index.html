@@ -1,0 +1,1375 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent de prospection par e-mail — atelier</title>
+<meta name="description" content="Recherche un prospect, puis rédige un message personnalisé.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html">Agents avancés (agent unique)</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🤖</span> Agents avancés (agent unique)</p>
+  <h1 class="pagehead__title">Agent de prospection par e-mail</h1>
+  <p class="pagehead__summary">Recherche un prospect, puis rédige un message personnalisé.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#tres-demande" title="Compétence fréquemment attendue sur les offres d&#x27;emploi en IA."><span class="tag__icon" aria-hidden="true">🔥</span><span class="tag__label">Très demandé</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://exa.ai" target="_blank" rel="noopener noreferrer">Exa</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Crédit offert à l&#x27;inscription. Recherche sémantique, pas par mots-clés.</p><ul class="alts__list"><li><a href="https://pypi.org/project/duckduckgo-search/" target="_blank" rel="noopener noreferrer">DuckDuckGo Search</a> — Sans clé ; il faut en revanche formuler la requête soi-même.</li><li><a href="https://tavily.com" target="_blank" rel="noopener noreferrer">Tavily (palier gratuit)</a> — Recherche pensée pour les agents, 1 000 appels offerts par mois.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="ai-email-gtm-reachout-agent">🚀 AI Email GTM Reachout Agent<a class="anchor" href="#ai-email-gtm-reachout-agent" aria-label="Lien vers cette section">#</a></h1>
+<h3 id="free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial<a class="anchor" href="#free-step-by-step-tutorial" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>👉 <a href="https://www.theunwindai.com/p/build-an-ai-email-gtm-outreach-agent-team" target="_blank" rel="noopener noreferrer">Click here to follow our complete step-by-step tutorial</a> and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.</strong></p>
+<p>An intelligent, fully automated B2B outreach system that discovers companies, finds decision makers, researches company intelligence, and generates personalized cold emails using AI agents.</p>
+<h2 id="features">✨ Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="automated-company-discovery">🔍 <strong>Automated Company Discovery</strong><a class="anchor" href="#automated-company-discovery" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Uses Exa search to find target companies based on industry, size, and business criteria</li>
+<li>Identifies companies showing growth, recent funding, or expansion</li>
+<li>Supports multiple company categories: SaaS/Technology, E-commerce/Retail, Financial Services, Healthcare/Biotech, Manufacturing/Industrial</li>
+</ul>
+<h3 id="intelligent-contact-finding">👥 <strong>Intelligent Contact Finding</strong><a class="anchor" href="#intelligent-contact-finding" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Automatically discovers decision makers in target departments</li>
+<li>Finds email addresses and LinkedIn profiles</li>
+<li>Targets roles like CEO, CTO, VP of Engineering, CMO, VP Marketing, Sales Directors, HR Directors</li>
+</ul>
+<h3 id="deep-company-research">🔬 <strong>Deep Company Research</strong><a class="anchor" href="#deep-company-research" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Comprehensive company intelligence gathering</li>
+<li>Analyzes website, recent news, product offerings, technology stack</li>
+<li>Identifies pain points, growth opportunities, and market positioning</li>
+<li>Extracts insights relevant for personalized outreach</li>
+</ul>
+<h3 id="personalized-email-generation">✉️ <strong>Personalized Email Generation</strong><a class="anchor" href="#personalized-email-generation" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Creates highly personalized cold emails based on research</li>
+<li>Uses department-specific templates for different professional types</li>
+<li>Maintains friendly, conversational tone (20-year-old sales rep style)</li>
+<li>Avoids corporate jargon and clichés</li>
+<li>References specific company challenges and achievements</li>
+</ul>
+<h3 id="smart-targeting">🎯 <strong>Smart Targeting</strong><a class="anchor" href="#smart-targeting" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Company Categories</strong>: SaaS/Technology, E-commerce, Financial Services, Healthcare, Manufacturing</li>
+<li><strong>Company Sizes</strong>: Startup (1-50), SMB (51-500), Enterprise (500+), All Sizes</li>
+<li><strong>Target Departments</strong>: GTM (Sales &amp; Marketing), HR, Engineering/Tech, Operations, Finance, Product, Executive Leadership</li>
+<li><strong>Service Types</strong>: Software Solution, Consulting Services, Professional Services, Technology Platform, Custom Development</li>
+</ul>
+<h2 id="installation">🛠️ Installation<a class="anchor" href="#installation" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li><strong>Clone the repository</strong></li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>&lt;repository-url&gt;
+<span class="nb">cd</span><span class="w"> </span>ai_email_gtm_reachout_agent
+</pre></div>
+</div><ol start="2">
+<li><strong>Install dependencies</strong></li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div><p><strong>Note</strong>: Make sure you have Agno version 2.0.4 or higher installed.</p>
+<ol start="3">
+<li><strong>Set up API keys</strong></li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Required API keys</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">EXA_API_KEY</span><span class="o">=</span><span class="s2">&quot;your_exa_api_key&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;your_openai_api_key&quot;</span>
+</pre></div>
+</div><h2 id="quick-start">🚀 Quick Start<a class="anchor" href="#quick-start" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li><strong>Run the application</strong></li>
+</ol>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>ai_email_gtm_reachout.py
+</pre></div>
+</div><ol start="2">
+<li>
+<p><strong>Configure your outreach campaign</strong>:</p>
+<ul>
+<li>Select target company category and size</li>
+<li>Choose departments to target</li>
+<li>Enter your contact information</li>
+<li>Describe your service offering</li>
+<li>Select personalization level</li>
+</ul>
+</li>
+<li>
+<p><strong>Launch automated campaign</strong>:</p>
+<ul>
+<li>Click &quot;Start Automated Campaign&quot;</li>
+<li>Watch as AI discovers companies, finds contacts, researches details, and generates personalized emails</li>
+</ul>
+</li>
+</ol>
+<h2 id="usage-guide">📋 Usage Guide<a class="anchor" href="#usage-guide" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="step-1-target-company-discovery">Step 1: Target Company Discovery<a class="anchor" href="#step-1-target-company-discovery" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Choose from predefined company categories</li>
+<li>Select preferred company size</li>
+<li>Specify number of companies to find (1-20)</li>
+</ul>
+<h3 id="step-2-your-information">Step 2: Your Information<a class="anchor" href="#step-2-your-information" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Required</strong>: Name, Email, Organization, Service Description</li>
+<li><strong>Optional</strong>: LinkedIn, Phone, Website, Calendar Link</li>
+</ul>
+<h3 id="step-3-outreach-configuration">Step 3: Outreach Configuration<a class="anchor" href="#step-3-outreach-configuration" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Select service/product category</li>
+<li>Choose personalization level (Basic/Medium/Deep)</li>
+<li>Pick target departments</li>
+</ul>
+<h3 id="step-4-generate-campaign">Step 4: Generate Campaign<a class="anchor" href="#step-4-generate-campaign" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Review your configuration</li>
+<li>Click &quot;Start Automated Campaign&quot;</li>
+<li>Monitor progress and view generated emails</li>
+</ul>
+<h2 id="email-templates">🎨 Email Templates<a class="anchor" href="#email-templates" aria-label="Lien vers cette section">#</a></h2>
+<p>The system includes department-specific templates:</p>
+<h3 id="gtm-sales-marketing">GTM (Sales &amp; Marketing)<a class="anchor" href="#gtm-sales-marketing" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Software Solution templates</li>
+<li>Consulting Services templates</li>
+</ul>
+<h3 id="human-resources">Human Resources<a class="anchor" href="#human-resources" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Software Solution templates</li>
+<li>Consulting Services templates</li>
+<li>Investment Opportunity templates</li>
+</ul>
+<h3 id="marketing-professional">Marketing Professional<a class="anchor" href="#marketing-professional" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Product Demo templates</li>
+<li>Service Offering templates</li>
+</ul>
+<h3 id="b2b-sales-representative">B2B Sales Representative<a class="anchor" href="#b2b-sales-representative" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Product Demo templates</li>
+<li>Service Offering templates</li>
+</ul>
+<h2 id="configuration-options">🔧 Configuration Options<a class="anchor" href="#configuration-options" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="company-categories">Company Categories<a class="anchor" href="#company-categories" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>SaaS/Technology Companies</strong>: Software, cloud services, tech platforms</li>
+<li><strong>E-commerce/Retail</strong>: Online retail, marketplaces, D2C brands</li>
+<li><strong>Financial Services</strong>: Banks, fintech, insurance, investment firms</li>
+<li><strong>Healthcare/Biotech</strong>: Healthcare providers, biotech, health tech</li>
+<li><strong>Manufacturing/Industrial</strong>: Manufacturing, industrial automation, supply chain</li>
+</ul>
+<h3 id="personalization-levels">Personalization Levels<a class="anchor" href="#personalization-levels" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li><strong>Basic</strong>: Standard personalization with company name and basic details</li>
+<li><strong>Medium</strong>: Includes recent company news and achievements</li>
+<li><strong>Deep</strong>: Comprehensive personalization with specific pain points and opportunities</li>
+</ul>
+<h2 id="output-format">📊 Output Format<a class="anchor" href="#output-format" aria-label="Lien vers cette section">#</a></h2>
+<p>Each generated email includes:</p>
+<ul>
+<li><strong>Personalized Email</strong>: Ready-to-send cold email</li>
+<li><strong>Company Research</strong>: Detailed company intelligence</li>
+<li><strong>Contacts Found</strong>: Decision maker information</li>
+</ul>
+<h2 id="api-requirements">🔑 API Requirements<a class="anchor" href="#api-requirements" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="exa-api">Exa API<a class="anchor" href="#exa-api" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Used for company discovery and research</li>
+<li>Get your API key from <a href="https://exa.ai" target="_blank" rel="noopener noreferrer">exa.ai</a></li>
+<li>Required for finding companies and gathering intelligence</li>
+</ul>
+<h3 id="openai-api">OpenAI API<a class="anchor" href="#openai-api" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Used for email generation and content creation</li>
+<li>Get your API key from <a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">platform.openai.com</a></li>
+<li>Required for AI-powered email personalization</li>
+</ul>
+<h2 id="use-cases">🎯 Use Cases<a class="anchor" href="#use-cases" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="sales-teams">Sales Teams<a class="anchor" href="#sales-teams" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Automated prospecting for B2B sales</li>
+<li>Personalized outreach at scale</li>
+<li>Target specific industries and company sizes</li>
+</ul>
+<h3 id="marketing-agencies">Marketing Agencies<a class="anchor" href="#marketing-agencies" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Client prospecting campaigns</li>
+<li>Lead generation for multiple clients</li>
+<li>Industry-specific outreach strategies</li>
+</ul>
+<h3 id="consultants">Consultants<a class="anchor" href="#consultants" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Business development automation</li>
+<li>Service offering promotion</li>
+<li>Professional network expansion</li>
+</ul>
+<h3 id="startups">Startups<a class="anchor" href="#startups" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Investor outreach</li>
+<li>Partnership development</li>
+<li>Customer acquisition</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-ai-email-gtm-reachout-py"><summary class="codefile__head"><span class="codefile__name">ai_email_gtm_reachout.py</span><span class="codefile__size">46 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">dedent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Literal</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.models.openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIChat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.db.sqlite</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqliteDb</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.tools.exa</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExaTools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.utils.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.utils.pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint_run_response</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="c1"># Initialize API keys from environment or empty defaults</span>
+<span class="k">if</span> <span class="s1">&#39;EXA_API_KEY&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">EXA_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EXA_API_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="s1">&#39;OPENAI_API_KEY&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Set environment variables</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;EXA_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">EXA_API_KEY</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span>
+
+<span class="c1"># Demo mode</span>
+<span class="c1"># - set to True to print email to console</span>
+<span class="c1"># - set to False to send to yourself</span>
+<span class="n">DEMO_MODE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example leads - Replace with your actual targets</span>
+<span class="n">leads</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Notion&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Notion&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;website&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.notion.so&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contact_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ivan Zhao&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;CEO&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="c1"># Add more companies as needed</span>
+<span class="p">}</span>
+
+<span class="c1"># Updated sender details for an AI analytics company</span>
+<span class="n">sender_details_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sarah Chen&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;your.email@company.com&quot;</span><span class="p">,</span>  <span class="c1"># Your email goes here</span>
+    <span class="s2">&quot;organization&quot;</span><span class="p">:</span> <span class="s2">&quot;Data Consultants Inc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;service_offered&quot;</span><span class="p">:</span> <span class="s2">&quot;We help build data products and offer data consulting services&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;calendar_link&quot;</span><span class="p">:</span> <span class="s2">&quot;https://calendly.com/data-consultants-inc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="s2">&quot;https://linkedin.com/in/your-profile&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;phone&quot;</span><span class="p">:</span> <span class="s2">&quot;+1 (555) 123-4567&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;website&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.data-consultants.com&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">DEPARTMENT_TEMPLATES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;GTM (Sales &amp; Marketing)&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;Software Solution&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">Hey [RECIPIENT_NAME],</span>
+
+<span class="s2">I noticed [COMPANY_NAME]&#39;s impressive [GTM_INITIATIVE] and your role in scaling [SPECIFIC_ACHIEVEMENT]. Your approach to [SALES_STRATEGY] caught my attention.</span>
+
+<span class="s2">[PRODUCT_VALUE_FOR_GTM]</span>
+
+<span class="s2">[GTM_SPECIFIC_BENEFIT]</span>
+
+<span class="s2">Would love to show you how this could work for your team: [CALENDAR_LINK]</span>
+
+<span class="s2">Best,</span>
+<span class="s2">[SIGNATURE]</span><span class="se">\</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Consulting Services&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">Hey [RECIPIENT_NAME],</span>
+
+<span class="s2">Your team&#39;s recent success with [CAMPAIGN_NAME] is impressive, particularly the [SPECIFIC_METRIC].</span>
+
+<span class="s2">[CONSULTING_VALUE_PROP]</span>
+
+<span class="s2">[GTM_IMPROVEMENT_POTENTIAL]</span>
+
+<span class="s2">Here&#39;s my calendar if you&#39;d like to explore this: [CALENDAR_LINK]</span>
+
+<span class="s2">Best,</span>
+<span class="s2">[SIGNATURE]</span><span class="se">\</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;Human Resources&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;Software Solution&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">Hey [RECIPIENT_NAME],</span>
+
+<span class="s2">I&#39;ve been following [COMPANY_NAME]&#39;s growth and noticed your focus on [HR_INITIATIVE]. Your approach to [SPECIFIC_HR_PROGRAM] stands out.</span>
+
+<span class="s2">[HR_TOOL_VALUE_PROP]</span>
+
+<span class="s2">[HR_SPECIFIC_BENEFIT]</span>
+
+<span class="s2">Would you be open to seeing how this could help your HR initiatives? [CALENDAR_LINK]</span>
+
+<span class="s2">Best,</span>
+<span class="s2">[SIGNATURE]</span><span class="se">\</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Consulting Services&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">Hey [RECIPIENT_NAME],</span>
+
+<span class="s2">I&#39;ve been following [COMPANY_NAME]&#39;s journey in [INDUSTRY], and your recent [ACHIEVEMENT] caught my attention. Your approach to [SPECIFIC_FOCUS] aligns perfectly with what we&#39;re building.</span>
+
+<span class="s2">[PARTNERSHIP_VALUE_PROP]</span>
+
+<span class="s2">[MUTUAL_BENEFIT]</span>
+
+<span class="s2">Would love to explore potential synergies over a quick call: [CALENDAR_LINK]</span>
+
+<span class="s2">Best,</span>
+<span class="s2">[SIGNATURE]</span><span class="se">\</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Investment Opportunity&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">Hey [RECIPIENT_NAME],</span>
+
+<span class="s2">Your work at [COMPANY_NAME] in [SPECIFIC_FOCUS] is impressive, especially [RECENT_ACHIEVEMENT].</span>
+
+<span class="s2">[INVESTMENT_THESIS]</span>
+
+<span class="s2">[UNIQUE_VALUE_ADD]</span>
+
+<span class="s2">Here&#39;s my calendar if you&#39;d like to discuss: [CALENDAR_LINK]</span>
+
+<span class="s2">Best,</span>
+<span class="s2">[SIGNATURE]</span><span class="se">\</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;Marketing Professional&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;Product Demo&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">Hey [RECIPIENT_NAME],</span>
+
+<span class="s2">I noticed [COMPANY_NAME]&#39;s recent [MARKETING_INITIATIVE] and was impressed by [SPECIFIC_DETAIL].</span>
+
+<span class="s2">[PRODUCT_VALUE_PROP]</span>
+
+<span class="s2">[BENEFIT_TO_MARKETING]</span>
+
+<span class="s2">Would you be open to a quick demo? Here&#39;s my calendar: [CALENDAR_LINK]</span>
+
+<span class="s2">Best,</span>
+<span class="s2">[SIGNATURE]</span><span class="se">\</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Service Offering&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">Hey [RECIPIENT_NAME],</span>
+
+<span class="s2">Saw your team&#39;s work on [RECENT_CAMPAIGN] - great execution on [SPECIFIC_ELEMENT].</span>
+
+<span class="s2">[SERVICE_VALUE_PROP]</span>
+
+<span class="s2">[MARKETING_BENEFIT]</span>
+
+<span class="s2">Here&#39;s my calendar if you&#39;d like to explore this: [CALENDAR_LINK]</span>
+
+<span class="s2">Best,</span>
+<span class="s2">[SIGNATURE]</span><span class="se">\</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;B2B Sales Representative&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;Product Demo&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">Hey [RECIPIENT_NAME],</span>
+
+<span class="s2">Noticed your team at [COMPANY_NAME] is scaling [SALES_FOCUS]. Your approach to [SPECIFIC_STRATEGY] is spot-on.</span>
+
+<span class="s2">[PRODUCT_VALUE_PROP]</span>
+
+<span class="s2">[SALES_BENEFIT]</span>
+
+<span class="s2">Would you be interested in seeing how this works? Here&#39;s my calendar: [CALENDAR_LINK]</span>
+
+<span class="s2">Best,</span>
+<span class="s2">[SIGNATURE]</span><span class="se">\</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Service Offering&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">Hey [RECIPIENT_NAME],</span>
+
+<span class="s2">Your sales team&#39;s success with [RECENT_WIN] caught my attention. Particularly impressed by [SPECIFIC_ACHIEVEMENT].</span>
+
+<span class="s2">[SERVICE_VALUE_PROP]</span>
+
+<span class="s2">[SALES_IMPROVEMENT]</span>
+
+<span class="s2">Here&#39;s my calendar if you&#39;d like to discuss: [CALENDAR_LINK]</span>
+
+<span class="s2">Best,</span>
+<span class="s2">[SIGNATURE]</span><span class="se">\</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="n">COMPANY_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;SaaS/Technology Companies&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Software, cloud services, and tech platforms&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;typical_roles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CTO&quot;</span><span class="p">,</span> <span class="s2">&quot;Head of Engineering&quot;</span><span class="p">,</span> <span class="s2">&quot;VP of Product&quot;</span><span class="p">,</span> <span class="s2">&quot;Engineering Manager&quot;</span><span class="p">,</span> <span class="s2">&quot;Tech Lead&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;E-commerce/Retail&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Online retail, marketplaces, and D2C brands&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;typical_roles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Head of Digital&quot;</span><span class="p">,</span> <span class="s2">&quot;E-commerce Manager&quot;</span><span class="p">,</span> <span class="s2">&quot;Marketing Director&quot;</span><span class="p">,</span> <span class="s2">&quot;Operations Head&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;Financial Services&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Banks, fintech, insurance, and investment firms&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;typical_roles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CFO&quot;</span><span class="p">,</span> <span class="s2">&quot;Head of Innovation&quot;</span><span class="p">,</span> <span class="s2">&quot;Risk Manager&quot;</span><span class="p">,</span> <span class="s2">&quot;Product Manager&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;Healthcare/Biotech&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Healthcare providers, biotech, and health tech&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;typical_roles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Medical Director&quot;</span><span class="p">,</span> <span class="s2">&quot;Head of R&amp;D&quot;</span><span class="p">,</span> <span class="s2">&quot;Clinical Manager&quot;</span><span class="p">,</span> <span class="s2">&quot;Healthcare IT Lead&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;Manufacturing/Industrial&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Manufacturing, industrial automation, and supply chain&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;typical_roles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Operations Director&quot;</span><span class="p">,</span> <span class="s2">&quot;Plant Manager&quot;</span><span class="p">,</span> <span class="s2">&quot;Supply Chain Head&quot;</span><span class="p">,</span> <span class="s2">&quot;Quality Manager&quot;</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OutreachConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for email outreach&quot;&quot;&quot;</span>
+    <span class="n">company_category</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Type of companies to target&quot;</span><span class="p">)</span>
+    <span class="n">target_departments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> 
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Departments to target (e.g., GTM, HR, Engineering)&quot;</span>
+    <span class="p">)</span>
+    <span class="n">service_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span>
+        <span class="s2">&quot;Software Solution&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Consulting Services&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Professional Services&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Technology Platform&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Custom Development&quot;</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Type of service being offered&quot;</span><span class="p">)</span>
+    <span class="n">company_size_preference</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Startup (1-50)&quot;</span><span class="p">,</span> <span class="s2">&quot;SMB (51-500)&quot;</span><span class="p">,</span> <span class="s2">&quot;Enterprise (500+)&quot;</span><span class="p">,</span> <span class="s2">&quot;All Sizes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;All Sizes&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Preferred company size&quot;</span>
+    <span class="p">)</span>
+    <span class="n">personalization_level</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Basic&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium&quot;</span><span class="p">,</span> <span class="s2">&quot;Deep&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;Deep&quot;</span><span class="p">,</span> 
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Level of personalization&quot;</span>
+    <span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ContactInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contact information for decision makers&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Contact&#39;s full name&quot;</span><span class="p">)</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Job title/position&quot;</span><span class="p">)</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Email address&quot;</span><span class="p">)</span>
+    <span class="n">linkedin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;LinkedIn profile URL&quot;</span><span class="p">)</span>
+    <span class="n">company</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Company name&quot;</span><span class="p">)</span>
+    <span class="n">department</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Department&quot;</span><span class="p">)</span>
+    <span class="n">background</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Professional background&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CompanyInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stores in-depth data about a company gathered during the research phase.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Basic Information</span>
+    <span class="n">company_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Company name&quot;</span><span class="p">)</span>
+    <span class="n">website_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Company website URL&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Business Details</span>
+    <span class="n">industry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Primary industry&quot;</span><span class="p">)</span>
+    <span class="n">core_business</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Main business focus&quot;</span><span class="p">)</span>
+    <span class="n">business_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;B2B, B2C, etc.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Marketing Information</span>
+    <span class="n">motto</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Company tagline/slogan&quot;</span><span class="p">)</span>
+    <span class="n">value_proposition</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Main value proposition&quot;</span><span class="p">)</span>
+    <span class="n">target_audience</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Target customer segments&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Company Metrics</span>
+    <span class="n">company_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Employee count range&quot;</span><span class="p">)</span>
+    <span class="n">founded_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Year founded&quot;</span><span class="p">)</span>
+    <span class="n">locations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Office locations&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Technical Details</span>
+    <span class="n">technologies</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Technology stack&quot;</span><span class="p">)</span>
+    <span class="n">integrations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Software integrations&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Market Position</span>
+    <span class="n">competitors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Main competitors&quot;</span><span class="p">)</span>
+    <span class="n">unique_selling_points</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Key differentiators&quot;</span>
+    <span class="p">)</span>
+    <span class="n">market_position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Market positioning&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Social Proof</span>
+    <span class="n">customers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Notable customers&quot;</span><span class="p">)</span>
+    <span class="n">case_studies</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Success stories&quot;</span><span class="p">)</span>
+    <span class="n">awards</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Awards and recognition&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Recent Activity</span>
+    <span class="n">recent_news</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recent news/updates&quot;</span><span class="p">)</span>
+    <span class="n">blog_topics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recent blog topics&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Pain Points &amp; Opportunities</span>
+    <span class="n">challenges</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Potential pain points&quot;</span><span class="p">)</span>
+    <span class="n">growth_areas</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Growth opportunities&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Contact Information</span>
+    <span class="n">email_address</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Contact email&quot;</span><span class="p">)</span>
+    <span class="n">phone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Contact phone&quot;</span><span class="p">)</span>
+    <span class="n">social_media</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Social media links&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Additional Fields</span>
+    <span class="n">pricing_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Pricing strategy and tiers&quot;</span><span class="p">)</span>
+    <span class="n">user_base</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Estimated user base size&quot;</span><span class="p">)</span>
+    <span class="n">key_features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Main product features&quot;</span><span class="p">)</span>
+    <span class="n">integration_ecosystem</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Integration partners&quot;</span>
+    <span class="p">)</span>
+    <span class="n">funding_status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Latest funding information&quot;</span>
+    <span class="p">)</span>
+    <span class="n">growth_metrics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Key growth indicators&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PersonalisedEmailGenerator</span><span class="p">(</span><span class="n">Workflow</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Automated B2B outreach system that:</span>
+
+<span class="sd">    1. Discovers companies using Exa search based on criteria</span>
+<span class="sd">    2. Finds contact details for decision makers at those companies</span>
+<span class="sd">    3. Researches company details and pain points</span>
+<span class="sd">    4. Generates personalized cold emails for B2B outreach</span>
+
+<span class="sd">    This workflow is designed to automate the entire prospecting process</span>
+<span class="sd">    from company discovery to personalized email generation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">        AI-Powered B2B Outreach Workflow:</span>
+<span class="s2">        --------------------------------------------------------</span>
+<span class="s2">        1. Discover Target Companies (Exa Search)</span>
+<span class="s2">        2. Find Decision Maker Contacts</span>
+<span class="s2">        3. Research Company Intelligence</span>
+<span class="s2">        4. Generate Personalized Emails</span>
+<span class="s2">        --------------------------------------------------------</span>
+<span class="s2">        Fully automated prospecting pipeline for B2B outreach.</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">company_finder</span><span class="p">:</span> <span class="n">Agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;gpt-5&quot;</span><span class="p">),</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">ExaTools</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;EXA_API_KEY&quot;</span><span class="p">])],</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Expert at finding companies that match specific criteria using web search&quot;</span><span class="p">,</span>
+        <span class="n">instructions</span><span class="o">=</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">            You are a company discovery specialist. Your job is to find companies that match the given criteria.</span>
+<span class="s2">            </span>
+<span class="s2">            Search for companies based on:</span>
+<span class="s2">            - Industry/sector</span>
+<span class="s2">            - Company size</span>
+<span class="s2">            - Geographic location</span>
+<span class="s2">            - Business model</span>
+<span class="s2">            - Technology stack</span>
+<span class="s2">            - Recent funding/growth</span>
+<span class="s2">            </span>
+<span class="s2">            For each company found, provide:</span>
+<span class="s2">            - Company name</span>
+<span class="s2">            - Website URL</span>
+<span class="s2">            - Brief description</span>
+<span class="s2">            - Industry</span>
+<span class="s2">            - Estimated size</span>
+<span class="s2">            - Location</span>
+<span class="s2">            </span>
+<span class="s2">            Focus on finding companies that would be good prospects for the specified service offering.</span>
+<span class="s2">            Look for companies showing signs of growth, funding, or expansion.</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">contact_finder</span><span class="p">:</span> <span class="n">Agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;gpt-5&quot;</span><span class="p">),</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">ExaTools</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;EXA_API_KEY&quot;</span><span class="p">])],</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Expert at finding contact information for decision makers at companies&quot;</span><span class="p">,</span>
+        <span class="n">instructions</span><span class="o">=</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">            You are a contact research specialist. Find decision makers and their contact information.</span>
+<span class="s2">            </span>
+<span class="s2">            For each company, search for:</span>
+<span class="s2">            - Key decision makers in target departments</span>
+<span class="s2">            - Their email addresses</span>
+<span class="s2">            - LinkedIn profiles</span>
+<span class="s2">            - Professional backgrounds</span>
+<span class="s2">            - Current role and responsibilities</span>
+<span class="s2">            </span>
+<span class="s2">            Focus on finding people in roles like:</span>
+<span class="s2">            - CEO, CTO, VP of Engineering (for tech solutions)</span>
+<span class="s2">            - CMO, VP Marketing, Growth Lead (for marketing solutions)</span>
+<span class="s2">            - VP Sales, Sales Director (for sales solutions)</span>
+<span class="s2">            - HR Director, People Ops (for HR solutions)</span>
+<span class="s2">            </span>
+<span class="s2">            Provide verified contact information when possible.</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">company_researcher</span><span class="p">:</span> <span class="n">Agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;gpt-5&quot;</span><span class="p">),</span>
+        <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">ExaTools</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;EXA_API_KEY&quot;</span><span class="p">])],</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Expert at researching company details for personalization&quot;</span><span class="p">,</span>
+        <span class="n">instructions</span><span class="o">=</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">            Research companies in depth to enable personalized outreach.</span>
+<span class="s2">            </span>
+<span class="s2">            Analyze:</span>
+<span class="s2">            - Company website and messaging</span>
+<span class="s2">            - Recent news and updates</span>
+<span class="s2">            - Product/service offerings</span>
+<span class="s2">            - Technology stack</span>
+<span class="s2">            - Growth indicators</span>
+<span class="s2">            - Pain points and challenges</span>
+<span class="s2">            - Recent achievements</span>
+<span class="s2">            - Market position</span>
+<span class="s2">            </span>
+<span class="s2">            Focus on insights that would be relevant for B2B outreach:</span>
+<span class="s2">            - Scaling challenges</span>
+<span class="s2">            - Technology needs</span>
+<span class="s2">            - Market expansion</span>
+<span class="s2">            - Competitive positioning</span>
+<span class="s2">            - Recent wins or milestones</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">email_creator</span><span class="p">:</span> <span class="n">Agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;gpt-5&quot;</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">            You are writing for a friendly, empathetic 20-year-old sales rep whose</span>
+<span class="s2">            style is cool, concise, and respectful. Tone is casual yet professional.</span>
+
+<span class="s2">            - Be polite but natural, using simple language.</span>
+<span class="s2">            - Never sound robotic or use big cliché words like &quot;delve&quot;, &quot;synergy&quot; or &quot;revolutionary.&quot;</span>
+<span class="s2">            - Clearly address problems the prospect might be facing and how we solve them.</span>
+<span class="s2">            - Keep paragraphs short and friendly, with a natural voice.</span>
+<span class="s2">            - End on a warm, upbeat note, showing willingness to help.</span><span class="se">\</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">),</span>
+        <span class="n">instructions</span><span class="o">=</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">            Please craft a highly personalized email that has:</span>
+
+<span class="s2">            1. A simple, personal subject line referencing the problem or opportunity.</span>
+<span class="s2">            2. At least one area for improvement or highlight from research.</span>
+<span class="s2">            3. A quick explanation of how we can help them (no heavy jargon).</span>
+<span class="s2">            4. References a known challenge from the research.</span>
+<span class="s2">            5. Avoid words like &quot;delve&quot;, &quot;explore&quot;, &quot;synergy&quot;, &quot;amplify&quot;, &quot;game changer&quot;, &quot;revolutionary&quot;, &quot;breakthrough&quot;.</span>
+<span class="s2">            6. Use first-person language (&quot;I&quot;) naturally.</span>
+<span class="s2">            7. Maintain a 20-year-old&#39;s friendly style—brief and to the point.</span>
+<span class="s2">            8. Avoid placing the recipient&#39;s name in the subject line.</span>
+
+<span class="s2">            Use the appropriate template based on the target professional type and outreach purpose.</span>
+<span class="s2">            Ensure the final tone feels personal and conversation-like, not automatically generated.</span>
+<span class="s2">            ----------------------------------------------------------------------</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_cached_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve cached data&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checking cache for: </span><span class="si">{</span><span class="n">cache_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cache_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cache data&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caching data for: </span><span class="si">{</span><span class="n">cache_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;cache&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">][</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_to_storage</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">OutreachConfig</span><span class="p">,</span>
+        <span class="n">sender_details</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">num_companies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">use_cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Automated B2B outreach workflow:</span>
+
+<span class="sd">        1. Discover companies using Exa search based on criteria</span>
+<span class="sd">        2. Find decision maker contacts for each company</span>
+<span class="sd">        3. Research company details for personalization</span>
+<span class="sd">        4. Generate personalized emails</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting automated B2B outreach workflow...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 1: Discover companies</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;🔍 Discovering target companies...&quot;</span><span class="p">)</span>
+        <span class="n">search_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Find </span><span class="si">{</span><span class="n">num_companies</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">company_category</span><span class="si">}</span><span class="s2"> companies that would be good prospects for </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">service_type</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">        </span>
+<span class="s2">        Company criteria:</span>
+<span class="s2">        - Industry: </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">company_category</span><span class="si">}</span>
+<span class="s2">        - Size: </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">company_size_preference</span><span class="si">}</span>
+<span class="s2">        - Target departments: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">target_departments</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        </span>
+<span class="s2">        Look for companies showing growth, recent funding, or expansion.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        
+        <span class="n">companies_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">company_finder</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">search_query</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">companies_response</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">companies_response</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No companies found&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Parse companies from response</span>
+        <span class="n">companies_text</span> <span class="o">=</span> <span class="n">companies_response</span><span class="o">.</span><span class="n">content</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found companies: </span><span class="si">{</span><span class="n">companies_text</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 2: For each company, find contacts and research</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_companies</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Yield progress update</span>
+                <span class="k">yield</span> <span class="p">{</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Processing company </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_companies</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_companies</span><span class="p">,</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Finding contacts...&quot;</span>
+                <span class="p">}</span>
+                
+                <span class="c1"># Extract company info from the response</span>
+                <span class="n">company_search</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Extract company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> details from: </span><span class="si">{</span><span class="n">companies_text</span><span class="si">}</span><span class="s2">&quot;</span>
+                
+                <span class="c1"># Step 3: Find decision maker contacts</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;👥 Finding decision maker contacts...&quot;</span><span class="p">)</span>
+                <span class="n">contacts_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                Find decision makers at company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> from this list: </span><span class="si">{</span><span class="n">companies_text</span><span class="si">}</span>
+<span class="s2">                </span>
+<span class="s2">                Focus on roles in: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">target_departments</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">                Find their email addresses and LinkedIn profiles.</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+                
+                <span class="n">contacts_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contact_finder</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">contacts_query</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">contacts_response</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">contacts_response</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No contacts found for company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Yield progress update</span>
+                <span class="k">yield</span> <span class="p">{</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Processing company </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_companies</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.4</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_companies</span><span class="p">,</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Researching company...&quot;</span>
+                <span class="p">}</span>
+
+                <span class="c1"># Step 4: Research company details</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;🔬 Researching company details...&quot;</span><span class="p">)</span>
+                <span class="n">research_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                Research company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> from this list: </span><span class="si">{</span><span class="n">companies_text</span><span class="si">}</span>
+<span class="s2">                </span>
+<span class="s2">                Focus on insights relevant for </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">service_type</span><span class="si">}</span><span class="s2"> outreach.</span>
+<span class="s2">                Find pain points related to </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">target_departments</span><span class="p">)</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+                
+                <span class="n">research_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">company_researcher</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">research_query</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">research_response</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">research_response</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No research data for company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Parse the research response content</span>
+                <span class="n">research_content</span> <span class="o">=</span> <span class="n">research_response</span><span class="o">.</span><span class="n">content</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">research_content</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No research data for company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                
+                <span class="c1"># Create a basic company info structure from the research</span>
+                <span class="n">company_data</span> <span class="o">=</span> <span class="n">CompanyInfo</span><span class="p">(</span>
+                    <span class="n">company_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>  <span class="c1"># Will be updated with actual name</span>
+                    <span class="n">website_url</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="c1"># Will be updated with actual URL</span>
+                    <span class="n">industry</span><span class="o">=</span><span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
+                    <span class="n">core_business</span><span class="o">=</span><span class="n">research_content</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span> <span class="k">if</span> <span class="n">research_content</span> <span class="k">else</span> <span class="s2">&quot;No data available&quot;</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Yield progress update</span>
+                <span class="k">yield</span> <span class="p">{</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Processing company </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_companies</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.6</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_companies</span><span class="p">,</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Generating email...&quot;</span>
+                <span class="p">}</span>
+
+                <span class="c1"># Step 5: Generate personalized email</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;✉️ Generating personalized email...&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Get appropriate template based on target departments</span>
+                <span class="n">template_dept</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">target_departments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">target_departments</span> <span class="k">else</span> <span class="s2">&quot;GTM (Sales &amp; Marketing)&quot;</span>
+                <span class="k">if</span> <span class="n">template_dept</span> <span class="ow">in</span> <span class="n">DEPARTMENT_TEMPLATES</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">service_type</span> <span class="ow">in</span> <span class="n">DEPARTMENT_TEMPLATES</span><span class="p">[</span><span class="n">template_dept</span><span class="p">]:</span>
+                    <span class="n">template</span> <span class="o">=</span> <span class="n">DEPARTMENT_TEMPLATES</span><span class="p">[</span><span class="n">template_dept</span><span class="p">][</span><span class="n">config</span><span class="o">.</span><span class="n">service_type</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">template</span> <span class="o">=</span> <span class="n">DEPARTMENT_TEMPLATES</span><span class="p">[</span><span class="s2">&quot;GTM (Sales &amp; Marketing)&quot;</span><span class="p">][</span><span class="s2">&quot;Software Solution&quot;</span><span class="p">]</span>
+                
+                <span class="n">email_context</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;template&quot;</span><span class="p">:</span> <span class="n">template</span><span class="p">,</span>
+                        <span class="s2">&quot;company_info&quot;</span><span class="p">:</span> <span class="n">company_data</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span>
+                        <span class="s2">&quot;contacts_info&quot;</span><span class="p">:</span> <span class="n">contacts_response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                        <span class="s2">&quot;sender_details&quot;</span><span class="p">:</span> <span class="n">sender_details</span><span class="p">,</span>
+                        <span class="s2">&quot;target_departments&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">target_departments</span><span class="p">,</span>
+                        <span class="s2">&quot;service_type&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">service_type</span><span class="p">,</span>
+                        <span class="s2">&quot;personalization_level&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">personalization_level</span>
+                    <span class="p">},</span>
+                    <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="p">)</span>
+                
+                <span class="n">email_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email_creator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Generate a personalized email using this context:</span><span class="se">\n</span><span class="si">{</span><span class="n">email_context</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">email_response</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">email_response</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No email generated for company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="k">yield</span> <span class="p">{</span>
+                    <span class="s2">&quot;company_name&quot;</span><span class="p">:</span> <span class="n">company_data</span><span class="o">.</span><span class="n">company_name</span><span class="p">,</span>
+                    <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">email_response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                    <span class="s2">&quot;company_data&quot;</span><span class="p">:</span> <span class="n">company_data</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span>
+                    <span class="s2">&quot;contacts&quot;</span><span class="p">:</span> <span class="n">contacts_response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                    <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Company </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_companies</span><span class="si">}</span><span class="s2"> completed&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_companies</span><span class="p">,</span>
+                    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed&quot;</span>
+                <span class="p">}</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing company #</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_streamlit_ui</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create the Streamlit user interface&quot;&quot;&quot;</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🚀 Automated B2B Email Outreach Generator&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    **Fully automated prospecting pipeline**: Discovers companies, finds decision makers, </span>
+<span class="s2">    and generates personalized emails using AI research agents.</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 1: Target Company Category Selection</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;1️⃣ Target Company Discovery&quot;</span><span class="p">)</span>
+    
+    <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+        <span class="n">selected_category</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+            <span class="s2">&quot;What type of companies should we target?&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">COMPANY_CATEGORIES</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+            <span class="n">key</span><span class="o">=</span><span class="s2">&quot;company_category&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📌 </span><span class="si">{</span><span class="n">COMPANY_CATEGORIES</span><span class="p">[</span><span class="n">selected_category</span><span class="p">][</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Typical Decision Makers We&#39;ll Find:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">COMPANY_CATEGORIES</span><span class="p">[</span><span class="n">selected_category</span><span class="p">][</span><span class="s1">&#39;typical_roles&#39;</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Company Size Filter&quot;</span><span class="p">)</span>
+        <span class="n">company_size</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">radio</span><span class="p">(</span>
+            <span class="s2">&quot;Preferred company size&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="s2">&quot;All Sizes&quot;</span><span class="p">,</span> <span class="s2">&quot;Startup (1-50)&quot;</span><span class="p">,</span> <span class="s2">&quot;SMB (51-500)&quot;</span><span class="p">,</span> <span class="s2">&quot;Enterprise (500+)&quot;</span><span class="p">],</span>
+            <span class="n">key</span><span class="o">=</span><span class="s2">&quot;company_size&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">num_companies</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span>
+            <span class="s2">&quot;Number of companies to find&quot;</span><span class="p">,</span>
+            <span class="n">min_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">max_value</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;AI will discover this many companies automatically&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Step 2: Your Information</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;2️⃣ Your Contact Information&quot;</span><span class="p">)</span>
+    
+    <span class="n">col3</span><span class="p">,</span> <span class="n">col4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Required Information&quot;</span><span class="p">)</span>
+        <span class="n">sender_details</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Your Name *&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sender_name&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Your Email *&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sender_email&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;organization&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Your Organization *&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sender_org&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+    
+    <span class="k">with</span> <span class="n">col4</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Optional Information&quot;</span><span class="p">)</span>
+        <span class="n">sender_details</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;linkedin&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;LinkedIn Profile (optional)&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sender_linkedin&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;https://linkedin.com/in/yourname&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;phone&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Phone Number (optional)&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sender_phone&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;+1 (555) 123-4567&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;website&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Company Website (optional)&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sender_website&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;https://yourcompany.com&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;calendar_link&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Calendar Link (optional)&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sender_calendar&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;https://calendly.com/yourname&quot;</span><span class="p">)</span>
+        <span class="p">})</span>
+    
+    <span class="c1"># Service description</span>
+    <span class="n">sender_details</span><span class="p">[</span><span class="s2">&quot;service_offered&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span>
+        <span class="s2">&quot;Describe your offering *&quot;</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;service_description&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Explain what you offer and how it helps businesses&quot;</span><span class="p">,</span>
+        <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;We help companies build custom AI solutions that automate workflows and improve efficiency...&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Step 3: Service Type and Targeting</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;3️⃣ Outreach Configuration&quot;</span><span class="p">)</span>
+    
+    <span class="n">col5</span><span class="p">,</span> <span class="n">col6</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">col5</span><span class="p">:</span>
+        <span class="n">service_type</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+            <span class="s2">&quot;Service/Product Category&quot;</span><span class="p">,</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;Software Solution&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Consulting Services&quot;</span><span class="p">,</span> 
+                <span class="s2">&quot;Professional Services&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Technology Platform&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Custom Development&quot;</span>
+            <span class="p">],</span>
+            <span class="n">key</span><span class="o">=</span><span class="s2">&quot;service_type&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">col6</span><span class="p">:</span>
+        <span class="n">personalization_level</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">select_slider</span><span class="p">(</span>
+            <span class="s2">&quot;Email Personalization Level&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Basic&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium&quot;</span><span class="p">,</span> <span class="s2">&quot;Deep&quot;</span><span class="p">],</span>
+            <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Deep&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Deep personalization takes longer but produces better results&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Step 4: Target Department Selection</span>
+    <span class="n">target_departments</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">multiselect</span><span class="p">(</span>
+        <span class="s2">&quot;Which departments should we target?&quot;</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;GTM (Sales &amp; Marketing)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Human Resources&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;Engineering/Tech&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Operations&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Finance&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Product&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Executive Leadership&quot;</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GTM (Sales &amp; Marketing)&quot;</span><span class="p">],</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;target_departments&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;AI will find decision makers in these departments&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Validate required inputs</span>
+    <span class="n">required_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="s2">&quot;organization&quot;</span><span class="p">,</span> <span class="s2">&quot;service_offered&quot;</span><span class="p">]</span>
+    <span class="n">missing_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">required_fields</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">sender_details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">)]</span>
+    
+    <span class="k">if</span> <span class="n">missing_fields</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please fill in required fields: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_fields</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">target_departments</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please select at least one target department&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_category</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please select a company category&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">service_type</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please select a service type&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+    <span class="c1"># Create and return configuration</span>
+    <span class="n">outreach_config</span> <span class="o">=</span> <span class="n">OutreachConfig</span><span class="p">(</span>
+        <span class="n">company_category</span><span class="o">=</span><span class="n">selected_category</span><span class="p">,</span>
+        <span class="n">target_departments</span><span class="o">=</span><span class="n">target_departments</span><span class="p">,</span>
+        <span class="n">service_type</span><span class="o">=</span><span class="n">service_type</span><span class="p">,</span>
+        <span class="n">company_size_preference</span><span class="o">=</span><span class="n">company_size</span><span class="p">,</span>
+        <span class="n">personalization_level</span><span class="o">=</span><span class="n">personalization_level</span>
+    <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">outreach_config</span><span class="p">,</span> <span class="n">sender_details</span><span class="p">,</span> <span class="n">num_companies</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main entry point for running the automated B2B outreach workflow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Set page config must be the first Streamlit command</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span>
+            <span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;Automated B2B Email Outreach&quot;</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">,</span>
+            <span class="n">initial_sidebar_state</span><span class="o">=</span><span class="s2">&quot;expanded&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># API Keys in Sidebar</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;🔑 API Configuration&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Update API keys from sidebar</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">EXA_API_KEY</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+            <span class="s2">&quot;Exa API Key *&quot;</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">EXA_API_KEY</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="s2">&quot;exa_key_input&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Get your Exa API key from https://exa.ai&quot;</span>
+        <span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+            <span class="s2">&quot;OpenAI API Key *&quot;</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="s2">&quot;openai_key_input&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Get your OpenAI API key from https://platform.openai.com&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Update environment variables</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;EXA_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">EXA_API_KEY</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span>
+        
+        <span class="c1"># Validate API keys</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">EXA_API_KEY</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;⚠️ Both API keys are required to run the application&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ API keys configured&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Add guidance about API keys</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        **API Keys Required:**</span>
+<span class="s2">        - Exa API key for company research</span>
+<span class="s2">        - OpenAI API key for email generation</span>
+<span class="s2">        </span>
+<span class="s2">        Set these in your environment variables or enter them above.</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Get user inputs from the UI</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">,</span> <span class="n">sender_details</span><span class="p">,</span> <span class="n">num_companies</span> <span class="o">=</span> <span class="n">create_streamlit_ui</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        
+        <span class="c1"># Generate Emails Section</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;4️⃣ Generate Outreach Campaign&quot;</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        **Ready to launch automated prospecting:**</span>
+<span class="s2">        - Target: </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">company_category</span><span class="si">}</span><span class="s2"> companies (</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">company_size_preference</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">        - Departments: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">target_departments</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        - Service: </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">service_type</span><span class="si">}</span>
+<span class="s2">        - Companies to find: </span><span class="si">{</span><span class="n">num_companies</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🚀 Start Automated Campaign&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;generate_button&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">):</span>
+            <span class="c1"># Check if API keys are configured</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">EXA_API_KEY</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ Please configure both API keys before starting the campaign&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Progress tracking</span>
+                <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">status_text</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+                <span class="n">results_container</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">container</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Initializing AI research agents...&quot;</span><span class="p">):</span>
+                    <span class="c1"># Setup the database</span>
+                    <span class="n">db</span> <span class="o">=</span> <span class="n">SqliteDb</span><span class="p">(</span>
+                        <span class="n">db_file</span><span class="o">=</span><span class="s2">&quot;tmp/agno_workflows.db&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    
+                    <span class="n">workflow</span> <span class="o">=</span> <span class="n">PersonalisedEmailGenerator</span><span class="p">(</span>
+                        <span class="n">session_id</span><span class="o">=</span><span class="s2">&quot;streamlit-email-generator&quot;</span><span class="p">,</span>
+                        <span class="n">db</span><span class="o">=</span><span class="n">db</span>
+                    <span class="p">)</span>
+                
+                <span class="n">status_text</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;🔍 Discovering companies and generating emails...&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Process companies and display results</span>
+                <span class="n">results_count</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                    <span class="n">sender_details</span><span class="o">=</span><span class="n">sender_details</span><span class="p">,</span>
+                    <span class="n">num_companies</span><span class="o">=</span><span class="n">num_companies</span><span class="p">,</span>
+                    <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">):</span>
+                    <span class="c1"># Update progress bar and status</span>
+                    <span class="k">if</span> <span class="s1">&#39;email&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                        <span class="n">progress_bar</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;progress&#39;</span><span class="p">])</span>
+                        <span class="n">status_text</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔄 </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># This is a completed email result</span>
+                        <span class="n">results_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">progress_bar</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;progress&#39;</span><span class="p">,</span> <span class="n">results_count</span> <span class="o">/</span> <span class="n">num_companies</span><span class="p">))</span>
+                        <span class="n">status_text</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Only display results for completed emails</span>
+                    <span class="k">if</span> <span class="s1">&#39;email&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                        <span class="k">with</span> <span class="n">results_container</span><span class="p">:</span>
+                            <span class="c1"># Create a more visually appealing card layout</span>
+                            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">container</span><span class="p">():</span>
+                                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+                                
+                                <span class="c1"># Header with company info</span>
+                                <span class="n">col_header1</span><span class="p">,</span> <span class="n">col_header2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                                <span class="k">with</span> <span class="n">col_header1</span><span class="p">:</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;### 📧 </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;company_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="k">with</span> <span class="n">col_header2</span><span class="p">:</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Email #</span><span class="si">{</span><span class="n">results_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                                
+                                <span class="c1"># Create tabs for different information</span>
+                                <span class="n">tab1</span><span class="p">,</span> <span class="n">tab2</span><span class="p">,</span> <span class="n">tab3</span><span class="p">,</span> <span class="n">tab4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">&quot;📝 Generated Email&quot;</span><span class="p">,</span> <span class="s2">&quot;🏢 Company Research&quot;</span><span class="p">,</span> <span class="s2">&quot;👥 Contacts Found&quot;</span><span class="p">,</span> <span class="s2">&quot;📊 Summary&quot;</span><span class="p">])</span>
+                                
+                                <span class="k">with</span> <span class="n">tab1</span><span class="p">:</span>
+                                    <span class="c1"># Email display with better formatting</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Subject Line&quot;</span><span class="p">)</span>
+                                    <span class="c1"># Extract subject line if present</span>
+                                    <span class="n">email_content</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+                                    <span class="k">if</span> <span class="n">email_content</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Subject:&#39;</span><span class="p">):</span>
+                                        <span class="n">lines</span> <span class="o">=</span> <span class="n">email_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                                        <span class="n">subject</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Subject:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                                        <span class="n">body</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">**&quot;</span><span class="p">)</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Email Body&quot;</span><span class="p">)</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span>
+                                            <span class="s2">&quot;Email Content&quot;</span><span class="p">,</span>
+                                            <span class="n">body</span><span class="p">,</span>
+                                            <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                                            <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;email_body_</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;company_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">results_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                            <span class="n">label_visibility</span><span class="o">=</span><span class="s2">&quot;collapsed&quot;</span>
+                                        <span class="p">)</span>
+                                    <span class="k">else</span><span class="p">:</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span>
+                                            <span class="s2">&quot;Email Content&quot;</span><span class="p">,</span>
+                                            <span class="n">email_content</span><span class="p">,</span>
+                                            <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                                            <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;email_body_</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;company_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">results_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                            <span class="n">label_visibility</span><span class="o">=</span><span class="s2">&quot;collapsed&quot;</span>
+                                        <span class="p">)</span>
+                                    
+                                    <span class="c1"># Copy button</span>
+                                    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📋 Copy Email&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;copy_</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;company_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">results_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">):</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;📋 Email copied to clipboard!&quot;</span><span class="p">)</span>
+                                
+                                <span class="k">with</span> <span class="n">tab2</span><span class="p">:</span>
+                                    <span class="c1"># Company research with better formatting</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Company Intelligence&quot;</span><span class="p">)</span>
+                                    <span class="n">company_data</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;company_data&#39;</span><span class="p">]</span>
+                                    
+                                    <span class="c1"># Key metrics in columns</span>
+                                    <span class="n">col_metrics1</span><span class="p">,</span> <span class="n">col_metrics2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                                    <span class="k">with</span> <span class="n">col_metrics1</span><span class="p">:</span>
+                                        <span class="k">if</span> <span class="n">company_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;industry&#39;</span><span class="p">):</span>
+                                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Industry&quot;</span><span class="p">,</span> <span class="n">company_data</span><span class="p">[</span><span class="s1">&#39;industry&#39;</span><span class="p">])</span>
+                                        <span class="k">if</span> <span class="n">company_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;company_size&#39;</span><span class="p">):</span>
+                                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Company Size&quot;</span><span class="p">,</span> <span class="n">company_data</span><span class="p">[</span><span class="s1">&#39;company_size&#39;</span><span class="p">])</span>
+                                    <span class="k">with</span> <span class="n">col_metrics2</span><span class="p">:</span>
+                                        <span class="k">if</span> <span class="n">company_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;founded_year&#39;</span><span class="p">):</span>
+                                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Founded&quot;</span><span class="p">,</span> <span class="n">company_data</span><span class="p">[</span><span class="s1">&#39;founded_year&#39;</span><span class="p">])</span>
+                                        <span class="k">if</span> <span class="n">company_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;funding_status&#39;</span><span class="p">):</span>
+                                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Funding&quot;</span><span class="p">,</span> <span class="n">company_data</span><span class="p">[</span><span class="s1">&#39;funding_status&#39;</span><span class="p">])</span>
+                                    
+                                    <span class="c1"># Core business info</span>
+                                    <span class="k">if</span> <span class="n">company_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;core_business&#39;</span><span class="p">):</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Business Focus&quot;</span><span class="p">)</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">company_data</span><span class="p">[</span><span class="s1">&#39;core_business&#39;</span><span class="p">])</span>
+                                    
+                                    <span class="c1"># Additional details</span>
+                                    <span class="k">if</span> <span class="n">company_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;technologies&#39;</span><span class="p">):</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Technology Stack&quot;</span><span class="p">)</span>
+                                        <span class="n">tech_tags</span> <span class="o">=</span> <span class="n">company_data</span><span class="p">[</span><span class="s1">&#39;technologies&#39;</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span>  <span class="c1"># Show first 5</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tech_tags</span><span class="p">))</span>
+                                    
+                                    <span class="c1"># Raw data expander</span>
+                                    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;🔍 View Raw Research Data&quot;</span><span class="p">):</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">company_data</span><span class="p">)</span>
+                                
+                                <span class="k">with</span> <span class="n">tab3</span><span class="p">:</span>
+                                    <span class="c1"># Contacts with better formatting</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Decision Makers Found&quot;</span><span class="p">)</span>
+                                    <span class="n">contacts_text</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;contacts&#39;</span><span class="p">]</span>
+                                    
+                                    <span class="c1"># Try to parse contacts if they&#39;re structured</span>
+                                    <span class="k">if</span> <span class="n">contacts_text</span><span class="p">:</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span>
+                                            <span class="s2">&quot;Contact Information&quot;</span><span class="p">,</span>
+                                            <span class="n">contacts_text</span><span class="p">,</span>
+                                            <span class="n">height</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+                                            <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;contacts_</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;company_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">results_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                            <span class="n">label_visibility</span><span class="o">=</span><span class="s2">&quot;collapsed&quot;</span>
+                                        <span class="p">)</span>
+                                        
+                                        <span class="c1"># Copy contacts button</span>
+                                        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📋 Copy Contacts&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;copy_contacts_</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;company_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">results_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+                                            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;📋 Contacts copied!&quot;</span><span class="p">)</span>
+                                    <span class="k">else</span><span class="p">:</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No contact information found for this company.&quot;</span><span class="p">)</span>
+                                
+                                <span class="k">with</span> <span class="n">tab4</span><span class="p">:</span>
+                                    <span class="c1"># Summary tab with key insights</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Campaign Summary&quot;</span><span class="p">)</span>
+                                    
+                                    <span class="c1"># Key stats</span>
+                                    <span class="n">col_summary1</span><span class="p">,</span> <span class="n">col_summary2</span><span class="p">,</span> <span class="n">col_summary3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                                    <span class="k">with</span> <span class="n">col_summary1</span><span class="p">:</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Personalization Level&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">personalization_level</span><span class="p">)</span>
+                                    <span class="k">with</span> <span class="n">col_summary2</span><span class="p">:</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Service Type&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+                                    <span class="k">with</span> <span class="n">col_summary3</span><span class="p">:</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Target Dept&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">target_departments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">target_departments</span> <span class="k">else</span> <span class="s2">&quot;N/A&quot;</span><span class="p">)</span>
+                                    
+                                    <span class="c1"># Email quality indicators</span>
+                                    <span class="n">email_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">])</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Email Quality&quot;</span><span class="p">)</span>
+                                    <span class="n">col_quality1</span><span class="p">,</span> <span class="n">col_quality2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                                    <span class="k">with</span> <span class="n">col_quality1</span><span class="p">:</span>
+                                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Email Length&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">email_length</span><span class="si">}</span><span class="s2"> chars&quot;</span><span class="p">)</span>
+                                    <span class="k">with</span> <span class="n">col_quality2</span><span class="p">:</span>
+                                        <span class="k">if</span> <span class="n">email_length</span> <span class="o">&lt;</span> <span class="mi">200</span><span class="p">:</span>
+                                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Length Rating&quot;</span><span class="p">,</span> <span class="s2">&quot;🟢 Concise&quot;</span><span class="p">)</span>
+                                        <span class="k">elif</span> <span class="n">email_length</span> <span class="o">&lt;</span> <span class="mi">400</span><span class="p">:</span>
+                                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Length Rating&quot;</span><span class="p">,</span> <span class="s2">&quot;🟡 Good&quot;</span><span class="p">)</span>
+                                        <span class="k">else</span><span class="p">:</span>
+                                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Length Rating&quot;</span><span class="p">,</span> <span class="s2">&quot;🔴 Long&quot;</span><span class="p">)</span>
+                                    
+                                    <span class="c1"># Personalization score</span>
+                                    <span class="n">personalization_score</span> <span class="o">=</span> <span class="mi">85</span>  <span class="c1"># Placeholder - could be calculated</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;#### Personalization Score&quot;</span><span class="p">)</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="n">personalization_score</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+                                    <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Score: </span><span class="si">{</span><span class="n">personalization_score</span><span class="si">}</span><span class="s2">/100 - </span><span class="si">{</span><span class="s1">&#39;Excellent&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">personalization_score</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;Good&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">personalization_score</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;Needs Improvement&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                                
+                                <span class="c1"># Footer with timestamp</span>
+                                <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated on </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Final status with enhanced display</span>
+                <span class="k">if</span> <span class="n">results_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">progress_bar</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+                    <span class="n">status_text</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🎉 Campaign complete! Generated </span><span class="si">{</span><span class="n">results_count</span><span class="si">}</span><span class="s2"> personalized emails&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Success summary</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🎉 **Campaign Complete!** Successfully generated </span><span class="si">{</span><span class="n">results_count</span><span class="si">}</span><span class="s2"> personalized emails&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Campaign summary metrics</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### 📊 Campaign Summary&quot;</span><span class="p">)</span>
+                    <span class="n">col_summary1</span><span class="p">,</span> <span class="n">col_summary2</span><span class="p">,</span> <span class="n">col_summary3</span><span class="p">,</span> <span class="n">col_summary4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">col_summary1</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Emails Generated&quot;</span><span class="p">,</span> <span class="n">results_count</span><span class="p">)</span>
+                    <span class="k">with</span> <span class="n">col_summary2</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Target Companies&quot;</span><span class="p">,</span> <span class="n">num_companies</span><span class="p">)</span>
+                    <span class="k">with</span> <span class="n">col_summary3</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Success Rate&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">(</span><span class="n">results_count</span><span class="o">/</span><span class="n">num_companies</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+                    <span class="k">with</span> <span class="n">col_summary4</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Service Type&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span>
+                    
+                    <span class="c1"># Action buttons for campaign</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### 🚀 Next Steps&quot;</span><span class="p">)</span>
+                    <span class="n">col_action1</span><span class="p">,</span> <span class="n">col_action2</span><span class="p">,</span> <span class="n">col_action3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">col_action1</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;📧 Export All Emails&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;export_all&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">):</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;💾 All emails exported successfully!&quot;</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">col_action2</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;📊 Generate Report&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;generate_report&quot;</span><span class="p">):</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;📈 Campaign report generated!&quot;</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">col_action3</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🔄 Run New Campaign&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;new_campaign&quot;</span><span class="p">):</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+                    
+                    <span class="c1"># Celebration</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">balloons</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ **No emails were generated.** Please try adjusting your criteria or check your API keys.&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Troubleshooting tips</span>
+                    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;🔧 Troubleshooting Tips&quot;</span><span class="p">):</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        **Common issues and solutions:**</span>
+<span class="s2">                        </span>
+<span class="s2">                        1. **API Keys**: Make sure both Exa and OpenAI API keys are valid</span>
+<span class="s2">                        2. **Company Criteria**: Try broader categories or different company sizes</span>
+<span class="s2">                        3. **Target Departments**: Select more departments to increase chances of finding contacts</span>
+<span class="s2">                        4. **Service Type**: Try different service types that might have better market fit</span>
+<span class="s2">                        5. **Number of Companies**: Start with fewer companies (1-3) for testing</span>
+<span class="s2">                        &quot;&quot;&quot;</span><span class="p">)</span>
+            
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Campaign failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Workflow failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### About&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            **Automated B2B Outreach Tool**</span>
+<span class="sd">            </span>
+<span class="sd">            This tool uses AI agents to:</span>
+<span class="sd">            - Discover target companies automatically</span>
+<span class="sd">            - Find decision maker contacts</span>
+<span class="sd">            - Research company intelligence</span>
+<span class="sd">            - Generate personalized emails</span>
+<span class="sd">            </span>
+<span class="sd">            Perfect for sales teams, agencies, and consultants.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="p">)</span>
+                
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Workflow failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-single-agent-apps/ai-email-gtm-reachout-agent/ai_email_gtm_reachout.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">59 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>agno&gt;=2.0.4
+streamlit&gt;=1.32.0
+pydantic&gt;=2.0.0
+openai&gt;=1.0.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-single-agent-apps/ai-email-gtm-reachout-agent/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li><li><a href="../../../lecons/11-integrating-with-function-calling/index.html">11 · Intégrer des services externes avec l&#x27;appel de fonctions</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-single-agent-apps/ai-email-gtm-reachout-agent">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-single-agent-apps/ai-deep-research-agent/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Agent de recherche approfondie</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-single-agent-apps/ai-fraud-investigation-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Agent d&#x27;investigation de fraude</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/single_agent_apps/ai_email_gtm_reachout_agent" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/single_agent_apps/ai_email_gtm_reachout_agent</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h3"><a href="#free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial</a></li><li class="toc__item toc__item--h2"><a href="#features">✨ Features</a></li><li class="toc__item toc__item--h3"><a href="#automated-company-discovery">🔍 **Automated Company Discovery**</a></li><li class="toc__item toc__item--h3"><a href="#intelligent-contact-finding">👥 **Intelligent Contact Finding**</a></li><li class="toc__item toc__item--h3"><a href="#deep-company-research">🔬 **Deep Company Research**</a></li><li class="toc__item toc__item--h3"><a href="#personalized-email-generation">✉️ **Personalized Email Generation**</a></li><li class="toc__item toc__item--h3"><a href="#smart-targeting">🎯 **Smart Targeting**</a></li><li class="toc__item toc__item--h2"><a href="#installation">🛠️ Installation</a></li><li class="toc__item toc__item--h2"><a href="#quick-start">🚀 Quick Start</a></li><li class="toc__item toc__item--h2"><a href="#usage-guide">📋 Usage Guide</a></li><li class="toc__item toc__item--h3"><a href="#step-1-target-company-discovery">Step 1: Target Company Discovery</a></li><li class="toc__item toc__item--h3"><a href="#step-2-your-information">Step 2: Your Information</a></li><li class="toc__item toc__item--h3"><a href="#step-3-outreach-configuration">Step 3: Outreach Configuration</a></li><li class="toc__item toc__item--h3"><a href="#step-4-generate-campaign">Step 4: Generate Campaign</a></li><li class="toc__item toc__item--h2"><a href="#email-templates">🎨 Email Templates</a></li><li class="toc__item toc__item--h3"><a href="#gtm-sales-marketing">GTM (Sales &amp; Marketing)</a></li><li class="toc__item toc__item--h3"><a href="#human-resources">Human Resources</a></li><li class="toc__item toc__item--h3"><a href="#marketing-professional">Marketing Professional</a></li><li class="toc__item toc__item--h3"><a href="#b2b-sales-representative">B2B Sales Representative</a></li><li class="toc__item toc__item--h2"><a href="#configuration-options">🔧 Configuration Options</a></li><li class="toc__item toc__item--h3"><a href="#company-categories">Company Categories</a></li><li class="toc__item toc__item--h3"><a href="#personalization-levels">Personalization Levels</a></li><li class="toc__item toc__item--h2"><a href="#output-format">📊 Output Format</a></li><li class="toc__item toc__item--h2"><a href="#api-requirements">🔑 API Requirements</a></li><li class="toc__item toc__item--h3"><a href="#exa-api">Exa API</a></li><li class="toc__item toc__item--h3"><a href="#openai-api">OpenAI API</a></li><li class="toc__item toc__item--h2"><a href="#use-cases">🎯 Use Cases</a></li><li class="toc__item toc__item--h3"><a href="#sales-teams">Sales Teams</a></li><li class="toc__item toc__item--h3"><a href="#marketing-agencies">Marketing Agencies</a></li><li class="toc__item toc__item--h3"><a href="#consultants">Consultants</a></li><li class="toc__item toc__item--h3"><a href="#startups">Startups</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

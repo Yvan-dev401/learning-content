@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent GitHub (MCP) — atelier</title>
+<meta name="description" content="Interroge dépôts, issues et pull requests en langage naturel.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/mcp-ai-agents/index.html">Agents MCP</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🔌</span> Agents MCP</p>
+  <h1 class="pagehead__title">Agent GitHub (MCP)</h1>
+  <p class="pagehead__summary">Interroge dépôts, issues et pull requests en langage naturel.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#tres-demande" title="Compétence fréquemment attendue sur les offres d&#x27;emploi en IA."><span class="tag__icon" aria-hidden="true">🔥</span><span class="tag__label">Très demandé</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#emploi" title="Se retrouve tel quel dans des projets professionnels."><span class="tag__icon" aria-hidden="true">💼</span><span class="tag__label">Orienté emploi</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Natural Language Interface: Ask questions about repositories in plain English</li><li>Comprehensive Analysis: Explore issues, pull requests, repository activity, and code statistics</li><li>Interactive UI: User-friendly interface with example queries and custom input</li><li>MCP Integration: Leverages the Model Context Protocol to interact with GitHub&#x27;s API</li><li>Real-time Results: Get immediate insights on repository activity and health</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="github-mcp-agent">🐙 GitHub MCP Agent<a class="anchor" href="#github-mcp-agent" aria-label="Lien vers cette section">#</a></h1>
+<h3 id="free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial<a class="anchor" href="#free-step-by-step-tutorial" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>👉 <a href="https://www.theunwindai.com/p/build-an-mcp-github-agent-in-less-than-50-lines-of-code" target="_blank" rel="noopener noreferrer">Click here to follow our complete step-by-step tutorial</a> and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.</strong></p>
+<p>A Streamlit application that allows you to explore and analyze GitHub repositories using natural language queries through the Model Context Protocol (MCP).</p>
+<p><strong>✨ Now using the official <a href="https://github.com/github/github-mcp-server" target="_blank" rel="noopener noreferrer">GitHub MCP Server</a> from GitHub!</strong></p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Natural Language Interface</strong>: Ask questions about repositories in plain English</li>
+<li><strong>Comprehensive Analysis</strong>: Explore issues, pull requests, repository activity, and code statistics</li>
+<li><strong>Interactive UI</strong>: User-friendly interface with example queries and custom input</li>
+<li><strong>MCP Integration</strong>: Leverages the Model Context Protocol to interact with GitHub's API</li>
+<li><strong>Real-time Results</strong>: Get immediate insights on repository activity and health</li>
+</ul>
+<h2 id="setup">Setup<a class="anchor" href="#setup" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="requirements">Requirements<a class="anchor" href="#requirements" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Python 3.8+</li>
+<li>Docker (for official GitHub MCP server)
+<ul>
+<li>Download and install from <a href="https://www.docker.com/get-started" target="_blank" rel="noopener noreferrer">docker.com</a></li>
+<li>Make sure Docker is running before starting the app</li>
+</ul>
+</li>
+<li>OpenAI API Key</li>
+<li>GitHub Personal Access Token</li>
+</ul>
+<h3 id="installation">Installation<a class="anchor" href="#installation" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>
+<p>Clone this repository:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>mcp-github-agent
+</pre></div>
+</div></li>
+<li>
+<p>Install the required Python packages:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p>Verify Docker is installed and running:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>docker<span class="w"> </span>--version
+docker<span class="w"> </span>ps
+</pre></div>
+</div></li>
+<li>
+<p>Get your API keys:</p>
+<ul>
+<li><strong>OpenAI API Key</strong>: Get from <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">platform.openai.com/api-keys</a></li>
+<li><strong>GitHub Token</strong>: Create at <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">github.com/settings/tokens</a> with <code>repo</code> scope</li>
+</ul>
+</li>
+</ol>
+<h3 id="running-the-app">Running the App<a class="anchor" href="#running-the-app" aria-label="Lien vers cette section">#</a></h3>
+<ol>
+<li>
+<p>Start the Streamlit app:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>github_agent.py
+</pre></div>
+</div></li>
+<li>
+<p>In the app interface:</p>
+<ul>
+<li>Enter your OpenAI API key</li>
+<li>Enter your GitHub token</li>
+<li>Specify a repository to analyze</li>
+<li>Select a query type or write your own</li>
+<li>Click &quot;Run Query&quot;</li>
+</ul>
+</li>
+</ol>
+<h3 id="example-queries">Example Queries<a class="anchor" href="#example-queries" aria-label="Lien vers cette section">#</a></h3>
+<h4 id="issues">Issues<a class="anchor" href="#issues" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>&quot;Show me issues by label&quot;</li>
+<li>&quot;What issues are being actively discussed?&quot;</li>
+<li>&quot;Find issues labeled as bugs&quot;</li>
+</ul>
+<h4 id="pull-requests">Pull Requests<a class="anchor" href="#pull-requests" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>&quot;What PRs need review?&quot;</li>
+<li>&quot;Show me recent merged PRs&quot;</li>
+<li>&quot;Find PRs with conflicts&quot;</li>
+</ul>
+<h4 id="repository">Repository<a class="anchor" href="#repository" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>&quot;Show repository health metrics&quot;</li>
+<li>&quot;Show repository activity patterns&quot;</li>
+<li>&quot;Analyze code quality trends&quot;</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-github-agent-py"><summary class="codefile__head"><span class="codefile__name">github_agent.py</span><span class="codefile__size">6 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">dedent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.run.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.tools.mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPTools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">StdioServerParameters</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;🐙 GitHub MCP Agent&quot;</span><span class="p">,</span> <span class="n">page_icon</span><span class="o">=</span><span class="s2">&quot;🐙&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">)</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&lt;h1 class=&#39;main-header&#39;&gt;🐙 GitHub MCP Agent&lt;/h1&gt;&quot;</span><span class="p">,</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;Explore GitHub repositories with natural language using the Model Context Protocol&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;🔑 Authentication&quot;</span><span class="p">)</span>
+    
+    <span class="n">openai_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;OpenAI API Key&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Required for the AI agent to interpret queries and format results&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">openai_key</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">openai_key</span>
+    
+    <span class="n">github_token</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;GitHub Token&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> 
+                                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Create a token with repo scope at github.com/settings/tokens&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">github_token</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;GITHUB_TOKEN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">github_token</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Example Queries&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Issues**&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- Show me issues by label&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- What issues are being actively discussed?&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Pull Requests**&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- What PRs need review?&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- Show me recent merged PRs&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Repository**&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- Show repository health metrics&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;- Show repository activity patterns&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">&quot;Note: Always specify the repository in your query if not already selected in the main input.&quot;</span><span class="p">)</span>
+
+<span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+    <span class="n">repo</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Repository&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Shubhamsaboo/awesome-llm-apps&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Format: owner/repo&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+    <span class="n">query_type</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&quot;Query Type&quot;</span><span class="p">,</span> <span class="p">[</span>
+        <span class="s2">&quot;Issues&quot;</span><span class="p">,</span> <span class="s2">&quot;Pull Requests&quot;</span><span class="p">,</span> <span class="s2">&quot;Repository Activity&quot;</span><span class="p">,</span> <span class="s2">&quot;Custom&quot;</span>
+    <span class="p">])</span>
+
+<span class="k">if</span> <span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;Issues&quot;</span><span class="p">:</span>
+    <span class="n">query_template</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Find issues labeled as bugs in </span><span class="si">{</span><span class="n">repo</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">elif</span> <span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;Pull Requests&quot;</span><span class="p">:</span>
+    <span class="n">query_template</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Show me recent merged PRs in </span><span class="si">{</span><span class="n">repo</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">elif</span> <span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;Repository Activity&quot;</span><span class="p">:</span>
+    <span class="n">query_template</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Analyze code quality trends in </span><span class="si">{</span><span class="n">repo</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">query_template</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span><span class="s2">&quot;Your Query&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">query_template</span><span class="p">,</span> 
+                     <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;What would you like to know about this repository?&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_github_agent</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GITHUB_TOKEN&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Error: GitHub token not provided&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Error: OpenAI API key not provided&quot;</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">server_params</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span>
+            <span class="n">command</span><span class="o">=</span><span class="s2">&quot;docker&quot;</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--rm&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;GITHUB_PERSONAL_ACCESS_TOKEN&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;GITHUB_TOOLSETS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ghcr.io/github/github-mcp-server&quot;</span>
+            <span class="p">],</span>
+            <span class="n">env</span><span class="o">=</span><span class="p">{</span>
+                <span class="o">**</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">,</span>
+                <span class="s2">&quot;GITHUB_PERSONAL_ACCESS_TOKEN&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;GITHUB_TOKEN&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;GITHUB_TOOLSETS&quot;</span><span class="p">:</span> <span class="s2">&quot;repos,issues,pull_requests&quot;</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        
+        <span class="k">async</span> <span class="k">with</span> <span class="n">MCPTools</span><span class="p">(</span><span class="n">server_params</span><span class="o">=</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="n">mcp_tools</span><span class="p">:</span>
+            <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+                <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">mcp_tools</span><span class="p">],</span>
+                <span class="n">instructions</span><span class="o">=</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">                    You are a GitHub assistant. Help users explore repositories and their activity.</span>
+<span class="s2">                    - Provide organized, concise insights about the repository</span>
+<span class="s2">                    - Focus on facts and data from the GitHub API</span>
+<span class="s2">                    - Use markdown formatting for better readability</span>
+<span class="s2">                    - Present numerical data in tables when appropriate</span>
+<span class="s2">                    - Include links to relevant GitHub pages when helpful</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">),</span>
+                <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+            
+            <span class="n">response</span><span class="p">:</span> <span class="n">RunOutput</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">arun</span><span class="p">(</span><span class="n">message</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">120.0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+                
+    <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Error: Request timed out after 120 seconds&quot;</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🚀 Run Query&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">openai_key</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please enter your OpenAI API key in the sidebar&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">github_token</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please enter your GitHub token in the sidebar&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">query</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please enter a query&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Analyzing GitHub repository...&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">repo</span> <span class="ow">and</span> <span class="n">repo</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+                <span class="n">full_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">repo</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">full_query</span> <span class="o">=</span> <span class="n">query</span>
+                
+            <span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">run_github_agent</span><span class="p">(</span><span class="n">full_query</span><span class="p">))</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Results&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&lt;div class=&#39;info-box&#39;&gt;</span>
+<span class="sd">        &lt;h4&gt;How to use this app:&lt;/h4&gt;</span>
+<span class="sd">        &lt;ol&gt;</span>
+<span class="sd">            &lt;li&gt;Enter your &lt;strong&gt;OpenAI API key&lt;/strong&gt; in the sidebar (powers the AI agent)&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Enter your &lt;strong&gt;GitHub token&lt;/strong&gt; in the sidebar&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Specify a repository (e.g., Shubhamsaboo/awesome-llm-apps)&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Select a query type or write your own&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Click &#39;Run Query&#39; to see results&lt;/li&gt;</span>
+<span class="sd">        &lt;/ol&gt;</span>
+<span class="sd">        &lt;p&gt;&lt;strong&gt;How it works:&lt;/strong&gt;&lt;/p&gt;</span>
+<span class="sd">        &lt;ul&gt;</span>
+<span class="sd">            &lt;li&gt;Uses the official GitHub MCP server via Docker for real-time access to GitHub API&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;AI Agent (powered by OpenAI) interprets your queries and calls appropriate GitHub APIs&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Results are formatted in readable markdown with insights and links&lt;/li&gt;</span>
+<span class="sd">            &lt;li&gt;Queries work best when focused on specific aspects like issues, PRs, or repository info&lt;/li&gt;</span>
+<span class="sd">        &lt;/ul&gt;</span>
+<span class="sd">        &lt;/div&gt;&quot;&quot;&quot;</span><span class="p">,</span> 
+        <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/mcp-ai-agents/github-mcp-agent/github_agent.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">55 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit&gt;=1.28.0
+agno&gt;=2.2.10
+mcp&gt;=0.1.0
+openai&gt;=1.0.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/mcp-ai-agents/github-mcp-agent/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/11-integrating-with-function-calling/index.html">11 · Intégrer des services externes avec l&#x27;appel de fonctions</a></li><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:mcp-ai-agents/github-mcp-agent">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/mcp-ai-agents/browser-mcp-agent/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Agent navigateur (MCP)</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/mcp-ai-agents/multi-mcp-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Assistant multi-MCP</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/mcp_ai_agents/github_mcp_agent" target="_blank" rel="noopener noreferrer">
+    mcp_ai_agents/github_mcp_agent</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h3"><a href="#free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial</a></li><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#setup">Setup</a></li><li class="toc__item toc__item--h3"><a href="#requirements">Requirements</a></li><li class="toc__item toc__item--h3"><a href="#installation">Installation</a></li><li class="toc__item toc__item--h3"><a href="#running-the-app">Running the App</a></li><li class="toc__item toc__item--h3"><a href="#example-queries">Example Queries</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

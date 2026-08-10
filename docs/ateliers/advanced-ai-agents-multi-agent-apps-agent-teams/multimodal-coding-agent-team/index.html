@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Équipe de développement multimodale — atelier</title>
+<meta name="description" content="Une capture d&#x27;écran en entrée, du code en sortie, avec relecture croisée.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html">Équipes d&#x27;agents par métier</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">👥</span> Équipes d&#x27;agents par métier</p>
+  <h1 class="pagehead__title">Équipe de développement multimodale</h1>
+  <p class="pagehead__summary">Une capture d&#x27;écran en entrée, du code en sortie, avec relecture croisée.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://e2b.dev" target="_blank" rel="noopener noreferrer">E2B</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Bacs à sable d&#x27;exécution de code, avec des heures gratuites.</p><ul class="alts__list"><li><a href="https://docs.docker.com" target="_blank" rel="noopener noreferrer">Docker en local</a> — Un conteneur jetable rend le même service pour apprendre.</li><li><a href="https://jupyter.org" target="_blank" rel="noopener noreferrer">Noyau Jupyter local</a> — Suffit pour les ateliers d&#x27;analyse de données.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio / Gemini</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Palier gratuit confortable, sans carte bancaire. Convient à la quasi-totalité des ateliers.</p><ul class="alts__list"><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Le palier gratuit suffit</a> — Créez la clé dans AI Studio : aucune carte n&#x27;est demandée.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Si vous dépassez le quota, un modèle local prend le relais.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Upload images of coding problems (supports PNG, JPG, JPEG)</li><li>Type problems in natural language</li><li>Automatic problem extraction from images</li><li>Interactive problem processing</li><li>Optimal solution generation with best time/space complexity</li><li>Clean, documented Python code output</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="multimodal-ai-coding-agent-team-with-o3-mini-and-gemini">💻 Multimodal AI Coding Agent Team with o3-mini and Gemini<a class="anchor" href="#multimodal-ai-coding-agent-team-with-o3-mini-and-gemini" aria-label="Lien vers cette section">#</a></h1>
+<p>An AI Powered Streamlit application that serves as your personal coding assistant, powered by multiple Agents built on the new o3-mini model. You can also upload an image of a coding problem or describe it in text, and the AI agent will analyze, generate an optimal solution, and execute it in a sandbox environment.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<h4 id="multi-modal-problem-input">Multi-Modal Problem Input<a class="anchor" href="#multi-modal-problem-input" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>Upload images of coding problems (supports PNG, JPG, JPEG)</li>
+<li>Type problems in natural language</li>
+<li>Automatic problem extraction from images</li>
+<li>Interactive problem processing</li>
+</ul>
+<h4 id="intelligent-code-generation">Intelligent Code Generation<a class="anchor" href="#intelligent-code-generation" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>Optimal solution generation with best time/space complexity</li>
+<li>Clean, documented Python code output</li>
+<li>Type hints and proper documentation</li>
+<li>Edge case handling</li>
+</ul>
+<h4 id="secure-code-execution">Secure Code Execution<a class="anchor" href="#secure-code-execution" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>Sandboxed code execution environment</li>
+<li>Real-time execution results</li>
+<li>Error handling and explanations</li>
+<li>30-second execution timeout protection</li>
+</ul>
+<h4 id="multi-agent-architecture">Multi-Agent Architecture<a class="anchor" href="#multi-agent-architecture" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li>Vision Agent (Gemini-2.0-flash) for image processing</li>
+<li>Coding Agent (OpenAI- o3-mini) for solution generation</li>
+<li>Execution Agent (OpenAI) for code running and result analysis</li>
+<li>E2B Sandbox for secure code execution</li>
+</ul>
+<h2 id="how-to-run">How to Run<a class="anchor" href="#how-to-run" aria-label="Lien vers cette section">#</a></h2>
+<p>Follow the steps below to set up and run the application:</p>
+<ul>
+<li>Get an OpenAI API key from: https://platform.openai.com/</li>
+<li>Get a Google (Gemini) API key from: https://makersuite.google.com/app/apikey</li>
+<li>Get an E2B API key from: https://e2b.dev/docs/getting-started/api-key</li>
+</ul>
+<ol>
+<li>
+<p><strong>Clone the Repository</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>advanced_ai_agents/multi_agent_apps/agent_teams/multimodal_coding_agent_team
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install the dependencies</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Run the Streamlit app</strong></p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>ai_coding_agent_o3.py
+</pre></div>
+</div></li>
+<li>
+<p><strong>Configure API Keys</strong></p>
+<ul>
+<li>Enter your API keys in the sidebar</li>
+<li>All three keys (OpenAI, Gemini, E2B) are required for full functionality</li>
+</ul>
+</li>
+</ol>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>Upload an image of a coding problem OR type your problem description</li>
+<li>Click &quot;Generate &amp; Execute Solution&quot;</li>
+<li>View the generated solution with full documentation</li>
+<li>See execution results and any generated files</li>
+<li>Review any error messages or execution timeouts</li>
+</ol>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-ai-coding-agent-o3-py"><summary class="codefile__head"><span class="codefile__name">ai_coding_agent_o3.py</span><span class="codefile__size">11 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.run.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.models.openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIChat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.models.google</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gemini</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">agno.media</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span> <span class="k">as</span> <span class="n">AgnoImage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">e2b_code_interpreter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sandbox</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">initialize_session_state</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;openai_key&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_key</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="s1">&#39;gemini_key&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">gemini_key</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="s1">&#39;e2b_key&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">e2b_key</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="s1">&#39;sandbox&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_sidebar</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;API Configuration&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;OpenAI API Key&quot;</span><span class="p">,</span> 
+                                                   <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_key</span><span class="p">,</span>
+                                                   <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">gemini_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Gemini API Key&quot;</span><span class="p">,</span> 
+                                                   <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">gemini_key</span><span class="p">,</span>
+                                                   <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">e2b_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;E2B API Key&quot;</span><span class="p">,</span>
+                                                <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">e2b_key</span><span class="p">,</span>
+                                                <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_agents</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Agent</span><span class="p">]:</span>
+    <span class="n">vision_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">Gemini</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">gemini_key</span><span class="p">),</span>
+        <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">coding_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;o3-mini&quot;</span><span class="p">,</span> 
+            <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_key</span><span class="p">,</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;You are an expert Python programmer. You will receive coding problems similar to LeetCode questions, </span>
+<span class="s2">            which may include problem statements, sample inputs, and examples. Your task is to:</span>
+<span class="s2">            1. Analyze the problem carefully and Optimally with best possible time and space complexities.</span>
+<span class="s2">            2. Write clean, efficient Python code to solve it</span>
+<span class="s2">            3. Include proper documentation and type hints</span>
+<span class="s2">            4. The code will be executed in an e2b sandbox environment</span>
+<span class="s2">            Please ensure your code is complete and handles edge cases appropriately.&quot;&quot;&quot;</span>
+        <span class="p">),</span>
+        <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    
+    <span class="n">execution_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">OpenAIChat</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;o3-mini&quot;</span><span class="p">,</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_key</span><span class="p">,</span>
+            <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;You are an expert at executing Python code in sandbox environments.</span>
+<span class="s2">            Your task is to:</span>
+<span class="s2">            1. Take the provided Python code</span>
+<span class="s2">            2. Execute it in the e2b sandbox</span>
+<span class="s2">            3. Format and explain the results clearly</span>
+<span class="s2">            4. Handle any execution errors gracefully</span>
+<span class="s2">            Always ensure proper error handling and clear output formatting.&quot;&quot;&quot;</span>
+        <span class="p">),</span>
+        <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">vision_agent</span><span class="p">,</span> <span class="n">coding_agent</span><span class="p">,</span> <span class="n">execution_agent</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">initialize_sandbox</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;E2B_API_KEY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">e2b_key</span>
+        <span class="c1"># Initialize sandbox with 60 second timeout</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span> <span class="o">=</span> <span class="n">Sandbox</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize sandbox: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_code_in_sandbox</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span><span class="p">:</span>
+        <span class="n">initialize_sandbox</span><span class="p">()</span>
+    
+    <span class="n">execution</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span><span class="o">.</span><span class="n">run_code</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;logs&quot;</span><span class="p">:</span> <span class="n">execution</span><span class="o">.</span><span class="n">logs</span><span class="p">,</span>
+        <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_image_with_gemini</span><span class="p">(</span><span class="n">vision_agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Image</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Analyze this image and extract any coding problem or code snippet shown. </span>
+<span class="s2">    Describe it in clear natural language, including any:</span>
+<span class="s2">    1. Problem statement</span>
+<span class="s2">    2. Input/output examples</span>
+<span class="s2">    3. Constraints or requirements</span>
+<span class="s2">    Format it as a proper coding problem description.&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Save image to a temporary file</span>
+    <span class="n">temp_path</span> <span class="o">=</span> <span class="s2">&quot;temp_image.png&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Convert to RGB if needed</span>
+        <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s1">&#39;RGB&#39;</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;RGB&#39;</span><span class="p">)</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">temp_path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Create Agno Image object</span>
+        <span class="n">agno_image</span> <span class="o">=</span> <span class="n">AgnoImage</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">temp_path</span><span class="p">))</span>
+            
+        <span class="c1"># Pass image to Gemini</span>
+        <span class="n">response</span><span class="p">:</span> <span class="n">RunOutput</span> <span class="o">=</span> <span class="n">vision_agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="n">prompt</span><span class="p">,</span>
+            <span class="n">images</span><span class="o">=</span><span class="p">[</span><span class="n">agno_image</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing image: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;Failed to process the image. Please try again or use text input instead.&quot;</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Clean up temporary file</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">temp_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_path</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_code_with_agent</span><span class="p">(</span><span class="n">execution_agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Set timeout to 30 seconds for code execution</span>
+        <span class="n">sandbox</span><span class="o">.</span><span class="n">set_timeout</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+        <span class="n">execution</span> <span class="o">=</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">run_code</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+        
+        <span class="c1"># Handle execution errors</span>
+        <span class="k">if</span> <span class="n">execution</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;TimeoutException&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">execution</span><span class="o">.</span><span class="n">error</span><span class="p">):</span>
+                <span class="k">return</span> <span class="s2">&quot;⚠️ Execution Timeout: The code took too long to execute (&gt;30 seconds). Please optimize your solution or try a smaller input.&quot;</span>
+            
+            <span class="n">error_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;The code execution resulted in an error:</span>
+<span class="s2">            Error: </span><span class="si">{</span><span class="n">execution</span><span class="o">.</span><span class="n">error</span><span class="si">}</span>
+<span class="s2">            </span>
+<span class="s2">            Please analyze the error and provide a clear explanation of what went wrong.&quot;&quot;&quot;</span>
+            <span class="n">response</span><span class="p">:</span> <span class="n">RunOutput</span> <span class="o">=</span> <span class="n">execution_agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">error_prompt</span><span class="p">)</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;⚠️ Execution Error:</span><span class="se">\n</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+        <span class="c1"># Get files list safely</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Here is the code execution result:</span>
+<span class="s2">        Logs: </span><span class="si">{</span><span class="n">execution</span><span class="o">.</span><span class="n">logs</span><span class="si">}</span>
+<span class="s2">        Files: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">files</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        </span>
+<span class="s2">        Please provide a clear explanation of the results and any outputs.&quot;&quot;&quot;</span>
+        
+        <span class="n">response</span><span class="p">:</span> <span class="n">RunOutput</span> <span class="o">=</span> <span class="n">execution_agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Reinitialize sandbox on error</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">initialize_sandbox</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;⚠️ Sandbox Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;O3-Mini Coding Agent&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Add timeout info in sidebar</span>
+    <span class="n">initialize_session_state</span><span class="p">()</span>
+    <span class="n">setup_sidebar</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;⏱️ Code execution timeout: 30 seconds&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Check all required API keys</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_key</span> <span class="ow">and</span> 
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">gemini_key</span> <span class="ow">and</span> 
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">e2b_key</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please enter all required API keys in the sidebar.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="n">vision_agent</span><span class="p">,</span> <span class="n">coding_agent</span><span class="p">,</span> <span class="n">execution_agent</span> <span class="o">=</span> <span class="n">create_agents</span><span class="p">()</span>
+    
+    <span class="c1"># Clean, single-column layout</span>
+    <span class="n">uploaded_image</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">file_uploader</span><span class="p">(</span>
+        <span class="s2">&quot;Upload an image of your coding problem (optional)&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;jpeg&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">uploaded_image</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">uploaded_image</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Uploaded Image&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="n">user_query</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span>
+        <span class="s2">&quot;Or type your coding problem here:&quot;</span><span class="p">,</span>
+        <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Example: Write a function to find the sum of two numbers. Include sample input/output cases.&quot;</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="mi">100</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Process button</span>
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Generate &amp; Execute Solution&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">uploaded_image</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">user_query</span><span class="p">:</span>
+            <span class="c1"># Process image with Gemini</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Processing image...&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Save uploaded file to temporary location</span>
+                    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">uploaded_image</span><span class="p">)</span>
+                    <span class="n">extracted_query</span> <span class="o">=</span> <span class="n">process_image_with_gemini</span><span class="p">(</span><span class="n">vision_agent</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="n">extracted_query</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Failed to process&quot;</span><span class="p">):</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">extracted_query</span><span class="p">)</span>
+                        <span class="k">return</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;📝 Extracted Problem:&quot;</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">extracted_query</span><span class="p">)</span>
+                    
+                    <span class="c1"># Pass extracted query to coding agent</span>
+                    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Generating solution...&quot;</span><span class="p">):</span>
+                        <span class="n">response</span><span class="p">:</span> <span class="n">RunOutput</span> <span class="o">=</span> <span class="n">coding_agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">extracted_query</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing image: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">return</span>
+                
+        <span class="k">elif</span> <span class="n">user_query</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">uploaded_image</span><span class="p">:</span>
+            <span class="c1"># Direct text input processing</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Generating solution...&quot;</span><span class="p">):</span>
+                <span class="n">response</span><span class="p">:</span> <span class="n">RunOutput</span> <span class="o">=</span> <span class="n">coding_agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">user_query</span><span class="p">)</span>
+                
+        <span class="k">elif</span> <span class="n">user_query</span> <span class="ow">and</span> <span class="n">uploaded_image</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please use either image upload OR text input, not both.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please provide either an image or text description of your coding problem.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># Display and execute solution</span>
+        <span class="k">if</span> <span class="s1">&#39;response&#39;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;💻 Solution&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Extract code from markdown response</span>
+            <span class="n">code_blocks</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;```python&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">code_blocks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="n">code_blocks</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;```&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                
+                <span class="c1"># Display the code</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">code</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Execute code with execution agent</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Executing code...&quot;</span><span class="p">):</span>
+                    <span class="c1"># Always initialize a fresh sandbox for each execution</span>
+                    <span class="n">initialize_sandbox</span><span class="p">()</span>
+                    
+                    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span><span class="p">:</span>
+                        <span class="n">execution_results</span> <span class="o">=</span> <span class="n">execute_code_with_agent</span><span class="p">(</span>
+                            <span class="n">execution_agent</span><span class="p">,</span>
+                            <span class="n">code</span><span class="p">,</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span>
+                        <span class="p">)</span>
+                        
+                        <span class="c1"># Display execution results</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🚀 Execution Results&quot;</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">execution_results</span><span class="p">)</span>
+                        
+                        <span class="c1"># Try to display files if available</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">files</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">sandbox</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">files</span><span class="p">:</span>
+                                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;📁 **Generated Files:**&quot;</span><span class="p">)</span>
+                                <span class="n">st</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+                        <span class="k">except</span><span class="p">:</span>
+                            <span class="k">pass</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/multimodal-coding-agent-team/ai_coding_agent_o3.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">50 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit
+e2b-code-interpreter
+agno&gt;=2.2.10
+Pillow
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/multimodal-coding-agent-team/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li><li><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html">12 · Concevoir l&#x27;UX des applications d&#x27;IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-multi-agent-apps-agent-teams/multimodal-coding-agent-team">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-vc-due-diligence-agent-team/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Due diligence de capital-risque</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/multimodal-design-agent-team/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Équipe de design multimodale</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/multi_agent_apps/agent_teams/multimodal_coding_agent_team" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/multi_agent_apps/agent_teams/multimodal_coding_agent_team</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#how-to-run">How to Run</a></li><li class="toc__item toc__item--h2"><a href="#usage">Usage</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

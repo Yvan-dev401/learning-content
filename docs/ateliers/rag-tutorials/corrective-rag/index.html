@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corrective RAG (CRAG) — atelier</title>
+<meta name="description" content="Évalue la pertinence des documents récupérés et bascule sur une recherche web quand ils sont insuffisants — le correctif le plus utile en production.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/rag-tutorials/index.html">RAG — ancrer le modèle dans vos données</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">📚</span> RAG — ancrer le modèle dans vos données</p>
+  <h1 class="pagehead__title">Corrective RAG (CRAG)</h1>
+  <p class="pagehead__summary">Évalue la pertinence des documents récupérés et bascule sur une recherche web quand ils sont insuffisants — le correctif le plus utile en production.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#incontournable" title="Le socle : sans ça, la suite ne tient pas."><span class="tag__icon" aria-hidden="true">⭐</span><span class="tag__label">Incontournable</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://console.anthropic.com" target="_blank" rel="noopener noreferrer">Anthropic (Claude)</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Facturation à l&#x27;usage, sans palier gratuit sur l&#x27;API.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Modèles de niveau comparable, gratuitement.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit, bon en raisonnement et sur les longs contextes.</li><li><a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer">OpenRouter</a> — Quelques modèles ouverts y sont proposés gratuitement.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://cloud.qdrant.io" target="_blank" rel="noopener noreferrer">Qdrant Cloud</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">Une grappe gratuite de 1 Go, suffisante pour apprendre.</p><ul class="alts__list"><li><a href="https://qdrant.tech/documentation/quick-start/" target="_blank" rel="noopener noreferrer">Qdrant en local (Docker)</a> — Une commande docker run, exactement la même API : le code de l&#x27;atelier fonctionne sans modification.</li><li><a href="https://www.trychroma.com" target="_blank" rel="noopener noreferrer">ChromaDB</a> — S&#x27;exécute dans le processus Python, sans serveur.</li><li><a href="https://faiss.ai" target="_blank" rel="noopener noreferrer">FAISS</a> — Bibliothèque locale de Meta, idéale pour de petits volumes.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://tavily.com" target="_blank" rel="noopener noreferrer">Tavily</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">1 000 recherches gratuites par mois, sans carte bancaire.</p><ul class="alts__list"><li><a href="https://tavily.com" target="_blank" rel="noopener noreferrer">Le palier gratuit suffit</a> — Largement au-dessus des besoins d&#x27;un atelier.</li><li><a href="https://pypi.org/project/duckduckgo-search/" target="_blank" rel="noopener noreferrer">DuckDuckGo Search</a> — Aucune clé, aucun quota. Déjà utilisé par plusieurs ateliers du dépôt.</li><li><a href="https://docs.searxng.org" target="_blank" rel="noopener noreferrer">SearXNG</a> — Métamoteur auto-hébergeable, sans limite.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Smart Document Retrieval: Uses Qdrant vector store for efficient document retrieval</li><li>Document Relevance Grading: Employs Claude 4.5 sonnet to assess document relevance</li><li>Query Transformation: Improves search results by optimizing queries when needed</li><li>Web Search Fallback: Uses Tavily API for web search when local documents aren&#x27;t sufficient</li><li>Multi-Model Approach: Combines OpenAI embeddings and Claude 4.5 sonnet for different tasks</li><li>Interactive UI: Built with Streamlit for easy document upload and querying</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="corrective-rag-agent">🔄 Corrective RAG Agent<a class="anchor" href="#corrective-rag-agent" aria-label="Lien vers cette section">#</a></h1>
+<p>A sophisticated Retrieval-Augmented Generation (RAG) system that implements a corrective multi-stage workflow using LangGraph. This system combines document retrieval, relevance grading, query transformation, and web search to provide comprehensive and accurate responses.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Smart Document Retrieval</strong>: Uses Qdrant vector store for efficient document retrieval</li>
+<li><strong>Document Relevance Grading</strong>: Employs Claude 4.5 sonnet to assess document relevance</li>
+<li><strong>Query Transformation</strong>: Improves search results by optimizing queries when needed</li>
+<li><strong>Web Search Fallback</strong>: Uses Tavily API for web search when local documents aren't sufficient</li>
+<li><strong>Multi-Model Approach</strong>: Combines OpenAI embeddings and Claude 4.5 sonnet for different tasks</li>
+<li><strong>Interactive UI</strong>: Built with Streamlit for easy document upload and querying</li>
+</ul>
+<h2 id="how-to-run">How to Run?<a class="anchor" href="#how-to-run" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>
+<p><strong>Clone the Repository</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>rag_tutorials/corrective_rag
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install Dependencies</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Set Up API Keys</strong>:
+You'll need to obtain the following API keys:</p>
+<ul>
+<li><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">OpenAI API key</a> (for embeddings)</li>
+<li><a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">Anthropic API key</a> (for Claude 4.5 sonnet as LLM)</li>
+<li><a href="https://app.tavily.com/home" target="_blank" rel="noopener noreferrer">Tavily API key</a> (for web search)</li>
+<li>Qdrant Cloud Setup
+<ol>
+<li>Visit <a href="https://cloud.qdrant.io/" target="_blank" rel="noopener noreferrer">Qdrant Cloud</a></li>
+<li>Create an account or sign in</li>
+<li>Create a new cluster</li>
+<li>Get your credentials:
+<ul>
+<li>Qdrant API Key: Found in API Keys section</li>
+<li>Qdrant URL: Your cluster URL (format: <code>https://xxx-xxx.aws.cloud.qdrant.io</code>)</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Run the Application</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>corrective_rag.py
+</pre></div>
+</div></li>
+<li>
+<p><strong>Use the Application</strong>:</p>
+<ul>
+<li>Upload documents or provide URLs</li>
+<li>Enter your questions in the query box</li>
+<li>View the step-by-step Corrective RAG process</li>
+<li>Get comprehensive answers</li>
+</ul>
+</li>
+</ol>
+<h2 id="tech-stack">Tech Stack<a class="anchor" href="#tech-stack" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>LangChain</strong>: For RAG orchestration and chains</li>
+<li><strong>LangGraph</strong>: For workflow management</li>
+<li><strong>Qdrant</strong>: Vector database for document storage</li>
+<li><strong>Claude 4.5 sonnet</strong>: Main language model for analysis and generation</li>
+<li><strong>OpenAI</strong>: For document embeddings</li>
+<li><strong>Tavily</strong>: For web search capabilities</li>
+<li><strong>Streamlit</strong>: For the user interface</li>
+</ul>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-corrective-rag-py"><summary class="codefile__head"><span class="codefile__name">corrective_rag.py</span><span class="codefile__size">16 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain</span><span class="w"> </span><span class="kn">import</span> <span class="n">hub</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PydanticOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.text_splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveCharacterTextSplitter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.document_loaders</span><span class="w"> </span><span class="kn">import</span> <span class="n">PyPDFLoader</span><span class="p">,</span> <span class="n">TextLoader</span><span class="p">,</span> <span class="n">WebBaseLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">TavilySearchResults</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qdrant</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIEmbeddings</span><span class="p">,</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>        
+<span class="kn">from</span><span class="w"> </span><span class="nn">langgraph.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">END</span><span class="p">,</span> <span class="n">StateGraph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">TypedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pprint</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nest_asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qdrant_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">QdrantClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qdrant_client.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distance</span><span class="p">,</span> <span class="n">VectorParams</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatAnthropic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tenacity</span><span class="w"> </span><span class="kn">import</span> <span class="n">retry</span><span class="p">,</span> <span class="n">stop_after_attempt</span><span class="p">,</span> <span class="n">wait_exponential</span>
+
+
+<span class="n">nest_asyncio</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+
+<span class="n">retriever</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">initialize_session_state</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize session state variables for API keys and URLs.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;initialized&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Initialize API keys and URLs</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">anthropic_api_key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">tavily_api_key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_api_key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:6333&quot;</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_url</span> <span class="o">=</span> <span class="s2">&quot;https://arxiv.org/pdf/2307.09288.pdf&quot;</span>  
+        
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_sidebar</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup sidebar for API keys and configuration.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;API Configuration&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">anthropic_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Anthropic API Key&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">anthropic_api_key</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Required for Claude 3 model&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;OpenAI API Key&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">tavily_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Tavily API Key&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">tavily_api_key</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_url</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Qdrant URL&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_url</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Qdrant API Key&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_api_key</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_url</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Document URL&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_url</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">anthropic_api_key</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_url</span><span class="p">]):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please provide the required API keys and URLs&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">initialize_session_state</span><span class="p">()</span>
+<span class="n">setup_sidebar</span><span class="p">()</span>
+
+<span class="c1"># Use session state variables instead of config</span>
+<span class="n">openai_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span>
+<span class="n">tavily_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">tavily_api_key</span>
+<span class="n">anthropic_api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">anthropic_api_key</span>
+
+<span class="c1"># Update embeddings initialization</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">OpenAIEmbeddings</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;text-embedding-3-small&quot;</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">openai_api_key</span>
+<span class="p">)</span>
+
+<span class="c1"># Update Qdrant client initialization</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">QdrantClient</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_url</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_api_key</span>
+<span class="p">)</span>
+
+<span class="nd">@retry</span><span class="p">(</span><span class="n">stop</span><span class="o">=</span><span class="n">stop_after_attempt</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">wait</span><span class="o">=</span><span class="n">wait_exponential</span><span class="p">(</span><span class="n">multiplier</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_tavily_search</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tool</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">})</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">web_search</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Web search based on the re-phrased question using Tavily API.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-web search-~&quot;</span><span class="p">)</span>
+    <span class="n">state_dict</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Create progress placeholder</span>
+    <span class="n">progress_placeholder</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+    <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initiating web search...&quot;</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Validate Tavily API key</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">tavily_api_key</span><span class="p">:</span>
+            <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Tavily API key not provided - skipping web search&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}}</span>
+        
+        <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Configuring search tool...&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize Tavily search tool</span>
+        <span class="n">tool</span> <span class="o">=</span> <span class="n">TavilySearchResults</span><span class="p">(</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">tavily_api_key</span><span class="p">,</span>
+            <span class="n">max_results</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">search_depth</span><span class="o">=</span><span class="s2">&quot;advanced&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Execute search with retry logic</span>
+        <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Executing search query...&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">search_results</span> <span class="o">=</span> <span class="n">execute_tavily_search</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">question</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">search_error</span><span class="p">:</span>
+            <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search failed after retries: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">search_error</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}}</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">search_results</span><span class="p">:</span>
+            <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No search results found&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}}</span>
+        
+        <span class="c1"># Process results</span>
+        <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Processing search results...&quot;</span><span class="p">)</span>
+        <span class="n">web_results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">search_results</span><span class="p">:</span>
+            <span class="c1"># Extract and format relevant information</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Title: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;No title&#39;</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Content: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;No content&#39;</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="n">web_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        
+        <span class="c1"># Create document from results</span>
+        <span class="n">web_document</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span>
+            <span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">web_results</span><span class="p">),</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;tavily_search&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+                <span class="s2">&quot;result_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">web_results</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">documents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">web_document</span><span class="p">)</span>
+        
+        <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully added </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">web_results</span><span class="p">)</span><span class="si">}</span><span class="s2"> search results&quot;</span><span class="p">)</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Web search error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">progress_placeholder</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_documents</span><span class="p">(</span><span class="n">file_or_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_url</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_url</span><span class="p">:</span>
+            <span class="c1"># A .pdf URL must be parsed as a PDF; WebBaseLoader would run an HTML</span>
+            <span class="c1"># parser over the binary body and embed decoded garbage.</span>
+            <span class="k">if</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">file_or_url</span><span class="p">)</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.pdf&quot;</span><span class="p">):</span>
+                <span class="n">loader</span> <span class="o">=</span> <span class="n">PyPDFLoader</span><span class="p">(</span><span class="n">file_or_url</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">loader</span> <span class="o">=</span> <span class="n">WebBaseLoader</span><span class="p">(</span><span class="n">file_or_url</span><span class="p">)</span>
+                <span class="n">loader</span><span class="o">.</span><span class="n">requests_per_second</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">file_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_or_url</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">file_extension</span> <span class="o">==</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">:</span>
+                <span class="n">loader</span> <span class="o">=</span> <span class="n">PyPDFLoader</span><span class="p">(</span><span class="n">file_or_url</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">file_extension</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;.md&#39;</span><span class="p">]:</span>
+                <span class="n">loader</span> <span class="o">=</span> <span class="n">TextLoader</span><span class="p">(</span><span class="n">file_or_url</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported file type: </span><span class="si">{</span><span class="n">file_extension</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading document: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Document Input&quot;</span><span class="p">)</span>
+<span class="n">input_option</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">radio</span><span class="p">(</span><span class="s2">&quot;Choose input method:&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;URL&quot;</span><span class="p">,</span> <span class="s2">&quot;File Upload&quot;</span><span class="p">])</span>
+
+<span class="n">docs</span> <span class="o">=</span> <span class="kc">None</span>  
+
+<span class="k">if</span> <span class="n">input_option</span> <span class="o">==</span> <span class="s2">&quot;URL&quot;</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Enter document URL:&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">doc_url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+        <span class="n">docs</span> <span class="o">=</span> <span class="n">load_documents</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">is_url</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">uploaded_file</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">file_uploader</span><span class="p">(</span><span class="s2">&quot;Upload a document&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;txt&#39;</span><span class="p">,</span> <span class="s1">&#39;md&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">uploaded_file</span><span class="p">:</span>
+        <span class="c1"># Create a temporary file to store the upload</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="k">as</span> <span class="n">tmp_file</span><span class="p">:</span>
+            <span class="n">tmp_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+            <span class="n">docs</span> <span class="o">=</span> <span class="n">load_documents</span><span class="p">(</span><span class="n">tmp_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">is_url</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="c1"># Clean up the temporary file</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">tmp_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="c1"># Streamlit re-runs this whole script on every widget interaction (e.g. asking a</span>
+<span class="c1"># question), so ingest only when the source actually changes — otherwise every</span>
+<span class="c1"># question would delete the collection and re-embed the entire document.</span>
+<span class="n">source_key</span> <span class="o">=</span> <span class="n">url</span> <span class="k">if</span> <span class="n">input_option</span> <span class="o">==</span> <span class="s2">&quot;URL&quot;</span> <span class="k">else</span> <span class="p">(</span><span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">uploaded_file</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">docs</span> <span class="ow">and</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ingested_source&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">source_key</span><span class="p">:</span>
+    <span class="n">text_splitter</span> <span class="o">=</span> <span class="n">RecursiveCharacterTextSplitter</span><span class="o">.</span><span class="n">from_tiktoken_encoder</span><span class="p">(</span>
+        <span class="n">chunk_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">100</span>
+    <span class="p">)</span>
+    <span class="n">all_splits</span> <span class="o">=</span> <span class="n">text_splitter</span><span class="o">.</span><span class="n">split_documents</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">QdrantClient</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_url</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">qdrant_api_key</span><span class="p">)</span>
+    <span class="n">collection_name</span> <span class="o">=</span> <span class="s2">&quot;rag-qdrant&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Try to delete the collection if it exists</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">delete_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="n">client</span><span class="o">.</span><span class="n">create_collection</span><span class="p">(</span>
+        <span class="n">collection_name</span><span class="o">=</span><span class="n">collection_name</span><span class="p">,</span>
+        <span class="n">vectors_config</span><span class="o">=</span><span class="n">VectorParams</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1536</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">Distance</span><span class="o">.</span><span class="n">COSINE</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Create vectorstore</span>
+    <span class="n">vectorstore</span> <span class="o">=</span> <span class="n">Qdrant</span><span class="p">(</span>
+        <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span>
+        <span class="n">collection_name</span><span class="o">=</span><span class="n">collection_name</span><span class="p">,</span>
+        <span class="n">embeddings</span><span class="o">=</span><span class="n">embeddings</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Add documents to the vectorstore</span>
+    <span class="n">vectorstore</span><span class="o">.</span><span class="n">add_documents</span><span class="p">(</span><span class="n">all_splits</span><span class="p">)</span>
+    <span class="n">retriever</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">()</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">ingested_source</span> <span class="o">=</span> <span class="n">source_key</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">retriever</span> <span class="o">=</span> <span class="n">retriever</span>
+<span class="k">elif</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;retriever&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">retriever</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">retriever</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GraphState</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">keys</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-retrieve-~&quot;</span><span class="p">)</span>
+    <span class="n">state_dict</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">retriever</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}}</span>
+        
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate answer using Claude 3 model&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-generate-~&quot;</span><span class="p">)</span>
+    <span class="n">state_dict</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span>
+    <span class="n">question</span><span class="p">,</span> <span class="n">documents</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Based on the following context, please answer the question.</span>
+<span class="s2">            Context: </span><span class="si">{context}</span>
+<span class="s2">            Question: </span><span class="si">{question}</span>
+<span class="s2">            Answer:&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">input_variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">])</span>
+        <span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">anthropic_api_key</span><span class="p">,</span>
+                           <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">)</span>
+
+        <span class="c1"># Create and run chain</span>
+        <span class="n">rag_chain</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">context</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">question</span><span class="p">}</span> 
+            <span class="o">|</span> <span class="n">prompt</span> 
+            <span class="o">|</span> <span class="n">llm</span> 
+            <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="n">generation</span> <span class="o">=</span> <span class="n">rag_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({})</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span>
+                <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+                <span class="s2">&quot;generation&quot;</span><span class="p">:</span> <span class="n">generation</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error in generate function: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span> 
+                <span class="s2">&quot;generation&quot;</span><span class="p">:</span> <span class="s2">&quot;Sorry, I encountered an error while generating the response.&quot;</span><span class="p">}}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_documents</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determines whether the retrieved documents are relevant.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-check relevance-~&quot;</span><span class="p">)</span>
+    <span class="n">state_dict</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+
+    <span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">anthropic_api_key</span><span class="p">,</span>
+                       <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+    <span class="n">prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;You are grading the relevance of a retrieved document to a user question.</span>
+<span class="s2">        Return ONLY a JSON object with a &quot;score&quot; field that is either &quot;yes&quot; or &quot;no&quot;.</span>
+<span class="s2">        Do not include any other text or explanation.</span>
+<span class="s2">        </span>
+<span class="s2">        Document: </span><span class="si">{context}</span>
+<span class="s2">        Question: </span><span class="si">{question}</span>
+<span class="s2">        </span>
+<span class="s2">        Rules:</span>
+<span class="s2">        - Check for related keywords or semantic meaning</span>
+<span class="s2">        - Use lenient grading to only filter clear mismatches</span>
+<span class="s2">        - Return exactly like this example: {{&quot;score&quot;: &quot;yes&quot;}} or {{&quot;score&quot;: &quot;no&quot;}}&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">input_variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">])</span>
+
+    <span class="n">chain</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">prompt</span> 
+        <span class="o">|</span> <span class="n">llm</span> 
+        <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="n">filtered_docs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">search</span> <span class="o">=</span> <span class="s2">&quot;No&quot;</span>
+    
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span> <span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">page_content</span><span class="p">})</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+            <span class="n">json_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\{.*\}&#39;</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">json_match</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">json_match</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+            
+            <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">score</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-grade: document relevant-~&quot;</span><span class="p">)</span>
+                <span class="n">filtered_docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-grade: document not relevant-~&quot;</span><span class="p">)</span>
+                <span class="n">search</span> <span class="o">=</span> <span class="s2">&quot;Yes&quot;</span>
+                
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error grading document: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># On error, keep the document to be safe</span>
+            <span class="n">filtered_docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">filtered_docs</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span> <span class="s2">&quot;run_web_search&quot;</span><span class="p">:</span> <span class="n">search</span><span class="p">}}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">transform_query</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform the query to produce a better question.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-transform query-~&quot;</span><span class="p">)</span>
+    <span class="n">state_dict</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Create a prompt template</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span>
+        <span class="n">template</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Generate a search-optimized version of this question by </span>
+<span class="s2">        analyzing its core semantic meaning and intent.</span>
+<span class="s2">        </span><span class="se">\n</span><span class="s2"> ------- </span><span class="se">\n</span>
+<span class="s2">        </span><span class="si">{question}</span>
+<span class="s2">        </span><span class="se">\n</span><span class="s2"> ------- </span><span class="se">\n</span>
+<span class="s2">        Return only the improved question with no additional text:&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">input_variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Use Claude instead of Gemini</span>
+    <span class="n">llm</span> <span class="o">=</span> <span class="n">ChatAnthropic</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-5&quot;</span><span class="p">,</span>
+        <span class="n">anthropic_api_key</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">anthropic_api_key</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Prompt</span>
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+    <span class="n">better_question</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">better_question</span><span class="p">}</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">decide_to_generate</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-decide to generate-~&quot;</span><span class="p">)</span>
+    <span class="n">state_dict</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span>
+    <span class="n">search</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;run_web_search&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">search</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
+     
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-decision: transform query and run web search-~&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;transform_query&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~-decision: generate-~&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;generate&quot;</span>
+    
+<span class="k">def</span><span class="w"> </span><span class="nf">format_document</span><span class="p">(</span><span class="n">doc</span><span class="p">:</span> <span class="n">Document</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Source: </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Unknown&#39;</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">    Title: </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;No title&#39;</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">    Content: </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span><span class="si">}</span><span class="s2">...</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">format_state</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">formatted</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;documents&quot;</span><span class="p">:</span>
+            <span class="n">formatted</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">format_document</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">formatted</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            
+    <span class="k">return</span> <span class="n">formatted</span>
+
+
+<span class="n">workflow</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">GraphState</span><span class="p">)</span>
+
+<span class="c1"># Define the nodes by langgraph</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;retrieve&quot;</span><span class="p">,</span> <span class="n">retrieve</span><span class="p">)</span> 
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;grade_documents&quot;</span><span class="p">,</span> <span class="n">grade_documents</span><span class="p">)</span>  
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;generate&quot;</span><span class="p">,</span> <span class="n">generate</span><span class="p">)</span> 
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;transform_query&quot;</span><span class="p">,</span> <span class="n">transform_query</span><span class="p">)</span>  
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span> <span class="n">web_search</span><span class="p">)</span> 
+
+<span class="c1"># Build graph</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">set_entry_point</span><span class="p">(</span><span class="s2">&quot;retrieve&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;retrieve&quot;</span><span class="p">,</span> <span class="s2">&quot;grade_documents&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_conditional_edges</span><span class="p">(</span>
+    <span class="s2">&quot;grade_documents&quot;</span><span class="p">,</span>
+    <span class="n">decide_to_generate</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;transform_query&quot;</span><span class="p">:</span> <span class="s2">&quot;transform_query&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;generate&quot;</span><span class="p">:</span> <span class="s2">&quot;generate&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;transform_query&quot;</span><span class="p">,</span> <span class="s2">&quot;web_search&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span> <span class="s2">&quot;generate&quot;</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;generate&quot;</span><span class="p">,</span> <span class="n">END</span><span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🔄 Corrective RAG Agent&quot;</span><span class="p">)</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;A possible query: What are the experiment results and ablation studies in this research paper?&quot;</span><span class="p">)</span>
+
+<span class="c1"># User input</span>
+<span class="n">user_question</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Please enter your question:&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">user_question</span><span class="p">:</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">user_question</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">stream</span><span class="p">(</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">):</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">format_state</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">80</span><span class="p">))</span>
+
+    <span class="n">final_generation</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;keys&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;generation&#39;</span><span class="p">,</span> <span class="s1">&#39;No final generation produced.&#39;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Final Generation:&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">final_generation</span><span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/corrective-rag/corrective_rag.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">348 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span># Core dependencies
+langchain==0.3.12
+langgraph==0.2.53
+qdrant-client==1.12.1
+langchain-openai==0.2.14
+langchain-anthropic==0.3.0
+tavily-python==0.5.0
+langchain-community==0.3.12
+langchain-core==0.3.28
+streamlit==1.41.1
+tenacity==8.5.0
+anthropic&gt;=0.7.0
+openai&gt;=1.12.0
+tiktoken&gt;=0.6.0
+pydantic&gt;=2.0.0
+numpy&gt;=1.24.0
+PyYAML&gt;=6.0.0
+nest-asyncio&gt;=1.5.0
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/corrective-rag/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/15-rag-and-vector-databases/index.html">15 · RAG et bases de données vectorielles</a></li><li><a href="../../../lecons/08-building-search-applications/index.html">08 · Construire des applications de recherche (embeddings)</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:rag-tutorials/corrective-rag">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/rag-tutorials/contextualai-rag-agent/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">RAG avec Contextual AI</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/rag-tutorials/deepseek-local-rag-agent/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">RAG local avec DeepSeek R1</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/rag_tutorials/corrective_rag" target="_blank" rel="noopener noreferrer">
+    rag_tutorials/corrective_rag</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#how-to-run">How to Run?</a></li><li class="toc__item toc__item--h2"><a href="#tech-stack">Tech Stack</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

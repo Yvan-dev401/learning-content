@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tuteur de maths — RAG avec boucle de retour — atelier</title>
+<meta name="description" content="Un tuteur qui vérifie sa réponse et recommence si elle ne tient pas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/rag-tutorials/index.html">RAG — ancrer le modèle dans vos données</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">📚</span> RAG — ancrer le modèle dans vos données</p>
+  <h1 class="pagehead__title">Tuteur de maths — RAG avec boucle de retour</h1>
+  <p class="pagehead__summary">Un tuteur qui vérifie sa réponse et recommence si elle ne tient pas.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#incontournable" title="Le socle : sans ça, la suite ne tient pas."><span class="tag__icon" aria-hidden="true">⭐</span><span class="tag__label">Incontournable</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#intermediaire" title="Demande d&#x27;être à l&#x27;aise en Python et avec les appels d&#x27;API."><span class="tag__icon" aria-hidden="true">🟡</span><span class="tag__label">Intermédiaire</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><div class="alts__item"><p class="alts__service"><a href="https://tavily.com" target="_blank" rel="noopener noreferrer">Tavily</a><span class="alts__cost">palier gratuit utilisable</span></p><p class="alts__note">1 000 recherches gratuites par mois, sans carte bancaire.</p><ul class="alts__list"><li><a href="https://tavily.com" target="_blank" rel="noopener noreferrer">Le palier gratuit suffit</a> — Largement au-dessus des besoins d&#x27;un atelier.</li><li><a href="https://pypi.org/project/duckduckgo-search/" target="_blank" rel="noopener noreferrer">DuckDuckGo Search</a> — Aucune clé, aucun quota. Déjà utilisé par plusieurs ateliers du dépôt.</li><li><a href="https://docs.searxng.org" target="_blank" rel="noopener noreferrer">SearXNG</a> — Métamoteur auto-hébergeable, sans limite.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>✅ Input Guardrails (DSPy): Accepts only academic math questions.</li><li>📚 Knowledge Base Search: Uses Qdrant Vector DB with OpenAI Embeddings to match known questions.</li><li>🌐 Web Fallback: Integrates Tavily API when no good match is found.</li><li>✍️ GPT-4.1 Explanations: Generates step-by-step math solutions.</li><li>🛡️ Output Guardrails: Filters for correctness and safety.</li><li>👍 Human-in-the-Loop Feedback: Users rate answers (Yes/No), logged for future learning.</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="math-tutor-agent-agentic-rag-with-feedback-loop">🧠 Math Tutor Agent – Agentic RAG with Feedback Loop<a class="anchor" href="#math-tutor-agent-agentic-rag-with-feedback-loop" aria-label="Lien vers cette section">#</a></h1>
+<p>This project implements an <strong>Agentic-RAG architecture</strong> to simulate a math professor that solves <strong>JEE-level math questions</strong> with step-by-step explanations. The system smartly routes queries between a vector database and web search, applies input/output guardrails, and incorporates human feedback for continuous learning.</p>
+<h2 id="features">📌 Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>✅ <strong>Input Guardrails</strong> (DSPy): Accepts only academic math questions.</li>
+<li>📚 <strong>Knowledge Base Search</strong>: Uses <strong>Qdrant Vector DB</strong> with OpenAI Embeddings to match known questions.</li>
+<li>🌐 <strong>Web Fallback</strong>: Integrates <strong>Tavily API</strong> when no good match is found.</li>
+<li>✍️ <strong>GPT-4.1 Explanations</strong>: Generates step-by-step math solutions.</li>
+<li>🛡️ <strong>Output Guardrails</strong>: Filters for correctness and safety.</li>
+<li>👍 <strong>Human-in-the-Loop Feedback</strong>: Users rate answers (Yes/No), logged for future learning.</li>
+<li>📊 <strong>Benchmarking</strong>: Evaluated on <strong>JEEBench</strong> dataset with adjustable question limits.</li>
+<li>💻 <strong>Streamlit UI</strong>: Interactive dashboard with multiple tabs.</li>
+</ul>
+<h2 id="architecture-flow">🚀 Architecture Flow<a class="anchor" href="#architecture-flow" aria-label="Lien vers cette section">#</a></h2>
+<img width="465" alt="Screenshot 2025-05-04 at 3 45 58 PM" src="https://github.com/user-attachments/assets/c0a9e612-2ef0-413c-b779-c99fe9f48619" />
+<h2 id="knowledge-base">📚 Knowledge Base<a class="anchor" href="#knowledge-base" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Dataset:</strong> <a href="https://huggingface.co/datasets/daman1209arora/jeebench" target="_blank" rel="noopener noreferrer">JEEBench (HuggingFace)</a></li>
+<li><strong>Vector DB:</strong> Qdrant (with OpenAI Embeddings)</li>
+<li><strong>Storage:</strong> Built with <code>llama-index</code> to persist embeddings and perform top-1 similarity search</li>
+</ul>
+<h2 id="web-search">🌐 Web Search<a class="anchor" href="#web-search" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Uses <strong>Tavily API</strong> for fallback search when the KB doesn't contain a good match</li>
+<li>Fetched content is piped into <strong>GPT-4o</strong> for clean explanation</li>
+</ul>
+<h2 id="guardrails">🔐 Guardrails<a class="anchor" href="#guardrails" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li><strong>Input Guardrail (DSPy):</strong> Accepts only math-related academic questions</li>
+<li><strong>Output Guardrail (DSPy):</strong> Blocks hallucinated or off-topic content</li>
+</ul>
+<h2 id="human-in-the-loop-feedback">👨‍🏫 Human-in-the-Loop Feedback<a class="anchor" href="#human-in-the-loop-feedback" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Streamlit UI allows students to give 👍 / 👎 after seeing the answer</li>
+<li>Feedback is logged to a local JSON file for future improvement</li>
+</ul>
+<h2 id="benchmarking">📊 Benchmarking<a class="anchor" href="#benchmarking" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Evaluated on <strong>50 random JEEBench Math Questions</strong></li>
+<li><strong>Current Accuracy:</strong> 66%</li>
+<li>Benchmark results saved to: <code>benchmark/results.csv</code></li>
+</ul>
+<h2 id="demo">🚀 Demo<a class="anchor" href="#demo" aria-label="Lien vers cette section">#</a></h2>
+<p>To run the app with Streamlit:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>app/streamlit.py
+</pre></div>
+</div>
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs" role="tablist"><button class="tabs__btn" role="tab" aria-selected="true" data-tab="app">app</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="benchmark">benchmark</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="config">config</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="data">data</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="logs">logs</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="rag">rag</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="fichiers">Fichiers</button></div><div class="tabs__panel" data-tab="app"><details class="codefile" id="code-app-benchmark-py"><summary class="codefile__head"><span class="codefile__name">app/benchmark.py</span><span class="codefile__size">1 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Add the project root to the Python path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;..&quot;</span><span class="p">)))</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rag.query_router</span><span class="w"> </span><span class="kn">import</span> <span class="n">answer_math_question</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">data.load_gsm8k_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_jeebench_dataset</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">benchmark_math_agent</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="c1"># ✅ Always filter math-only questions</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_jeebench_dataset</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>  <span class="c1"># Limit the number of questions for benchmarking</span>
+
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">question</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;gold&quot;</span><span class="p">]</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">answer_math_question</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+            <span class="n">is_correct</span> <span class="o">=</span> <span class="n">expected</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">is_correct</span><span class="p">:</span>
+                <span class="n">correct</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;Question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+                <span class="s2">&quot;Expected&quot;</span><span class="p">:</span> <span class="n">expected</span><span class="p">,</span>
+                <span class="s2">&quot;Predicted&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">,</span>
+                <span class="s2">&quot;Correct&quot;</span><span class="p">:</span> <span class="n">is_correct</span><span class="p">,</span>
+                <span class="s2">&quot;TimeTakenSec&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">})</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;Question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+                <span class="s2">&quot;Expected&quot;</span><span class="p">:</span> <span class="n">expected</span><span class="p">,</span>
+                <span class="s2">&quot;Predicted&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Correct&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;TimeTakenSec&quot;</span><span class="p">:</span> <span class="kc">None</span>
+            <span class="p">})</span>
+
+    <span class="n">df_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">correct</span> <span class="o">/</span> <span class="n">total</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="k">return</span> <span class="n">df_result</span><span class="p">,</span> <span class="n">accuracy</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/app/benchmark.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-app-streamlit-py"><summary class="codefile__head"><span class="codefile__name">app/streamlit.py</span><span class="codefile__size">5 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Add root to import path</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;..&quot;</span><span class="p">)))</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.benchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">benchmark_math_agent</span>  <span class="c1"># Add this import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">data.load_gsm8k_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_jeebench_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rag.query_router</span><span class="w"> </span><span class="kn">import</span> <span class="n">answer_math_question</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">set_page_config</span><span class="p">(</span><span class="n">page_title</span><span class="o">=</span><span class="s2">&quot;Math Agent 🧮&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;wide&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🧠 Math Tutor Agent Dashboard&quot;</span><span class="p">)</span>
+
+<span class="n">tab1</span><span class="p">,</span> <span class="n">tab2</span><span class="p">,</span> <span class="n">tab3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">&quot;📘 Ask a Question&quot;</span><span class="p">,</span> <span class="s2">&quot;📁 View Feedback&quot;</span><span class="p">,</span> <span class="s2">&quot;📊 Benchmark Results&quot;</span><span class="p">])</span>
+
+<span class="c1"># ---------------- TAB 1: Ask a Question ---------------- #</span>
+<span class="k">with</span> <span class="n">tab1</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📘 Ask a Math Question&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;Enter any math question below. The agent will try to explain it step-by-step.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;last_question&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;last_question&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;last_answer&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;last_answer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;feedback_given&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;feedback_given&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">user_question</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Your Question:&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Get Answer&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_question</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Thinking...&quot;</span><span class="p">):</span>
+                <span class="n">answer</span> <span class="o">=</span> <span class="n">answer_math_question</span><span class="p">(</span><span class="n">user_question</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;last_question&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_question</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;last_answer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">answer</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;feedback_given&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;last_answer&quot;</span><span class="p">]:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### ✅ Answer:&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;last_answer&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;feedback_given&quot;</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### 🙋 Was this helpful?&quot;</span><span class="p">)</span>
+            <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;👍 Yes&quot;</span><span class="p">):</span>
+                    <span class="n">feedback</span> <span class="o">=</span> <span class="s2">&quot;positive&quot;</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;feedback_given&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;👎 No&quot;</span><span class="p">):</span>
+                    <span class="n">feedback</span> <span class="o">=</span> <span class="s2">&quot;negative&quot;</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;feedback_given&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;feedback_given&quot;</span><span class="p">]:</span>
+                <span class="n">log_entry</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;last_question&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">[</span><span class="s2">&quot;last_answer&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;feedback&quot;</span><span class="p">:</span> <span class="n">feedback</span>
+                <span class="p">}</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">log_file</span> <span class="o">=</span> <span class="s2">&quot;logs/feedback_log.json&quot;</span>
+
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">log_file</span><span class="p">):</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                            <span class="n">existing_logs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">existing_logs</span> <span class="o">=</span> <span class="p">[]</span>
+
+                    <span class="n">existing_logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_entry</span><span class="p">)</span>
+
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">existing_logs</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Feedback recorded as &#39;</span><span class="si">{</span><span class="n">feedback</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;📝 Log entry:&quot;</span><span class="p">,</span> <span class="n">log_entry</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error saving feedback: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># ---------------- TAB 2: View Feedback ---------------- #</span>
+<span class="k">with</span> <span class="n">tab2</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📁 View Collected Feedback&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;logs/feedback_log.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">feedback_logs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Loaded feedback log.&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">feedback_logs</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No feedback log found or error loading.&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+<span class="c1"># ---------------- TAB 3: Benchmark Results ---------------- #</span>
+
+<span class="k">with</span> <span class="n">tab3</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Benchmark Accuracy Report&quot;</span><span class="p">)</span>
+
+    <span class="n">total_math</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">load_jeebench_dataset</span><span class="p">())</span>
+
+    <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📘 Benchmarking from </span><span class="si">{</span><span class="n">total_math</span><span class="si">}</span><span class="s2"> math questions&quot;</span><span class="p">)</span>
+
+    <span class="n">num_questions</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Select number of math questions to benchmark&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="n">total_math</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;▶️ Run Benchmark Now&quot;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Benchmarking </span><span class="si">{</span><span class="n">num_questions</span><span class="si">}</span><span class="s2"> math questions...&quot;</span><span class="p">):</span>
+            <span class="n">df_result</span><span class="p">,</span> <span class="n">accuracy</span> <span class="o">=</span> <span class="n">benchmark_math_agent</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">num_questions</span><span class="p">)</span>
+
+            <span class="c1"># Save the result</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;benchmark&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">result_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;benchmark/results_math_</span><span class="si">{</span><span class="n">num_questions</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+            <span class="n">df_result</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">result_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="c1"># Show result</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Done! Accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Accuracy&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">df_result</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">download_button</span><span class="p">(</span><span class="s2">&quot;Download Results&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df_result</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">file_name</span><span class="o">=</span><span class="n">result_path</span><span class="p">,</span> <span class="n">mime</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/app/streamlit.py" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="benchmark" hidden><details class="codefile" id="code-benchmark-results-math-5-csv"><summary class="codefile__head"><span class="codefile__name">benchmark/results_math_5.csv</span><span class="codefile__size">7 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>Question,Expected,Predicted,Correct,TimeTakenSec
+&quot;Let $-\frac{\pi}{6}&lt;\theta&lt;-\frac{\pi}{12}$. Suppose $\alpha_{1}$ and $\beta_{1}$ are the roots of the equation $x^{2}-2 x \sec \theta+1=0$ and $\alpha_{2}$ and $\beta_{2}$ are the roots of the equation $x^{2}+2 x \tan \theta-1=0$. If $\alpha_{1}&gt;\beta_{1}$ and $\alpha_{2}&gt;\beta_{2}$, then $\alpha_{1}+\beta_{2}$ equals
+
+(A) $2(\sec \theta-\tan \theta)$
+
+(B) $2 \sec \theta$
+
+(C) $-2 \tan \theta$
+
+(D) 0&quot;,C,&quot;To find the values of $\alpha_{1}$ and $\beta_{1}$, we need to solve the equation $x^{2}-2 x \sec \theta+1=0$. This is a quadratic equation in the form $ax^{2}+bx+c=0$, where $a=1$, $b=-2\sec\theta$, and $c=1$. 
+
+The roots of a quadratic equation $ax^{2}+bx+c=0$ are given by the formula $x=\frac{-b\pm\sqrt{b^{2}-4ac}}{2a}$. 
+
+For the equation $x^{2}-2 x \sec \theta+1=0$, we have $a=1$, $b=-2\sec\theta$, and $c=1$. Plugging these values into the formula, we get:
+
+$\alpha_{1}=\frac{2\sec\theta+\sqrt{4\sec^{2}\theta-4}}{2}=\sec\theta+\sqrt{\sec^{2}\theta-1}$
+
+$\beta_{1}=\frac{2\sec\theta-\sqrt{4\sec^{2}\theta-4}}{2}=\sec\theta-\sqrt{\sec^{2}\theta-1}$
+
+Since $\alpha_{1}&gt;\beta_{1}$, we have $\sec\theta+\sqrt{\sec^{2}\theta-1}&gt;\sec\theta-\sqrt{\sec^{2}\theta-1}$. 
+
+Now, to find the values of $\alpha_{2}$ and $\beta_{2}$, we need to solve the equation $x^{2}+2 x \tan \theta-1=0$. This is a quadratic equation in the form $ax^{2}+bx+c=0$, where $a=1$, $b=2\tan\theta$, and $c=-1$. 
+
+Using the quadratic formula, we find:
+
+$\alpha_{2}=\frac{-2\tan\theta+\sqrt{4\tan^{2}\theta+4}}{2}=-\tan\theta+\sqrt{\tan^{2}\theta+1}$
+
+$\beta_{2}=\frac{-2\tan\theta-\sqrt{4\tan^{2}\theta+4}}{2}=-\tan\theta-\sqrt{\tan^{2}\theta+1}$
+
+Since $\alpha_{2}&gt;\beta_{2}$, we have $-\tan\theta+\sqrt{\tan^{2}\theta+1}&gt;-\tan\theta-\sqrt{\tan^{2}\theta+1}$. 
+
+Finally, we need to find $\alpha_{1}+\beta_{2}$. Substituting the values we found earlier, we get:
+
+$\alpha_{1}+\beta_{2}=(\sec\theta+\sqrt{\sec^{2}\theta-1})+(-\tan\theta-\sqrt{\tan^{2}\theta+1})$
+
+Simplifying this expression, we get:
+
+$\alpha_{1}+\beta_{2}=\sec\theta-\tan\theta$
+
+Therefore, the correct answer is $\boxed{C) -2\tan\theta}$.&quot;,True,9.85
+&quot;A debate club consists of 6 girls and 4 boys. A team of 4 members is to be selected from this club including the selection of a captain (from among these 4 members) for the team. If the team has to include at most one boy, then the number of ways of selecting the team is
+
+(A) 380
+
+(B) 320
+
+(C) 260
+
+(D) 95&quot;,A,&quot;To solve this problem, we need to consider the different scenarios for selecting the team with at most one boy.
+
+1. Selecting a team with no boys:
+In this case, we need to select 4 girls from the 6 available girls. This can be done in 6 choose 4 ways, which is equal to 15 ways.
+
+2. Selecting a team with one boy:
+We can select 1 boy from the 4 available boys and 3 girls from the 6 available girls. This can be done in 4 choose 1 * 6 choose 3 ways, which is equal to 80 ways.
+
+Therefore, the total number of ways of selecting the team with at most one boy is the sum of the ways from the two scenarios:
+15 (from scenario 1) + 80 (from scenario 2) = 95 ways.
+
+So, the correct answer is (D) 95.&quot;,True,4.15
+&quot;Let $S=\left\{x \in(-\pi, \pi): x \neq 0, \pm \frac{\pi}{2}\right\}$. The sum of all distinct solutions of the equation $\sqrt{3} \sec x+\operatorname{cosec} x+2(\tan x-\cot x)=0$ in the set $S$ is equal to
+
+(A) $-\frac{7 \pi}{9}$
+
+(B) $-\frac{2 \pi}{9}$
+
+(C) 0
+
+(D) $\frac{5 \pi}{9}$&quot;,C,&quot;To find the sum of all distinct solutions of the given equation in the set $S$, we first need to simplify the equation.
+
+Given equation: $\sqrt{3} \sec x+\csc x+2(\tan x-\cot x)=0$
+
+Recall that $\sec x = \frac{1}{\cos x}$ and $\csc x = \frac{1}{\sin x}$.
+
+Substitute these values into the equation:
+$\sqrt{3} \frac{1}{\cos x} + \frac{1}{\sin x} + 2(\frac{\sin x}{\cos x} - \frac{\cos x}{\sin x}) = 0$
+
+Simplify the equation:
+$\frac{\sqrt{3}}{\cos x} + \frac{1}{\sin x} + 2(\frac{\sin^2 x - \cos^2 x}{\sin x \cos x}) = 0$
+
+$\frac{\sqrt{3}\sin x + \cos x}{\sin x \cos x} + 2(\frac{\sin^2 x - \cos^2 x}{\sin x \cos x}) = 0$
+
+$\frac{\sqrt{3}\sin x + \cos x + 2\sin^2 x - 2\cos^2 x}{\sin x \cos x} = 0$
+
+$\frac{2\sin^2 x + \sqrt{3}\sin x - 2\cos^2 x + \cos x}{\sin x \cos x} = 0$
+
+Now, we need to find the solutions of this equation in the set $S$, which is $(-\pi, \pi)$ excluding $0, \pm \frac{\pi}{2}$.
+
+By solving the equation and considering the restrictions, we find that the distinct solutions in the set $S$ are $x = \frac{5\pi}{6}$ and $x = -\frac{\pi}{6}$.
+
+Therefore, the sum of all distinct solutions in the set $S$ is $\frac{5\pi}{6} + (-\frac{\pi}{6}) = \frac{4\pi}{6} = \frac{2\pi}{3}$.
+
+The correct answer is not provided in the options given.&quot;,True,20.71
+&quot;A computer producing factory has only two plants $T_{1}$ and $T_{2}$. Plant $T_{1}$ produces $20 \%$ and plant $T_{2}$ produces $80 \%$ of the total computers produced. $7 \%$ of computers produced in the factory turn out to be defective. It is known that
+
+$P$ (computer turns out to be defective given that it is produced in plant $T_{1}$ )
+
+$=10 P\left(\right.$ computer turns out to be defective given that it is produced in plant $\left.T_{2}\right)$,
+
+where $P(E)$ denotes the probability of an event $E$. A computer produced in the factory is randomly selected and it does not turn out to be defective. Then the probability that it is produced in plant $T_{2}$ is
+
+(A) $\frac{36}{73}$
+
+(B) $\frac{47}{79}$
+
+(C) $\frac{78}{93}$
+
+(D) $\frac{75}{83}$&quot;,C,&quot;To find the probability that a computer selected randomly and not defective is produced in plant $T_{2}$, we can use Bayes&#39; Theorem.
+
+Let $D$ be the event that a computer is defective, and $T_{1}$ and $T_{2}$ be the events that a computer is produced in plant $T_{1}$ and plant $T_{2}$ respectively.
+
+We are given:
+$P(D) = 0.07$
+$P(D|T_{1}) = 0.1P(D|T_{2})$
+
+We want to find $P(T_{2}|D&#39;)$, where $D&#39;$ is the event that a computer is not defective.
+
+By Bayes&#39; Theorem:
+$P(T_{2}|D&#39;) = \frac{P(D&#39;|T_{2})P(T_{2})}{P(D&#39;)}$
+$P(D&#39;) = 1 - P(D) = 0.93$
+
+We know that $P(D|T_{1}) = 0.1P(D|T_{2})$, so $P(D|T_{1}) = 0.1(1 - P(D|T_{1}))$.
+This gives us $0.1 = 0.1 - 0.1P(D|T_{1})$, which simplifies to $P(D|T_{1}) = 0$.
+
+Therefore, $P(D&#39;|T_{1}) = 1 - P(D|T_{1}) = 1$.
+
+Now we can calculate $P(T_{2}|D&#39;)$:
+$P(T_{2}|D&#39;) = \frac{P(D&#39;|T_{2})P(T_{2})}{P(D&#39;)}$
+$P(T_{2}|D&#39;) = \frac{(1)(0.8)}{0.93} = \frac{0.8}{0.93} = \frac{80}{93}$
+
+Therefore, the correct answer is (C) $\frac{78}{93}$.&quot;,True,6.32
+&quot;The least value of $\alpha \in \mathbb{R}$ for which $4 \alpha x^{2}+\frac{1}{x} \geq 1$, for all $x&gt;0$, is
+
+(A) $\frac{1}{64}$
+
+(B) $\frac{1}{32}$
+
+(C) $\frac{1}{27}$
+
+(D) $\frac{1}{25}$&quot;,C,&quot;To find the least value of $\alpha$ for which $4\alpha x^{2} + \frac{1}{x} \geq 1$ for all $x &gt; 0$, we need to analyze the inequality.
+
+First, let&#39;s rewrite the inequality as $4\alpha x^{3} + 1 \geq x$.
+
+Since this inequality must hold for all $x &gt; 0$, we can consider the limit as $x$ approaches $0$ to find the least value of $\alpha$.
+
+Taking the limit as $x$ approaches $0$ on both sides of the inequality, we get:
+$\lim_{x \to 0} (4\alpha x^{3} + 1) \geq \lim_{x \to 0} x$
+$1 \geq 0$
+
+This shows that the inequality holds for all $x &gt; 0$ when $\alpha = \frac{1}{27}$.
+
+Therefore, the correct answer is (C) $\frac{1}{27}$.&quot;,True,11.42
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/benchmark/results_math_5.csv" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-benchmark-results-math-50-csv"><summary class="codefile__head"><span class="codefile__name">benchmark/results_math_50.csv</span><span class="codefile__size">82 ko</span></summary><div class="codefile__body"><p class="note">Fichier généré ou volumineux : il n'est pas affiché ici.</p><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/benchmark/results_math_50.csv" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="config" hidden><details class="codefile" id="code-config-env-example"><summary class="codefile__head"><span class="codefile__name">config/.env.example</span><span class="codefile__size">36 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>OPENAI_API_KEY=&quot;&quot;
+TAVILY_API_KEY=&quot;&quot;
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/config/.env.example" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="data" hidden><details class="codefile" id="code-data-load-gsm8k-data-py"><summary class="codefile__head"><span class="codefile__name">data/load_gsm8k_data.py</span><span class="codefile__size">264 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_jeebench_dataset</span><span class="p">():</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;hf://datasets/daman1209arora/jeebench/test.json&quot;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;math&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;gold&#39;</span><span class="p">]]</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">load_jeebench_dataset</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/data/load_gsm8k_data.py" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="logs" hidden><details class="codefile" id="code-logs-feedback-log-json"><summary class="codefile__head"><span class="codefile__name">logs/feedback_log.json</span><span class="codefile__size">11 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">json</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;explain calculus&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Calculus is a branch of mathematics that deals with the study of rates of change and accumulation of quantities. It includes concepts such as differentiation, which is used to find the rate at which a quantity changes, and integration, which is used to find the accumulation of quantities over a given interval. Calculus is widely used in various fields such as physics, engineering, economics, and many others to analyze and solve problems involving change and motion.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;how many arithematic operations are there in mathematics&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;There are four basic arithmetic operations in mathematics: addition, subtraction, multiplication, and division.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;how many arithematic operations are there in mathematics&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sure! Here is a step-by-step explanation of the four basic arithmetic operations:\n\n1. Addition:\n- Addition is combining two or more numbers to find their total sum.\n- For example, if you want to add 5 and 3 together, you would write it as 5 + 3.\n- To find the sum, simply add the numbers together: 5 + 3 = 8.\n\n2. Subtraction:\n- Subtraction is taking one number away from another to find the difference.\n- For example, if you want to subtract 4 from 9, you would write it as 9 - 4.\n- To find the difference, subtract the second number from the first: 9 - 4 = 5.\n\n3. Multiplication:\n- Multiplication is repeated addition of the same number.\n- For example, if you want to multiply 3 by 4, you would write it as 3 x 4.\n- To find the product, add 3 four times: 3 x 4 = 12.\n\n4. Division:\n- Division is splitting a number into equal parts.\n- For example, if you want to divide 10 by 2, you would write it as 10 \u00f7 2.\n- To find the quotient, divide 10 into 2 equal parts: 10 \u00f7 2 = 5.\n\nThese are the four basic arithmetic operations in mathematics. Practice using these operations with different numbers to improve your math skills.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;explain the integral of sinx&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;To find the integral of sin(x), we will use the formula for the integral of sine:\n\n\u222bsin(x) dx = -cos(x) + C\n\nWhere C is the constant of integration.\n\nStep 1: Identify the integral to solve\nWe are looking to find the integral of sin(x).\n\nStep 2: Apply the formula for the integral of sin(x)\nUsing the formula, we have:\n\n\u222bsin(x) dx = -cos(x) + C\n\nStep 3: Add the constant of integration\nRemember to always include the constant of integration when finding the integral. In this case, the constant is denoted by C.\n\nTherefore, the integral of sin(x) is:\n\n\u222bsin(x) dx = -cos(x) + C\n\nThis is the fundamental result in calculus for the integral of sin(x).&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;explain the integral of sinx&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The integral of sin(x) is equal to -cos(x) plus the constant of integration.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;what is linear algebra&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Linear algebra is a branch of mathematics that deals with vector spaces and linear mappings between these spaces. It involves the study of lines, planes, and subspaces, as well as systems of linear equations and their solutions.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;negative&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;explain the arithematic operations in mathematics&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Subtraction, addition, multiplication, and division are fundamental arithmetic operations in mathematics. Subtraction involves taking away one number from another, while addition combines two or more numbers. Multiplication is repeated addition, and division is the process of splitting a number into equal parts. These operations are used to manipulate numbers and solve mathematical equations.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;what is linear algebra&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Linear algebra is a branch of mathematics that deals with vector spaces and linear mappings between these spaces. It involves the study of lines, planes, and subspaces, as well as systems of linear equations and their solutions.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;negative&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;what is the integral of sinx&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Q: What is the integral of sin(x)?\nA: Step 1: Recall that the integral of sin(x) is -cos(x). Step 2: So \u00e2\u02c6\u00absin(x) dx = -cos(x) + C.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;why do one study calculus&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Calculus is a branch of mathematics that studies change and motion. It is essential in various fields such as science, engineering, and economics because it helps us solve problems related to dynamic systems.\n\nHere are some reasons why one would study calculus:\n\n1. **Modeling Change**: Calculus allows us to model and analyze how quantities change over time. For example, it helps us understand how the velocity of an object changes as it moves, or how the population of a species grows over time.\n\n2. **Solving Real-World Problems**: Calculus provides tools like derivatives and integrals that are crucial for solving complex problems in physics, engineering, and economics. For instance, it helps engineers design structures that can withstand varying forces, economists analyze market trends, and physicists understand the behavior of natural phenomena.\n\n3. **Optimization**: Calculus helps us find optimal solutions to problems. For example, it can be used to maximize profits in business, minimize costs in manufacturing, or determine the most efficient way to complete a task.\n\nIn summary, studying calculus is important because it equips us with the necessary tools to understand and solve problems involving change and motion in various fields of study.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Solve the equation: 3 \ud835\udc65 2 \u2212 5 \ud835\udc65 + 2 = 0 3x  2  \u22125x+2=0 Find the roots and explain the method used.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;To solve the equation 3\ud835\udc65^2 - 5\ud835\udc65 + 2 = 0, we can use the quadratic formula. The quadratic formula states that for an equation in the form ax^2 + bx + c = 0, the roots are given by:\n\nx = (-b \u00b1 \u221a(b^2 - 4ac)) / 2a\n\nIn this case, a = 3, b = -5, and c = 2. Plugging these values into the formula, we get:\n\nx = (5 \u00b1 \u221a((-5)^2 - 4*3*2)) / 2*3\nx = (5 \u00b1 \u221a(25 - 24)) / 6\nx = (5 \u00b1 \u221a1) / 6\nx = (5 \u00b1 1) / 6\n\nSo, the two roots of the equation are:\nx = (5 + 1) / 6 = 6 / 6 = 1\nx = (5 - 1) / 6 = 4 / 6 = 2/3\n\nTherefore, the roots of the equation 3\ud835\udc65^2 - 5\ud835\udc65 + 2 = 0 are x = 1 and x = 2/3.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Let  \ud835\udc53 ( \ud835\udc65 ) = ln \u2061 ( sin \u2061 \ud835\udc65 ) + ln \u2061 ( tan \u2061 \ud835\udc65 ) f(x)=ln(sinx)+ln(tanx). Find the domain of the function  \ud835\udc53 ( \ud835\udc65 ) f(x) in the interval  ( 0 , \ud835\udf0b ) (0,\u03c0).&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;To find the domain of the function \\( f(x) = \\ln(\\sin x) + \\ln(\\tan x) \\) in the interval \\( (0, \\pi) \\), we need to consider the restrictions imposed by the natural logarithm function and the trigonometric functions involved.\n\n1. The natural logarithm function \\( \\ln(x) \\) is defined only for positive real numbers. Therefore, for \\( \\ln(\\sin x) \\) to be defined, we need \\( \\sin x &gt; 0 \\), which occurs in the intervals \\( (0, \\pi) \\) excluding the points where \\( \\sin x = 0 \\).\n\n2. The trigonometric function \\( \\tan x = \\frac{\\sin x}{\\cos x} \\) is defined for all real numbers except where \\( \\cos x = 0 \\), which happens at \\( x = \\frac{\\pi}{2} \\).\n\n3. Combining the restrictions from both \\( \\ln(\\sin x) \\) and \\( \\ln(\\tan x) \\), we find that the domain of \\( f(x) \\) in the interval \\( (0, \\pi) \\) is all values of \\( x \\) in the interval \\( (0, \\pi) \\) excluding \\( x = \\frac{\\pi}{2} \\).\n\nTherefore, the domain of the function \\( f(x) = \\ln(\\sin x) + \\ln(\\tan x) \\) in the interval \\( (0, \\pi) \\) is \\( (0, \\frac{\\pi}{2}) \\cup (\\frac{\\pi}{2}, \\pi) \\).&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Let  \ud835\udc53 ( \ud835\udc65 ) = \ud835\udc65 3 \u2212 3 \ud835\udc65 + 1 f(x)=x  3  \u22123x+1. The number of real solutions of the equation \ud835\udc53 ( \ud835\udc53 ( \ud835\udc65 ) ) = 0 f(f(x))=0 is:  Options: (A) 3 (B) 5 (C) 7 (D) 9&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;To find the number of real solutions of the equation \ud835\udc53(\ud835\udc53(\ud835\udc65)) = 0, we first need to understand what the function \ud835\udc53(\ud835\udc65) = \ud835\udc65\u00b3 - 3\ud835\udc65 + 1 represents.\n\nThe function \ud835\udc53(\ud835\udc65) = \ud835\udc65\u00b3 - 3\ud835\udc65 + 1 is a cubic function, which means it has at most 3 real roots. To find the real roots of \ud835\udc53(\ud835\udc65), we set \ud835\udc53(\ud835\udc65) = 0 and solve for \ud835\udc65:\n\n\ud835\udc65\u00b3 - 3\ud835\udc65 + 1 = 0\n\nThis equation may have 1, 2, or 3 real roots. Let&#39;s assume it has 3 real roots for now.\n\nNow, we need to find the number of real solutions of the equation \ud835\udc53(\ud835\udc53(\ud835\udc65)) = 0. This equation can be rewritten as:\n\n\ud835\udc53(\ud835\udc53(\ud835\udc65)) = \ud835\udc53(\ud835\udc65)\u00b3 - 3\ud835\udc53(\ud835\udc65) + 1 = 0\n\nSince \ud835\udc53(\ud835\udc65) has 3 real roots, each of these roots contributes 3 solutions to the equation \ud835\udc53(\ud835\udc53(\ud835\udc65)) = 0. Therefore, the total number of real solutions of \ud835\udc53(\ud835\udc53(\ud835\udc65)) = 0 is 3 * 3 = 9.\n\nTherefore, the correct answer is (D) 9, as stated in the web content provided.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;question&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Let  \ud835\udc53 ( \ud835\udc65 ) = ln \u2061 ( sin \u2061 \ud835\udc65 ) + ln \u2061 ( tan \u2061 \ud835\udc65 ) f(x)=ln(sinx)+ln(tanx). Find the domain of the function  \ud835\udc53 ( \ud835\udc65 ) f(x) in the interval  ( 0 , \ud835\udf0b ) (0,\u03c0).&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;To find the domain of the function \\( f(x) = \\ln(\\sin x) + \\ln(\\tan x) \\) in the interval \\( (0, \\pi) \\), we need to determine where both \\(\\ln(\\sin x)\\) and \\(\\ln(\\tan x)\\) are defined.\n\n### Step-by-Step Explanation:\n\n1. **Understanding the Natural Logarithm:**\n   - The natural logarithm function \\(\\ln(y)\\) is defined only for \\(y &gt; 0\\).\n\n2. **Analyzing \\(\\ln(\\sin x)\\):**\n   - \\(\\sin x &gt; 0\\) in the interval \\( (0, \\pi) \\).\n   - Therefore, \\(\\ln(\\sin x)\\) is defined for all \\(x\\) in \\( (0, \\pi) \\).\n\n3. **Analyzing \\(\\ln(\\tan x)\\):**\n   - \\(\\tan x = \\frac{\\sin x}{\\cos x}\\).\n   - For \\(\\ln(\\tan x)\\) to be defined, \\(\\tan x &gt; 0\\), which means \\(\\sin x &gt; 0\\) and \\(\\cos x &gt; 0\\).\n   - \\(\\cos x &gt; 0\\) in the interval \\( (0, \\frac{\\pi}{2}) \\).\n   - \\(\\tan x\\) is undefined at \\(x = \\frac{\\pi}{2}\\) because \\(\\cos x = 0\\) there.\n\n4. **Combining the Conditions:**\n   - Both \\(\\ln(\\sin x)\\) and \\(\\ln(\\tan x)\\) are defined when \\(x\\) is in \\( (0, \\frac{\\pi}{2}) \\) and \\( (\\frac{\\pi}{2}, \\pi) \\).\n   - At \\(x = \\frac{\\pi}{2}\\), \\(\\tan x\\) is undefined, so \\(x = \\frac{\\pi}{2}\\) is excluded from the domain.\n\n5. **Conclusion:**\n   - The domain of \\( f(x) = \\ln(\\sin x) + \\ln(\\tan x) \\) in the interval \\( (0, \\pi) \\) is \\( (0, \\frac{\\pi}{2}) \\cup (\\frac{\\pi}{2}, \\pi) \\).\n\nThis step-by-step analysis confirms that the domain of the function \\( f(x) \\) is indeed \\( (0, \\frac{\\pi}{2}) \\cup (\\frac{\\pi}{2}, \\pi) \\), excluding \\(x = \\frac{\\pi}{2}\\) where \\(\\tan x\\) is undefined.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;feedback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;positive&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/logs/feedback_log.json" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="rag" hidden><details class="codefile" id="code-rag-guardrails-py"><summary class="codefile__head"><span class="codefile__name">rag/guardrails.py</span><span class="codefile__size">6 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">dspy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="c1"># Load API key</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="s2">&quot;config/.env&quot;</span><span class="p">)</span>
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔐 Loaded OPENAI_API_KEY:&quot;</span><span class="p">,</span> <span class="s2">&quot;✅ Found&quot;</span> <span class="k">if</span> <span class="n">OPENAI_API_KEY</span> <span class="k">else</span> <span class="s2">&quot;❌ Missing&quot;</span><span class="p">)</span>
+
+<span class="c1"># Configure LM</span>
+<span class="n">lm</span> <span class="o">=</span> <span class="n">dspy</span><span class="o">.</span><span class="n">LM</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">OPENAI_API_KEY</span><span class="p">)</span>
+<span class="n">dspy</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">lm</span><span class="o">=</span><span class="n">lm</span><span class="p">)</span>
+
+<span class="c1"># ✅ Signature for Input Guard</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClassifyMath</span><span class="p">(</span><span class="n">dspy</span><span class="o">.</span><span class="n">Signature</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decide if a question is related to mathematics — this includes problem-solving,</span>
+<span class="sd">    formulas, definitions (e.g., &#39;what is calculus&#39;),examples to any topic, or theoretical topics.</span>
+
+<span class="sd">    Return only &#39;Yes&#39; or &#39;No&#39; as your final verdict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">question</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dspy</span><span class="o">.</span><span class="n">InputField</span><span class="p">()</span>
+    <span class="n">verdict</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dspy</span><span class="o">.</span><span class="n">OutputField</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Respond with &#39;Yes&#39; if the question is related to mathematics, &#39;No&#39; otherwise.&quot;</span><span class="p">)</span>
+
+
+
+<span class="c1"># ✅ Input Validator</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InputValidator</span><span class="p">(</span><span class="n">dspy</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">dspy</span><span class="o">.</span><span class="n">Predict</span><span class="p">(</span><span class="n">ClassifyMath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_question</span> <span class="o">=</span> <span class="n">dspy</span><span class="o">.</span><span class="n">ChainOfThought</span><span class="p">(</span>
+            <span class="n">ClassifyMath</span><span class="p">,</span>
+            <span class="n">examples</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the derivative of x^2?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;Explain the chain rule in calculus.&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;Why do I need to learn algebra?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the Pythagorean theorem?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;How do I solve a quadratic equation?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the area of a circle?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;How is math used in real life?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the purpose of trigonometry?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the Fibonacci sequence?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;can you tell me about rhombus?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;what is a circle?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the area of a circle?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the circumference of a circle?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the volume of a cone?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the area of a parallelogram?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the area of a trapezoid?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the surface area of a cube?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the area of parallelogram?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is a square?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;Explain rectangle?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;can you tell me about pentagon?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the volume of a sphere?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the difference between a mean and median?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the area of a triangle?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the difference between a permutation and a combination?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the slope of a line?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the difference between a rational and irrational number?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the area of a rectangle?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the volume of a cylinder?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the area of a trapezoid?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the surface area of a sphere?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the surface area of a cylinder?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the integral of sin(x)?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the difference between mean and median?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the formula for the circumference of a circle?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is the quadratic formula?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span><span class="p">},</span>   
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;Tell me a good movie to watch.&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;No&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is AI?&quot;</span><span class="p">,</span> <span class="s2">&quot;verdict&quot;</span><span class="p">:</span> <span class="s2">&quot;No&quot;</span><span class="p">},</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">question</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="n">question</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🧠 InputValidator Response:&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">verdict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">verdict</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span>
+
+<span class="c1"># ✅ Output Validator (no change unless needed)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OutputValidator</span><span class="p">(</span><span class="n">dspy</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">ValidateAnswer</span><span class="p">(</span><span class="n">dspy</span><span class="o">.</span><span class="n">Signature</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the answer is correct, step-by-step, and relevant to the question.&quot;&quot;&quot;</span>
+        <span class="n">question</span> <span class="o">=</span> <span class="n">dspy</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;The original math question.&quot;</span><span class="p">)</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">dspy</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;The model-generated answer.&quot;</span><span class="p">)</span>
+        <span class="n">verdict</span> <span class="o">=</span> <span class="n">dspy</span><span class="o">.</span><span class="n">OutputField</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Answer only &#39;Yes&#39; or &#39;No&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_answer</span> <span class="o">=</span> <span class="n">dspy</span><span class="o">.</span><span class="n">Predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ValidateAnswer</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">question</span><span class="p">,</span> <span class="n">answer</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_answer</span><span class="p">(</span>
+            <span class="n">question</span><span class="o">=</span><span class="n">question</span><span class="p">,</span>
+            <span class="n">answer</span><span class="o">=</span><span class="n">answer</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🧠 OutputValidator Response:&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">verdict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">verdict</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span>
+
+<span class="c1"># Initialize validators</span>
+<span class="n">input_validator</span> <span class="o">=</span> <span class="n">InputValidator</span><span class="p">()</span>
+<span class="n">output_validator</span> <span class="o">=</span> <span class="n">OutputValidator</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/rag/guardrails.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-rag-query-router-py"><summary class="codefile__head"><span class="codefile__name">rag/query_router.py</span><span class="codefile__size">5 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># rag/query_router.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;..&quot;</span><span class="p">)))</span>
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openai</span>  
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">StorageContext</span><span class="p">,</span><span class="n">load_index_from_storage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.vector_stores.qdrant</span><span class="w"> </span><span class="kn">import</span> <span class="n">QdrantVectorStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qdrant_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">QdrantClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.embeddings.openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIEmbedding</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.llms.openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rag.guardrails</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputValidator</span><span class="p">,</span> <span class="n">InputValidator</span>
+
+<span class="c1"># Load environment variables</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="s2">&quot;config/.env&quot;</span><span class="p">)</span>
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">)</span>
+<span class="n">TAVILY_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TAVILY_API_KEY&quot;</span><span class="p">)</span>
+
+<span class="c1"># Load DSPy guardrails</span>
+<span class="n">output_validator</span> <span class="o">=</span> <span class="n">OutputValidator</span><span class="p">()</span>
+<span class="n">input_validator</span> <span class="o">=</span> <span class="n">InputValidator</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_kb_index</span><span class="p">():</span>
+    <span class="n">qdrant_client</span> <span class="o">=</span> <span class="n">QdrantClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6333</span><span class="p">)</span>
+    <span class="n">vector_store</span> <span class="o">=</span> <span class="n">QdrantVectorStore</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">qdrant_client</span><span class="p">,</span> <span class="n">collection_name</span><span class="o">=</span><span class="s2">&quot;math_agent&quot;</span><span class="p">)</span>
+    <span class="n">storage_context</span> <span class="o">=</span> <span class="n">StorageContext</span><span class="o">.</span><span class="n">from_defaults</span><span class="p">(</span><span class="n">persist_dir</span><span class="o">=</span><span class="s2">&quot;storage&quot;</span><span class="p">,</span><span class="n">vector_store</span><span class="o">=</span><span class="n">vector_store</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">load_index_from_storage</span><span class="p">(</span><span class="n">storage_context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">index</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">query_kb</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">load_kb_index</span><span class="p">()</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">(</span><span class="n">similarity_top_k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;I&#39;m not sure.&quot;</span><span class="p">,</span> <span class="mf">0.0</span>
+
+    <span class="n">node</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">matched_text</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="n">similarity</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">score</span> <span class="ow">or</span> <span class="mf">0.0</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 Matched Score: </span><span class="si">{</span><span class="n">similarity</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🧠 Matched Content: </span><span class="si">{</span><span class="n">matched_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">matched_text</span><span class="p">,</span> <span class="n">similarity</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">query_web</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.tavily.com/search&quot;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">TAVILY_API_KEY</span><span class="p">,</span>
+        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+        <span class="s2">&quot;search_depth&quot;</span><span class="p">:</span> <span class="s2">&quot;basic&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;include_answer&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;include_raw_content&quot;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;answer&quot;</span><span class="p">,</span> <span class="s2">&quot;No answer found.&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">explain_with_openai</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">web_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a friendly and precise math tutor.</span>
+
+<span class="s2">The student asked: &quot;</span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="s2">Below is some information retrieved from the web. If it&#39;s helpful, use it to explain the answer. If it&#39;s incorrect or irrelevant, ignore it and instead explain the answer accurately based on your own math knowledge.</span>
+
+<span class="s2">Web Content:</span>
+<span class="se">\&quot;\&quot;\&quot;</span>
+<span class="si">{</span><span class="n">web_content</span><span class="si">}</span>
+<span class="se">\&quot;\&quot;\&quot;</span>
+
+<span class="s2">Now write a clear, accurate, and step-by-step explanation of the student&#39;s question.</span>
+<span class="s2">Only include valid math steps — do not guess or make up answers.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">OPENAI_API_KEY</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+
+<span class="c1"># query_kb returns a cosine similarity (higher = better); with OpenAI embeddings</span>
+<span class="c1"># almost any two English texts score well above 0, so `&gt; 0.` accepted every query</span>
+<span class="c1"># and served an arbitrary KB answer as authoritative. Require a real match.</span>
+<span class="n">KB_SIMILARITY_THRESHOLD</span> <span class="o">=</span> <span class="mf">0.80</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">answer_math_question</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 Query: </span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">input_validator</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">question</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;⚠️ This assistant only answers math-related academic questions.&quot;</span>
+
+    <span class="n">answer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">from_kb</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">kb_answer</span><span class="p">,</span> <span class="n">similarity</span> <span class="o">=</span> <span class="n">query_kb</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🧪 KB raw answer:&quot;</span><span class="p">,</span> <span class="n">kb_answer</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">similarity</span> <span class="o">&gt;=</span> <span class="n">KB_SIMILARITY_THRESHOLD</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ High similarity KB match, using GPT for step-by-step explanation...&quot;</span><span class="p">)</span>
+
+            <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are a helpful math tutor.</span>
+
+<span class="s2">Here is a student&#39;s question:</span>
+<span class="se">\&quot;\&quot;\&quot;</span>
+<span class="si">{</span><span class="n">question</span><span class="si">}</span>
+<span class="se">\&quot;\&quot;\&quot;</span>
+
+<span class="s2">And here is the correct answer retrieved from a trusted academic knowledge base:</span>
+<span class="se">\&quot;\&quot;\&quot;</span>
+<span class="si">{</span><span class="n">kb_answer</span><span class="si">}</span>
+<span class="se">\&quot;\&quot;\&quot;</span>
+
+<span class="s2">Your job is to explain to the student step-by-step **why** this is the correct answer.</span>
+<span class="s2">Do not change the final answer. You are only allowed to explain what is already given.</span>
+
+<span class="s2">Use the KB content as your only source. Do not guess or recalculate.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+            <span class="n">llm</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">OPENAI_API_KEY</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">from_kb</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Low similarity match or empty&quot;</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Using Web fallback because:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">web_content</span> <span class="o">=</span> <span class="n">query_web</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">explain_with_openai</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">web_content</span><span class="p">)</span>
+        <span class="n">from_kb</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📦 Answer Source: </span><span class="si">{</span><span class="s1">&#39;KB&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">from_kb</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;Web&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Final Output Guardrail Check</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">output_validator</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">answer</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Final answer failed validation — retrying with web content...&quot;</span><span class="p">)</span>
+
+        <span class="n">web_content</span> <span class="o">=</span> <span class="n">query_web</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">explain_with_openai</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">web_content</span><span class="p">)</span>
+        <span class="n">from_kb</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">answer</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">In a historical experiment to determine Planck&#39;s constant, a metal surface was irradiated with light of different wavelengths.</span>
+<span class="s2">The emitted photoelectron energies were measured by applying a stopping potential.</span>
+<span class="s2">The relevant data for the wavelength (λ) of incident light and the corresponding stopping potential (V₀) are given below:</span>
+
+<span class="s2">λ (μm) | V₀ (V)</span>
+<span class="s2">0.3     | 2.0  </span>
+<span class="s2">0.4     | 1.0  </span>
+<span class="s2">0.5     | 0.4  </span>
+
+<span class="s2">Given that c = 3×10⁸ m/s and e = 1.6×10⁻¹⁹ C, Planck&#39;s constant (in Js) found from such an experiment is:</span>
+<span class="s2">(A) 6.0×10⁻³⁴  </span>
+<span class="s2">(B) 6.4×10⁻³⁴  </span>
+<span class="s2">(C) 6.6×10⁻³⁴  </span>
+<span class="s2">(D) 6.8×10⁻³⁴</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">answer_math_question</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🧠 Final Answer:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">answer</span><span class="p">)</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/rag/query_router.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-rag-vector-py"><summary class="codefile__head"><span class="codefile__name">rag/vector.py</span><span class="codefile__size">2 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">VectorStoreIndex</span><span class="p">,</span> <span class="n">StorageContext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.core.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.core.node_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleNodeParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.vector_stores.qdrant</span><span class="w"> </span><span class="kn">import</span> <span class="n">QdrantVectorStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">llama_index.embeddings.openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIEmbedding</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qdrant_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">QdrantClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qdrant_client.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distance</span><span class="p">,</span> <span class="n">VectorParams</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># ✅ Load environment variables</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="s2">&quot;config/.env&quot;</span><span class="p">)</span>
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">)</span>
+
+<span class="c1"># ✅ Load JEEBench dataset as Documents</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_jeebench_documents</span><span class="p">():</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;hf://datasets/daman1209arora/jeebench/test.json&quot;</span><span class="p">)</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;gold&quot;</span><span class="p">]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Q: </span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="se">\n</span><span class="s2">A: </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;jee_bench&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span>
+        <span class="n">documents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">documents</span>
+
+<span class="c1"># ✅ Build the vector index using Qdrant</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_vector_index</span><span class="p">():</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="n">load_jeebench_documents</span><span class="p">()</span>
+
+    <span class="n">node_parser</span> <span class="o">=</span> <span class="n">SimpleNodeParser</span><span class="p">()</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">node_parser</span><span class="o">.</span><span class="n">get_nodes_from_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+
+    <span class="n">qdrant_client</span> <span class="o">=</span> <span class="n">QdrantClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6333</span><span class="p">)</span>
+    <span class="n">collection_name</span> <span class="o">=</span> <span class="s2">&quot;math_agent&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">qdrant_client</span><span class="o">.</span><span class="n">collection_exists</span><span class="p">(</span><span class="n">collection_name</span><span class="o">=</span><span class="n">collection_name</span><span class="p">):</span>
+        <span class="n">qdrant_client</span><span class="o">.</span><span class="n">create_collection</span><span class="p">(</span>
+            <span class="n">collection_name</span><span class="o">=</span><span class="n">collection_name</span><span class="p">,</span>
+            <span class="n">vectors_config</span><span class="o">=</span><span class="n">VectorParams</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1536</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">Distance</span><span class="o">.</span><span class="n">COSINE</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">vector_store</span> <span class="o">=</span> <span class="n">QdrantVectorStore</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">qdrant_client</span><span class="p">,</span> <span class="n">collection_name</span><span class="o">=</span><span class="n">collection_name</span><span class="p">)</span>
+    <span class="n">embed_model</span> <span class="o">=</span> <span class="n">OpenAIEmbedding</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">OPENAI_API_KEY</span><span class="p">)</span>
+    <span class="n">storage_context</span> <span class="o">=</span> <span class="n">StorageContext</span><span class="o">.</span><span class="n">from_defaults</span><span class="p">(</span><span class="n">vector_store</span><span class="o">=</span><span class="n">vector_store</span><span class="p">)</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="n">VectorStoreIndex</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">embed_model</span><span class="o">=</span><span class="n">embed_model</span><span class="p">,</span> <span class="n">storage_context</span><span class="o">=</span><span class="n">storage_context</span><span class="p">)</span>
+    <span class="n">index</span><span class="o">.</span><span class="n">storage_context</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Qdrant vector index built and saved successfully.&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">build_vector_index</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/rag/vector.py" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="fichiers" hidden><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">275 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span># Optional: For running in async contexts
+nest-asyncio
+openai==1.61.0
+llama-index==0.12.33
+llama-index-vector-stores-qdrant==0.6.0
+qdrant-client==1.14.1
+dspy==2.6.18
+faiss-cpu==1.10.0
+tavily-python==0.5.4
+python-dotenv==1.1.0
+streamlit==1.44.1
+pandas==2.2.3
+requests==2.32.3
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/rag-tutorials/agentic-rag-math-agent/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/15-rag-and-vector-databases/index.html">15 · RAG et bases de données vectorielles</a></li><li><a href="../../../lecons/08-building-search-applications/index.html">08 · Construire des applications de recherche (embeddings)</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:rag-tutorials/agentic-rag-math-agent">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/rag-tutorials/agentic-rag-gpt5/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">RAG agentique avec GPT-5</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/rag-tutorials/agentic-rag-with-reasoning/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">RAG agentique avec raisonnement</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/rag_tutorials/agentic_rag_math_agent" target="_blank" rel="noopener noreferrer">
+    rag_tutorials/agentic_rag_math_agent</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#features">📌 Features</a></li><li class="toc__item toc__item--h2"><a href="#architecture-flow">🚀 Architecture Flow</a></li><li class="toc__item toc__item--h2"><a href="#knowledge-base">📚 Knowledge Base</a></li><li class="toc__item toc__item--h2"><a href="#web-search">🌐 Web Search</a></li><li class="toc__item toc__item--h2"><a href="#guardrails">🔐 Guardrails</a></li><li class="toc__item toc__item--h2"><a href="#human-in-the-loop-feedback">👨‍🏫 Human-in-the-Loop Feedback</a></li><li class="toc__item toc__item--h2"><a href="#benchmarking">📊 Benchmarking</a></li><li class="toc__item toc__item--h2"><a href="#demo">🚀 Demo</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

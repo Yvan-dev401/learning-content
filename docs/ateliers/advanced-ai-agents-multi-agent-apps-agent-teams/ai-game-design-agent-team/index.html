@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Équipe de game design — atelier</title>
+<meta name="description" content="Concept, mécaniques, narration et équilibrage répartis entre agents.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track sidebar__track--apps"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span><a href="../../../ateliers/index.html">Ateliers pratiques</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/starter-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🌱</span><span class="sidebar__label">Premiers agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/rag-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">📚</span><span class="sidebar__label">RAG — ancrer le modèle dans vos données</span><span class="sidebar__count">24</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-single-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🤖</span><span class="sidebar__label">Agents avancés (agent unique)</span><span class="sidebar__count">18</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🕸️</span><span class="sidebar__label">Applications multi-agents</span><span class="sidebar__count">14</span></a></li><li class="sidebar__item sidebar__item--cat is-active"><a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html"><span class="sidebar__num" aria-hidden="true">👥</span><span class="sidebar__label">Équipes d&#x27;agents par métier</span><span class="sidebar__count">16</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/mcp-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🔌</span><span class="sidebar__label">Agents MCP</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-chat-with-x-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">💬</span><span class="sidebar__label">Dialoguer avec vos sources</span><span class="sidebar__count">7</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-apps-with-memory-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🧠</span><span class="sidebar__label">Applications avec mémoire</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/voice-ai-agents/index.html"><span class="sidebar__num" aria-hidden="true">🎙️</span><span class="sidebar__label">Agents vocaux</span><span class="sidebar__count">4</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/generative-ui-agents/index.html"><span class="sidebar__num" aria-hidden="true">🖼️</span><span class="sidebar__label">Interfaces génératives</span><span class="sidebar__count">8</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps/index.html"><span class="sidebar__num" aria-hidden="true">🧪</span><span class="sidebar__label">Applications LLM diverses</span><span class="sidebar__count">6</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-llm-finetuning-tutorials/index.html"><span class="sidebar__num" aria-hidden="true">🔧</span><span class="sidebar__label">Fine-tuning</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/ai-agent-framework-crash-course/index.html"><span class="sidebar__num" aria-hidden="true">🎓</span><span class="sidebar__label">Cours intensifs sur les frameworks</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/always-on-agents/index.html"><span class="sidebar__num" aria-hidden="true">🛰️</span><span class="sidebar__label">Agents permanents</span><span class="sidebar__count">2</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/agent-skills/index.html"><span class="sidebar__num" aria-hidden="true">🧩</span><span class="sidebar__label">Compétences d&#x27;agent</span><span class="sidebar__count">5</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-ai-agents-autonomous-game-playing-agent-apps/index.html"><span class="sidebar__num" aria-hidden="true">🎮</span><span class="sidebar__label">Agents joueurs</span><span class="sidebar__count">3</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../ateliers/advanced-llm-apps-cursor-ai-experiments/index.html"><span class="sidebar__num" aria-hidden="true">🧭</span><span class="sidebar__label">Expérimentations</span><span class="sidebar__count">2</span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2><ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat"><a href="../../../annexes/alternatives-gratuites/index.html"><span class="sidebar__num" aria-hidden="true">🆓</span><span class="sidebar__label">Alternatives gratuites</span></a></li><li class="sidebar__item sidebar__item--cat"><a href="../../../tags/index.html"><span class="sidebar__num" aria-hidden="true">🏷️</span><span class="sidebar__label">Légende des tags</span></a></li></ul></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/index.html">Ateliers</a> <span aria-hidden="true">›</span>
+  <a href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/index.html">Équipes d&#x27;agents par métier</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">👥</span> Équipes d&#x27;agents par métier</p>
+  <h1 class="pagehead__title">Équipe de game design</h1>
+  <p class="pagehead__summary">Concept, mécaniques, narration et équilibrage répartis entre agents.</p>
+  <ul class="tags"><li class="tag tag--interet"><a href="../../../tags/index.html#utile" title="Bon à connaître, mais pas bloquant pour avancer."><span class="tag__icon" aria-hidden="true">👍</span><span class="tag__label">Utile</span></a></li><li class="tag tag--difficulte"><a href="../../../tags/index.html#avance" title="Plusieurs notions se combinent : prévoyez du temps."><span class="tag__icon" aria-hidden="true">🔴</span><span class="tag__label">Avancé</span></a></li><li class="tag tag--cout"><a href="../../../tags/index.html#payant" title="Au moins un service exige un compte approvisionné. Des alternatives gratuites sont indiquées sur la page."><span class="tag__icon" aria-hidden="true">💳</span><span class="tag__label">Compte payant requis</span></a></li><li class="tag tag--nature"><a href="../../../tags/index.html#pratique" title="Du code à faire tourner."><span class="tag__icon" aria-hidden="true">🛠️</span><span class="tag__label">Atelier pratique</span></a></li></ul>
+</header>
+<aside class="alts"><p class="alts__lead"><span aria-hidden="true">💳</span> Cette page s'appuie sur des services facturés. Voici par quoi les remplacer sans dépenser :</p><div class="alts__item"><p class="alts__service"><a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI API</a><span class="alts__cost">compte payant nécessaire</span></p><p class="alts__note">Aucun crédit offert à l&#x27;inscription : il faut approvisionner le compte avant le premier appel.</p><ul class="alts__list"><li><a href="https://github.com/marketplace/models" target="_blank" rel="noopener noreferrer">GitHub Models</a> — Gratuit avec un simple compte GitHub, et compatible avec le SDK OpenAI : il suffit souvent de changer l&#x27;URL de base et la clé.</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">Google AI Studio (Gemini)</a> — Palier gratuit large, avec un mode compatible OpenAI.</li><li><a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">Groq</a> — Palier gratuit, très rapide, API compatible OpenAI sur des modèles ouverts.</li><li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> — Modèles exécutés sur votre machine, sans compte ni facture. Expose une API compatible OpenAI en local.</li></ul></div><p class="alts__more"><a href="../../../annexes/alternatives-gratuites/index.html">Table complète des alternatives gratuites</a></p></aside>
+<section class="feats"><h2 id="ce-que-fait-cet-atelier">Ce que fait cet atelier<a class="anchor" href="#ce-que-fait-cet-atelier" aria-label="Lien vers cette section">#</a></h2><p class="feats__note">Extrait de la section « Features » du README d'origine.</p><ul><li>Specialized Game Design Agent Team</li><li>🎭 Story Agent: Specializes in narrative design and world-building, including character development, plot arcs, dialogue writing, and lore creation</li><li>🎮 Gameplay Agent: Focuses on game mechanics and systems design, including player progression, combat systems, resource management, and balancing</li><li>🎨 Visuals Agent: Handles art direction and audio design, covering UI/UX, character/environment art style, sound effects, and music composition</li><li>⚙️ Tech Agent: Provides technical architecture and implementation guidance, including engine selection, optimization strategies, networking requirements, and development roadmap</li><li>🎯 Task Agent: Coordinates between all specialized agents and ensures cohesive integration of different game aspects</li></ul></section>
+<p class="langnote"><span aria-hidden="true">🌐</span> Le README ci-dessous est celui du dépôt
+   d'origine et n'a pas été traduit : les commandes et noms de paquets restent en anglais.</p>
+<article class="prose">
+<h1 id="ai-game-design-agent-team">AI Game Design Agent Team 🎮<a class="anchor" href="#ai-game-design-agent-team" aria-label="Lien vers cette section">#</a></h1>
+<h3 id="free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial<a class="anchor" href="#free-step-by-step-tutorial" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>👉 <a href="https://www.theunwindai.com/p/build-an-ai-game-design-agent-team" target="_blank" rel="noopener noreferrer">Click here to follow our complete step-by-step tutorial</a> and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.</strong></p>
+<p>The AI Game Design Agent Team is a collaborative game design system powered by <a href="https://github.com/ag2ai/ag2?tab=readme-ov-file" target="_blank" rel="noopener noreferrer">AG2</a>(formerly AutoGen)'s AI Agent framework. This app generates comprehensive game concepts through the coordination of multiple specialized AI agents, each focusing on different aspects of game design based on user inputs such as game type, target audience, art style, and technical requirements. This is built on AG2's new swarm feature run through initiate_chat() method.</p>
+<h2 id="features">Features<a class="anchor" href="#features" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>
+<p><strong>Specialized Game Design Agent Team</strong></p>
+<ul>
+<li>🎭 <strong>Story Agent</strong>: Specializes in narrative design and world-building, including character development, plot arcs, dialogue writing, and lore creation</li>
+<li>🎮 <strong>Gameplay Agent</strong>: Focuses on game mechanics and systems design, including player progression, combat systems, resource management, and balancing</li>
+<li>🎨 <strong>Visuals Agent</strong>: Handles art direction and audio design, covering UI/UX, character/environment art style, sound effects, and music composition</li>
+<li>⚙️ <strong>Tech Agent</strong>: Provides technical architecture and implementation guidance, including engine selection, optimization strategies, networking requirements, and development roadmap</li>
+<li>🎯 <strong>Task Agent</strong>: Coordinates between all specialized agents and ensures cohesive integration of different game aspects</li>
+</ul>
+</li>
+<li>
+<p><strong>Comprehensive Game Design Outputs</strong>:</p>
+<ul>
+<li>Detailed narrative and world-building elements</li>
+<li>Core gameplay mechanics and systems</li>
+<li>Visual and audio direction</li>
+<li>Technical specifications and requirements</li>
+<li>Development timeline and budget considerations</li>
+<li>Coherent game design from the team.</li>
+</ul>
+</li>
+<li>
+<p><strong>Customizable Input Parameters</strong>:</p>
+<ul>
+<li>Game type and target audience</li>
+<li>Art style and visual preferences</li>
+<li>Platform requirements</li>
+<li>Development constraints (time, budget)</li>
+<li>Core mechanics and gameplay features</li>
+</ul>
+</li>
+<li>
+<p><strong>Interactive Results</strong>:</p>
+<ul>
+<li>Quick show of game design ideas from each agent</li>
+<li>Detailed results are presented in expandable sections for easy navigation and reference</li>
+</ul>
+</li>
+</ul>
+<h2 id="how-to-run">How to Run<a class="anchor" href="#how-to-run" aria-label="Lien vers cette section">#</a></h2>
+<p>Follow these steps to set up and run the application:</p>
+<ol>
+<li>
+<p><strong>Clone the Repository</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Shubhamsaboo/awesome-llm-apps.git
+<span class="nb">cd</span><span class="w"> </span>advanced_ai_agents/multi_agent_apps/agent_teams/ai_game_design_agent_team
+</pre></div>
+</div></li>
+<li>
+<p><strong>Install Dependencies</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div></li>
+<li>
+<p><strong>Set Up OpenAI API Key</strong>:</p>
+<ul>
+<li>Obtain an OpenAI API key from <a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">OpenAI's platform</a></li>
+<li>You'll input this key in the app's sidebar when running</li>
+</ul>
+</li>
+<li>
+<p><strong>Run the Streamlit App</strong>:</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>game_design_agent_team.py
+</pre></div>
+</div></li>
+</ol>
+<h2 id="usage">Usage<a class="anchor" href="#usage" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>Enter your OpenAI API key in the sidebar</li>
+<li>Fill in the game details:
+<ul>
+<li>Background vibe and setting</li>
+<li>Game type and target audience</li>
+<li>Visual style preferences</li>
+<li>Technical requirements</li>
+<li>Development constraints</li>
+</ul>
+</li>
+<li>Click &quot;Generate Game Concept&quot; to receive comprehensive design documentation from all agents</li>
+<li>Review the outputs in the expandable sections for each aspect of game design</li>
+</ol>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de l&#x27;atelier<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers du projet, copiés depuis le dépôt d&#x27;origine. Lisibles ici, et téléchargeables un par un.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-game-design-agent-team-py"><summary class="codefile__head"><span class="codefile__name">game_design_agent_team.py</span><span class="codefile__size">13 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">autogen</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SwarmAgent</span><span class="p">,</span>
+    <span class="n">SwarmResult</span><span class="p">,</span>
+    <span class="n">initiate_swarm_chat</span><span class="p">,</span>
+    <span class="n">OpenAIWrapper</span><span class="p">,</span>
+    <span class="n">AFTER_WORK</span><span class="p">,</span>
+    <span class="n">UPDATE_SYSTEM_MESSAGE</span>
+<span class="p">)</span>
+
+<span class="c1"># Initialize session state</span>
+<span class="k">if</span> <span class="s1">&#39;output&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;story&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;gameplay&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;visuals&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;tech&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+
+<span class="c1"># Sidebar for API key input</span>
+<span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;API Key&quot;</span><span class="p">)</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Enter your OpenAI API Key&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add guidance in sidebar</span>
+<span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">✨ **Getting Started**</span>
+
+<span class="s2">Please provide inputs and features for your dream game! Consider:</span>
+<span class="s2">- The overall vibe and setting</span>
+<span class="s2">- Core gameplay elements</span>
+<span class="s2">- Target audience and platforms</span>
+<span class="s2">- Visual style preferences</span>
+<span class="s2">- Technical requirements</span>
+
+<span class="s2">The AI agents will collaborate to develop a comprehensive game concept based on your specifications.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Main app UI</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🎮 AI Game Design Agent Team&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add agent information below title</span>
+<span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">**Meet Your AI Game Design Team:**</span>
+
+<span class="s2">🎭 **Story Agent** - Crafts compelling narratives and rich worlds</span>
+
+<span class="s2">🎮 **Gameplay Agent** - Creates engaging mechanics and systems</span>
+
+<span class="s2">🎨 **Visuals Agent** - Shapes the artistic vision and style</span>
+
+<span class="s2">⚙️ **Tech Agent** - Provides technical direction and solutions</span>
+<span class="s2">                </span>
+<span class="s2">These agents collaborate to create a comprehensive game concept based on your inputs.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># User inputs</span>
+<span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Game Details&quot;</span><span class="p">)</span>
+<span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+    <span class="n">background_vibe</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Background Vibe&quot;</span><span class="p">,</span> <span class="s2">&quot;Epic fantasy with dragons&quot;</span><span class="p">)</span>
+    <span class="n">game_type</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&quot;Game Type&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;RPG&quot;</span><span class="p">,</span> <span class="s2">&quot;Action&quot;</span><span class="p">,</span> <span class="s2">&quot;Adventure&quot;</span><span class="p">,</span> <span class="s2">&quot;Puzzle&quot;</span><span class="p">,</span> <span class="s2">&quot;Strategy&quot;</span><span class="p">,</span> <span class="s2">&quot;Simulation&quot;</span><span class="p">,</span> <span class="s2">&quot;Platform&quot;</span><span class="p">,</span> <span class="s2">&quot;Horror&quot;</span><span class="p">])</span>
+    <span class="n">target_audience</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&quot;Target Audience&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Kids (7-12)&quot;</span><span class="p">,</span> <span class="s2">&quot;Teens (13-17)&quot;</span><span class="p">,</span> <span class="s2">&quot;Young Adults (18-25)&quot;</span><span class="p">,</span> <span class="s2">&quot;Adults (26+)&quot;</span><span class="p">,</span> <span class="s2">&quot;All Ages&quot;</span><span class="p">])</span>
+    <span class="n">player_perspective</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&quot;Player Perspective&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;First Person&quot;</span><span class="p">,</span> <span class="s2">&quot;Third Person&quot;</span><span class="p">,</span> <span class="s2">&quot;Top Down&quot;</span><span class="p">,</span> <span class="s2">&quot;Side View&quot;</span><span class="p">,</span> <span class="s2">&quot;Isometric&quot;</span><span class="p">])</span>
+    <span class="n">multiplayer</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&quot;Multiplayer Support&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Single Player Only&quot;</span><span class="p">,</span> <span class="s2">&quot;Local Co-op&quot;</span><span class="p">,</span> <span class="s2">&quot;Online Multiplayer&quot;</span><span class="p">,</span> <span class="s2">&quot;Both Local and Online&quot;</span><span class="p">])</span>
+
+<span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+    <span class="n">game_goal</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Game Goal&quot;</span><span class="p">,</span> <span class="s2">&quot;Save the kingdom from eternal winter&quot;</span><span class="p">)</span>
+    <span class="n">art_style</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&quot;Art Style&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Realistic&quot;</span><span class="p">,</span> <span class="s2">&quot;Cartoon&quot;</span><span class="p">,</span> <span class="s2">&quot;Pixel Art&quot;</span><span class="p">,</span> <span class="s2">&quot;Stylized&quot;</span><span class="p">,</span> <span class="s2">&quot;Low Poly&quot;</span><span class="p">,</span> <span class="s2">&quot;Anime&quot;</span><span class="p">,</span> <span class="s2">&quot;Hand-drawn&quot;</span><span class="p">])</span>
+    <span class="n">platform</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">multiselect</span><span class="p">(</span><span class="s2">&quot;Target Platforms&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;PC&quot;</span><span class="p">,</span> <span class="s2">&quot;Mobile&quot;</span><span class="p">,</span> <span class="s2">&quot;PlayStation&quot;</span><span class="p">,</span> <span class="s2">&quot;Xbox&quot;</span><span class="p">,</span> <span class="s2">&quot;Nintendo Switch&quot;</span><span class="p">,</span> <span class="s2">&quot;Web Browser&quot;</span><span class="p">])</span>
+    <span class="n">development_time</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Development Time (months)&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Budget (USD)&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+
+<span class="c1"># Additional details</span>
+<span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;Detailed Preferences&quot;</span><span class="p">)</span>
+<span class="n">col3</span><span class="p">,</span> <span class="n">col4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+    <span class="n">core_mechanics</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">multiselect</span><span class="p">(</span>
+        <span class="s2">&quot;Core Gameplay Mechanics&quot;</span><span class="p">,</span>
+        <span class="p">[</span><span class="s2">&quot;Combat&quot;</span><span class="p">,</span> <span class="s2">&quot;Exploration&quot;</span><span class="p">,</span> <span class="s2">&quot;Puzzle Solving&quot;</span><span class="p">,</span> <span class="s2">&quot;Resource Management&quot;</span><span class="p">,</span> <span class="s2">&quot;Base Building&quot;</span><span class="p">,</span> <span class="s2">&quot;Stealth&quot;</span><span class="p">,</span> <span class="s2">&quot;Racing&quot;</span><span class="p">,</span> <span class="s2">&quot;Crafting&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">mood</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">multiselect</span><span class="p">(</span>
+        <span class="s2">&quot;Game Mood/Atmosphere&quot;</span><span class="p">,</span>
+        <span class="p">[</span><span class="s2">&quot;Epic&quot;</span><span class="p">,</span> <span class="s2">&quot;Mysterious&quot;</span><span class="p">,</span> <span class="s2">&quot;Peaceful&quot;</span><span class="p">,</span> <span class="s2">&quot;Tense&quot;</span><span class="p">,</span> <span class="s2">&quot;Humorous&quot;</span><span class="p">,</span> <span class="s2">&quot;Dark&quot;</span><span class="p">,</span> <span class="s2">&quot;Whimsical&quot;</span><span class="p">,</span> <span class="s2">&quot;Scary&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+<span class="k">with</span> <span class="n">col4</span><span class="p">:</span>
+    <span class="n">inspiration</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span><span class="s2">&quot;Games for Inspiration (comma-separated)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">unique_features</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span><span class="s2">&quot;Unique Features or Requirements&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">depth</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&quot;Level of Detail in Response&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Low&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium&quot;</span><span class="p">,</span> <span class="s2">&quot;High&quot;</span><span class="p">])</span>
+
+<span class="c1"># Button to start the agent collaboration</span>
+<span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Generate Game Concept&quot;</span><span class="p">):</span>
+    <span class="c1"># Check if API key is provided</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Please enter your OpenAI API key.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s1">&#39;🤖 AI Agents are collaborating on your game concept...&#39;</span><span class="p">):</span>
+            <span class="c1"># Prepare the task based on user inputs</span>
+            <span class="n">task</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            Create a game concept with the following details:</span>
+<span class="s2">            - Background Vibe: </span><span class="si">{</span><span class="n">background_vibe</span><span class="si">}</span>
+<span class="s2">            - Game Type: </span><span class="si">{</span><span class="n">game_type</span><span class="si">}</span>
+<span class="s2">            - Game Goal: </span><span class="si">{</span><span class="n">game_goal</span><span class="si">}</span>
+<span class="s2">            - Target Audience: </span><span class="si">{</span><span class="n">target_audience</span><span class="si">}</span>
+<span class="s2">            - Player Perspective: </span><span class="si">{</span><span class="n">player_perspective</span><span class="si">}</span>
+<span class="s2">            - Multiplayer Support: </span><span class="si">{</span><span class="n">multiplayer</span><span class="si">}</span>
+<span class="s2">            - Art Style: </span><span class="si">{</span><span class="n">art_style</span><span class="si">}</span>
+<span class="s2">            - Target Platforms: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">platform</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">            - Development Time: </span><span class="si">{</span><span class="n">development_time</span><span class="si">}</span><span class="s2"> months</span>
+<span class="s2">            - Budget: $</span><span class="si">{</span><span class="n">cost</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span>
+<span class="s2">            - Core Mechanics: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">core_mechanics</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">            - Mood/Atmosphere: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mood</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">            - Inspiration: </span><span class="si">{</span><span class="n">inspiration</span><span class="si">}</span>
+<span class="s2">            - Unique Features: </span><span class="si">{</span><span class="n">unique_features</span><span class="si">}</span>
+<span class="s2">            - Detail Level: </span><span class="si">{</span><span class="n">depth</span><span class="si">}</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+
+            <span class="n">llm_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;config_list&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span><span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">api_key</span><span class="p">}]}</span>
+
+            <span class="c1"># initialize context variables</span>
+            <span class="n">context_variables</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;story&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;gameplay&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;visuals&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;tech&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="c1"># define functions to be called by the agents</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">update_story_overview</span><span class="p">(</span><span class="n">story_summary</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">context_variables</span><span class="p">:</span><span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwarmResult</span><span class="p">:</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Keep the summary as short as possible.&quot;&quot;&quot;</span>
+                <span class="n">context_variables</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">story_summary</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s1">&#39;Story overview: &#39;</span> <span class="o">+</span> <span class="n">story_summary</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">SwarmResult</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="s2">&quot;gameplay_agent&quot;</span><span class="p">,</span> <span class="n">context_variables</span><span class="o">=</span><span class="n">context_variables</span><span class="p">)</span>
+                
+            <span class="k">def</span><span class="w"> </span><span class="nf">update_gameplay_overview</span><span class="p">(</span><span class="n">gameplay_summary</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">context_variables</span><span class="p">:</span><span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwarmResult</span><span class="p">:</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Keep the summary as short as possible.&quot;&quot;&quot;</span>
+                <span class="n">context_variables</span><span class="p">[</span><span class="s2">&quot;gameplay&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gameplay_summary</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s1">&#39;Gameplay overview: &#39;</span> <span class="o">+</span> <span class="n">gameplay_summary</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">SwarmResult</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="s2">&quot;visuals_agent&quot;</span><span class="p">,</span> <span class="n">context_variables</span><span class="o">=</span><span class="n">context_variables</span><span class="p">)</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">update_visuals_overview</span><span class="p">(</span><span class="n">visuals_summary</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">context_variables</span><span class="p">:</span><span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwarmResult</span><span class="p">:</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Keep the summary as short as possible.&quot;&quot;&quot;</span>
+                <span class="n">context_variables</span><span class="p">[</span><span class="s2">&quot;visuals&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">visuals_summary</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s1">&#39;Visuals overview: &#39;</span> <span class="o">+</span> <span class="n">visuals_summary</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">SwarmResult</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="s2">&quot;tech_agent&quot;</span><span class="p">,</span> <span class="n">context_variables</span><span class="o">=</span><span class="n">context_variables</span><span class="p">)</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">update_tech_overview</span><span class="p">(</span><span class="n">tech_summary</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">context_variables</span><span class="p">:</span><span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwarmResult</span><span class="p">:</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Keep the summary as short as possible.&quot;&quot;&quot;</span>
+                <span class="n">context_variables</span><span class="p">[</span><span class="s2">&quot;tech&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tech_summary</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s1">&#39;Tech overview: &#39;</span> <span class="o">+</span> <span class="n">tech_summary</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">SwarmResult</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="s2">&quot;story_agent&quot;</span><span class="p">,</span> <span class="n">context_variables</span><span class="o">=</span><span class="n">context_variables</span><span class="p">)</span>
+
+            <span class="n">system_messages</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;story_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            You are an experienced game story designer specializing in narrative design and world-building. Your task is to:</span>
+<span class="s2">            1. Create a compelling narrative that aligns with the specified game type and target audience.</span>
+<span class="s2">            2. Design memorable characters with clear motivations and character arcs.</span>
+<span class="s2">            3. Develop the game&#39;s world, including its history, culture, and key locations.</span>
+<span class="s2">            4. Plan story progression and major plot points.</span>
+<span class="s2">            5. Integrate the narrative with the specified mood/atmosphere.</span>
+<span class="s2">            6. Consider how the story supports the core gameplay mechanics.</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;gameplay_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            You are a senior game mechanics designer with expertise in player engagement and systems design. Your task is to:</span>
+<span class="s2">            1. Design core gameplay loops that match the specified game type and mechanics.</span>
+<span class="s2">            2. Create progression systems (character development, skills, abilities).</span>
+<span class="s2">            3. Define player interactions and control schemes for the chosen perspective.</span>
+<span class="s2">            4. Balance gameplay elements for the target audience.</span>
+<span class="s2">            5. Design multiplayer interactions if applicable.</span>
+<span class="s2">            6. Specify game modes and difficulty settings.</span>
+<span class="s2">            7. Consider the budget and development time constraints.</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;visuals_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            You are a creative art director with expertise in game visual and audio design. Your task is to:</span>
+<span class="s2">            1. Define the visual style guide matching the specified art style.</span>
+<span class="s2">            2. Design character and environment aesthetics.</span>
+<span class="s2">            3. Plan visual effects and animations.</span>
+<span class="s2">            4. Create the audio direction including music style, sound effects, and ambient sound.</span>
+<span class="s2">            5. Consider technical constraints of chosen platforms.</span>
+<span class="s2">            6. Align visual elements with the game&#39;s mood/atmosphere.</span>
+<span class="s2">            7. Work within the specified budget constraints.</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;tech_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            You are a technical director with extensive game development experience. Your task is to:</span>
+<span class="s2">            1. Recommend appropriate game engine and development tools.</span>
+<span class="s2">            2. Define technical requirements for all target platforms.</span>
+<span class="s2">            3. Plan the development pipeline and asset workflow.</span>
+<span class="s2">            4. Identify potential technical challenges and solutions.</span>
+<span class="s2">            5. Estimate resource requirements within the budget.</span>
+<span class="s2">            6. Consider scalability and performance optimization.</span>
+<span class="s2">            7. Plan for multiplayer infrastructure if applicable.</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+            <span class="p">}</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">update_system_message_func</span><span class="p">(</span><span class="n">agent</span><span class="p">:</span> <span class="n">SwarmAgent</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+                <span class="n">system_prompt</span> <span class="o">=</span> <span class="n">system_messages</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+                <span class="n">current_gen</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">_context_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">current_gen</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">system_prompt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Call the update function provided to first provide a 2-3 sentence summary of your ideas on </span><span class="si">{</span><span class="n">current_gen</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> based on the context provided.&quot;</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">llm_config</span><span class="p">[</span><span class="s1">&#39;tool_choice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span><span class="p">,</span> <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;update_</span><span class="si">{</span><span class="n">current_gen</span><span class="si">}</span><span class="s2">_overview&quot;</span><span class="p">}}</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIWrapper</span><span class="p">(</span><span class="o">**</span><span class="n">agent</span><span class="o">.</span><span class="n">llm_config</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># remove the tools to avoid the agent from using it and reduce cost</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">llm_config</span><span class="p">[</span><span class="s2">&quot;tools&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">llm_config</span><span class="p">[</span><span class="s1">&#39;tool_choice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAIWrapper</span><span class="p">(</span><span class="o">**</span><span class="n">agent</span><span class="o">.</span><span class="n">llm_config</span><span class="p">)</span>
+                    <span class="c1"># the agent has given a summary, now it should generate a detailed response</span>
+                    <span class="n">system_prompt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Your task</span><span class="se">\n</span><span class="s2">You task is write the </span><span class="si">{</span><span class="n">current_gen</span><span class="si">}</span><span class="s2"> part of the report. Do not include any other parts. Do not use XML tags.</span><span class="se">\n</span><span class="s2">Start your response with: &#39;## </span><span class="si">{</span><span class="n">current_gen</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> Design&#39;.&quot;</span>    
+                    
+                    <span class="c1"># Remove all messages except the first one with less cost</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">_oai_messages</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">_oai_messages</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">_oai_messages</span><span class="p">[</span><span class="n">k</span><span class="p">][:</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="n">system_prompt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">Below are some context for you to refer to:&quot;</span>
+                <span class="c1"># Add context variables to the prompt</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">_context_variables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">system_prompt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">k</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> Summary:</span><span class="se">\n</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="k">return</span> <span class="n">system_prompt</span>
+            
+            <span class="n">state_update</span> <span class="o">=</span> <span class="n">UPDATE_SYSTEM_MESSAGE</span><span class="p">(</span><span class="n">update_system_message_func</span><span class="p">)</span>
+
+            <span class="c1"># Define agents</span>
+            <span class="n">story_agent</span> <span class="o">=</span> <span class="n">SwarmAgent</span><span class="p">(</span>
+                <span class="s2">&quot;story_agent&quot;</span><span class="p">,</span> 
+                <span class="n">llm_config</span><span class="o">=</span><span class="n">llm_config</span><span class="p">,</span>
+                <span class="n">functions</span><span class="o">=</span><span class="n">update_story_overview</span><span class="p">,</span>
+                <span class="n">update_agent_state_before_reply</span><span class="o">=</span><span class="p">[</span><span class="n">state_update</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">gameplay_agent</span> <span class="o">=</span> <span class="n">SwarmAgent</span><span class="p">(</span>
+                <span class="s2">&quot;gameplay_agent&quot;</span><span class="p">,</span>
+                <span class="n">llm_config</span><span class="o">=</span> <span class="n">llm_config</span><span class="p">,</span>
+                <span class="n">functions</span><span class="o">=</span><span class="n">update_gameplay_overview</span><span class="p">,</span>
+                <span class="n">update_agent_state_before_reply</span><span class="o">=</span><span class="p">[</span><span class="n">state_update</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">visuals_agent</span> <span class="o">=</span> <span class="n">SwarmAgent</span><span class="p">(</span>
+                <span class="s2">&quot;visuals_agent&quot;</span><span class="p">,</span>
+                <span class="n">llm_config</span><span class="o">=</span><span class="n">llm_config</span><span class="p">,</span>
+                <span class="n">functions</span><span class="o">=</span><span class="n">update_visuals_overview</span><span class="p">,</span>
+                <span class="n">update_agent_state_before_reply</span><span class="o">=</span><span class="p">[</span><span class="n">state_update</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">tech_agent</span> <span class="o">=</span> <span class="n">SwarmAgent</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tech_agent&quot;</span><span class="p">,</span>
+                <span class="n">llm_config</span><span class="o">=</span><span class="n">llm_config</span><span class="p">,</span>
+                <span class="n">functions</span><span class="o">=</span><span class="n">update_tech_overview</span><span class="p">,</span>
+                <span class="n">update_agent_state_before_reply</span><span class="o">=</span><span class="p">[</span><span class="n">state_update</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">story_agent</span><span class="o">.</span><span class="n">register_hand_off</span><span class="p">(</span><span class="n">AFTER_WORK</span><span class="p">(</span><span class="n">gameplay_agent</span><span class="p">))</span>
+            <span class="n">gameplay_agent</span><span class="o">.</span><span class="n">register_hand_off</span><span class="p">(</span><span class="n">AFTER_WORK</span><span class="p">(</span><span class="n">visuals_agent</span><span class="p">))</span>
+            <span class="n">visuals_agent</span><span class="o">.</span><span class="n">register_hand_off</span><span class="p">(</span><span class="n">AFTER_WORK</span><span class="p">(</span><span class="n">tech_agent</span><span class="p">))</span>
+            <span class="n">tech_agent</span><span class="o">.</span><span class="n">register_hand_off</span><span class="p">(</span><span class="n">AFTER_WORK</span><span class="p">(</span><span class="n">story_agent</span><span class="p">))</span>
+
+            <span class="n">result</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">initiate_swarm_chat</span><span class="p">(</span>
+                <span class="n">initial_agent</span><span class="o">=</span><span class="n">story_agent</span><span class="p">,</span>
+                <span class="n">agents</span><span class="o">=</span><span class="p">[</span><span class="n">story_agent</span><span class="p">,</span> <span class="n">gameplay_agent</span><span class="p">,</span> <span class="n">visuals_agent</span><span class="p">,</span> <span class="n">tech_agent</span><span class="p">],</span>
+                <span class="n">user_agent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">messages</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+                <span class="n">max_rounds</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Update session state with the individual responses</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;story&#39;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">chat_history</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">][</span><span class="s1">&#39;content&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;gameplay&#39;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">chat_history</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">][</span><span class="s1">&#39;content&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;visuals&#39;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">chat_history</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="s1">&#39;content&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;tech&#39;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">chat_history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;content&#39;</span><span class="p">]</span>
+            <span class="p">}</span>
+
+        <span class="c1"># Display success message after completion</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s1">&#39;✨ Game concept generated successfully!&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Display the individual outputs in expanders</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;Story Design&quot;</span><span class="p">):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;story&#39;</span><span class="p">])</span>
+
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;Gameplay Mechanics&quot;</span><span class="p">):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;gameplay&#39;</span><span class="p">])</span>
+
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;Visual and Audio Design&quot;</span><span class="p">):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;visuals&#39;</span><span class="p">])</span>
+
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;Technical Recommendations&quot;</span><span class="p">):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;tech&#39;</span><span class="p">])</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-game-design-agent-team/game_design_agent_team.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-requirements-txt"><summary class="codefile__head"><span class="codefile__name">requirements.txt</span><span class="codefile__size">25 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>streamlit==1.41.1
+autogen
+</pre></div>
+</div><p class="codefile__actions"><a href="../../../assets/code/ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-game-design-agent-team/requirements.txt" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li><li><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html">12 · Concevoir l&#x27;UX des applications d&#x27;IA</a></li></ul></section>
+<section class="done" data-lesson-toggle="atelier:advanced-ai-agents-multi-agent-apps-agent-teams/ai-game-design-agent-team">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai fait tourner cet atelier</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les ateliers"><a class="prevnext__link prevnext__prev" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-finance-agent-team/index.html"><span class="prevnext__dir">← Atelier précédent</span><span class="prevnext__title">Équipe d&#x27;analyse financière</span></a><a class="prevnext__link prevnext__next" href="../../../ateliers/advanced-ai-agents-multi-agent-apps-agent-teams/ai-legal-agent-team/index.html"><span class="prevnext__dir">Atelier suivant →</span><span class="prevnext__title">Équipe juridique</span></a></nav>
+<p class="sourcelink">Source :
+  <a href="https://github.com/Shubhamsaboo/awesome-llm-apps/tree/main/advanced_ai_agents/multi_agent_apps/agent_teams/ai_game_design_agent_team" target="_blank" rel="noopener noreferrer">
+    advanced_ai_agents/multi_agent_apps/agent_teams/ai_game_design_agent_team</a> dans awesome-llm-apps (Apache-2.0).
+  Seuls les chemins d'images et les liens internes ont été réécrits.</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h3"><a href="#free-step-by-step-tutorial">🎓 FREE Step-by-Step Tutorial</a></li><li class="toc__item toc__item--h2"><a href="#features">Features</a></li><li class="toc__item toc__item--h2"><a href="#how-to-run">How to Run</a></li><li class="toc__item toc__item--h2"><a href="#usage">Usage</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de l&#x27;atelier</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>
