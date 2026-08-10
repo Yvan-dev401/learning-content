@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 · Explorer et comparer différents LLM — IA Générative</title>
+<meta name="description" content="Les familles de modèles, leurs différences, et comment choisir celui qui correspond à votre cas d&#x27;usage.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item is-active" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a> <span aria-hidden="true">›</span>
+  <span>Leçon 02</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Leçon 02 · Comprendre l&#x27;IA générative · ≈ 35 min</p>
+  <p class="pagehead__summary">Les familles de modèles, leurs différences, et comment choisir celui qui correspond à votre cas d&#x27;usage.</p>
+</header>
+<article class="prose">
+<h1 id="explorer-et-comparer-differents-llm">Explorer et comparer différents LLM<a class="anchor" href="#explorer-et-comparer-differents-llm" aria-label="Lien vers cette section">#</a></h1>
+<p><a href="https://youtu.be/KIRUeDKscfI?si=8BHX1zvwzQBn-PlK" target="_blank" rel="noopener noreferrer"><img src="../../assets/images/02-lesson-banner.webp" alt="Explorer et comparer différents LLM" loading="lazy" decoding="async" /></a></p>
+<blockquote>
+<p><em>Cliquez sur l'image ci-dessus pour visionner la vidéo de cette leçon</em></p>
+</blockquote>
+<p>Dans la leçon précédente, nous avons vu comment l'IA générative transforme le paysage technologique, comment fonctionnent les modèles de langage étendus (LLM) et comment une entreprise - comme notre startup - peut les appliquer à ses cas d'utilisation et se développer ! Dans ce chapitre, nous allons comparer et contraster différents types de modèles de langage étendus (LLM) pour comprendre leurs avantages et inconvénients.</p>
+<p>La prochaine étape dans le parcours de notre startup est d'explorer le paysage actuel des LLM et de comprendre lesquels sont adaptés à notre cas d'utilisation.</p>
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction" aria-label="Lien vers cette section">#</a></h2>
+<p>Cette leçon couvrira :</p>
+<ul>
+<li>Les différents types de LLM dans le paysage actuel.</li>
+<li>Tester, itérer et comparer différents modèles pour votre cas d'utilisation dans Azure.</li>
+<li>Comment déployer un LLM.</li>
+</ul>
+<h2 id="objectifs-dapprentissage">Objectifs d'apprentissage<a class="anchor" href="#objectifs-dapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, vous serez capable de :</p>
+<ul>
+<li>Choisir le bon modèle pour votre cas d'utilisation.</li>
+<li>Comprendre comment tester, itérer et améliorer les performances de votre modèle.</li>
+<li>Savoir comment les entreprises déploient des modèles.</li>
+</ul>
+<h2 id="comprendre-les-differents-types-de-llm">Comprendre les différents types de LLM<a class="anchor" href="#comprendre-les-differents-types-de-llm" aria-label="Lien vers cette section">#</a></h2>
+<p>Les LLM peuvent être classés de différentes manières en fonction de leur architecture, de leurs données d'entraînement et de leur cas d'utilisation. Comprendre ces différences aidera notre startup à choisir le bon modèle pour le scénario et à comprendre comment tester, itérer et améliorer les performances.</p>
+<p>Il existe de nombreux types de modèles LLM, et votre choix dépend de ce que vous souhaitez en faire, de vos données, de votre budget et d'autres facteurs.</p>
+<p>Selon que vous souhaitez utiliser les modèles pour la génération de texte, d'audio, de vidéo, d'images, etc., vous pourriez opter pour un type de modèle différent.</p>
+<ul>
+<li>
+<p><strong>Reconnaissance audio et vocale</strong>. Pour cet usage, les modèles de type Whisper sont un excellent choix car ils sont polyvalents et conçus pour la reconnaissance vocale. Ils sont entraînés sur des données audio variées et peuvent effectuer une reconnaissance vocale multilingue. En savoir plus sur les <a href="https://platform.openai.com/docs/models/whisper" target="_blank" rel="noopener noreferrer">modèles de type Whisper ici</a>.</p>
+</li>
+<li>
+<p><strong>Génération d'images</strong>. Pour la génération d'images, DALL-E et Midjourney sont deux choix très connus. DALL-E est proposé par Azure OpenAI. <a href="https://platform.openai.com/docs/models/dall-e" target="_blank" rel="noopener noreferrer">En savoir plus sur DALL-E ici</a> et également dans le chapitre 9 de ce programme.</p>
+</li>
+<li>
+<p><strong>Génération de texte</strong>. La plupart des modèles sont entraînés pour la génération de texte et vous avez un large choix allant de GPT-3.5 à GPT-4. Ils ont des coûts différents, GPT-4 étant le plus cher. Il est intéressant de consulter le <a href="https://oai.azure.com/portal/playground" target="_blank" rel="noopener noreferrer">Azure OpenAI playground</a> pour évaluer quels modèles conviennent le mieux à vos besoins en termes de capacités et de coût.</p>
+</li>
+<li>
+<p><strong>Multimodalité</strong>. Si vous cherchez à gérer plusieurs types de données en entrée et en sortie, vous pourriez envisager des modèles comme <a href="https://learn.microsoft.com/azure/ai-services/openai/concepts/models#gpt-4-and-gpt-4-turbo-models" target="_blank" rel="noopener noreferrer">gpt-4 turbo avec vision ou gpt-4o</a> - les dernières versions des modèles OpenAI - qui sont capables de combiner le traitement du langage naturel avec la compréhension visuelle, permettant des interactions via des interfaces multimodales.</p>
+</li>
+</ul>
+<p>Choisir un modèle signifie obtenir certaines capacités de base, qui peuvent cependant ne pas être suffisantes. Souvent, vous disposez de données spécifiques à votre entreprise que vous devez transmettre au LLM d'une manière ou d'une autre. Il existe plusieurs approches pour cela, que nous aborderons dans les sections suivantes.</p>
+<h3 id="modeles-de-base-versus-llm">Modèles de base versus LLM<a class="anchor" href="#modeles-de-base-versus-llm" aria-label="Lien vers cette section">#</a></h3>
+<p>Le terme &quot;modèle de base&quot; a été <a href="https://arxiv.org/abs/2108.07258" target="_blank" rel="noopener noreferrer">inventé par des chercheurs de Stanford</a> et défini comme un modèle d'IA répondant à certains critères, tels que :</p>
+<ul>
+<li><strong>Ils sont entraînés en utilisant l'apprentissage non supervisé ou l'apprentissage auto-supervisé</strong>, ce qui signifie qu'ils sont entraînés sur des données multimodales non étiquetées et qu'ils ne nécessitent pas d'annotation ou de labellisation humaine des données pour leur processus d'entraînement.</li>
+<li><strong>Ce sont des modèles très volumineux</strong>, basés sur des réseaux neuronaux très profonds entraînés sur des milliards de paramètres.</li>
+<li><strong>Ils sont généralement destinés à servir de &quot;fondation&quot; pour d'autres modèles</strong>, ce qui signifie qu'ils peuvent être utilisés comme point de départ pour construire d'autres modèles par le biais de l'affinage.</li>
+</ul>
+<p><img src="../../assets/images/FoundationModel.webp" alt="Modèles de base versus LLM" loading="lazy" decoding="async" /></p>
+<p>Source de l'image : <a href="https://thebabar.medium.com/essential-guide-to-foundation-models-and-large-language-models-27dab58f7404" target="_blank" rel="noopener noreferrer">Essential Guide to Foundation Models and Large Language Models | par Babar M Bhatti | Medium
+</a></p>
+<p>Pour clarifier davantage cette distinction, prenons ChatGPT comme exemple. Pour construire la première version de ChatGPT, un modèle appelé GPT-3.5 a servi de modèle de base. Cela signifie qu'OpenAI a utilisé des données spécifiques aux conversations pour créer une version ajustée de GPT-3.5, spécialisée dans les scénarios conversationnels, tels que les chatbots.</p>
+<p><img src="../../assets/images/Multimodal.webp" alt="Modèle de base" loading="lazy" decoding="async" /></p>
+<p>Source de l'image : <a href="https://arxiv.org/pdf/2108.07258.pdf" target="_blank" rel="noopener noreferrer">2108.07258.pdf (arxiv.org)</a></p>
+<h3 id="modeles-open-source-versus-proprietaires">Modèles open source versus propriétaires<a class="anchor" href="#modeles-open-source-versus-proprietaires" aria-label="Lien vers cette section">#</a></h3>
+<p>Une autre façon de catégoriser les LLM est de savoir s'ils sont open source ou propriétaires.</p>
+<p>Les modèles open source sont des modèles mis à disposition du public et peuvent être utilisés par tout le monde. Ils sont souvent proposés par l'entreprise qui les a créés ou par la communauté de recherche. Ces modèles peuvent être inspectés, modifiés et personnalisés pour divers cas d'utilisation des LLM. Cependant, ils ne sont pas toujours optimisés pour une utilisation en production et peuvent ne pas être aussi performants que les modèles propriétaires. De plus, le financement des modèles open source peut être limité, et ils peuvent ne pas être maintenus à long terme ou mis à jour avec les dernières recherches. Des exemples de modèles open source populaires incluent <a href="https://crfm.stanford.edu/2023/03/13/alpaca.html" target="_blank" rel="noopener noreferrer">Alpaca</a>, <a href="https://huggingface.co/bigscience/bloom" target="_blank" rel="noopener noreferrer">Bloom</a> et <a href="https://llama.meta.com" target="_blank" rel="noopener noreferrer">LLaMA</a>.</p>
+<p>Les modèles propriétaires sont des modèles détenus par une entreprise et ne sont pas mis à disposition du public. Ces modèles sont souvent optimisés pour une utilisation en production. Cependant, ils ne peuvent pas être inspectés, modifiés ou personnalisés pour différents cas d'utilisation. De plus, ils ne sont pas toujours disponibles gratuitement et peuvent nécessiter un abonnement ou un paiement pour être utilisés. Les utilisateurs n'ont pas non plus de contrôle sur les données utilisées pour entraîner le modèle, ce qui signifie qu'ils doivent faire confiance au propriétaire du modèle pour garantir l'engagement envers la confidentialité des données et l'utilisation responsable de l'IA. Des exemples de modèles propriétaires populaires incluent <a href="https://platform.openai.com/docs/models/overview" target="_blank" rel="noopener noreferrer">OpenAI models</a>, <a href="https://sapling.ai/llm/bard" target="_blank" rel="noopener noreferrer">Google Bard</a> ou <a href="https://www.anthropic.com/index/claude-2" target="_blank" rel="noopener noreferrer">Claude 2</a>.</p>
+<h3 id="embedding-versus-generation-dimages-versus-generation-de-texte-et-de-code">Embedding versus génération d'images versus génération de texte et de code<a class="anchor" href="#embedding-versus-generation-dimages-versus-generation-de-texte-et-de-code" aria-label="Lien vers cette section">#</a></h3>
+<p>Les LLM peuvent également être catégorisés en fonction du type de sortie qu'ils génèrent.</p>
+<p>Les embeddings sont un ensemble de modèles capables de convertir du texte en une forme numérique, appelée embedding, qui est une représentation numérique du texte d'entrée. Les embeddings facilitent la compréhension des relations entre les mots ou les phrases par les machines et peuvent être utilisés comme entrées par d'autres modèles, tels que les modèles de classification ou de regroupement qui ont de meilleures performances sur les données numériques. Les modèles d'embedding sont souvent utilisés pour l'apprentissage par transfert, où un modèle est construit pour une tâche de substitution pour laquelle il existe une abondance de données, puis les poids du modèle (embeddings) sont réutilisés pour d'autres tâches en aval. Un exemple de cette catégorie est <a href="https://platform.openai.com/docs/models/embeddings" target="_blank" rel="noopener noreferrer">OpenAI embeddings</a>.</p>
+<p><img src="../../assets/images/Embedding.webp" alt="Embedding" loading="lazy" decoding="async" /></p>
+<p>Les modèles de génération d'images sont des modèles qui génèrent des images. Ces modèles sont souvent utilisés pour l'édition d'images, la synthèse d'images et la traduction d'images. Les modèles de génération d'images sont souvent entraînés sur de grands ensembles de données d'images, tels que <a href="https://laion.ai/blog/laion-5b/" target="_blank" rel="noopener noreferrer">LAION-5B</a>, et peuvent être utilisés pour générer de nouvelles images ou pour éditer des images existantes avec des techniques de retouche, de super-résolution et de colorisation. Des exemples incluent <a href="https://openai.com/dall-e-3" target="_blank" rel="noopener noreferrer">DALL-E-3</a> et <a href="https://github.com/Stability-AI/StableDiffusion" target="_blank" rel="noopener noreferrer">Stable Diffusion models</a>.</p>
+<p><img src="../../assets/images/Image.webp" alt="Génération d'images" loading="lazy" decoding="async" /></p>
+<p>Les modèles de génération de texte et de code sont des modèles qui génèrent du texte ou du code. Ces modèles sont souvent utilisés pour la synthèse de texte, la traduction et la réponse aux questions. Les modèles de génération de texte sont souvent entraînés sur de grands ensembles de données de texte, tels que <a href="https://www.cv-foundation.org/openaccess/content_iccv_2015/html/Zhu_Aligning_Books_and_ICCV_2015_paper.html" target="_blank" rel="noopener noreferrer">BookCorpus</a>, et peuvent être utilisés pour générer du nouveau texte ou pour répondre à des questions. Les modèles de génération de code, comme <a href="https://huggingface.co/codeparrot" target="_blank" rel="noopener noreferrer">CodeParrot</a>, sont souvent entraînés sur de grands ensembles de données de code, tels que GitHub, et peuvent être utilisés pour générer du nouveau code ou pour corriger des bugs dans du code existant.</p>
+<p><img src="../../assets/images/Text.webp" alt="Génération de texte et de code" loading="lazy" decoding="async" /></p>
+<h3 id="encodeur-decodeur-versus-decodeur-uniquement">Encodeur-Décodeur versus Décodeur uniquement<a class="anchor" href="#encodeur-decodeur-versus-decodeur-uniquement" aria-label="Lien vers cette section">#</a></h3>
+<p>Pour parler des différents types d'architectures des LLM, utilisons une analogie.</p>
+<p>Imaginez que votre responsable vous confie la tâche de rédiger un quiz pour les étudiants. Vous avez deux collègues : l'un s'occupe de créer le contenu et l'autre de le réviser.</p>
+<p>Le créateur de contenu est comme un modèle Décodeur uniquement, il peut regarder le sujet et voir ce que vous avez déjà écrit, puis rédiger un cours en fonction de cela. Il est très doué pour rédiger un contenu engageant et informatif, mais il n'est pas très bon pour comprendre le sujet et les objectifs d'apprentissage. Quelques exemples de modèles Décodeur uniquement sont les modèles de la famille GPT, comme GPT-3.</p>
+<p>Le réviseur est comme un modèle Encodeur uniquement, il examine le cours écrit et les réponses, remarque les relations entre eux et comprend le contexte, mais il n'est pas bon pour générer du contenu. Un exemple de modèle Encodeur uniquement serait BERT.</p>
+<p>Imaginez que nous puissions également avoir quelqu'un capable de créer et de réviser le quiz, ce serait un modèle Encodeur-Décodeur. Quelques exemples seraient BART et T5.</p>
+<h3 id="service-versus-modele">Service versus Modèle<a class="anchor" href="#service-versus-modele" aria-label="Lien vers cette section">#</a></h3>
+<p>Parlons maintenant de la différence entre un service et un modèle. Un service est un produit proposé par un fournisseur de services cloud, et est souvent une combinaison de modèles, de données et d'autres composants. Un modèle est le composant central d'un service, et est souvent un modèle de base, tel qu'un LLM.</p>
+<p>Les services sont souvent optimisés pour une utilisation en production et sont souvent plus faciles à utiliser que les modèles, via une interface utilisateur graphique. Cependant, les services ne sont pas toujours disponibles gratuitement et peuvent nécessiter un abonnement ou un paiement pour être utilisés, en échange de l'utilisation des équipements et des ressources du propriétaire du service, optimisant ainsi les dépenses et facilitant la mise à l'échelle. Un exemple de service est <a href="https://learn.microsoft.com/azure/ai-services/openai/overview" target="_blank" rel="noopener noreferrer">Azure OpenAI Service</a>, qui propose un plan tarifaire à la consommation, ce qui signifie que les utilisateurs sont facturés proportionnellement à leur utilisation du service. De plus, Azure OpenAI Service offre une sécurité de niveau entreprise et un cadre d'IA responsable en plus des capacités des modèles.</p>
+<p>Les modèles ne sont que le réseau neuronal, avec les paramètres, les poids, et autres. Permettre aux entreprises de les exécuter localement nécessiterait cependant d'acheter des équipements, de construire une structure pour évoluer et d'acheter une licence ou d'utiliser un modèle open source. Un modèle comme LLaMA est disponible pour être utilisé, nécessitant une puissance de calcul pour exécuter le modèle.</p>
+<h2 id="comment-tester-et-iterer-avec-differents-modeles-pour-comprendre-les-performances-sur-azure">Comment tester et itérer avec différents modèles pour comprendre les performances sur Azure<a class="anchor" href="#comment-tester-et-iterer-avec-differents-modeles-pour-comprendre-les-performances-sur-azure" aria-label="Lien vers cette section">#</a></h2>
+<p>Une fois que notre équipe a exploré le paysage actuel des LLM et identifié quelques bons candidats pour leurs scénarios, l'étape suivante consiste à les tester sur leurs données et sur leur charge de travail. C'est un processus itératif, réalisé par des expériences et des mesures.
+La plupart des modèles mentionnés dans les paragraphes précédents (modèles OpenAI, modèles open source comme Llama2 et transformers de Hugging Face) sont disponibles dans le <a href="https://learn.microsoft.com/azure/ai-studio/how-to/model-catalog-overview" target="_blank" rel="noopener noreferrer">Catalogue de Modèles</a> dans <a href="https://ai.azure.com/" target="_blank" rel="noopener noreferrer">Azure AI Studio</a>.</p>
+<p><a href="https://learn.microsoft.com/azure/ai-studio/what-is-ai-studio" target="_blank" rel="noopener noreferrer">Azure AI Studio</a> est une plateforme cloud conçue pour les développeurs afin de créer des applications d'IA générative et de gérer tout le cycle de développement - de l'expérimentation à l'évaluation - en combinant tous les services Azure AI dans un hub unique avec une interface utilisateur pratique. Le Catalogue de Modèles dans Azure AI Studio permet à l'utilisateur de :</p>
+<ul>
+<li>Trouver le modèle de base d'intérêt dans le catalogue - qu'il soit propriétaire ou open source, en filtrant par tâche, licence ou nom. Pour améliorer la recherche, les modèles sont organisés en collections, comme la collection Azure OpenAI, la collection Hugging Face, et plus encore.</li>
+</ul>
+<p><img src="../../assets/images/AzureAIStudioModelCatalog.webp" alt="Catalogue de modèles" loading="lazy" decoding="async" /></p>
+<ul>
+<li>Examiner la fiche du modèle, incluant une description détaillée de l'utilisation prévue et des données d'entraînement, des exemples de code et des résultats d'évaluation dans la bibliothèque d'évaluations internes.</li>
+</ul>
+<p><img src="../../assets/images/ModelCard.webp" alt="Fiche du modèle" loading="lazy" decoding="async" /></p>
+<ul>
+<li>Comparer les benchmarks entre les modèles et les ensembles de données disponibles dans l'industrie pour évaluer lequel répond le mieux au scénario commercial, via le volet <a href="https://learn.microsoft.com/azure/ai-studio/how-to/model-benchmarks" target="_blank" rel="noopener noreferrer">Benchmarks de Modèles</a>.</li>
+</ul>
+<p><img src="../../assets/images/ModelBenchmarks.webp" alt="Benchmarks de modèles" loading="lazy" decoding="async" /></p>
+<ul>
+<li>Affiner le modèle avec des données d'entraînement personnalisées pour améliorer les performances du modèle dans une charge de travail spécifique, en utilisant les capacités d'expérimentation et de suivi d'Azure AI Studio.</li>
+</ul>
+<p><img src="../../assets/images/FineTuning.webp" alt="Affinage du modèle" loading="lazy" decoding="async" /></p>
+<ul>
+<li>Déployer le modèle pré-entraîné original ou la version affinée pour une inférence en temps réel à distance - calcul géré - ou un point de terminaison API sans serveur - <a href="https://learn.microsoft.com/azure/ai-studio/how-to/model-catalog-overview#model-deployment-managed-compute-and-serverless-api-pay-as-you-go" target="_blank" rel="noopener noreferrer">paiement à l'utilisation</a> - pour permettre aux applications de l'utiliser.</li>
+</ul>
+<p><img src="../../assets/images/ModelDeploy.webp" alt="Déploiement du modèle" loading="lazy" decoding="async" /></p>
+<blockquote>
+<p>[!NOTE]
+Tous les modèles du catalogue ne sont pas actuellement disponibles pour l'affinage et/ou le déploiement en paiement à l'utilisation. Consultez la fiche du modèle pour les détails sur les capacités et les limitations du modèle.</p>
+</blockquote>
+<h2 id="ameliorer-les-resultats-des-llm">Améliorer les résultats des LLM<a class="anchor" href="#ameliorer-les-resultats-des-llm" aria-label="Lien vers cette section">#</a></h2>
+<p>Nous avons exploré avec notre équipe de startup différents types de LLM et une plateforme cloud (Azure Machine Learning) nous permettant de comparer différents modèles, de les évaluer sur des données de test, d'améliorer leurs performances et de les déployer sur des points de terminaison d'inférence.</p>
+<p>Mais quand faut-il envisager d'affiner un modèle plutôt que d'utiliser un modèle pré-entraîné ? Existe-t-il d'autres approches pour améliorer les performances du modèle sur des charges de travail spécifiques ?</p>
+<p>Il existe plusieurs approches qu'une entreprise peut utiliser pour obtenir les résultats souhaités d'un LLM. Vous pouvez choisir différents types de modèles avec différents degrés d'entraînement lors du déploiement d'un LLM en production, avec divers niveaux de complexité, de coût et de qualité. Voici quelques approches différentes :</p>
+<ul>
+<li>
+<p><strong>Ingénierie des prompts avec contexte</strong>. L'idée est de fournir suffisamment de contexte lors de la requête pour garantir d'obtenir les réponses souhaitées.</p>
+</li>
+<li>
+<p><strong>Génération augmentée par récupération, RAG</strong>. Vos données peuvent exister dans une base de données ou un point de terminaison web, par exemple. Pour garantir que ces données, ou un sous-ensemble de celles-ci, soient incluses au moment de la requête, vous pouvez récupérer les données pertinentes et les inclure dans le prompt de l'utilisateur.</p>
+</li>
+<li>
+<p><strong>Modèle affiné</strong>. Ici, vous avez entraîné davantage le modèle sur vos propres données, ce qui le rend plus précis et adapté à vos besoins, mais cela peut être coûteux.</p>
+</li>
+</ul>
+<p><img src="../../assets/images/Deploy.webp" alt="Déploiement des LLM" loading="lazy" decoding="async" /></p>
+<p>Source de l'image : <a href="https://www.fiddler.ai/blog/four-ways-that-enterprises-deploy-llms" target="_blank" rel="noopener noreferrer">Four Ways that Enterprises Deploy LLMs | Fiddler AI Blog</a></p>
+<h3 id="ingenierie-des-prompts-avec-contexte">Ingénierie des prompts avec contexte<a class="anchor" href="#ingenierie-des-prompts-avec-contexte" aria-label="Lien vers cette section">#</a></h3>
+<p>Les LLM pré-entraînés fonctionnent très bien sur des tâches générales de traitement du langage naturel, même lorsqu'ils sont appelés avec un prompt court, comme une phrase à compléter ou une question – ce qu'on appelle l'apprentissage &quot;zero-shot&quot;.</p>
+<p>Cependant, plus l'utilisateur peut formuler sa requête avec une demande détaillée et des exemples – le contexte – plus la réponse sera précise et proche des attentes de l'utilisateur. Dans ce cas, on parle d'apprentissage &quot;one-shot&quot; si le prompt inclut un seul exemple et d'&quot;apprentissage par quelques exemples&quot; si plusieurs exemples sont inclus. L'ingénierie des prompts avec contexte est l'approche la plus économique pour commencer.</p>
+<h3 id="generation-augmentee-par-recuperation-rag">Génération augmentée par récupération (RAG)<a class="anchor" href="#generation-augmentee-par-recuperation-rag" aria-label="Lien vers cette section">#</a></h3>
+<p>Les LLM ont la limitation de ne pouvoir utiliser que les données qui ont été utilisées lors de leur entraînement pour générer une réponse. Cela signifie qu'ils ne savent rien des faits survenus après leur processus d'entraînement et qu'ils ne peuvent pas accéder à des informations non publiques (comme les données d'entreprise).<br />
+Cela peut être surmonté grâce à la RAG, une technique qui augmente le prompt avec des données externes sous forme de fragments de documents, en tenant compte des limites de longueur du prompt. Cela est soutenu par des outils de base de données vectorielle (comme <a href="https://learn.microsoft.com/azure/search/vector-search-overview" target="_blank" rel="noopener noreferrer">Azure Vector Search</a>) qui récupèrent les fragments utiles à partir de diverses sources de données prédéfinies et les ajoutent au contexte du prompt.</p>
+<p>Cette technique est très utile lorsqu'une entreprise n'a pas assez de données, de temps ou de ressources pour affiner un LLM, mais souhaite tout de même améliorer les performances sur une charge de travail spécifique et réduire les risques de fabrications, c'est-à-dire de mystification de la réalité ou de contenu nuisible.</p>
+<h3 id="modele-affine">Modèle affiné<a class="anchor" href="#modele-affine" aria-label="Lien vers cette section">#</a></h3>
+<p>L'affinage est un processus qui utilise l'apprentissage par transfert pour &quot;adapter&quot; le modèle à une tâche spécifique ou pour résoudre un problème particulier. Contrairement à l'apprentissage par quelques exemples et à la RAG, il en résulte un nouveau modèle généré, avec des poids et des biais mis à jour. Cela nécessite un ensemble d'exemples d'entraînement composé d'une seule entrée (le prompt) et de sa sortie associée (la complétion).<br />
+Cette approche serait préférée si :</p>
+<ul>
+<li>
+<p><strong>Utilisation de modèles affinés</strong>. Une entreprise souhaite utiliser des modèles affinés moins performants (comme les modèles d'embedding) plutôt que des modèles hautes performances, ce qui permet une solution plus économique et rapide.</p>
+</li>
+<li>
+<p><strong>Prise en compte de la latence</strong>. La latence est importante pour un cas d'utilisation spécifique, donc il n'est pas possible d'utiliser des prompts très longs ou un grand nombre d'exemples que le modèle devrait apprendre, car cela ne correspond pas aux limites de longueur du prompt.</p>
+</li>
+<li>
+<p><strong>Rester à jour</strong>. Une entreprise dispose de nombreuses données de haute qualité et d'étiquettes de vérité terrain, ainsi que des ressources nécessaires pour maintenir ces données à jour au fil du temps.</p>
+</li>
+</ul>
+<h3 id="modele-entraine">Modèle entraîné<a class="anchor" href="#modele-entraine" aria-label="Lien vers cette section">#</a></h3>
+<p>Entraîner un LLM à partir de zéro est sans aucun doute l'approche la plus difficile et la plus complexe à adopter, nécessitant des quantités massives de données, des ressources qualifiées et une puissance de calcul appropriée. Cette option ne devrait être envisagée que dans un scénario où une entreprise a un cas d'utilisation spécifique à un domaine et une grande quantité de données centrées sur ce domaine.</p>
+<h2 id="verification-des-connaissances">Vérification des connaissances<a class="anchor" href="#verification-des-connaissances" aria-label="Lien vers cette section">#</a></h2>
+<p>Quelle pourrait être une bonne approche pour améliorer les résultats de complétion des LLM ?</p>
+<ol>
+<li>Ingénierie des prompts avec contexte</li>
+<li>RAG</li>
+<li>Modèle affiné</li>
+</ol>
+<p>R : 3, si vous avez le temps, les ressources et des données de haute qualité, l'affinage est la meilleure option pour rester à jour. Cependant, si vous cherchez à améliorer les choses et que vous manquez de temps, il vaut la peine de considérer d'abord la RAG.</p>
+<h2 id="defi">🚀 Défi<a class="anchor" href="#defi" aria-label="Lien vers cette section">#</a></h2>
+<p>Renseignez-vous davantage sur la manière dont vous pouvez <a href="https://learn.microsoft.com/azure/search/retrieval-augmented-generation-overview" target="_blank" rel="noopener noreferrer">utiliser la RAG</a> pour votre entreprise.</p>
+<h2 id="excellent-travail-continuez-votre-apprentissage">Excellent travail, continuez votre apprentissage<a class="anchor" href="#excellent-travail-continuez-votre-apprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, consultez notre <a href="https://aka.ms/genai-collection" target="_blank" rel="noopener noreferrer">collection d'apprentissage sur l'IA générative</a> pour continuer à approfondir vos connaissances sur l'IA générative !</p>
+<p>Passez à la leçon 3 où nous examinerons comment <a href="../../lecons/03-using-generative-ai-responsibly/index.html">utiliser l'IA générative de manière responsable</a> !</p>
+
+</article>
+
+
+<section class="done" data-lesson-toggle="02-exploring-and-comparing-different-llms">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai terminé la leçon 02 — Explorer et comparer différents LLM</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../lecons/01-introduction-to-genai/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Introduction à l&#x27;IA générative et aux LLM</span></a><a class="prevnext__link prevnext__next" href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Utiliser l&#x27;IA générative de manière responsable</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/02-exploring-and-comparing-different-llms/README.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/02-exploring-and-comparing-different-llms/README.md</a> ·
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/tree/main/02-exploring-and-comparing-different-llms" target="_blank" rel="noopener noreferrer">version anglaise</a>
+</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#introduction">Introduction</a></li><li class="toc__item toc__item--h2"><a href="#objectifs-dapprentissage">Objectifs d&#x27;apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#comprendre-les-differents-types-de-llm">Comprendre les différents types de LLM</a></li><li class="toc__item toc__item--h3"><a href="#modeles-de-base-versus-llm">Modèles de base versus LLM</a></li><li class="toc__item toc__item--h3"><a href="#modeles-open-source-versus-proprietaires">Modèles open source versus propriétaires</a></li><li class="toc__item toc__item--h3"><a href="#embedding-versus-generation-dimages-versus-generation-de-texte-et-de-code">Embedding versus génération d&#x27;images versus génération de texte et de code</a></li><li class="toc__item toc__item--h3"><a href="#encodeur-decodeur-versus-decodeur-uniquement">Encodeur-Décodeur versus Décodeur uniquement</a></li><li class="toc__item toc__item--h3"><a href="#service-versus-modele">Service versus Modèle</a></li><li class="toc__item toc__item--h2"><a href="#comment-tester-et-iterer-avec-differents-modeles-pour-comprendre-les-performances-sur-azure">Comment tester et itérer avec différents modèles pour comprendre les performances sur Azure</a></li><li class="toc__item toc__item--h2"><a href="#ameliorer-les-resultats-des-llm">Améliorer les résultats des LLM</a></li><li class="toc__item toc__item--h3"><a href="#ingenierie-des-prompts-avec-contexte">Ingénierie des prompts avec contexte</a></li><li class="toc__item toc__item--h3"><a href="#generation-augmentee-par-recuperation-rag">Génération augmentée par récupération (RAG)</a></li><li class="toc__item toc__item--h3"><a href="#modele-affine">Modèle affiné</a></li><li class="toc__item toc__item--h3"><a href="#modele-entraine">Modèle entraîné</a></li><li class="toc__item toc__item--h2"><a href="#verification-des-connaissances">Vérification des connaissances</a></li><li class="toc__item toc__item--h2"><a href="#defi">🚀 Défi</a></li><li class="toc__item toc__item--h2"><a href="#excellent-travail-continuez-votre-apprentissage">Excellent travail, continuez votre apprentissage</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · Utiliser l&#x27;IA générative de manière responsable — IA Générative</title>
+<meta name="description" content="Hallucinations, biais, contenus nuisibles : identifier les risques et mettre en place des garde-fous.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item is-active" data-lesson="03-using-generative-ai-responsibly"><a href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a> <span aria-hidden="true">›</span>
+  <span>Leçon 03</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Leçon 03 · Comprendre l&#x27;IA générative · ≈ 25 min</p>
+  <p class="pagehead__summary">Hallucinations, biais, contenus nuisibles : identifier les risques et mettre en place des garde-fous.</p>
+</header>
+<article class="prose">
+<h1 id="utiliser-lia-generative-de-maniere-responsable">Utiliser l'IA générative de manière responsable<a class="anchor" href="#utiliser-lia-generative-de-maniere-responsable" aria-label="Lien vers cette section">#</a></h1>
+<p><a href="https://youtu.be/YOp-e1GjZdA?si=7Wv4wu3x44L1DCVj" target="_blank" rel="noopener noreferrer"><img src="../../assets/images/03-lesson-banner.webp" alt="Utiliser l'IA générative de manière responsable" loading="lazy" decoding="async" /></a></p>
+<blockquote>
+<p><em>Cliquez sur l'image ci-dessus pour visionner la vidéo de cette leçon</em></p>
+</blockquote>
+<p>Il est facile d'être fasciné par l'IA, et en particulier par l'IA générative, mais il est essentiel de réfléchir à la manière de l'utiliser de manière responsable. Vous devez prendre en compte des aspects tels que la garantie que les résultats soient équitables, non nuisibles, et bien plus encore. Ce chapitre vise à vous fournir le contexte mentionné, les éléments à considérer et les étapes à suivre pour améliorer votre utilisation de l'IA.</p>
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction" aria-label="Lien vers cette section">#</a></h2>
+<p>Cette leçon couvrira :</p>
+<ul>
+<li>Pourquoi vous devriez donner la priorité à l'IA responsable lors de la création d'applications d'IA générative.</li>
+<li>Les principes fondamentaux de l'IA responsable et leur lien avec l'IA générative.</li>
+<li>Comment mettre en pratique ces principes d'IA responsable grâce à des stratégies et des outils.</li>
+</ul>
+<h2 id="objectifs-dapprentissage">Objectifs d'apprentissage<a class="anchor" href="#objectifs-dapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, vous saurez :</p>
+<ul>
+<li>L'importance de l'IA responsable lors de la création d'applications d'IA générative.</li>
+<li>Quand réfléchir et appliquer les principes fondamentaux de l'IA responsable lors de la création d'applications d'IA générative.</li>
+<li>Quels outils et stratégies sont à votre disposition pour mettre en pratique le concept d'IA responsable.</li>
+</ul>
+<h2 id="principes-de-lia-responsable">Principes de l'IA responsable<a class="anchor" href="#principes-de-lia-responsable" aria-label="Lien vers cette section">#</a></h2>
+<p>L'enthousiasme autour de l'IA générative n'a jamais été aussi grand. Cet engouement a attiré de nombreux nouveaux développeurs, une attention accrue et des financements dans ce domaine. Bien que cela soit très positif pour quiconque souhaite créer des produits et des entreprises utilisant l'IA générative, il est également important de procéder de manière responsable.</p>
+<p>Tout au long de ce cours, nous nous concentrons sur la création de notre startup et de notre produit éducatif basé sur l'IA. Nous utiliserons les principes de l'IA responsable : Équité, Inclusion, Fiabilité/Sécurité, Sécurité et Confidentialité, Transparence et Responsabilité. Avec ces principes, nous explorerons leur relation avec notre utilisation de l'IA générative dans nos produits.</p>
+<h2 id="pourquoi-donner-la-priorite-a-lia-responsable">Pourquoi donner la priorité à l'IA responsable<a class="anchor" href="#pourquoi-donner-la-priorite-a-lia-responsable" aria-label="Lien vers cette section">#</a></h2>
+<p>Lors de la création d'un produit, adopter une approche centrée sur l'humain en gardant à l'esprit les intérêts de vos utilisateurs conduit aux meilleurs résultats.</p>
+<p>La particularité de l'IA générative réside dans sa capacité à fournir des réponses utiles, des informations, des conseils et du contenu aux utilisateurs. Cela peut être fait sans de nombreuses étapes manuelles, ce qui peut conduire à des résultats très impressionnants. Cependant, sans planification et stratégies appropriées, cela peut malheureusement entraîner des résultats nuisibles pour vos utilisateurs, votre produit et la société dans son ensemble.</p>
+<p>Examinons certains (mais pas tous) de ces résultats potentiellement nuisibles :</p>
+<h3 id="hallucinations">Hallucinations<a class="anchor" href="#hallucinations" aria-label="Lien vers cette section">#</a></h3>
+<p>Les hallucinations désignent les cas où un modèle de langage produit un contenu qui est soit complètement absurde, soit manifestement incorrect selon d'autres sources d'information.</p>
+<p>Prenons l'exemple où nous créons une fonctionnalité pour notre startup permettant aux étudiants de poser des questions historiques à un modèle. Un étudiant pose la question : <code>Qui était le seul survivant du Titanic ?</code></p>
+<p>Le modèle produit une réponse telle que celle-ci :</p>
+<p><img src="../../assets/images/ChatGPT-titanic-survivor-prompt.webp" alt="Invite disant &quot;Qui était le seul survivant du Titanic&quot;" loading="lazy" decoding="async" /></p>
+<blockquote>
+<p><em>(Source : <a href="https://flyingbisons.com" target="_blank" rel="noopener noreferrer">Flying bisons</a>)</em></p>
+</blockquote>
+<p>C'est une réponse très confiante et détaillée. Malheureusement, elle est incorrecte. Même avec un minimum de recherche, on découvrirait qu'il y avait plus d'un survivant de la catastrophe du Titanic. Pour un étudiant qui commence tout juste à rechercher ce sujet, cette réponse peut être suffisamment convaincante pour ne pas être remise en question et être considérée comme un fait. Les conséquences de cela peuvent rendre le système d'IA peu fiable et nuire à la réputation de notre startup.</p>
+<p>Avec chaque itération d'un modèle de langage donné, nous avons constaté des améliorations de performance pour minimiser les hallucinations. Même avec ces améliorations, nous, en tant que créateurs d'applications et utilisateurs, devons rester conscients de ces limitations.</p>
+<h3 id="contenu-nuisible">Contenu nuisible<a class="anchor" href="#contenu-nuisible" aria-label="Lien vers cette section">#</a></h3>
+<p>Nous avons abordé dans la section précédente les cas où un modèle de langage produit des réponses incorrectes ou absurdes. Un autre risque à prendre en compte est lorsque le modèle répond avec un contenu nuisible.</p>
+<p>Le contenu nuisible peut être défini comme :</p>
+<ul>
+<li>Fournir des instructions ou encourager l'automutilation ou le préjudice envers certains groupes.</li>
+<li>Contenu haineux ou dégradant.</li>
+<li>Aider à planifier tout type d'attaque ou d'actes violents.</li>
+<li>Fournir des instructions sur la manière de trouver du contenu illégal ou de commettre des actes illégaux.</li>
+<li>Afficher du contenu sexuellement explicite.</li>
+</ul>
+<p>Pour notre startup, nous voulons nous assurer d'avoir les bons outils et stratégies en place pour empêcher ce type de contenu d'être vu par les étudiants.</p>
+<h3 id="manque-dequite">Manque d'équité<a class="anchor" href="#manque-dequite" aria-label="Lien vers cette section">#</a></h3>
+<p>L'équité est définie comme « garantir qu'un système d'IA est exempt de biais et de discrimination et qu'il traite tout le monde de manière équitable et égale ». Dans le domaine de l'IA générative, nous voulons nous assurer que les visions du monde excluantes envers les groupes marginalisés ne sont pas renforcées par les résultats du modèle.</p>
+<p>Ces types de résultats ne sont pas seulement destructeurs pour créer des expériences positives pour nos utilisateurs, mais ils causent également des dommages supplémentaires à la société. En tant que créateurs d'applications, nous devrions toujours garder à l'esprit une base d'utilisateurs large et diversifiée lors de la création de solutions avec l'IA générative.</p>
+<h2 id="comment-utiliser-lia-generative-de-maniere-responsable">Comment utiliser l'IA générative de manière responsable<a class="anchor" href="#comment-utiliser-lia-generative-de-maniere-responsable" aria-label="Lien vers cette section">#</a></h2>
+<p>Maintenant que nous avons identifié l'importance de l'IA générative responsable, examinons 4 étapes que nous pouvons suivre pour créer nos solutions d'IA de manière responsable :</p>
+<p><img src="../../assets/images/mitigate-cycle.webp" alt="Cycle d'atténuation" loading="lazy" decoding="async" /></p>
+<h3 id="mesurer-les-dommages-potentiels">Mesurer les dommages potentiels<a class="anchor" href="#mesurer-les-dommages-potentiels" aria-label="Lien vers cette section">#</a></h3>
+<p>Dans les tests logiciels, nous testons les actions attendues d'un utilisateur sur une application. De même, tester un ensemble diversifié de requêtes que les utilisateurs sont le plus susceptibles d'utiliser est une bonne façon de mesurer les dommages potentiels.</p>
+<p>Étant donné que notre startup développe un produit éducatif, il serait judicieux de préparer une liste de requêtes liées à l'éducation. Cela pourrait couvrir un certain sujet, des faits historiques et des requêtes sur la vie étudiante.</p>
+<h3 id="attenuer-les-dommages-potentiels">Atténuer les dommages potentiels<a class="anchor" href="#attenuer-les-dommages-potentiels" aria-label="Lien vers cette section">#</a></h3>
+<p>Il est maintenant temps de trouver des moyens de prévenir ou de limiter les dommages potentiels causés par le modèle et ses réponses. Nous pouvons examiner cela sous 4 couches différentes :</p>
+<p><img src="../../assets/images/mitigation-layers.webp" alt="Couches d'atténuation" loading="lazy" decoding="async" /></p>
+<ul>
+<li>
+<p><strong>Modèle</strong>. Choisir le bon modèle pour le bon cas d'utilisation. Les modèles plus grands et plus complexes comme GPT-4 peuvent présenter un risque accru de contenu nuisible lorsqu'ils sont appliqués à des cas d'utilisation plus petits et spécifiques. Utiliser vos données d'entraînement pour un ajustement fin réduit également le risque de contenu nuisible.</p>
+</li>
+<li>
+<p><strong>Système de sécurité</strong>. Un système de sécurité est un ensemble d'outils et de configurations sur la plateforme qui héberge le modèle et qui aide à atténuer les dommages. Un exemple de cela est le système de filtrage de contenu sur le service Azure OpenAI. Les systèmes doivent également détecter les attaques de contournement et les activités indésirables comme les requêtes provenant de bots.</p>
+</li>
+<li>
+<p><strong>Métaprompt</strong>. Les métaprompts et l'ancrage sont des moyens de diriger ou de limiter le modèle en fonction de certains comportements et informations. Cela pourrait être l'utilisation d'entrées système pour définir certaines limites du modèle. En outre, fournir des résultats plus pertinents au champ ou au domaine du système.</p>
+</li>
+</ul>
+<p>Cela peut également inclure l'utilisation de techniques comme la génération augmentée par récupération (RAG) pour que le modèle ne puise des informations que dans une sélection de sources fiables. Il y a une leçon plus tard dans ce cours sur <a href="../../lecons/08-building-search-applications/index.html">la création d'applications de recherche</a></p>
+<ul>
+<li><strong>Expérience utilisateur</strong>. La dernière couche est celle où l'utilisateur interagit directement avec le modèle via l'interface de notre application d'une manière ou d'une autre. De cette manière, nous pouvons concevoir l'interface utilisateur/expérience utilisateur pour limiter l'utilisateur sur les types d'entrées qu'il peut envoyer au modèle ainsi que sur le texte ou les images affichés à l'utilisateur. Lors du déploiement de l'application d'IA, nous devons également être transparents sur ce que notre application d'IA générative peut et ne peut pas faire.</li>
+</ul>
+<p>Nous avons une leçon entière dédiée à <a href="../../lecons/12-designing-ux-for-ai-applications/index.html">Concevoir l'UX pour les applications d'IA</a></p>
+<ul>
+<li><strong>Évaluer le modèle</strong>. Travailler avec des modèles de langage peut être difficile car nous n'avons pas toujours le contrôle sur les données sur lesquelles le modèle a été entraîné. Néanmoins, nous devrions toujours évaluer les performances et les résultats du modèle. Il est toujours important de mesurer la précision, la similarité, l'ancrage et la pertinence des résultats du modèle. Cela aide à fournir transparence et confiance aux parties prenantes et aux utilisateurs.</li>
+</ul>
+<h3 id="exploiter-une-solution-dia-generative-responsable">Exploiter une solution d'IA générative responsable<a class="anchor" href="#exploiter-une-solution-dia-generative-responsable" aria-label="Lien vers cette section">#</a></h3>
+<p>Construire une pratique opérationnelle autour de vos applications d'IA est la dernière étape. Cela inclut de collaborer avec d'autres parties de notre startup comme le service juridique et la sécurité pour garantir que nous respectons toutes les politiques réglementaires. Avant de lancer, nous voulons également élaborer des plans autour de la livraison, de la gestion des incidents et du retour en arrière pour éviter tout préjudice à nos utilisateurs.</p>
+<h2 id="outils">Outils<a class="anchor" href="#outils" aria-label="Lien vers cette section">#</a></h2>
+<p>Bien que le travail de développement de solutions d'IA responsable puisse sembler important, il s'agit d'un effort qui en vaut la peine. À mesure que le domaine de l'IA générative se développe, davantage d'outils pour aider les développeurs à intégrer efficacement la responsabilité dans leurs flux de travail vont se perfectionner. Par exemple, le <a href="https://learn.microsoft.com/azure/ai-services/content-safety/overview" target="_blank" rel="noopener noreferrer">Azure AI Content Safety</a> peut aider à détecter les contenus et images nuisibles via une requête API.</p>
+<h2 id="verification-des-connaissances">Vérification des connaissances<a class="anchor" href="#verification-des-connaissances" aria-label="Lien vers cette section">#</a></h2>
+<p>Quels sont les éléments à prendre en compte pour garantir une utilisation responsable de l'IA ?</p>
+<ol>
+<li>Que la réponse soit correcte.</li>
+<li>Une utilisation nuisible, que l'IA ne soit pas utilisée à des fins criminelles.</li>
+<li>Garantir que l'IA soit exempte de biais et de discrimination.</li>
+</ol>
+<p>R : Les réponses 2 et 3 sont correctes. L'IA responsable vous aide à réfléchir à la manière de limiter les effets nuisibles et les biais, entre autres.</p>
+<h2 id="defi">🚀 Défi<a class="anchor" href="#defi" aria-label="Lien vers cette section">#</a></h2>
+<p>Renseignez-vous sur <a href="https://learn.microsoft.com/azure/ai-services/content-safety/overview" target="_blank" rel="noopener noreferrer">Azure AI Content Safety</a> et voyez ce que vous pouvez adopter pour votre utilisation.</p>
+<h2 id="excellent-travail-continuez-votre-apprentissage">Excellent travail, continuez votre apprentissage<a class="anchor" href="#excellent-travail-continuez-votre-apprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, consultez notre <a href="https://aka.ms/genai-collection" target="_blank" rel="noopener noreferrer">collection d'apprentissage sur l'IA générative</a> pour continuer à approfondir vos connaissances sur l'IA générative !</p>
+<p>Passez à la leçon 4 où nous examinerons les <a href="../../lecons/04-prompt-engineering-fundamentals/index.html">Fondamentaux de l'ingénierie des invites</a> !</p>
+
+</article>
+
+
+<section class="done" data-lesson-toggle="03-using-generative-ai-responsibly">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai terminé la leçon 03 — Utiliser l&#x27;IA générative de manière responsable</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Explorer et comparer différents LLM</span></a><a class="prevnext__link prevnext__next" href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Fondamentaux de l&#x27;ingénierie des prompts</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/03-using-generative-ai-responsibly/README.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/03-using-generative-ai-responsibly/README.md</a> ·
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/tree/main/03-using-generative-ai-responsibly" target="_blank" rel="noopener noreferrer">version anglaise</a>
+</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#introduction">Introduction</a></li><li class="toc__item toc__item--h2"><a href="#objectifs-dapprentissage">Objectifs d&#x27;apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#principes-de-lia-responsable">Principes de l&#x27;IA responsable</a></li><li class="toc__item toc__item--h2"><a href="#pourquoi-donner-la-priorite-a-lia-responsable">Pourquoi donner la priorité à l&#x27;IA responsable</a></li><li class="toc__item toc__item--h3"><a href="#hallucinations">Hallucinations</a></li><li class="toc__item toc__item--h3"><a href="#contenu-nuisible">Contenu nuisible</a></li><li class="toc__item toc__item--h3"><a href="#manque-dequite">Manque d&#x27;équité</a></li><li class="toc__item toc__item--h2"><a href="#comment-utiliser-lia-generative-de-maniere-responsable">Comment utiliser l&#x27;IA générative de manière responsable</a></li><li class="toc__item toc__item--h3"><a href="#mesurer-les-dommages-potentiels">Mesurer les dommages potentiels</a></li><li class="toc__item toc__item--h3"><a href="#attenuer-les-dommages-potentiels">Atténuer les dommages potentiels</a></li><li class="toc__item toc__item--h3"><a href="#exploiter-une-solution-dia-generative-responsable">Exploiter une solution d&#x27;IA générative responsable</a></li><li class="toc__item toc__item--h2"><a href="#outils">Outils</a></li><li class="toc__item toc__item--h2"><a href="#verification-des-connaissances">Vérification des connaissances</a></li><li class="toc__item toc__item--h2"><a href="#defi">🚀 Défi</a></li><li class="toc__item toc__item--h2"><a href="#excellent-travail-continuez-votre-apprentissage">Excellent travail, continuez votre apprentissage</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../assets/app.js" defer></script>
+</body>
+</html>

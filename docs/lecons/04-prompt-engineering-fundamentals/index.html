@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · Fondamentaux de l&#x27;ingénierie des prompts — IA Générative</title>
+<meta name="description" content="Comment un prompt est interprété, et les bonnes pratiques qui améliorent immédiatement vos résultats.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item is-active" data-lesson="04-prompt-engineering-fundamentals"><a href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a> <span aria-hidden="true">›</span>
+  <span>Leçon 04</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Leçon 04 · Maîtriser le prompt engineering · ≈ 60 min</p>
+  <p class="pagehead__summary">Comment un prompt est interprété, et les bonnes pratiques qui améliorent immédiatement vos résultats.</p>
+</header>
+<article class="prose">
+<h1 id="fondamentaux-de-lingenierie-des-prompts">Fondamentaux de l'Ingénierie des Prompts<a class="anchor" href="#fondamentaux-de-lingenierie-des-prompts" aria-label="Lien vers cette section">#</a></h1>
+<p><a href="https://youtu.be/GElCu2kUlRs?si=qrXsBvXnCW12epb8" target="_blank" rel="noopener noreferrer"><img src="../../assets/images/04-lesson-banner.webp" alt="Fondamentaux de l'Ingénierie des Prompts" loading="lazy" decoding="async" /></a></p>
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction" aria-label="Lien vers cette section">#</a></h2>
+<p>Ce module couvre les concepts et techniques essentiels pour créer des prompts efficaces dans les modèles d'IA générative. La façon dont vous rédigez votre prompt pour un LLM est également importante. Un prompt soigneusement conçu peut obtenir une meilleure qualité de réponse. Mais que signifient exactement les termes <em>prompt</em> et <em>ingénierie des prompts</em> ? Et comment puis-je améliorer le <em>contenu</em> du prompt que j’envoie au LLM ? Ce sont les questions auxquelles nous tenterons de répondre dans ce chapitre et le suivant.</p>
+<p><em>L’IA générative</em> est capable de créer du contenu nouveau (par exemple, texte, images, audio, code, etc.) en réponse aux demandes des utilisateurs. Elle y parvient en utilisant des <em>modèles de langage étendus</em> comme la série GPT d’OpenAI (&quot;Generative Pre-trained Transformer&quot;) qui sont entraînés à utiliser le langage naturel et le code.</p>
+<p>Les utilisateurs peuvent désormais interagir avec ces modèles via des paradigmes familiers comme le chat, sans nécessiter d’expertise technique ou de formation. Les modèles sont basés sur des <em>prompts</em> - les utilisateurs envoient une saisie textuelle (prompt) et reçoivent en retour la réponse de l’IA (complétion). Ils peuvent ensuite &quot;dialoguer avec l’IA&quot; de manière itérative, en conversations multi-tours, affinant leur prompt jusqu’à ce que la réponse corresponde à leurs attentes.</p>
+<p>Les &quot;prompts&quot; deviennent maintenant l’<em>interface principale de programmation</em> pour les applications d’IA générative, indiquant aux modèles ce qu’ils doivent faire et influençant la qualité des réponses retournées. L’&quot;ingénierie des prompts&quot; est un domaine d’étude en plein essor qui se concentre sur la <em>conception et l’optimisation</em> des prompts pour fournir des réponses cohérentes et de qualité à grande échelle.</p>
+<h2 id="objectifs-dapprentissage">Objectifs d'apprentissage<a class="anchor" href="#objectifs-dapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans cette leçon, nous apprendrons ce qu’est l’ingénierie des prompts, pourquoi elle est importante, et comment nous pouvons concevoir des prompts plus efficaces pour un modèle donné et un objectif d’application. Nous comprendrons les concepts de base et les meilleures pratiques pour l’ingénierie des prompts – et découvrirons un environnement interactif &quot;sandbox&quot; Jupyter Notebooks où nous pouvons voir ces concepts appliqués à des exemples concrets.</p>
+<p>À la fin de cette leçon, nous serons capables de :</p>
+<ol>
+<li>Expliquer ce qu’est l’ingénierie des prompts et pourquoi elle est importante.</li>
+<li>Décrire les composants d’un prompt et comment ils sont utilisés.</li>
+<li>Apprendre les meilleures pratiques et techniques pour l’ingénierie des prompts.</li>
+<li>Appliquer les techniques apprises à des exemples réels, en utilisant un endpoint OpenAI.</li>
+</ol>
+<h2 id="termes-cles">Termes clés<a class="anchor" href="#termes-cles" aria-label="Lien vers cette section">#</a></h2>
+<p>Ingénierie des Prompts : La pratique de concevoir et affiner les entrées pour guider les modèles d’IA vers la production des sorties désirées.<br />
+Tokenisation : Le processus de conversion du texte en unités plus petites, appelées tokens, que le modèle peut comprendre et traiter.<br />
+LLMs instruits par instruction : Modèles de langage étendus (LLMs) qui ont été affinés avec des instructions spécifiques pour améliorer la précision et la pertinence des réponses.</p>
+<h2 id="environnement-de-travail-sandbox">Environnement de Travail Sandbox<a class="anchor" href="#environnement-de-travail-sandbox" aria-label="Lien vers cette section">#</a></h2>
+<p>L’ingénierie des prompts est actuellement plus un art qu’une science. La meilleure façon d’améliorer notre intuition est de <em>pratiquer davantage</em> et d’adopter une approche par essais et erreurs qui combine l’expertise du domaine d’application avec les techniques recommandées et les optimisations spécifiques aux modèles.</p>
+<p>Le Jupyter Notebook accompagnant cette leçon fournit un environnement <em>sandbox</em> où vous pouvez essayer ce que vous apprenez – en temps réel ou dans le cadre du défi de code à la fin. Pour exécuter les exercices, vous aurez besoin :</p>
+<ol>
+<li><strong>D’une clé API Azure OpenAI</strong> - le point de terminaison du service pour un LLM déployé.</li>
+<li><strong>D’un environnement Python</strong> - dans lequel le Notebook peut être exécuté.</li>
+<li><strong>De variables d’environnement locales</strong> - <em>complétez maintenant les étapes du <a href="../../lecons/00-course-setup/02-setup-local/index.html">SETUP</a> pour être prêt</em>.</li>
+</ol>
+<p>Le notebook propose des exercices <em>démarreurs</em> – mais vous êtes encouragé à ajouter vos propres sections <em>Markdown</em> (description) et <em>Code</em> (requêtes de prompt) pour essayer plus d’exemples ou d’idées – et développer votre intuition pour la conception de prompts.</p>
+<h2 id="guide-illustre">Guide Illustré<a class="anchor" href="#guide-illustre" aria-label="Lien vers cette section">#</a></h2>
+<p>Vous souhaitez avoir une vue d'ensemble de ce que cette leçon couvre avant de plonger ? Consultez ce guide illustré, qui vous donne un aperçu des principaux sujets abordés et des points clés à retenir pour chacun. La feuille de route de la leçon vous conduit de la compréhension des concepts et défis fondamentaux à leur résolution par des techniques et meilleures pratiques d’ingénierie des prompts pertinentes. Notez que la section &quot;Techniques avancées&quot; dans ce guide fait référence au contenu couvert dans le chapitre <em>suivant</em> de ce cursus.</p>
+<p><img src="../../assets/images/04-prompt-engineering-sketchnote.webp" alt="Guide illustré de l'ingénierie des prompts" loading="lazy" decoding="async" /></p>
+<h2 id="notre-startup">Notre Startup<a class="anchor" href="#notre-startup" aria-label="Lien vers cette section">#</a></h2>
+<p>Parlons maintenant de la manière dont <em>ce sujet</em> se rapporte à la mission de notre startup de <a href="https://educationblog.microsoft.com/2023/06/collaborating-to-bring-ai-innovation-to-education" target="_blank" rel="noopener noreferrer">promouvoir l’innovation par l’IA dans l’éducation</a>. Nous voulons construire des applications d’IA pour un <em>apprentissage personnalisé</em> – alors réfléchissons à la façon dont différents utilisateurs de notre application pourraient &quot;concevoir&quot; des prompts :</p>
+<ul>
+<li><strong>Les administrateurs</strong> pourraient demander à l’IA d’<em>analyser les données du programme pour identifier des lacunes dans la couverture</em>. L’IA peut résumer les résultats ou les visualiser avec du code.</li>
+<li><strong>Les enseignants</strong> pourraient demander à l’IA de <em>générer un plan de cours pour un public cible et un sujet donné</em>. L’IA peut construire le plan personnalisé dans un format spécifié.</li>
+<li><strong>Les étudiants</strong> pourraient demander à l’IA de <em>les aider dans une matière difficile</em>. L’IA peut maintenant guider les étudiants avec des leçons, indices et exemples adaptés à leur niveau.</li>
+</ul>
+<p>Ce n’est que la partie émergée de l’iceberg. Découvrez <a href="https://github.com/microsoft/prompts-for-edu/tree/main" target="_blank" rel="noopener noreferrer">Prompts For Education</a> - une bibliothèque open source de prompts sélectionnés par des experts de l’éducation - pour avoir une idée plus large des possibilités ! <em>Essayez d’exécuter certains de ces prompts dans le sandbox ou en utilisant le OpenAI Playground pour voir ce qui se passe !</em></p>
+<!--
+LESSON TEMPLATE:
+This unit should cover core concept #1.
+Reinforce the concept with examples and references.
+
+CONCEPT #1:
+Prompt Engineering.
+Define it and explain why it is needed.
+-->
+<h2 id="quest-ce-que-lingenierie-des-prompts">Qu’est-ce que l’Ingénierie des Prompts ?<a class="anchor" href="#quest-ce-que-lingenierie-des-prompts" aria-label="Lien vers cette section">#</a></h2>
+<p>Nous avons commencé cette leçon en définissant <strong>l’Ingénierie des Prompts</strong> comme le processus de <em>conception et d’optimisation</em> des entrées textuelles (prompts) pour fournir des réponses cohérentes et de qualité (complétions) pour un objectif d’application et un modèle donnés. On peut considérer cela comme un processus en deux étapes :</p>
+<ul>
+<li><em>concevoir</em> le prompt initial pour un modèle et un objectif donnés</li>
+<li><em>affiner</em> le prompt de façon itérative pour améliorer la qualité de la réponse</li>
+</ul>
+<p>C’est nécessairement un processus par essais et erreurs qui demande de l’intuition et des efforts de la part de l’utilisateur pour obtenir des résultats optimaux. Alors, pourquoi est-ce important ? Pour répondre à cette question, il nous faut d’abord comprendre trois concepts :</p>
+<ul>
+<li><em>Tokenisation</em> = comment le modèle &quot;voit&quot; le prompt</li>
+<li><em>LLMs de base</em> = comment le modèle fondation &quot;traite&quot; un prompt</li>
+<li><em>LLMs instruits par instruction</em> = comment le modèle peut désormais &quot;voir des tâches&quot;</li>
+</ul>
+<h3 id="tokenisation">Tokenisation<a class="anchor" href="#tokenisation" aria-label="Lien vers cette section">#</a></h3>
+<p>Un LLM voit les prompts comme une <em>séquence de tokens</em> où différents modèles (ou versions d’un même modèle) peuvent tokenizer un même prompt de différentes manières. Comme les LLMs sont entraînés sur des tokens (et non sur du texte brut), la façon dont les prompts sont tokenisés impacte directement la qualité de la réponse générée.</p>
+<p>Pour avoir une intuition du fonctionnement de la tokenisation, essayez des outils comme le <a href="https://platform.openai.com/tokenizer" target="_blank" rel="noopener noreferrer">OpenAI Tokenizer</a> montré ci-dessous. Copiez votre prompt - et voyez comment il est converti en tokens, en faisant attention à la façon dont les espaces et la ponctuation sont traités. Notez que cet exemple montre un LLM plus ancien (GPT-3) - alors essayer avec un modèle plus récent peut donner un résultat différent.</p>
+<p><img src="../../assets/images/04-tokenizer-example.webp" alt="Tokenisation" loading="lazy" decoding="async" /></p>
+<h3 id="concept-modeles-fondations">Concept : Modèles Fondations<a class="anchor" href="#concept-modeles-fondations" aria-label="Lien vers cette section">#</a></h3>
+<p>Une fois un prompt tokenisé, la fonction principale du <a href="https://blog.gopenai.com/an-introduction-to-base-and-instruction-tuned-large-language-models-8de102c785a6" target="_blank" rel="noopener noreferrer">&quot;Base LLM&quot;</a> (ou modèle fondation) est de prédire le token suivant dans cette séquence. Comme les LLMs sont entraînés sur d'énormes ensembles de données textuelles, ils ont une bonne compréhension des relations statistiques entre les tokens et peuvent faire cette prédiction avec un certain degré de confiance. Notez qu’ils ne comprennent pas le <em>sens</em> des mots dans le prompt ou le token ; ils ne voient qu’un schéma qu’ils peuvent &quot;compléter&quot; avec leur prédiction suivante. Ils peuvent continuer à prédire la séquence jusqu’à ce que l’utilisateur arrête ou qu’une condition préétablie soit remplie.</p>
+<p>Vous voulez voir comment fonctionne la complétion basée sur un prompt ? Saisissez le prompt ci-dessus dans le <a href="https://oai.azure.com/playground" target="_blank" rel="noopener noreferrer"><em>Chat Playground</em></a> d’Azure OpenAI avec les réglages par défaut. Le système est configuré pour traiter les prompts comme des demandes d’informations - vous devriez donc voir une complétion qui correspond à ce contexte.</p>
+<p>Mais que se passe-t-il si l’utilisateur veut voir quelque chose de spécifique qui répond à des critères ou à un objectif de tâche ? C’est ici que les LLMs <em>instruits par instruction</em> entrent en jeu.</p>
+<p><img src="../../assets/images/04-playground-chat-base.webp" alt="Complétion Chat Base LLM" loading="lazy" decoding="async" /></p>
+<h3 id="concept-llms-instruits-par-instruction">Concept : LLMs instruits par instruction<a class="anchor" href="#concept-llms-instruits-par-instruction" aria-label="Lien vers cette section">#</a></h3>
+<p>Un <a href="https://blog.gopenai.com/an-introduction-to-base-and-instruction-tuned-large-language-models-8de102c785a6" target="_blank" rel="noopener noreferrer">LLM instruit par instruction</a> commence avec le modèle fondation et l’affine avec des exemples ou des paires entrée/sortie (par exemple, des &quot;messages&quot; multi-tours) qui contiennent des instructions claires – et la réponse de l’IA tente de suivre ces instructions.</p>
+<p>Cela utilise des techniques comme l’apprentissage par renforcement avec retour humain (RLHF) qui peuvent entraîner le modèle à <em>suivre des instructions</em> et <em>apprendre des retours</em> pour produire des réponses mieux adaptées aux applications pratiques et plus pertinentes par rapport aux objectifs des utilisateurs.</p>
+<p>Essayons – reprenez le prompt ci-dessus, mais changez maintenant le <em>message système</em> pour fournir l’instruction suivante comme contexte :</p>
+<blockquote>
+<p><em>Résumez le contenu fourni pour un élève de CE1. Limitez le résultat à un paragraphe avec 3 à 5 points clés.</em></p>
+</blockquote>
+<p>Voyez comme le résultat est désormais ajusté pour refléter l’objectif et le format souhaités ? Un enseignant peut maintenant directement utiliser cette réponse dans ses diapositives pour cette classe.</p>
+<p><img src="../../assets/images/04-playground-chat-instructions.webp" alt="Complétion Chat LLM intruit par instruction" loading="lazy" decoding="async" /></p>
+<h2 id="pourquoi-avons-nous-besoin-de-lingenierie-des-prompts">Pourquoi avons-nous besoin de l’Ingénierie des Prompts ?<a class="anchor" href="#pourquoi-avons-nous-besoin-de-lingenierie-des-prompts" aria-label="Lien vers cette section">#</a></h2>
+<p>Maintenant que nous savons comment les prompts sont traités par les LLMs, parlons du <em>pourquoi</em> de l’ingénierie des prompts. La réponse vient du fait que les LLMs actuels posent un certain nombre de défis qui rendent les <em>complétions fiables et cohérentes</em> plus difficiles à obtenir sans mettre d’efforts dans la construction et l’optimisation des prompts. Par exemple :</p>
+<ol>
+<li>
+<p><strong>Les réponses des modèles sont stochastiques.</strong> Le <em>même prompt</em> produira probablement des réponses différentes avec différents modèles ou versions de modèle. Et il peut même produire des résultats différents avec le <em>même modèle</em> à des moments différents. <em>Les techniques d’ingénierie des prompts peuvent nous aider à minimiser ces variations en fournissant de meilleures balises</em>.</p>
+</li>
+<li>
+<p><strong>Les modèles peuvent fabriquer des réponses.</strong> Les modèles sont pré-entraînés avec des ensembles de données <em>grands mais finis</em>, ce qui signifie qu’ils manquent de connaissances sur des concepts hors de ce champ d’entraînement. En conséquence, ils peuvent produire des complétions incorrectes, imaginaires ou directement contradictoires aux faits connus. <em>Les techniques d’ingénierie des prompts aident les utilisateurs à identifier et limiter ces fabrications, par exemple en demandant à l’IA des citations ou un raisonnement</em>.</p>
+</li>
+<li>
+<p><strong>Les capacités des modèles varient.</strong> Les modèles ou générations plus récents auront des capacités riches mais présenteront aussi des particularités et compromis uniques en termes de coût et de complexité. <em>L’ingénierie des prompts peut nous aider à développer des meilleures pratiques et des workflows qui abstraient ces différences et s’adaptent aux exigences spécifiques du modèle de façon évolutive et transparente</em>.</p>
+</li>
+</ol>
+<p>Voyons cela en action dans le OpenAI ou Azure OpenAI Playground :</p>
+<ul>
+<li>Utilisez le même prompt avec différents déploiements LLM (par exemple, OpenAI, Azure OpenAI, Hugging Face) - avez-vous vu des variations ?</li>
+<li>Utilisez plusieurs fois le même prompt avec le <em>même</em> déploiement LLM (par exemple, Azure OpenAI playground) - comment ces variations diffèrent-elles ?</li>
+</ul>
+<h3 id="exemple-de-fabrications">Exemple de Fabrications<a class="anchor" href="#exemple-de-fabrications" aria-label="Lien vers cette section">#</a></h3>
+<p>Dans ce cours, nous utilisons le terme <strong>&quot;fabrication&quot;</strong> pour désigner le phénomène où les LLMs génèrent parfois des informations factuellement incorrectes à cause de limitations dans leur entraînement ou d’autres contraintes. Vous avez peut-être aussi entendu ce phénomène appelé <em>&quot;hallucinations&quot;</em> dans des articles populaires ou des articles de recherche. Cependant, nous recommandons fortement d’utiliser le terme <em>&quot;fabrication&quot;</em> afin de ne pas anthropomorphiser ce comportement en lui attribuant une caractéristique humaine. Cela renforce également les <a href="https://www.microsoft.com/ai/responsible-ai" target="_blank" rel="noopener noreferrer">directives d’IA responsable</a> d’un point de vue terminologique, en éliminant des termes qui peuvent être perçus comme offensants ou non inclusifs dans certains contextes.</p>
+<p>Vous voulez vous faire une idée de ce que sont les fabrications ? Pensez à un prompt qui demande à l’IA de générer du contenu sur un sujet inexistant (pour s’assurer qu’il ne figure pas dans l’ensemble d’entraînement). Par exemple – j’ai essayé ce prompt :</p>
+<blockquote>
+<p><strong>Prompt :</strong> générez un plan de cours sur la guerre martienne de 2076.
+Une recherche sur le web m’a montré qu’il existait des récits fictifs (par exemple, séries télévisées ou livres) sur des guerres martiennes – mais aucun en 2076. Le bon sens nous dit aussi que 2076 est <em>dans le futur</em> et ne peut donc pas être associé à un événement réel.</p>
+</blockquote>
+<p>Alors que se passe-t-il lorsque nous exécutons cette invite avec différents fournisseurs de LLM ?</p>
+<blockquote>
+<p><strong>Réponse 1</strong> : OpenAI Playground (GPT-35)</p>
+</blockquote>
+<p><img src="../../assets/images/04-fabrication-oai.webp" alt="Réponse 1" loading="lazy" decoding="async" /></p>
+<blockquote>
+<p><strong>Réponse 2</strong> : Azure OpenAI Playground (GPT-35)</p>
+</blockquote>
+<p><img src="../../assets/images/04-fabrication-aoai.webp" alt="Réponse 2" loading="lazy" decoding="async" /></p>
+<blockquote>
+<p><strong>Réponse 3</strong> : : Hugging Face Chat Playground (LLama-2)</p>
+</blockquote>
+<p><img src="../../assets/images/04-fabrication-huggingchat.webp" alt="Réponse 3" loading="lazy" decoding="async" /></p>
+<p>Comme prévu, chaque modèle (ou version de modèle) produit des réponses légèrement différentes grâce au comportement stochastique et aux variations de capacité des modèles. Par exemple, un modèle cible un public de 4e tandis qu’un autre suppose un étudiant de lycée. Mais les trois modèles ont généré des réponses qui pourraient convaincre un utilisateur non informé que l’événement était réel.</p>
+<p>Les techniques d’ingénierie des invites comme le <em>métaprompting</em> et la <em>configuration de la température</em> peuvent réduire dans une certaine mesure les fabrications du modèle. De nouvelles <em>architectures</em> d’ingénierie des invites intègrent également de nouveaux outils et techniques de manière fluide dans le déroulement de l’invite, pour atténuer ou réduire certains de ces effets.</p>
+<h2 id="etude-de-cas-github-copilot">Étude de cas : GitHub Copilot<a class="anchor" href="#etude-de-cas-github-copilot" aria-label="Lien vers cette section">#</a></h2>
+<p>Terminons cette section en ayant une idée de la manière dont l’ingénierie des invites est utilisée dans des solutions réelles en examinant une étude de cas : <a href="https://github.com/features/copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot</a>.</p>
+<p>GitHub Copilot est votre « programmeur assistant IA » : il convertit des invites textuelles en suggestions de code et est intégré dans votre environnement de développement (par exemple, Visual Studio Code) pour une expérience utilisateur fluide. Comme documenté dans la série de blogs ci-dessous, la première version était basée sur le modèle OpenAI Codex – avec les ingénieurs constatant rapidement le besoin de peaufiner le modèle et de développer de meilleures techniques d’ingénierie des invites pour améliorer la qualité du code. En juillet, ils ont <a href="https://github.blog/2023-07-28-smarter-more-efficient-coding-github-copilot-goes-beyond-codex-with-improved-ai-model/" target="_blank" rel="noopener noreferrer">lancé un modèle IA amélioré qui va au-delà de Codex</a> pour des suggestions encore plus rapides.</p>
+<p>Lisez les articles dans l’ordre pour suivre leur parcours d’apprentissage.</p>
+<ul>
+<li><strong>Mai 2023</strong> | <a href="https://github.blog/2023-05-17-how-github-copilot-is-getting-better-at-understanding-your-code/" target="_blank" rel="noopener noreferrer">GitHub Copilot comprend mieux votre code</a></li>
+<li><strong>Mai 2023</strong> | <a href="https://github.blog/2023-05-17-inside-github-working-with-the-llms-behind-github-copilot/" target="_blank" rel="noopener noreferrer">À l’intérieur de GitHub : travailler avec les LLM derrière GitHub Copilot</a></li>
+<li><strong>Juin 2023</strong> | <a href="https://github.blog/2023-06-20-how-to-write-better-prompts-for-github-copilot/" target="_blank" rel="noopener noreferrer">Comment écrire de meilleures invites pour GitHub Copilot</a></li>
+<li><strong>Juillet 2023</strong> | <a href="https://github.blog/2023-07-28-smarter-more-efficient-coding-github-copilot-goes-beyond-codex-with-improved-ai-model/" target="_blank" rel="noopener noreferrer">.. GitHub Copilot dépasse Codex avec un modèle IA amélioré</a></li>
+<li><strong>Juillet 2023</strong> | <a href="https://github.blog/2023-07-17-prompt-engineering-guide-generative-ai-llms/" target="_blank" rel="noopener noreferrer">Guide du développeur pour l’ingénierie des prompts et les LLM</a></li>
+<li><strong>Sep 2023</strong> | <a href="https://github.blog/2023-09-06-how-to-build-an-enterprise-llm-application-lessons-from-github-copilot/" target="_blank" rel="noopener noreferrer">Comment construire une application LLM d’entreprise : leçons de GitHub Copilot</a></li>
+</ul>
+<p>Vous pouvez aussi parcourir leur <a href="https://github.blog/category/engineering/" target="_blank" rel="noopener noreferrer">blog d’ingénierie</a> pour plus d’articles comme <a href="https://github.blog/2023-09-27-how-i-used-github-copilot-chat-to-build-a-reactjs-gallery-prototype/" target="_blank" rel="noopener noreferrer">celui-ci</a> qui montre comment ces modèles et techniques sont <em>appliqués</em> pour piloter des applications concrètes.</p>
+<hr />
+<!--
+MODÈLE DE LEÇON :
+Cette unité devrait couvrir le concept clé #2.
+Renforcez le concept avec des exemples et références.
+
+CONCEPT #2 :
+Conception de prompts.
+Illustré par des exemples.
+-->
+<h2 id="construction-de-linvite">Construction de l’invite<a class="anchor" href="#construction-de-linvite" aria-label="Lien vers cette section">#</a></h2>
+<p>Nous avons vu pourquoi l’ingénierie des invites est importante – comprenons maintenant comment les invites sont <em>construites</em> pour pouvoir évaluer différentes techniques de conception d’invites plus efficaces.</p>
+<h3 id="invite-de-base">Invite de base<a class="anchor" href="#invite-de-base" aria-label="Lien vers cette section">#</a></h3>
+<p>Commençons par l’invite de base : une entrée textuelle envoyée au modèle sans autre contexte. Voici un exemple – lorsque nous envoyons les premiers mots de l’hymne national américain à l’API <a href="https://platform.openai.com/docs/api-reference/completions" target="_blank" rel="noopener noreferrer">Completion d’OpenAI</a>, il <em>complète</em> instantanément la réponse avec les lignes suivantes, illustrant le comportement de base de prédiction.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Invite (Entrée)</th>
+<th style="text-align:left">Complétion (Sortie)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Oh say can you see</td>
+<td style="text-align:left">On dirait que vous commencez à chanter les paroles de &quot;The Star-Spangled Banner&quot;, l’hymne national des États-Unis. Les paroles complètes sont ...</td>
+</tr>
+</tbody>
+</table>
+<h3 id="invite-complexe">Invite complexe<a class="anchor" href="#invite-complexe" aria-label="Lien vers cette section">#</a></h3>
+<p>Ajoutons maintenant un contexte et des instructions à cette invite de base. L’<a href="https://learn.microsoft.com/azure/ai-services/openai/how-to/chatgpt" target="_blank" rel="noopener noreferrer">API Chat Completion</a> nous permet de construire une invite complexe sous forme de collection de <em>messages</em> comprenant :</p>
+<ul>
+<li>paires entrée/sortie reflétant la saisie de l’<em>utilisateur</em> et la réponse de l’<em>assistant</em>.</li>
+<li>message système définissant le contexte du comportement ou de la personnalité de l’assistant.</li>
+</ul>
+<p>La requête prend maintenant la forme ci-dessous, où la <em>tokenisation</em> capture efficacement les informations pertinentes du contexte et de la conversation. Changer le contexte système peut avoir autant d’impact sur la qualité des complétions que les entrées utilisateur fournies.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Who won the world series in 2020?&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The Los Angeles Dodgers won the World Series in 2020.&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Where was it played?&quot;</span><span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div><h3 id="invite-dinstruction">Invite d’instruction<a class="anchor" href="#invite-dinstruction" aria-label="Lien vers cette section">#</a></h3>
+<p>Dans les exemples ci-dessus, l’invite utilisateur était une simple requête textuelle pouvant être interprétée comme une demande d’information. Avec les invites <em>d’instruction</em>, on peut utiliser ce texte pour spécifier une tâche plus en détail, fournissant ainsi une meilleure orientation à l’IA. Voici un exemple :</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Invite (Entrée)</th>
+<th style="text-align:left">Complétion (Sortie)</th>
+<th style="text-align:left">Type d’instruction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Écrire une description de la Guerre de Sécession</td>
+<td style="text-align:left"><em>a retourné un simple paragraphe</em></td>
+<td style="text-align:left">Simple</td>
+</tr>
+<tr>
+<td style="text-align:left">Écrire une description de la Guerre de Sécession. Fournir les dates clés et événements et décrire leur importance</td>
+<td style="text-align:left"><em>a retourné un paragraphe suivi d’une liste des dates clés des événements avec leurs descriptions</em></td>
+<td style="text-align:left">Complexe</td>
+</tr>
+<tr>
+<td style="text-align:left">Écrire une description de la Guerre de Sécession en 1 paragraphe. Fournir 3 points clés avec les dates clés et leur importance. Fournir 3 autres points clés avec les figures historiques importantes et leurs contributions. Retourner le résultat sous forme de fichier JSON</td>
+<td style="text-align:left"><em>retourne des détails plus étendus dans une zone de texte formatée en JSON que vous pouvez copier-coller et valider selon besoin</em></td>
+<td style="text-align:left">Complexe. Formaté.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="contenu-principal">Contenu principal<a class="anchor" href="#contenu-principal" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans les exemples ci-dessus, l’invite restait assez ouverte, permettant au LLM de décider quelle partie de son ensemble de données pré-entraînées était pertinente. Avec le schéma de conception <em>contenu principal</em>, le texte d’entrée est divisé en deux parties :</p>
+<ul>
+<li>une instruction (action)</li>
+<li>un contenu pertinent (qui influence l’action)</li>
+</ul>
+<p>Voici un exemple où l’instruction est de « résumer ceci en 2 phrases ».</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Invite (Entrée)</th>
+<th style="text-align:left">Complétion (Sortie)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Jupiter est la cinquième planète à partir du Soleil et la plus grande du Système solaire. C’est une géante gazeuse avec une masse équivalente à un millième de celle du Soleil, mais deux fois et demie celle de toutes les autres planètes du Système solaire réunies. Jupiter est l’un des objets les plus brillants visibles à l’œil nu dans le ciel nocturne et est connue depuis les civilisations anciennes bien avant l’histoire enregistrée. Elle doit son nom au dieu romain Jupiter.[19] Vue de la Terre, Jupiter peut être suffisamment brillante pour que sa lumière réfléchie projette des ombres visibles,[20] et c’est en moyenne le troisième objet naturel le plus brillant dans le ciel nocturne après la Lune et Vénus. <br/> <strong>Résumez ceci en 2 courtes phrases</strong></td>
+<td style="text-align:left">Jupiter, la cinquième planète à partir du Soleil, est la plus grande du Système solaire et est connue comme l’un des objets les plus brillants dans le ciel nocturne. Nommée d’après le dieu romain Jupiter, c’est une géante gazeuse dont la masse est deux fois et demie celle de toutes les autres planètes du Système solaire réunies.</td>
+</tr>
+</tbody>
+</table>
+<p>Le segment de contenu principal peut être utilisé de diverses façons pour guider des instructions plus efficaces :</p>
+<ul>
+<li><strong>Exemples</strong> – au lieu de dire au modèle quoi faire avec une instruction explicite, donnez-lui des exemples de ce qu’il doit faire et laissez-le en déduire le schéma.</li>
+<li><strong>Indices</strong> – suivez l’instruction par un « indice » qui prépare la complétion, guidant le modèle vers des réponses plus pertinentes.</li>
+<li><strong>Modèles</strong> – ce sont des « recettes » répétables pour les invites avec des espaces réservés (variables) pouvant être personnalisées avec des données pour des cas d’usage spécifiques.</li>
+</ul>
+<p>Explorons ces techniques en action.</p>
+<h3 id="utiliser-des-exemples">Utiliser des exemples<a class="anchor" href="#utiliser-des-exemples" aria-label="Lien vers cette section">#</a></h3>
+<p>C’est une approche où vous utilisez le contenu principal pour « nourrir le modèle » avec des exemples de la sortie désirée pour une instruction donnée, et le laissez inférer le schéma pour la sortie voulue. En fonction du nombre d’exemples fournis, on peut avoir une invite zéro-shot, one-shot, few-shot, etc.</p>
+<p>L’invite se compose maintenant de trois éléments :</p>
+<ul>
+<li>une description de la tâche</li>
+<li>quelques exemples de la sortie désirée</li>
+<li>le début d’un nouvel exemple (qui devient une description implicite de la tâche)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Type d’apprentissage</th>
+<th style="text-align:left">Invite (Entrée)</th>
+<th style="text-align:left">Complétion (Sortie)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Zéro-shot</td>
+<td style="text-align:left">« The Sun is Shining ». Traduire en espagnol</td>
+<td style="text-align:left">« El Sol está brillando ».</td>
+</tr>
+<tr>
+<td style="text-align:left">One-shot</td>
+<td style="text-align:left">« The Sun is Shining » =&gt; « El Sol está brillando ». <br> « It's a Cold and Windy Day » =&gt;</td>
+<td style="text-align:left">« Es un día frío y ventoso ».</td>
+</tr>
+<tr>
+<td style="text-align:left">Few-shot</td>
+<td style="text-align:left">Le joueur est passé par les bases =&gt; Baseball <br/> Le joueur a fait un service gagnant =&gt; Tennis <br/> Le joueur a frappé un six =&gt; Cricket <br/> Le joueur a réussi un dunk =&gt;</td>
+<td style="text-align:left">Basketball</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p>Remarquez que nous avons dû fournir une instruction explicite (« Traduire en espagnol ») dans l’invite zéro-shot, mais elle est déduite dans l’exemple one-shot. L’exemple few-shot montre comment l’ajout de plusieurs exemples permet aux modèles de faire des inférences plus précises sans instructions supplémentaires.</p>
+<h3 id="indices-dinvite">Indices d’invite<a class="anchor" href="#indices-dinvite" aria-label="Lien vers cette section">#</a></h3>
+<p>Une autre technique utilisant le contenu principal consiste à fournir des <em>indices</em> plutôt que des exemples. Dans ce cas, nous donnons au modèle une impulsion dans la bonne direction en <em>commençant</em> par un extrait qui reflète le format de réponse désiré. Le modèle « saisit l’indice » et poursuit dans cette veine.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Nombre d’indices</th>
+<th style="text-align:left">Invite (Entrée)</th>
+<th style="text-align:left">Complétion (Sortie)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">Jupiter est la cinquième planète à partir du Soleil et la plus grande du Système solaire. C’est une géante gazeuse avec une masse équivalente à un millième de celle du Soleil, mais deux fois et demie celle de toutes les autres planètes du Système solaire réunies. Jupiter est l’un des objets les plus brillants visibles à l’œil nu dans le ciel nocturne, et est connue depuis les civilisations anciennes avant l’histoire enregistrée. <br/><strong>Résumez Ceci</strong></td>
+<td style="text-align:left">Jupiter est la plus grande planète de notre Système solaire et la cinquième à partir du Soleil. C’est une géante gazeuse avec une masse équivalente à un millième de celle du Soleil, mais elle est plus lourde que toutes les autres planètes réunies. Les civilisations anciennes connaissent Jupiter depuis longtemps, et elle est facilement visible dans le ciel nocturne.</td>
+</tr>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">Jupiter est la cinquième planète à partir du Soleil et la plus grande du Système solaire. C'est une géante gazeuse avec une masse équivalente à un millième de celle du Soleil, mais deux fois et demie celle de toutes les autres planètes du Système solaire réunies. Jupiter est l’un des objets les plus brillants visibles à l’œil nu dans le ciel nocturne, et est connue des civilisations anciennes depuis avant l’histoire enregistrée. <br/><strong>Résumez ceci</strong> <br/> Ce que nous avons appris, c’est que Jupiter</td>
+<td style="text-align:left">est la cinquième planète à partir du Soleil et la plus grande du Système solaire. C'est une géante gazeuse avec une masse équivalente à un millième de celle du Soleil, mais deux fois et demie celle de toutes les autres planètes réunies. Elle est facilement visible à l’œil nu et est connue depuis les temps anciens.</td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Jupiter est la cinquième planète à partir du Soleil et la plus grande du Système solaire. C'est une géante gazeuse avec une masse équivalente à un millième de celle du Soleil, mais deux fois et demie celle de toutes les autres planètes du Système solaire réunies. Jupiter est l’un des objets les plus brillants visibles à l’œil nu dans le ciel nocturne, et est connue des civilisations anciennes depuis avant l’histoire enregistrée. <br/><strong>Résumez ceci</strong> <br/> Top 3 des faits que nous avons appris :</td>
+<td style="text-align:left">1. Jupiter est la cinquième planète à partir du Soleil et la plus grande du Système solaire. <br/> 2. C'est une géante gazeuse avec une masse équivalente à un millième de celle du Soleil...<br/> 3. Jupiter est visible à l’œil nu depuis les temps anciens ...</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="modeles-de-prompt">Modèles de prompt<a class="anchor" href="#modeles-de-prompt" aria-label="Lien vers cette section">#</a></h3>
+<p>Un modèle de prompt est une <em>recette prédéfinie pour un prompt</em> qui peut être stockée et réutilisée selon les besoins, afin d’offrir des expériences utilisateur plus cohérentes à grande échelle. Dans sa forme la plus simple, c’est simplement une collection d’exemples de prompts comme <a href="https://cookbook.openai.com/examples/gpt4-1_prompting_guide" target="_blank" rel="noopener noreferrer">celui-ci d’OpenAI</a> qui fournit à la fois des composants interactifs (messages utilisateur et système) et le format de requête piloté par API – pour permettre la réutilisation.</p>
+<p>Dans une forme plus complexe comme <a href="https://python.langchain.com/docs/concepts/prompt_templates/" target="_blank" rel="noopener noreferrer">cet exemple de LangChain</a>, il contient des <em>espaces réservés</em> pouvant être remplacés par des données issues de diverses sources (entrée utilisateur, contexte système, sources externes, etc.) pour générer dynamiquement un prompt. Cela permet de créer une bibliothèque de prompts réutilisables qui peuvent être utilisés pour offrir des expériences cohérentes <strong>de manière programmée</strong> à grande échelle.</p>
+<p>Enfin, la vraie valeur des modèles réside dans la capacité à créer et publier des <em>bibliothèques de prompts</em> pour des domaines d’application verticaux – où le modèle de prompt est désormais <em>optimisé</em> pour refléter un contexte ou des exemples propres à l’application, rendant les réponses plus pertinentes et précises pour l’audience ciblée. Le dépôt <a href="https://github.com/microsoft/prompts-for-edu" target="_blank" rel="noopener noreferrer">Prompts For Edu</a> est un excellent exemple de cette approche, proposant une bibliothèque de prompts pour le domaine éducatif avec un accent sur des objectifs clés comme la planification de cours, la conception de programmes, le tutorat des élèves, etc.</p>
+<h2 id="contenu-de-support">Contenu de support<a class="anchor" href="#contenu-de-support" aria-label="Lien vers cette section">#</a></h2>
+<p>Si nous considérons la construction d’un prompt comme ayant une instruction (tâche) et un contenu principal (cible), alors le <em>contenu secondaire</em> est comme un contexte additionnel que nous fournissons pour <strong>influencer la sortie d’une manière ou d’une autre</strong>. Cela peut être des paramètres d’ajustement, des instructions de formatage, des taxonomies de sujets, etc. aidant le modèle à <em>adapter</em> sa réponse pour mieux correspondre aux objectifs ou attentes de l’utilisateur.</p>
+<p>Par exemple : Étant donné un catalogue de cours avec des métadonnées étendues (nom, description, niveau, tags, instructeur, etc.) sur tous les cours disponibles du programme :</p>
+<ul>
+<li>nous pouvons définir une instruction pour « résumer le catalogue de cours pour l’automne 2023 »</li>
+<li>nous pouvons utiliser le contenu principal pour fournir quelques exemples du résultat attendu</li>
+<li>nous pouvons utiliser le contenu secondaire pour identifier les 5 tags d’intérêt principaux.</li>
+</ul>
+<p>Maintenant, le modèle peut fournir un résumé au format montré par les exemples – mais si un résultat comprend plusieurs tags, il peut prioriser les 5 tags identifiés dans le contenu secondaire.</p>
+<hr />
+<!--
+MODÈLE DE LEÇON :
+Cette unité doit couvrir le concept clé n°1.
+Renforcer le concept avec des exemples et références.
+
+CONCEPT N°3 :
+Techniques d’ingénierie de prompt.
+Quelles sont quelques techniques de base pour l’ingénierie de prompt ?
+Illustrer avec quelques exercices.
+-->
+<h2 id="bonnes-pratiques-pour-les-prompts">Bonnes pratiques pour les prompts<a class="anchor" href="#bonnes-pratiques-pour-les-prompts" aria-label="Lien vers cette section">#</a></h2>
+<p>Maintenant que nous savons comment les prompts peuvent être <em>construits</em>, nous pouvons commencer à réfléchir à comment les <em>concevoir</em> pour refléter les meilleures pratiques. Nous pouvons diviser cela en deux parties : avoir le bon <em>état d’esprit</em> et appliquer les bonnes <em>techniques</em>.</p>
+<h3 id="etat-desprit-de-lingenierie-de-prompt">État d’esprit de l’ingénierie de prompt<a class="anchor" href="#etat-desprit-de-lingenierie-de-prompt" aria-label="Lien vers cette section">#</a></h3>
+<p>L’ingénierie de prompt est un processus d’essais et erreurs, donc gardez en tête trois grands facteurs directeurs :</p>
+<ol>
+<li>
+<p><strong>La compréhension du domaine est importante.</strong> La précision et la pertinence des réponses dépendent du <em>domaine</em> dans lequel applique l’utilisateur ou l’application. Appliquez votre intuition et expertise métier pour <strong>personnaliser davantage les techniques</strong>. Par exemple, définissez des <em>personnalités spécifiques au domaine</em> dans vos prompts système, ou utilisez des <em>modèles spécifiques au domaine</em> dans vos prompts utilisateur. Fournissez un contenu secondaire qui reflète le contexte du domaine, ou utilisez des <em>indices et exemples spécifiques au domaine</em> pour orienter le modèle vers des usages familiers.</p>
+</li>
+<li>
+<p><strong>La compréhension du modèle est importante.</strong> Nous savons que les modèles sont stochastiques par nature. Mais leur implémentation peut aussi varier selon l’ensemble de données d’entraînement (connaissances pré-entraînées), les capacités offertes (ex. via API ou SDK) et le type de contenu optimisé (ex. code vs images vs texte). Comprenez les forces et limites du modèle utilisé, et servez-vous de ces connaissances pour <em>prioriser les tâches</em> ou construire des <em>modèles personnalisés</em> optimisés pour les capacités du modèle.</p>
+</li>
+<li>
+<p><strong>L’itération et la validation sont importantes.</strong> Les modèles évoluent rapidement, tout comme les techniques d’ingénierie de prompt. En tant qu’expert du domaine, vous disposez peut-être d’autres contextes ou critères propres à <em>votre</em> application spécifique, qui ne s’appliquent pas à la communauté plus large. Utilisez les outils et techniques d’ingénierie de prompt pour &quot;démarrer rapidement&quot; la construction du prompt, puis itérez et validez les résultats en vous appuyant sur votre intuition et expertise. Enregistrez vos observations et créez une <strong>base de connaissances</strong> (ex. bibliothèques de prompts) pouvant servir de base à d’autres pour accélérer les itérations futures.</p>
+</li>
+</ol>
+<h2 id="bonnes-pratiques">Bonnes pratiques<a class="anchor" href="#bonnes-pratiques" aria-label="Lien vers cette section">#</a></h2>
+<p>Voyons maintenant les bonnes pratiques communes recommandées par les praticiens d’<a href="https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-openai-api" target="_blank" rel="noopener noreferrer">OpenAI</a> et d’<a href="https://learn.microsoft.com/azure/ai-services/openai/concepts/prompt-engineering#best-practices" target="_blank" rel="noopener noreferrer">Azure OpenAI</a>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Quoi</th>
+<th style="text-align:left">Pourquoi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Évaluer les derniers modèles.</td>
+<td style="text-align:left">Les nouvelles générations de modèles ont probablement des fonctionnalités et une qualité améliorées - mais peuvent aussi entraîner des coûts plus élevés. Évaluez leur impact, puis décidez des migrations.</td>
+</tr>
+<tr>
+<td style="text-align:left">Séparer instructions &amp; contexte</td>
+<td style="text-align:left">Vérifiez si votre modèle/fournisseur définit des <em>délimiteurs</em> pour distinguer clairement instructions, contenu principal et secondaire. Cela peut aider le modèle à attribuer des poids de manière plus précise aux tokens.</td>
+</tr>
+<tr>
+<td style="text-align:left">Être spécifique et clair</td>
+<td style="text-align:left">Donnez plus de détails sur le contexte souhaité, le résultat attendu, la longueur, le format, le style, etc. Cela améliorera à la fois la qualité et la cohérence des réponses. Capturez ces recettes dans des modèles réutilisables.</td>
+</tr>
+<tr>
+<td style="text-align:left">Être descriptif, utiliser des exemples</td>
+<td style="text-align:left">Les modèles répondent souvent mieux à une approche « montrer et expliquer ». Commencez par une approche <code>zero-shot</code> où vous donnez une instruction (sans exemples), puis essayez <code>few-shot</code> comme raffinement, en fournissant quelques exemples du résultat attendu. Utilisez des analogies.</td>
+</tr>
+<tr>
+<td style="text-align:left">Utiliser des indices pour stimuler les complétions</td>
+<td style="text-align:left">Orientez-le vers un résultat désiré en donnant des mots ou phrases amorces qu’il peut utiliser comme point de départ pour la réponse.</td>
+</tr>
+<tr>
+<td style="text-align:left">Insister (Double Down)</td>
+<td style="text-align:left">Parfois, vous devrez vous répéter auprès du modèle. Donnez des instructions avant et après le contenu principal, utilisez une instruction et un indice, etc. Itérez et validez pour voir ce qui fonctionne.</td>
+</tr>
+<tr>
+<td style="text-align:left">L’ordre compte</td>
+<td style="text-align:left">L’ordre dans lequel vous présentez l’information peut influencer la sortie, même dans les exemples d’apprentissage, à cause du biais de récence. Essayez différentes options pour trouver ce qui marche le mieux.</td>
+</tr>
+<tr>
+<td style="text-align:left">Donner au modèle une « porte de sortie »</td>
+<td style="text-align:left">Donnez au modèle une réponse <em>de secours</em> qu’il peut fournir s’il ne peut pas accomplir la tâche pour une raison quelconque. Cela peut réduire la probabilité que le modèle génère des réponses fausses ou inventées.</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p>Comme pour toute bonne pratique, souvenez-vous que <em>vos résultats peuvent varier</em> selon le modèle, la tâche et le domaine. Utilisez ceci comme point de départ et itérez pour trouver ce qui vous convient le mieux. Réévaluez constamment votre processus d’ingénierie de prompt au fur et à mesure que de nouveaux modèles et outils deviennent disponibles, en vous concentrant sur l’évolutivité du processus et la qualité des réponses.</p>
+<!--
+MODÈLE DE LEÇON :
+Cette unité doit fournir un défi de code si applicable
+
+DÉFI :
+Lien vers un Jupyter Notebook avec uniquement les commentaires de code dans les instructions (sections de code vides).
+
+SOLUTION :
+Lien vers une copie de ce Notebook avec les prompts remplis et exécutés, montrant un exemple de sortie.
+-->
+<h2 id="exercices">Exercices<a class="anchor" href="#exercices" aria-label="Lien vers cette section">#</a></h2>
+<p>Félicitations ! Vous avez terminé la leçon ! Il est temps de mettre à l’épreuve quelques-uns de ces concepts et techniques avec des exemples réels !</p>
+<p>Pour notre exercice, nous utiliserons un Jupyter Notebook avec des exercices que vous pouvez compléter de manière interactive. Vous pouvez également étendre le Notebook avec vos propres cellules Markdown et Code pour explorer les idées et techniques par vous-même.</p>
+<h3 id="pour-commencer-creez-un-fork-du-depot-puis">Pour commencer, créez un fork du dépôt, puis<a class="anchor" href="#pour-commencer-creez-un-fork-du-depot-puis" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>(Recommandé) Lancez GitHub Codespaces</li>
+<li>(Sinon) Clonez le dépôt sur votre machine locale et utilisez-le avec Docker Desktop</li>
+<li>(Sinon) Ouvrez le Notebook avec votre environnement d’exécution préféré.</li>
+</ul>
+<h3 id="ensuite-configurez-vos-variables-denvironnement">Ensuite, configurez vos variables d’environnement<a class="anchor" href="#ensuite-configurez-vos-variables-denvironnement" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Copiez le fichier <code>.env.copy</code> à la racine du dépôt en <code>.env</code> et remplissez les valeurs <code>AZURE_OPENAI_API_KEY</code>, <code>AZURE_OPENAI_ENDPOINT</code> et <code>AZURE_OPENAI_DEPLOYMENT</code>. Revenez à la section <a href="#environnement-de-travail-sandbox">Learning Sandbox</a> pour apprendre comment.</li>
+</ul>
+<h3 id="ensuite-ouvrez-le-jupyter-notebook">Ensuite, ouvrez le Jupyter Notebook<a class="anchor" href="#ensuite-ouvrez-le-jupyter-notebook" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>Sélectionnez le kernel d’exécution. Si vous utilisez les options 1 ou 2, choisissez simplement le kernel Python 3.10.x par défaut fourni par le conteneur de développement.</li>
+</ul>
+<p>Vous êtes prêt à exécuter les exercices. Notez qu’il n’y a pas de réponses <em>justes ou fausses</em> ici – juste l’exploration par essais et erreurs et la construction d’une intuition sur ce qui fonctionne pour un modèle et un domaine d’application donnés.</p>
+<p><em>Pour cette raison, il n’y a pas de segments de solutions de code dans cette leçon. À la place, le Notebook aura des cellules Markdown intitulées &quot;Ma solution :&quot; montrant un exemple de sortie pour référence.</em></p>
+ <!--
+MODÈLE DE LEÇON :
+Terminez la section avec un résumé et des ressources pour l’auto-apprentissage.
+-->
+<h2 id="controle-des-connaissances">Contrôle des connaissances<a class="anchor" href="#controle-des-connaissances" aria-label="Lien vers cette section">#</a></h2>
+<p>Lequel des prompts suivants est un bon prompt suivant des bonnes pratiques raisonnables ?</p>
+<ol>
+<li>Montre-moi une image de voiture rouge</li>
+<li>Montre-moi une image de voiture rouge de marque Volvo et modèle XC90 garée près d’une falaise avec le soleil couchant</li>
+<li>Montre-moi une image de voiture rouge de marque Volvo et modèle XC90</li>
+</ol>
+<p>Réponse : 2, c’est le meilleur prompt car il donne des détails sur le &quot;quoi&quot; et va dans le spécifique (pas n’importe quelle voiture mais une marque et un modèle précis) et il décrit aussi le cadre général. Le 3 est le deuxième meilleur car il contient aussi beaucoup de description.</p>
+<h2 id="defi">🚀 Défi<a class="anchor" href="#defi" aria-label="Lien vers cette section">#</a></h2>
+<p>Voyez si vous pouvez utiliser la technique de &quot;l’indice&quot; avec le prompt : Complète la phrase &quot;Montre-moi une image de voiture rouge de marque Volvo et &quot;. Que répond-il, et comment l’amélioreriez-vous ?</p>
+<h2 id="excellent-travail-continuez-a-apprendre">Excellent travail ! Continuez à apprendre<a class="anchor" href="#excellent-travail-continuez-a-apprendre" aria-label="Lien vers cette section">#</a></h2>
+<p>Vous voulez en savoir plus sur les différents concepts d’ingénierie de prompt ? Rendez-vous sur la <a href="https://aka.ms/genai-collection" target="_blank" rel="noopener noreferrer">page d’apprentissage continu</a> pour trouver d’autres excellentes ressources sur ce sujet.</p>
+<p>Dirigez-vous vers la Leçon 5 où nous explorerons les <a href="../../lecons/05-advanced-prompts/index.html">techniques avancées de prompt</a> !</p>
+<hr />
+<!-- CO-OP TRANSLATOR DISCLAIMER START -->
+<p><strong>Avertissement</strong> :
+Ce document a été traduit à l'aide du service de traduction automatique <a href="https://github.com/Azure/co-op-translator" target="_blank" rel="noopener noreferrer">Co-op Translator</a>. Bien que nous nous efforçions d'assurer l'exactitude, veuillez noter que les traductions automatisées peuvent contenir des erreurs ou des inexactitudes. Le document original dans sa langue native doit être considéré comme la source faisant autorité. Pour les informations critiques, il est recommandé de recourir à une traduction professionnelle réalisée par un humain. Nous ne saurions être tenus responsables des malentendus ou erreurs d'interprétation découlant de l'utilisation de cette traduction.</p>
+<!-- CO-OP TRANSLATOR DISCLAIMER END -->
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de la leçon<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers d'exemple de cette leçon, copiés depuis le dépôt d'origine. Chaque fichier est lisible ici et téléchargeable.</p><div class="tabs__panel" data-tab="python"><details class="codefile" id="code-python-aoai-assignment-ipynb"><summary class="codefile__head"><span class="codefile__name">python/aoai-assignment.ipynb</span><span class="codefile__size">9 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="notebook__md"><p>The following notebook was auto-generated by GitHub Copilot Chat and is meant for initial setup only</p>
+</div><div class="notebook__md"><h1>Introduction to Prompt Engineering</h1>
+<p>Prompt engineering is the process of designing and optimizing prompts for natural language processing tasks. It involves selecting the right prompts, tuning their parameters, and evaluating their performance. Prompt engineering is crucial for achieving high accuracy and efficiency in NLP models. In this section, we will explore the basics of prompt engineering using the OpenAI models for exploration.</p>
+</div><div class="notebook__md"><h3>Exercise 1: Tokenization</h3>
+<p>Explore Tokenization using tiktoken, an open-source fast tokenizer from OpenAI
+See <a href="https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">OpenAI Cookbook</a> for more examples.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># EXERCISE:</span>
+<span class="c1"># 1. Run the exercise as is first</span>
+<span class="c1"># 2. Change the text to any prompt input you want to use &amp; re-run to see tokens</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tiktoken</span>
+
+<span class="c1"># Define the prompt you want tokenized</span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Jupiter is the fifth planet from the Sun and the </span><span class="se">\</span>
+<span class="s2">largest in the Solar System. It is a gas giant with </span><span class="se">\</span>
+<span class="s2">a mass one-thousandth that of the Sun, but two-and-a-half </span><span class="se">\</span>
+<span class="s2">times that of all the other planets in the Solar System combined. </span><span class="se">\</span>
+<span class="s2">Jupiter is one of the brightest objects visible to the naked eye </span><span class="se">\</span>
+<span class="s2">in the night sky, and has been known to ancient civilizations since </span><span class="se">\</span>
+<span class="s2">before recorded history. It is named after the Roman god Jupiter.[19] </span><span class="se">\</span>
+<span class="s2">When viewed from Earth, Jupiter can be bright enough for its reflected </span><span class="se">\</span>
+<span class="s2">light to cast visible shadows,[20] and is on average the third-brightest </span><span class="se">\</span>
+<span class="s2">natural object in the night sky after the Moon and Venus.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># Set the model you want encoding for</span>
+<span class="n">encoding</span> <span class="o">=</span> <span class="n">tiktoken</span><span class="o">.</span><span class="n">encoding_for_model</span><span class="p">(</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>
+
+<span class="c1"># Encode the text - gives you the tokens in integer form</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">encoding</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tokens</span><span class="p">);</span>
+
+<span class="c1"># Decode the integers to see what the text versions look like</span>
+<span class="p">[</span><span class="n">encoding</span><span class="o">.</span><span class="n">decode_single_token_bytes</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 2: Validate OpenAI API Key Setup</h3>
+<p>Run the code below to verify that your OpenAI endpoint is set up correctly. The code just tries a simple basic prompt and validates the completion. Input <code>oh say can you see</code> should complete along the lines of <code>by the dawn's early light..</code></p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Uses the OpenAI client against the Azure OpenAI (Microsoft Foundry) v1 endpoint</span>
+<span class="c1"># with the Responses API. See https://aka.ms/openai/start</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+  <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AZURE_OPENAI_API_KEY&#39;</span><span class="p">],</span>
+  <span class="n">base_url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AZURE_OPENAI_ENDPOINT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">/openai/v1/&quot;</span><span class="p">,</span>
+  <span class="p">)</span>
+
+<span class="n">deployment</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AZURE_OPENAI_DEPLOYMENT&#39;</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">deployment</span><span class="p">,</span>
+        <span class="nb">input</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
+        <span class="n">max_output_tokens</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+        <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+
+<span class="c1">## ---------- Call the helper method</span>
+
+<span class="c1">### 1. Set primary content or prompt text</span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">oh say can you see</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">### 2. Use that in the prompt template below</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">```</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">## 3. Run the prompt</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 3: Fabrications</h3>
+<p>Explore what happens when you ask the LLM to return completions for a prompt about a topic that may not exist, or about topics that it may not know about because it was outside it's pre-trained dataset (more recent). See how the response changes if you try a different prompt, or a different model.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">## Set the text for simple prompt or primary content</span>
+<span class="c1">## Prompt shows a template format with text in it - add cues, commands etc if needed</span>
+<span class="c1">## Run the completion </span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">generate a lesson plan on the Martian War of 2076.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">```</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 4: Instruction Based</h3>
+<p>Use the &quot;text&quot; variable to set the primary content
+and the &quot;prompt&quot; variable to provide an instruction related to that primary content.</p>
+<p>Here we ask the model to summarize the text for a second-grade student</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Test Example</span>
+<span class="c1"># https://platform.openai.com/playground/p/default-summarize</span>
+
+<span class="c1">## Example text</span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Jupiter is the fifth planet from the Sun and the </span><span class="se">\</span>
+<span class="s2">largest in the Solar System. It is a gas giant with </span><span class="se">\</span>
+<span class="s2">a mass one-thousandth that of the Sun, but two-and-a-half </span><span class="se">\</span>
+<span class="s2">times that of all the other planets in the Solar System combined. </span><span class="se">\</span>
+<span class="s2">Jupiter is one of the brightest objects visible to the naked eye </span><span class="se">\</span>
+<span class="s2">in the night sky, and has been known to ancient civilizations since </span><span class="se">\</span>
+<span class="s2">before recorded history. It is named after the Roman god Jupiter.[19] </span><span class="se">\</span>
+<span class="s2">When viewed from Earth, Jupiter can be bright enough for its reflected </span><span class="se">\</span>
+<span class="s2">light to cast visible shadows,[20] and is on average the third-brightest </span><span class="se">\</span>
+<span class="s2">natural object in the night sky after the Moon and Venus.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">## Set the prompt</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Summarize content you are provided with for a second-grade student.</span>
+<span class="s2">```</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">## Run the prompt</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 5: Complex Prompt</h3>
+<p>Try a request that has system, user and assistant messages
+System sets assistant context
+User &amp; Assistant messages provide multi-turn conversation context</p>
+<p>Note how the assistant personality is set to &quot;sarcastic&quot; in the system context.
+Try using a different personality context. Or try a different series of input/output messages</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">deployment</span><span class="p">,</span>
+    <span class="nb">input</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a sarcastic assistant.&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Who won the world series in 2020?&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Who do you think won? The Los Angeles Dodgers of course.&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Where was it played?&quot;</span><span class="p">}</span>
+    <span class="p">],</span>
+    <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">output_text</span><span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise: Explore Your Intuition</h3>
+<p>The above examples give you patterns that you can use to create new prompts (simple, complex, instruction etc.) - try creating other exercises to explore some of the other ideas we've talked about like examples, cues and more.</p>
+</div></div><p class="codefile__actions"><a href="../../assets/code/04-prompt-engineering-fundamentals/python/aoai-assignment.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-githubmodels-assignment-ipynb"><summary class="codefile__head"><span class="codefile__name">python/githubmodels-assignment.ipynb</span><span class="codefile__size">11 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="notebook__md"><h1>Introduction to Prompt Engineering</h1>
+<p>Prompt engineering is the process of designing and optimizing prompts for natural language processing tasks. It involves selecting the right prompts, tuning their parameters, and evaluating their performance. Prompt engineering is crucial for achieving high accuracy and efficiency in NLP models. In this section, we will explore the basics of prompt engineering using the OpenAI models for exploration.</p>
+</div><div class="notebook__md"><h3>Exercise 1: Tokenization</h3>
+<p>Explore Tokenization using tiktoken, an open-source fast tokenizer from OpenAI
+See <a href="https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">OpenAI Cookbook</a> for more examples.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># EXERCISE:</span>
+<span class="c1"># 1. Run the exercise as is first</span>
+<span class="c1"># 2. Change the text to any prompt input you want to use &amp; re-run to see tokens</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tiktoken</span>
+
+<span class="c1"># Define the prompt you want tokenized</span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Jupiter is the fifth planet from the Sun and the </span><span class="se">\</span>
+<span class="s2">largest in the Solar System. It is a gas giant with </span><span class="se">\</span>
+<span class="s2">a mass one-thousandth that of the Sun, but two-and-a-half </span><span class="se">\</span>
+<span class="s2">times that of all the other planets in the Solar System combined. </span><span class="se">\</span>
+<span class="s2">Jupiter is one of the brightest objects visible to the naked eye </span><span class="se">\</span>
+<span class="s2">in the night sky, and has been known to ancient civilizations since </span><span class="se">\</span>
+<span class="s2">before recorded history. It is named after the Roman god Jupiter.[19] </span><span class="se">\</span>
+<span class="s2">When viewed from Earth, Jupiter can be bright enough for its reflected </span><span class="se">\</span>
+<span class="s2">light to cast visible shadows,[20] and is on average the third-brightest </span><span class="se">\</span>
+<span class="s2">natural object in the night sky after the Moon and Venus.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># Set the model you want encoding for</span>
+<span class="n">encoding</span> <span class="o">=</span> <span class="n">tiktoken</span><span class="o">.</span><span class="n">encoding_for_model</span><span class="p">(</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>
+
+<span class="c1"># Encode the text - gives you the tokens in integer form</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">encoding</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tokens</span><span class="p">);</span>
+
+<span class="c1"># Decode the integers to see what the text versions look like</span>
+<span class="p">[</span><span class="n">encoding</span><span class="o">.</span><span class="n">decode_single_token_bytes</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 2: Validate Microsoft Foundry Models Key Setup</h3>
+<blockquote>
+<p><strong>Note:</strong> GitHub Models is retiring at the end of July 2026. This exercise uses <a href="https://ai.azure.com/catalog/models?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Microsoft Foundry Models</a> instead, which offers the same free-to-try model catalog and Azure AI Inference SDK experience.</p>
+</blockquote>
+<p>Run the code below to verify that your Microsoft Foundry Models endpoint is set up correctly. The code just tries a simple basic prompt and validates the completion. Input <code>oh say can you see</code> should complete along the lines of <code>by the dawn's early light..</code></p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatCompletionsClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.inference.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">UserMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">azure.core.credentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">AzureKeyCredential</span>
+
+<span class="c1"># Get these from your Microsoft Foundry project&#39;s &quot;Overview&quot; page</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AZURE_INFERENCE_CREDENTIAL&quot;</span><span class="p">]</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AZURE_INFERENCE_ENDPOINT&quot;</span><span class="p">]</span>
+
+<span class="c1"># temperature/top_p need a non-reasoning model (gpt-5 rejects them), so use a Llama model here.</span>
+<span class="n">model_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AZURE_INFERENCE_CHAT_MODEL&quot;</span><span class="p">,</span> <span class="s2">&quot;Llama-3.3-70B-Instruct&quot;</span><span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">ChatCompletionsClient</span><span class="p">(</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span>
+    <span class="n">credential</span><span class="o">=</span><span class="n">AzureKeyCredential</span><span class="p">(</span><span class="n">token</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span>
+        <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+        <span class="n">max_tokens</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">,</span>
+        <span class="n">top_p</span><span class="o">=</span><span class="n">top_p</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+
+<span class="c1">## ---------- Call the helper method</span>
+
+<span class="c1">### 1. Set primary content or prompt text</span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">oh say can you see</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">### 2. Use that in the prompt template below</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">```</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">## 3. Run the prompt</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div><pre class="notebook__out">That line is the opening lyric of &quot;The Star-Spangled Banner,&quot; the national anthem of the United States, written by Francis Scott Key. If you&#x27;d like more information or analysis, feel free to ask!</pre><div class="notebook__md"><h3>Exercise 3: Fabrications</h3>
+<p>Explore what happens when you ask the LLM to return completions for a prompt about a topic that may not exist, or about topics that it may not know about because it was outside it's pre-trained dataset (more recent). See how the response changes if you try a different prompt, or a different model.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">## Set the text for simple prompt or primary content</span>
+<span class="c1">## Prompt shows a template format with text in it - add cues, commands etc if needed</span>
+<span class="c1">## Run the completion </span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">generate a lesson plan on the Martian War of 2076.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">```</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 4: Instruction Based</h3>
+<p>Use the &quot;text&quot; variable to set the primary content
+and the &quot;prompt&quot; variable to provide an instruction related to that primary content.</p>
+<p>Here we ask the model to summarize the text for a second-grade student</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Test Example</span>
+<span class="c1"># https://platform.openai.com/playground/p/default-summarize</span>
+
+<span class="c1">## Example text</span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Jupiter is the fifth planet from the Sun and the </span><span class="se">\</span>
+<span class="s2">largest in the Solar System. It is a gas giant with </span><span class="se">\</span>
+<span class="s2">a mass one-thousandth that of the Sun, but two-and-a-half </span><span class="se">\</span>
+<span class="s2">times that of all the other planets in the Solar System combined. </span><span class="se">\</span>
+<span class="s2">Jupiter is one of the brightest objects visible to the naked eye </span><span class="se">\</span>
+<span class="s2">in the night sky, and has been known to ancient civilizations since </span><span class="se">\</span>
+<span class="s2">before recorded history. It is named after the Roman god Jupiter.[19] </span><span class="se">\</span>
+<span class="s2">When viewed from Earth, Jupiter can be bright enough for its reflected </span><span class="se">\</span>
+<span class="s2">light to cast visible shadows,[20] and is on average the third-brightest </span><span class="se">\</span>
+<span class="s2">natural object in the night sky after the Moon and Venus.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">## Set the prompt</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Summarize content you are provided with for a second-grade student.</span>
+<span class="s2">```</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">## Run the prompt</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div><pre class="notebook__out">Jupiter is the fifth planet from the Sun and the biggest one in our Solar System. It&#x27;s made of gas and is much bigger than all the other planets put together! You can see Jupiter in the night sky because it&#x27;s very bright. People have noticed it for a really long time and named it after a Roman god.</pre><div class="notebook__md"><h3>Exercise 5: Complex Prompt</h3>
+<p>Try a request that has system, user and assistant messages
+System sets assistant context
+User &amp; Assistant messages provide multi-turn conversation context</p>
+<p>Note how the assistant personality is set to &quot;sarcastic&quot; in the system context.
+Try using a different personality context. Or try a different series of input/output messages</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a sarcastic assistant.&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Who won the world series in 2020?&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Who do you think won? The Los Angeles Dodgers of course.&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Where was it played?&quot;</span><span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div><pre class="notebook__out">Oh, you mean the famous 2020 World Series that wasn’t in a regular location? That was the year they played in the glamorous Arlington, Texas, at Globe Life Field.</pre><div class="notebook__md"><h3>Exercise: Explore Your Intuition</h3>
+<p>The above examples give you patterns that you can use to create new prompts (simple, complex, instruction etc.) - try creating other exercises to explore some of the other ideas we've talked about like examples, cues and more.</p>
+</div></div><p class="codefile__actions"><a href="../../assets/code/04-prompt-engineering-fundamentals/python/githubmodels-assignment.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-oai-assignment-ipynb"><summary class="codefile__head"><span class="codefile__name">python/oai-assignment.ipynb</span><span class="codefile__size">8 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="notebook__md"><p>The following notebook was auto-generated by GitHub Copilot Chat and is meant for initial setup only</p>
+</div><div class="notebook__md"><h1>Introduction to Prompt Engineering</h1>
+<p>Prompt engineering is the process of designing and optimizing prompts for natural language processing tasks. It involves selecting the right prompts, tuning their parameters, and evaluating their performance. Prompt engineering is crucial for achieving high accuracy and efficiency in NLP models. In this section, we will explore the basics of prompt engineering using the OpenAI models for exploration.</p>
+</div><div class="notebook__md"><h3>Exercise 1: Tokenization</h3>
+<p>Explore Tokenization using tiktoken, an open-source fast tokenizer from OpenAI
+See <a href="https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">OpenAI Cookbook</a> for more examples.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># EXERCISE:</span>
+<span class="c1"># 1. Run the exercise as is first</span>
+<span class="c1"># 2. Change the text to any prompt input you want to use &amp; re-run to see tokens</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tiktoken</span>
+
+<span class="c1"># Define the prompt you want tokenized</span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Jupiter is the fifth planet from the Sun and the </span><span class="se">\</span>
+<span class="s2">largest in the Solar System. It is a gas giant with </span><span class="se">\</span>
+<span class="s2">a mass one-thousandth that of the Sun, but two-and-a-half </span><span class="se">\</span>
+<span class="s2">times that of all the other planets in the Solar System combined. </span><span class="se">\</span>
+<span class="s2">Jupiter is one of the brightest objects visible to the naked eye </span><span class="se">\</span>
+<span class="s2">in the night sky, and has been known to ancient civilizations since </span><span class="se">\</span>
+<span class="s2">before recorded history. It is named after the Roman god Jupiter.[19] </span><span class="se">\</span>
+<span class="s2">When viewed from Earth, Jupiter can be bright enough for its reflected </span><span class="se">\</span>
+<span class="s2">light to cast visible shadows,[20] and is on average the third-brightest </span><span class="se">\</span>
+<span class="s2">natural object in the night sky after the Moon and Venus.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># Set the model you want encoding for</span>
+<span class="n">encoding</span> <span class="o">=</span> <span class="n">tiktoken</span><span class="o">.</span><span class="n">encoding_for_model</span><span class="p">(</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>
+
+<span class="c1"># Encode the text - gives you the tokens in integer form</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">encoding</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tokens</span><span class="p">);</span>
+
+<span class="c1"># Decode the integers to see what the text versions look like</span>
+<span class="p">[</span><span class="n">encoding</span><span class="o">.</span><span class="n">decode_single_token_bytes</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 2: Validate OpenAI API Key Setup</h3>
+<p>Run the code below to verify that your OpenAI endpoint is set up correctly. The code just tries a simple basic prompt and validates the completion. Input <code>oh say can you see</code> should complete along the lines of <code>by the dawn's early light..</code></p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Uses the OpenAI client with the Responses API.</span>
+<span class="c1"># See https://platform.openai.com/docs/api-reference/responses</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+
+<span class="n">deployment</span><span class="o">=</span><span class="s2">&quot;gpt-5-mini&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">deployment</span><span class="p">,</span>
+        <span class="nb">input</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
+        <span class="n">max_output_tokens</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+        <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+
+<span class="c1">## ---------- Call the helper method</span>
+
+<span class="c1">### 1. Set primary content or prompt text</span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">oh say can you see</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">### 2. Use that in the prompt template below</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">```</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">## 3. Run the prompt</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 3: Fabrications</h3>
+<p>Explore what happens when you ask the LLM to return completions for a prompt about a topic that may not exist, or about topics that it may not know about because it was outside it's pre-trained dataset (more recent). See how the response changes if you try a different prompt, or a different model.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">## Set the text for simple prompt or primary content</span>
+<span class="c1">## Prompt shows a template format with text in it - add cues, commands etc if needed</span>
+<span class="c1">## Run the completion </span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">generate a lesson plan on the Martian War of 2076.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">```</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 4: Instruction Based</h3>
+<p>Use the &quot;text&quot; variable to set the primary content
+and the &quot;prompt&quot; variable to provide an instruction related to that primary content.</p>
+<p>Here we ask the model to summarize the text for a second-grade student</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Test Example</span>
+<span class="c1"># https://platform.openai.com/playground/p/default-summarize</span>
+
+<span class="c1">## Example text</span>
+<span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Jupiter is the fifth planet from the Sun and the </span><span class="se">\</span>
+<span class="s2">largest in the Solar System. It is a gas giant with </span><span class="se">\</span>
+<span class="s2">a mass one-thousandth that of the Sun, but two-and-a-half </span><span class="se">\</span>
+<span class="s2">times that of all the other planets in the Solar System combined. </span><span class="se">\</span>
+<span class="s2">Jupiter is one of the brightest objects visible to the naked eye </span><span class="se">\</span>
+<span class="s2">in the night sky, and has been known to ancient civilizations since </span><span class="se">\</span>
+<span class="s2">before recorded history. It is named after the Roman god Jupiter.[19] </span><span class="se">\</span>
+<span class="s2">When viewed from Earth, Jupiter can be bright enough for its reflected </span><span class="se">\</span>
+<span class="s2">light to cast visible shadows,[20] and is on average the third-brightest </span><span class="se">\</span>
+<span class="s2">natural object in the night sky after the Moon and Venus.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">## Set the prompt</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Summarize content you are provided with for a second-grade student.</span>
+<span class="s2">```</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1">## Run the prompt</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">get_completion</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise 5: Complex Prompt</h3>
+<p>Try a request that has system, user and assistant messages
+System sets assistant context
+User &amp; Assistant messages provide multi-turn conversation context</p>
+<p>Note how the assistant personality is set to &quot;sarcastic&quot; in the system context.
+Try using a different personality context. Or try a different series of input/output messages</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">deployment</span><span class="p">,</span>
+    <span class="nb">input</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a sarcastic assistant.&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Who won the world series in 2020?&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Who do you think won? The Los Angeles Dodgers of course.&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Where was it played?&quot;</span><span class="p">}</span>
+    <span class="p">],</span>
+    <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">output_text</span><span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Exercise: Explore Your Intuition</h3>
+<p>The above examples give you patterns that you can use to create new prompts (simple, complex, instruction etc.) - try creating other exercises to explore some of the other ideas we've talked about like examples, cues and more.</p>
+</div></div><p class="codefile__actions"><a href="../../assets/code/04-prompt-engineering-fundamentals/python/oai-assignment.ipynb" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="done" data-lesson-toggle="04-prompt-engineering-fundamentals">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai terminé la leçon 04 — Fondamentaux de l&#x27;ingénierie des prompts</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Utiliser l&#x27;IA générative de manière responsable</span></a><a class="prevnext__link prevnext__next" href="../../lecons/05-advanced-prompts/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Créer des prompts avancés</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/04-prompt-engineering-fundamentals/README.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/04-prompt-engineering-fundamentals/README.md</a> ·
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/tree/main/04-prompt-engineering-fundamentals" target="_blank" rel="noopener noreferrer">version anglaise</a>
+</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#introduction">Introduction</a></li><li class="toc__item toc__item--h2"><a href="#objectifs-dapprentissage">Objectifs d&#x27;apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#termes-cles">Termes clés</a></li><li class="toc__item toc__item--h2"><a href="#environnement-de-travail-sandbox">Environnement de Travail Sandbox</a></li><li class="toc__item toc__item--h2"><a href="#guide-illustre">Guide Illustré</a></li><li class="toc__item toc__item--h2"><a href="#notre-startup">Notre Startup</a></li><li class="toc__item toc__item--h2"><a href="#quest-ce-que-lingenierie-des-prompts">Qu’est-ce que l’Ingénierie des Prompts ?</a></li><li class="toc__item toc__item--h3"><a href="#tokenisation">Tokenisation</a></li><li class="toc__item toc__item--h3"><a href="#concept-modeles-fondations">Concept : Modèles Fondations</a></li><li class="toc__item toc__item--h3"><a href="#concept-llms-instruits-par-instruction">Concept : LLMs instruits par instruction</a></li><li class="toc__item toc__item--h2"><a href="#pourquoi-avons-nous-besoin-de-lingenierie-des-prompts">Pourquoi avons-nous besoin de l’Ingénierie des Prompts ?</a></li><li class="toc__item toc__item--h3"><a href="#exemple-de-fabrications">Exemple de Fabrications</a></li><li class="toc__item toc__item--h2"><a href="#etude-de-cas-github-copilot">Étude de cas : GitHub Copilot</a></li><li class="toc__item toc__item--h2"><a href="#construction-de-linvite">Construction de l’invite</a></li><li class="toc__item toc__item--h3"><a href="#invite-de-base">Invite de base</a></li><li class="toc__item toc__item--h3"><a href="#invite-complexe">Invite complexe</a></li><li class="toc__item toc__item--h3"><a href="#invite-dinstruction">Invite d’instruction</a></li><li class="toc__item toc__item--h2"><a href="#contenu-principal">Contenu principal</a></li><li class="toc__item toc__item--h3"><a href="#utiliser-des-exemples">Utiliser des exemples</a></li><li class="toc__item toc__item--h3"><a href="#indices-dinvite">Indices d’invite</a></li><li class="toc__item toc__item--h3"><a href="#modeles-de-prompt">Modèles de prompt</a></li><li class="toc__item toc__item--h2"><a href="#contenu-de-support">Contenu de support</a></li><li class="toc__item toc__item--h2"><a href="#bonnes-pratiques-pour-les-prompts">Bonnes pratiques pour les prompts</a></li><li class="toc__item toc__item--h3"><a href="#etat-desprit-de-lingenierie-de-prompt">État d’esprit de l’ingénierie de prompt</a></li><li class="toc__item toc__item--h2"><a href="#bonnes-pratiques">Bonnes pratiques</a></li><li class="toc__item toc__item--h2"><a href="#exercices">Exercices</a></li><li class="toc__item toc__item--h3"><a href="#pour-commencer-creez-un-fork-du-depot-puis">Pour commencer, créez un fork du dépôt, puis</a></li><li class="toc__item toc__item--h3"><a href="#ensuite-configurez-vos-variables-denvironnement">Ensuite, configurez vos variables d’environnement</a></li><li class="toc__item toc__item--h3"><a href="#ensuite-ouvrez-le-jupyter-notebook">Ensuite, ouvrez le Jupyter Notebook</a></li><li class="toc__item toc__item--h2"><a href="#controle-des-connaissances">Contrôle des connaissances</a></li><li class="toc__item toc__item--h2"><a href="#defi">🚀 Défi</a></li><li class="toc__item toc__item--h2"><a href="#excellent-travail-continuez-a-apprendre">Excellent travail ! Continuez à apprendre</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de la leçon</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../assets/app.js" defer></script>
+</body>
+</html>

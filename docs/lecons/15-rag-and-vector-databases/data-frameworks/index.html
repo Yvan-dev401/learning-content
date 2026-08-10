@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frameworks de réseaux de neurones — leçon 15</title>
+<meta name="description" content="Frameworks de réseaux de neurones — page annexe de la leçon 15, RAG et bases de données vectorielles.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item is-active" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a><ul class="sidebar__sublist"><li class="sidebar__subitem is-active"><a href="../../../lecons/15-rag-and-vector-databases/data-frameworks/index.html">Frameworks de réseaux de neurones</a></li><li class="sidebar__subitem"><a href="../../../lecons/15-rag-and-vector-databases/data-own-framework/index.html">Introduction aux réseaux de neurones. Perceptron multicouche</a></li><li class="sidebar__subitem"><a href="../../../lecons/15-rag-and-vector-databases/data-perceptron/index.html">Introduction aux réseaux de neurones : Perceptron</a></li></ul></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../parcours/avance/index.html">Techniques avancées</a> <span aria-hidden="true">›</span>
+  <a href="../../../lecons/15-rag-and-vector-databases/index.html">Leçon 15</a> <span aria-hidden="true">›</span>
+  <span>Frameworks de réseaux de neurones</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page annexe de la leçon 15 — RAG et bases de données vectorielles</p>
+</header>
+<article class="prose">
+<h1 id="frameworks-de-reseaux-de-neurones">Frameworks de réseaux de neurones<a class="anchor" href="#frameworks-de-reseaux-de-neurones" aria-label="Lien vers cette section">#</a></h1>
+<p>Comme nous l'avons déjà vu, pour pouvoir entraîner efficacement des réseaux de neurones, il faut faire deux choses :</p>
+<ul>
+<li>Opérer sur des tenseurs, par exemple multiplier, additionner, et calculer certaines fonctions comme sigmoid ou softmax</li>
+<li>Calculer les gradients de toutes les expressions, afin de réaliser une optimisation par descente de gradient</li>
+</ul>
+<p>Alors que la bibliothèque <code>numpy</code> peut gérer la première partie, nous avons besoin d’un mécanisme pour calculer les gradients. Dans notre framework développé dans la section précédente, nous devions programmer manuellement toutes les fonctions dérivées dans la méthode <code>backward</code>, qui réalise la rétropropagation. Idéalement, un framework devrait nous permettre de calculer les gradients de <em>n’importe quelle expression</em> que nous pouvons définir.</p>
+<p>Un autre point important est de pouvoir effectuer les calculs sur GPU, ou toute autre unité de calcul spécialisée, comme TPU. L’entraînement des réseaux de neurones profonds nécessite <em>beaucoup</em> de calculs, et pouvoir paralléliser ces calculs sur des GPU est très important.</p>
+<blockquote>
+<p>✅ Le terme « paralléliser » signifie répartir les calculs sur plusieurs dispositifs.</p>
+</blockquote>
+<p>Actuellement, les deux frameworks de réseaux de neurones les plus populaires sont : TensorFlow et PyTorch. Les deux fournissent une API bas niveau pour manipuler les tenseurs à la fois sur CPU et GPU. Au-dessus de cette API bas niveau, il existe aussi une API plus haut niveau, appelée respectivement Keras et PyTorch Lightning.</p>
+<table>
+<thead>
+<tr>
+<th>API bas niveau</th>
+<th>TensorFlow</th>
+<th>PyTorch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API haut niveau</td>
+<td>Keras</td>
+<td>PyTorch Lightning</td>
+</tr>
+</tbody>
+</table>
+<p>Les <strong>API bas niveau</strong> dans les deux frameworks permettent de construire ce qu’on appelle des <strong>graphes de calcul</strong>. Ce graphe définit comment calculer la sortie (généralement la fonction de perte) à partir des paramètres d’entrée, et peut être envoyé pour calcul sur GPU, si disponible. Il existe des fonctions pour différencier ce graphe de calcul et calculer les gradients, qui peuvent ensuite être utilisés pour optimiser les paramètres du modèle.</p>
+<p>Les <strong>API haut niveau</strong> considèrent essentiellement les réseaux de neurones comme une <strong>séquence de couches</strong>, et facilitent grandement la construction de la plupart des réseaux. L’entraînement du modèle nécessite généralement de préparer les données puis d’appeler une fonction <code>fit</code> pour lancer le processus.</p>
+<p>L’API haut niveau permet de construire rapidement des réseaux typiques sans se soucier de nombreux détails. En même temps, l’API bas niveau offre beaucoup plus de contrôle sur le processus d’entraînement, et est donc très utilisée en recherche, lorsque l’on travaille sur de nouvelles architectures de réseaux.</p>
+<p>Il est aussi important de comprendre que vous pouvez utiliser les deux API ensemble, par exemple en développant votre propre architecture de couche réseau avec l’API bas niveau, puis en l’intégrant dans un réseau plus large construit et entraîné avec l’API haut niveau. Ou bien vous pouvez définir un réseau avec l’API haut niveau comme une séquence de couches, puis utiliser votre propre boucle d’entraînement bas niveau pour optimiser. Les deux API partagent les mêmes concepts fondamentaux et sont conçues pour bien fonctionner ensemble.</p>
+<h2 id="apprentissage">Apprentissage<a class="anchor" href="#apprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans ce cours, nous proposons la plupart du contenu à la fois pour PyTorch et TensorFlow. Vous pouvez choisir votre framework préféré et ne suivre que les notebooks correspondants. Si vous ne savez pas quel framework choisir, lisez quelques discussions sur internet à propos de <strong>PyTorch vs. TensorFlow</strong>. Vous pouvez aussi explorer les deux frameworks pour mieux comprendre.</p>
+<p>Dans la mesure du possible, nous utiliserons les API haut niveau pour plus de simplicité. Cependant, nous pensons qu’il est important de comprendre le fonctionnement des réseaux de neurones depuis les bases, donc au début nous commençons par travailler avec l’API bas niveau et les tenseurs. Toutefois, si vous souhaitez avancer rapidement sans passer trop de temps sur ces détails, vous pouvez les sauter et aller directement aux notebooks avec l’API haut niveau.</p>
+<h2 id="exercices-frameworks">✍️ Exercices : Frameworks<a class="anchor" href="#exercices-frameworks" aria-label="Lien vers cette section">#</a></h2>
+<p>Poursuivez votre apprentissage dans les notebooks suivants :</p>
+<table>
+<thead>
+<tr>
+<th>API bas niveau</th>
+<th>Notebook TensorFlow+Keras</th>
+<th>PyTorch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API haut niveau</td>
+<td>Keras</td>
+<td><em>PyTorch Lightning</em></td>
+</tr>
+</tbody>
+</table>
+<p>Après avoir maîtrisé les frameworks, récapitulons la notion de surapprentissage.</p>
+<h1 id="surapprentissage">Surapprentissage<a class="anchor" href="#surapprentissage" aria-label="Lien vers cette section">#</a></h1>
+<p>Le surapprentissage est un concept extrêmement important en apprentissage automatique, et il est crucial de bien le comprendre !</p>
+<p>Considérons le problème suivant d’approximation de 5 points (représentés par des <code>x</code> sur les graphiques ci-dessous) :</p>
+<table>
+<thead>
+<tr>
+<th>!linear</th>
+<th>overfit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Modèle linéaire, 2 paramètres</strong></td>
+<td><strong>Modèle non-linéaire, 7 paramètres</strong></td>
+</tr>
+<tr>
+<td>Erreur d’entraînement = 5.3</td>
+<td>Erreur d’entraînement = 0</td>
+</tr>
+<tr>
+<td>Erreur de validation = 5.1</td>
+<td>Erreur de validation = 20</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>À gauche, on voit une bonne approximation par une droite. Comme le nombre de paramètres est adéquat, le modèle saisit correctement la distribution des points.</li>
+<li>À droite, le modèle est trop puissant. Comme nous n’avons que 5 points et que le modèle a 7 paramètres, il peut s’ajuster pour passer par tous les points, ce qui fait que l’erreur d’entraînement est nulle. Cependant, cela empêche le modèle de comprendre le vrai motif derrière les données, d’où une erreur de validation très élevée.</li>
+</ul>
+<p>Il est très important de trouver un bon équilibre entre la richesse du modèle (nombre de paramètres) et le nombre d’échantillons d’entraînement.</p>
+<h2 id="pourquoi-le-surapprentissage-se-produit">Pourquoi le surapprentissage se produit<a class="anchor" href="#pourquoi-le-surapprentissage-se-produit" aria-label="Lien vers cette section">#</a></h2>
+<ul>
+<li>Pas assez de données d’entraînement</li>
+<li>Modèle trop puissant</li>
+<li>Trop de bruit dans les données d’entrée</li>
+</ul>
+<h2 id="comment-detecter-le-surapprentissage">Comment détecter le surapprentissage<a class="anchor" href="#comment-detecter-le-surapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Comme on peut le voir sur le graphique ci-dessus, le surapprentissage se détecte par une erreur d’entraînement très faible, et une erreur de validation élevée. Normalement, pendant l’entraînement, on observe que les erreurs d’entraînement et de validation diminuent toutes les deux, puis à un certain moment l’erreur de validation peut cesser de diminuer et commencer à augmenter. C’est un signe de surapprentissage, et un indicateur qu’il faudrait probablement arrêter l’entraînement à ce moment-là (ou au moins sauvegarder un instantané du modèle).</p>
+<p>surapprentissage</p>
+<h2 id="comment-prevenir-le-surapprentissage">Comment prévenir le surapprentissage<a class="anchor" href="#comment-prevenir-le-surapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Si vous constatez qu’un surapprentissage se produit, vous pouvez faire l’une des choses suivantes :</p>
+<ul>
+<li>Augmenter la quantité de données d’entraînement</li>
+<li>Réduire la complexité du modèle</li>
+<li>Utiliser une technique de régularisation, comme le Dropout, que nous verrons plus tard.</li>
+</ul>
+<h2 id="surapprentissage-et-compromis-biais-variance">Surapprentissage et compromis biais-variance<a class="anchor" href="#surapprentissage-et-compromis-biais-variance" aria-label="Lien vers cette section">#</a></h2>
+<p>Le surapprentissage est en fait un cas particulier d’un problème plus général en statistiques appelé compromis biais-variance. Si l’on considère les sources possibles d’erreur dans notre modèle, on peut distinguer deux types d’erreurs :</p>
+<ul>
+<li>Les <strong>erreurs de biais</strong> sont causées par notre algorithme qui n’arrive pas à capturer correctement la relation dans les données d’entraînement. Cela peut venir du fait que notre modèle n’est pas assez puissant (<strong>sous-apprentissage</strong>).</li>
+<li>Les <strong>erreurs de variance</strong>, qui sont causées par le modèle qui approxime le bruit dans les données d’entrée au lieu de la relation significative (<strong>surapprentissage</strong>).</li>
+</ul>
+<p>Pendant l’entraînement, l’erreur de biais diminue (car notre modèle apprend à approximer les données), tandis que l’erreur de variance augmente. Il est important d’arrêter l’entraînement – soit manuellement (lorsqu’on détecte un surapprentissage), soit automatiquement (en introduisant une régularisation) – pour éviter le surapprentissage.</p>
+<h2 id="conclusion">Conclusion<a class="anchor" href="#conclusion" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans cette leçon, vous avez appris les différences entre les différentes API des deux frameworks d’IA les plus populaires, TensorFlow et PyTorch. Vous avez également découvert un sujet très important : le surapprentissage.</p>
+<h2 id="defi">🚀 Défi<a class="anchor" href="#defi" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans les notebooks associés, vous trouverez des « tâches » en bas de page ; travaillez-les et complétez les exercices.</p>
+<h2 id="revision-auto-apprentissage">Révision &amp; Auto-apprentissage<a class="anchor" href="#revision-auto-apprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Faites des recherches sur les sujets suivants :</p>
+<ul>
+<li>TensorFlow</li>
+<li>PyTorch</li>
+<li>Surapprentissage</li>
+</ul>
+<p>Posez-vous les questions suivantes :</p>
+<ul>
+<li>Quelle est la différence entre TensorFlow et PyTorch ?</li>
+<li>Quelle est la différence entre surapprentissage et sous-apprentissage ?</li>
+</ul>
+<h2 id="travail-a-faire">Travail à faire<a class="anchor" href="#travail-a-faire" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans ce laboratoire, vous êtes invité à résoudre deux problèmes de classification en utilisant des réseaux entièrement connectés à une ou plusieurs couches, avec PyTorch ou TensorFlow.</p>
+<p><strong>Avertissement</strong> :<br />
+Ce document a été traduit à l’aide du service de traduction automatique <a href="https://github.com/Azure/co-op-translator" target="_blank" rel="noopener noreferrer">Co-op Translator</a>. Bien que nous nous efforcions d’assurer l’exactitude, veuillez noter que les traductions automatiques peuvent contenir des erreurs ou des inexactitudes. Le document original dans sa langue d’origine doit être considéré comme la source faisant foi. Pour les informations critiques, une traduction professionnelle réalisée par un humain est recommandée. Nous déclinons toute responsabilité en cas de malentendus ou de mauvaises interprétations résultant de l’utilisation de cette traduction.</p>
+
+</article>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">RAG et bases de données vectorielles</span></a><a class="prevnext__link prevnext__next" href="../../../lecons/15-rag-and-vector-databases/data-own-framework/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Introduction aux réseaux de neurones. Perceptron multicouche</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/15-rag-and-vector-databases/data/frameworks.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/15-rag-and-vector-databases/data/frameworks.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#apprentissage">Apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#exercices-frameworks">✍️ Exercices : Frameworks</a></li><li class="toc__item toc__item--h2"><a href="#pourquoi-le-surapprentissage-se-produit">Pourquoi le surapprentissage se produit</a></li><li class="toc__item toc__item--h2"><a href="#comment-detecter-le-surapprentissage">Comment détecter le surapprentissage</a></li><li class="toc__item toc__item--h2"><a href="#comment-prevenir-le-surapprentissage">Comment prévenir le surapprentissage</a></li><li class="toc__item toc__item--h2"><a href="#surapprentissage-et-compromis-biais-variance">Surapprentissage et compromis biais-variance</a></li><li class="toc__item toc__item--h2"><a href="#conclusion">Conclusion</a></li><li class="toc__item toc__item--h2"><a href="#defi">🚀 Défi</a></li><li class="toc__item toc__item--h2"><a href="#revision-auto-apprentissage">Révision &amp; Auto-apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#travail-a-faire">Travail à faire</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

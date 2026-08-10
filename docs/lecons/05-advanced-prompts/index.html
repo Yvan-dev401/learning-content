@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 · Créer des prompts avancés — IA Générative</title>
+<meta name="description" content="Few-shot, chaîne de pensée, auto-cohérence : les techniques qui font vraiment la différence.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item is-active" data-lesson="05-advanced-prompts"><a href="../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a> <span aria-hidden="true">›</span>
+  <span>Leçon 05</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Leçon 05 · Maîtriser le prompt engineering · ≈ 45 min</p>
+  <p class="pagehead__summary">Few-shot, chaîne de pensée, auto-cohérence : les techniques qui font vraiment la différence.</p>
+</header>
+<article class="prose">
+<h1 id="creation-de-prompts-avances">Création de prompts avancés<a class="anchor" href="#creation-de-prompts-avances" aria-label="Lien vers cette section">#</a></h1>
+<p><a href="https://youtu.be/BAjzkaCdRok?si=NmUIyRf7-cDgbjtt" target="_blank" rel="noopener noreferrer"><img src="../../assets/images/05-lesson-banner.webp" alt="Création de prompts avancés" loading="lazy" decoding="async" /></a></p>
+<p>Récapitulons quelques apprentissages du chapitre précédent :</p>
+<blockquote>
+<p>Le <em>prompt engineering</em> est le processus par lequel nous <strong>guidons le modèle vers des réponses plus pertinentes</strong> en fournissant des instructions ou un contexte plus utiles.</p>
+</blockquote>
+<p>Il y a aussi deux étapes dans la rédaction de prompts : construire le prompt en fournissant un contexte pertinent, et l’<em>optimisation</em>, comment améliorer progressivement le prompt.</p>
+<p>À ce stade, nous avons une compréhension de base sur comment rédiger des prompts, mais il faut aller plus loin. Dans ce chapitre, vous passerez de l’essai de différents prompts à comprendre pourquoi un prompt est meilleur qu’un autre. Vous apprendrez à construire des prompts en suivant des techniques de base qui peuvent s’appliquer à n’importe quel LLM.</p>
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans ce chapitre, nous couvrons les sujets suivants :</p>
+<ul>
+<li>Étendre vos connaissances en prompt engineering en appliquant différentes techniques à vos prompts.</li>
+<li>Configurer vos prompts pour varier les sorties.</li>
+</ul>
+<h2 id="objectifs-dapprentissage">Objectifs d’apprentissage<a class="anchor" href="#objectifs-dapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, vous saurez :</p>
+<ul>
+<li>Appliquer des techniques de prompt engineering qui améliorent les résultats de vos prompts.</li>
+<li>Réaliser des prompts avec des sorties soit variées soit déterministes.</li>
+</ul>
+<h2 id="prompt-engineering">Prompt engineering<a class="anchor" href="#prompt-engineering" aria-label="Lien vers cette section">#</a></h2>
+<p>Le prompt engineering est le processus de création de prompts qui produisent le résultat souhaité. Ce processus va au-delà de la simple écriture d’un prompt texte. Le prompt engineering n’est pas une discipline d’ingénierie, c’est plutôt un ensemble de techniques que vous pouvez appliquer pour obtenir le résultat désiré.</p>
+<h3 id="un-exemple-de-prompt">Un exemple de prompt<a class="anchor" href="#un-exemple-de-prompt" aria-label="Lien vers cette section">#</a></h3>
+<p>Prenons un prompt basique comme celui-ci :</p>
+<blockquote>
+<p>Génère 10 questions sur la géographie.</p>
+</blockquote>
+<p>Dans ce prompt, vous appliquez en réalité un ensemble de différentes techniques de prompt.</p>
+<p>Décomposons cela.</p>
+<ul>
+<li><strong>Contexte</strong>, vous spécifiez que cela doit porter sur la &quot;géographie&quot;.</li>
+<li><strong>Limitation de la sortie</strong>, vous voulez au plus 10 questions.</li>
+</ul>
+<h3 id="limitations-dun-prompt-simple">Limitations d’un prompt simple<a class="anchor" href="#limitations-dun-prompt-simple" aria-label="Lien vers cette section">#</a></h3>
+<p>Le résultat souhaité peut être obtenu ou non. Vous obtiendrez des questions, mais la géographie est un sujet vaste et vous n’obtiendrez peut-être pas ce que vous voulez pour les raisons suivantes :</p>
+<ul>
+<li><strong>Sujet large</strong>, vous ne savez pas si ça portera sur les pays, les capitales, les rivières, etc.</li>
+<li><strong>Format</strong>, que faire si vous vouliez que les questions soient formatées d’une certaine manière ?</li>
+</ul>
+<p>Comme vous le voyez, il y a beaucoup à considérer lors de la création de prompts.</p>
+<p>Jusqu’à présent, nous avons vu un exemple simple de prompt, mais l’IA générative est capable de bien plus pour aider les personnes dans différents rôles et secteurs. Explorons maintenant quelques techniques de base.</p>
+<h3 id="techniques-de-prompting">Techniques de prompting<a class="anchor" href="#techniques-de-prompting" aria-label="Lien vers cette section">#</a></h3>
+<p>Premièrement, il faut comprendre que le prompting est une propriété <em>émergente</em> d’un LLM, ce qui signifie que ce n’est pas une fonctionnalité intégrée au modèle mais plutôt quelque chose que l’on découvre en l’utilisant.</p>
+<p>Il existe quelques techniques de base pour faire du prompt à un LLM. Explorons-les.</p>
+<ul>
+<li><strong>Prompting zero-shot</strong>, c’est la forme la plus basique de prompting. Il s’agit d’un prompt unique demandant une réponse basée uniquement sur les données d’entraînement du LLM.</li>
+<li><strong>Prompting few-shot</strong>, ce type de prompt guide le LLM en fournissant un ou plusieurs exemples dont il peut se servir pour générer sa réponse.</li>
+<li><strong>Chain-of-thought</strong>, ce type de prompt indique au LLM comment décomposer un problème en étapes.</li>
+<li><strong>Savoir généré</strong>, pour améliorer la réponse d’un prompt, vous pouvez fournir des faits ou des connaissances générées en plus de votre prompt.</li>
+<li><strong>Least to most</strong>, comme chain-of-thought, cette technique consiste à décomposer un problème en une série d’étapes et demander que ces étapes soient effectuées dans l’ordre.</li>
+<li><strong>Auto-affinement (self-refine)</strong>, cette technique consiste à critiquer la sortie du LLM puis à lui demander de l’améliorer.</li>
+<li><strong>Prompting maïeutique</strong>. Ici, vous voulez vous assurer que la réponse du LLM est correcte et vous lui demandez d’expliquer différentes parties de la réponse. C’est une forme d’auto-affinement.</li>
+</ul>
+<h3 id="prompting-zero-shot">Prompting zero-shot<a class="anchor" href="#prompting-zero-shot" aria-label="Lien vers cette section">#</a></h3>
+<p>Ce style de prompting est très simple, il consiste en un prompt unique. C’est probablement la technique que vous utilisez en commençant à apprendre à utiliser les LLM. Voici un exemple :</p>
+<ul>
+<li>Prompt : &quot;Qu’est-ce que l’algèbre ?&quot;</li>
+<li>Réponse : &quot;L’algèbre est une branche des mathématiques qui étudie les symboles mathématiques et les règles pour manipuler ces symboles.&quot;</li>
+</ul>
+<h3 id="prompting-few-shot">Prompting few-shot<a class="anchor" href="#prompting-few-shot" aria-label="Lien vers cette section">#</a></h3>
+<p>Ce style de prompting aide le modèle en fournissant quelques exemples avec la demande. Il s’agit d’un seul prompt avec des données supplémentaires spécifiques à la tâche. Voici un exemple :</p>
+<ul>
+<li>Prompt : &quot;Écris un poème dans le style de Shakespeare. Voici quelques exemples de sonnets shakespearien :
+Sonnet 18 : 'Dois-je te comparer à un jour d’été ? Tu es plus charmant et plus tempéré...'
+Sonnet 116 : 'Ne permets point au mariage des esprits vrais d’entrer d’empêchements. L’amour n’est pas amour qui change quand le changement le trouve...'
+Sonnet 132 : 'Tes yeux que j’aime, et eux, en me plaignant, sachant ton cœur me tourmente avec mépris,...'
+Maintenant, écris un sonnet sur la beauté de la lune.&quot;</li>
+<li>Réponse : &quot;Sur le ciel, la lune luit doucement, Dans une lumière argentée qui jette sa douce grâce,...&quot;</li>
+</ul>
+<p>Les exemples fournissent au LLM le contexte, le format ou le style de la sortie désirée. Ils aident le modèle à comprendre la tâche spécifique et à générer des réponses plus précises et pertinentes.</p>
+<h3 id="chain-of-thought">Chain-of-thought<a class="anchor" href="#chain-of-thought" aria-label="Lien vers cette section">#</a></h3>
+<p>Chain-of-thought est une technique très intéressante car elle consiste à faire passer le LLM par une série d’étapes. L’idée est d’instruire le LLM de façon à ce qu’il comprenne comment faire quelque chose. Considérez l’exemple suivant, avec et sans chain-of-thought :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">texte</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>- Prompt : &quot;Alice a 5 pommes, jette 3 pommes, donne 2 à Bob et Bob en rend une, combien de pommes Alice a-t-elle ?&quot;
+- Réponse : 5
+</pre></div>
+</div><p>Le LLM répond 5, ce qui est incorrect. La bonne réponse est 1 pomme, selon le calcul (5 -3 -2 + 1 = 1).</p>
+<p>Alors comment apprendre au LLM à faire cela correctement ?</p>
+<p>Essayons la chain-of-thought. Appliquer cette technique signifie :</p>
+<ol>
+<li>Donner au LLM un exemple similaire.</li>
+<li>Montrer le calcul, et comment le faire correctement.</li>
+<li>Fournir le prompt original.</li>
+</ol>
+<p>Voici comment faire :</p>
+<ul>
+<li>Prompt : &quot;Lisa a 7 pommes, jette 1 pomme, donne 4 pommes à Bart et Bart en rend une :
+7 -1 = 6
+6 -4 = 2
+2 +1 = 3<br />
+Alice a 5 pommes, jette 3 pommes, donne 2 à Bob et Bob en rend une, combien de pommes Alice a-t-elle ?&quot;
+Réponse : 1</li>
+</ul>
+<p>Remarquez comment nous écrivons des prompts beaucoup plus longs avec un autre exemple, un calcul, puis le prompt original et nous obtenons la bonne réponse 1.</p>
+<p>Comme vous le voyez, la chain-of-thought est une technique très puissante.</p>
+<h3 id="savoir-genere">Savoir généré<a class="anchor" href="#savoir-genere" aria-label="Lien vers cette section">#</a></h3>
+<p>Souvent, lorsque vous souhaitez construire un prompt, vous voulez le faire en utilisant les données de votre propre entreprise. Vous voulez qu’une partie du prompt provienne de l’entreprise et que l’autre partie soit le prompt proprement dit qui vous intéresse.</p>
+<p>Par exemple, voici à quoi votre prompt peut ressembler si vous êtes dans le secteur des assurances :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>{{company}}: {{company_name}}
+{{products}}:
+{{products_list}}
+Please suggest an insurance given the following budget and requirements:
+Budget: {{budget}}
+Requirements: {{requirements}}
+</pre></div>
+</div><p>Ci-dessus, vous voyez comment le prompt est construit avec un template. Dans le template, plusieurs variables, notées <code>{{variable}}</code>, seront remplacées par des valeurs réelles provenant d’une API d’entreprise.</p>
+<p>Voici un exemple de ce à quoi le prompt pourrait ressembler une fois les variables remplacées par le contenu de votre entreprise :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>Insurance company: ACME Insurance
+Insurance products (cost per month):
+- Car, cheap, 500 USD
+- Car, expensive, 1100 USD
+- Home, cheap, 600 USD
+- Home, expensive, 1200 USD
+- Life, cheap, 100 USD
+
+Please suggest an insurance given the following budget and requirements:
+Budget: $1000
+Requirements: Car, Home, and Life insurance
+</pre></div>
+</div><p>Exécuter ce prompt dans un LLM produira une réponse comme celle-ci :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">output</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="go">Given the budget and requirements, we suggest the following insurance package from ACME Insurance:</span>
+<span class="go">- Car, cheap, 500 USD</span>
+<span class="go">- Home, cheap, 600 USD</span>
+<span class="go">- Life, cheap, 100 USD</span>
+<span class="go">Total cost: $1,200 USD</span>
+</pre></div>
+</div><p>Comme vous le voyez, il suggère aussi l’assurance vie, ce qu’il ne devrait pas faire. Ce résultat indique que nous devons optimiser le prompt en le rendant plus clair sur ce qu’il doit autoriser. Après quelques <em>essais-erreurs</em>, nous obtenons le prompt suivant :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>Insurance company: ACME Insurance
+Insurance products (cost per month):
+- type: Car, cheap, cost: 500 USD
+- type: Car, expensive, cost: 1100 USD
+- type: Home, cheap, cost: 600 USD
+- type: Home, expensive, cost: 1200 USD
+- type: Life, cheap, cost: 100 USD
+
+Please suggest an insurance given the following budget and requirements:
+Budget: $1000 restrict choice to types: Car, Home
+</pre></div>
+</div><p>Remarquez comment l’ajout de <em>type</em> et <em>coût</em> ainsi que l’utilisation du mot-clé <em>restreindre</em> aide le LLM à comprendre ce que nous voulons.</p>
+<p>Maintenant nous obtenons la réponse suivante :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">output</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="go">Given the budget and requirements, we suggest the Car, Cheap insurance product which costs 500 USD per month.</span>
+</pre></div>
+</div><p>Le but de cet exemple est de montrer que même si nous utilisons une technique basique comme le <em>savoir généré</em>, nous devons souvent optimiser le prompt pour obtenir le résultat souhaité.</p>
+<h3 id="least-to-most">Least-to-most<a class="anchor" href="#least-to-most" aria-label="Lien vers cette section">#</a></h3>
+<p>L’idée du prompting Least-to-most est de décomposer un problème plus large en sous-problèmes. De cette façon, vous guidez le LLM sur comment &quot;conquérir&quot; le problème plus complexe. Un bon exemple pourrait être en science des données où vous pouvez demander au LLM de diviser un problème ainsi :</p>
+<blockquote>
+<p>Prompt : Comment réaliser une science des données en 5 étapes ?</p>
+</blockquote>
+<p>Avec votre assistant IA répondant :</p>
+<ol>
+<li>Collecter les données</li>
+<li>Nettoyer les données</li>
+<li>Analyser les données</li>
+<li>Visualiser les données</li>
+<li>Présenter les données</li>
+</ol>
+<h3 id="auto-affinement-critique-des-resultats">Auto-affinement, critique des résultats<a class="anchor" href="#auto-affinement-critique-des-resultats" aria-label="Lien vers cette section">#</a></h3>
+<p>Avec les IA génératives et les LLM, on ne peut pas faire confiance aux résultats. Il faut les vérifier. Après tout, le LLM ne fait que présenter ce qu’il estime être la chose la plus probable à dire, pas forcément ce qui est correct. Par conséquent, une bonne idée est de demander au LLM de se critiquer lui-même, ce qui nous amène à la technique d’auto-affinement.</p>
+<p>Voici comment cela fonctionne en suivant ces étapes :</p>
+<ol>
+<li>Prompt initial demandant au LLM de résoudre un problème</li>
+<li>Le LLM répond</li>
+<li>Vous critiquez la réponse et demandez à l’IA d’améliorer</li>
+<li>Le LLM répond à nouveau, cette fois en tenant compte de la critique et suggère des solutions</li>
+</ol>
+<p>Vous pouvez répéter ce processus autant de fois que vous le souhaitez.</p>
+<p>Voici un exemple utilisant cette technique :</p>
+<blockquote>
+<p>Prompt : &quot;Créer une API Web Python avec les routes produits et clients&quot;</p>
+</blockquote>
+<p>Réponse IA :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/products&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">products</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;Products&#39;</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/customers&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">customers</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;Customers&#39;</span>
+</pre></div>
+</div><blockquote>
+<p>Prompt : suggère 3 améliorations du code ci-dessus</p>
+</blockquote>
+<p>Réponse IA :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>Sure, here are three suggestions to improve the code:
+
+Import the correct module: The first line should import Flask instead of flask. The correct import statement should be from flask import Flask.
+
+Add a main function: Add a if __name__ == &#39;__main__&#39;: block to the end of the file to run the application when the file is executed.
+
+Use f-strings: Use f-strings to format the return statements in the route functions. For example, return &#39;Products&#39; can be changed to return f&#39;This is the {request.path} page&#39;.
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/products&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">products</span><span class="p">():</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;This is the </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> page&#39;</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/customers&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">customers</span><span class="p">():</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;This is the </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s1"> page&#39;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div><p>Comme vous le voyez, la réponse IA ci-dessus améliore le premier code suggéré grâce à la critique de la première réponse.</p>
+<h3 id="prompting-maieutique">Prompting maïeutique<a class="anchor" href="#prompting-maieutique" aria-label="Lien vers cette section">#</a></h3>
+<p>Le prompting maïeutique est une technique similaire à l’auto-affinement mais concerne davantage le fait de demander au LLM de s’expliquer lui-même. L’objectif est de réduire les incohérences dans la sortie du LLM afin de s’assurer qu’il arrive à la bonne réponse. Le flux de travail à suivre est :</p>
+<ol>
+<li>Demander au LLM de répondre à une question</li>
+<li>Pour chaque partie de la réponse, demander au LLM de l’expliquer plus en détail.</li>
+<li>S’il y a des incohérences, écarter les parties incohérentes.</li>
+</ol>
+<p>Répéter les étapes 2 et 3 jusqu’à avoir passé en revue toutes les parties et être satisfait de la réponse.</p>
+<p>Voici un exemple de prompt :</p>
+<blockquote>
+<p>prompt : Comment puis-je créer un plan de crise pour atténuer une pandémie en 5 étapes ?
+Réponse LLM :</p>
+</blockquote>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>1. Identify the risks
+1. Identify the stakeholders
+1. Identify the resources
+1. Identify the actions
+1. Identify the communication channels
+</pre></div>
+</div><p>Cinq étapes sont identifiées, mais peut-on déterminer si c’est correct ? Demandons au LLM d’expliquer chaque étape :</p>
+<blockquote>
+<p>prompt : Explique la première étape en plus de détail, quels sont les risques en détail avec une pandémie ?</p>
+</blockquote>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>The risks are the following:
+
+- Loss of life
+- Loss of business
+- Loss of reputation
+- Loss of customers
+- Loss of employees
+</pre></div>
+</div><p>À ce stade, nous voulons nous assurer que le LLM est correct, alors nous lui demandons d’expliquer le premier risque plus en détail en espérant qu’il soit cohérent avec la réponse précédente :</p>
+<blockquote>
+<p>prompt : Dans une pandémie, quel est le plus grand risque et pourquoi ?</p>
+</blockquote>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>The biggest risk is loss of life because it&#39;s the most important thing to protect.
+</pre></div>
+</div><blockquote>
+<p>Quels sont les deux plus grands risques dans une pandémie ?</p>
+</blockquote>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>The two biggest risks are loss of life and loss of business.
+</pre></div>
+</div><p>À ce stade, le LLM est cohérent et mentionne &quot;la vie&quot; et &quot;l’entreprise&quot; comme les deux principaux risques. Nous pouvons maintenant passer à l’étape suivante avec une confiance raisonnable. Cependant, nous ne devons jamais faire confiance aveuglément au LLM, il faut toujours vérifier la sortie.</p>
+<h2 id="variez-votre-sortie">Variez votre sortie<a class="anchor" href="#variez-votre-sortie" aria-label="Lien vers cette section">#</a></h2>
+<p>Les LLM sont par nature non déterministes, ce qui signifie que vous obtiendrez des résultats différents à chaque fois que vous exécutez le même prompt. Essayez le prompt suivant par exemple :</p>
+<blockquote>
+<p>&quot;Génère du code pour une API Web Python&quot;</p>
+</blockquote>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Importer les modules nécessaires</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="c1"># Créer une application Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Créer une route pour l&#39;API</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">api</span><span class="p">():</span>
+    <span class="c1"># Obtenir les données de la requête</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span>
+
+    <span class="c1"># Traiter les données</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># Retourner le résultat au format JSON</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1"># Fonction pour traiter les données</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># Faire quelque chose avec les données</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="c1"># Retourner le résultat</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Exécuter l&#39;application</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div><p>Exécuter le même prompt à nouveau génère une réponse légèrement différente :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#importer les packages nécessaires</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="c1">#créer l&#39;application Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1">#créer une liste de livres</span>
+<span class="n">books</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+     <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;A Fire Upon the Deep&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Vernor Vinge&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;first_sentence&#39;</span><span class="p">:</span> <span class="s1">&#39;The coldsleep itself was dreamless.&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;year_published&#39;</span><span class="p">:</span> <span class="s1">&#39;1992&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+     <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;The Ones Who Walk Away From Omelas&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Ursula K. Le Guin&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;first_sentence&#39;</span><span class="p">:</span> <span class="s1">&#39;With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;published&#39;</span><span class="p">:</span> <span class="s1">&#39;1973&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+     <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Dhalgren&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Samuel R. Delany&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;first_sentence&#39;</span><span class="p">:</span> <span class="s1">&#39;to wound the autumnal city.&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;published&#39;</span><span class="p">:</span> <span class="s1">&#39;1975&#39;</span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1">#créer un point de terminaison pour l&#39;API</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;&#39;&lt;h1&gt;Books API&lt;/h1&gt;</span>
+<span class="s1">&lt;p&gt;A prototype API for retrieving books.&lt;/p&gt;&#39;&#39;&#39;</span>
+
+<span class="c1">#créer un point de terminaison pour retourner tous les livres</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/v1/resources/books/all&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">api_all</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">books</span><span class="p">)</span>
+
+<span class="c1">#créer un point de terminaison pour retourner un seul livre</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/v1/resources/books&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">api_id</span><span class="p">():</span>
+    <span class="c1">#vérifier si un ID a été fourni dans l&#39;URL</span>
+    <span class="c1">#si l&#39;ID est fourni, l&#39;assigner à une variable</span>
+    <span class="c1">#si aucun ID n&#39;est fourni, afficher une erreur</span>
+    <span class="k">if</span> <span class="s1">&#39;id&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Error: No id field provided. Please specify an id.&quot;</span>
+
+    <span class="c1">#créer une liste vide pour nos résultats</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1">#parcourir les données et correspondre aux résultats qui conviennent à l&#39;ID demandé</span>
+    <span class="c1">#les IDs sont uniques, mais d&#39;autres champs peuvent retourner plusieurs résultats</span>
+    <span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">books</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">book</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">book</span><span class="p">)</span>
+
+    <span class="c1">#utiliser la fonction jsonify de Flask pour convertir notre liste de</span>
+    <span class="c1">#dictionnaires Python au format JSON</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div><blockquote>
+<p>Est-ce que la sortie variée est un problème ?</p>
+</blockquote>
+<p>Cela dépend de ce que vous essayez de faire. Si vous voulez une réponse spécifique, alors c’est un problème. Si vous êtes d’accord avec une sortie variée comme &quot;Génère n’importe quelles 3 questions sur la géographie&quot;, alors ce n’en est pas un.</p>
+<h3 id="utiliser-la-temperature-pour-varier-votre-sortie">Utiliser la température pour varier votre sortie<a class="anchor" href="#utiliser-la-temperature-pour-varier-votre-sortie" aria-label="Lien vers cette section">#</a></h3>
+<p>D’accord, nous avons décidé de limiter la sortie afin d’avoir quelque chose de plus prévisible, donc plus déterministe. Comment faire cela ?</p>
+<p>La température est une valeur comprise entre 0 et 1, où 0 est la valeur la plus déterministe et 1 la plus variée. La valeur par défaut est 0,7. Voyons ce qui se passe avec deux exécutions du même prompt avec la température réglée à 0,1 :</p>
+<blockquote>
+<p>&quot;Génère du code pour une API Web Python&quot;</p>
+</blockquote>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#importer les bibliothèques nécessaires</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="c1">#créer une instance de la classe Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1">#créer un point de terminaison pour l&#39;API</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/v1/endpoint&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">api_endpoint</span><span class="p">():</span>
+    <span class="c1">#obtenir les données de la requête</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+
+    <span class="c1">#traiter les données</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1">#retourner le résultat</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1">#fonction pour traiter les données</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1">#traiter les données</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span><span class="p">}</span>
+
+    <span class="c1">#retourner le résultat</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1">#exécuter l&#39;application Flask</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div><p>Une nouvelle exécution du prompt donne ce résultat :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#importer les bibliothèques nécessaires</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="c1">#créer une application Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1">#créer une route pour l&#39;API</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">api_call</span><span class="p">():</span>
+    <span class="c1">#obtenir les données de la requête</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+
+    <span class="c1">#traiter les données</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1">#retourner le résultat</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1">#définir la fonction process_data</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1">#faire quelque chose avec les données</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="c1">#retourner le résultat</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1">#exécuter l&#39;application</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div><p>Il n’y a qu’une toute petite différence entre ces deux sorties. Faisons l’inverse cette fois et réglons la température à 0,9 :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Importer les bibliothèques nécessaires</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="c1"># Créer une application Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Créer une route pour l&#39;API</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">api_call</span><span class="p">():</span>
+    <span class="c1"># Obtenir les données de la requête</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span>
+
+    <span class="c1"># Traiter les données</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># Retourner le résultat</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1"># Fonction pour traiter les données</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># Faire quelque chose avec les données</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="c1"># Retourner le résultat</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Exécuter l&#39;application</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div><p>et la deuxième tentative à 0,9 comme valeur de température :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">flask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+
+<span class="c1"># créer l&#39;application Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># créer quelques données de test</span>
+<span class="n">books</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;A Fire Upon The Deep&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Vernor Vinge&#39;</span><span class="p">,</span> <span class="s1">&#39;first_sentence&#39;</span><span class="p">:</span> <span class="s1">&#39;The coldsleep itself was dreamless.&#39;</span><span class="p">,</span> <span class="s1">&#39;year_published&#39;</span><span class="p">:</span> <span class="s1">&#39;1992&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;The Ones Who Walk Away From Omelas&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Ursula K. Le Guin&#39;</span><span class="p">,</span> <span class="s1">&#39;first_sentence&#39;</span><span class="p">:</span> <span class="s1">&#39;With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.&#39;</span><span class="p">,</span> <span class="s1">&#39;published&#39;</span><span class="p">:</span> <span class="s1">&#39;1973&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Dhalgren&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="s1">&#39;Samuel R. Delany&#39;</span><span class="p">,</span> <span class="s1">&#39;first_sentence&#39;</span><span class="p">:</span> <span class="s1">&#39;to wound the autumnal city.&#39;</span><span class="p">,</span> <span class="s1">&#39;published&#39;</span><span class="p">:</span> <span class="s1">&#39;1975&#39;</span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1"># créer un point de terminaison</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">home</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;&#39;&lt;h1&gt;Welcome to our book API!&lt;/h1&gt;&#39;&#39;&#39;</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/v1/resources/books</span>
+</pre></div>
+</div><p>Comme vous le voyez, les résultats ne pourraient pas être plus variés.</p>
+<blockquote>
+<p>Notez qu'il existe plus de paramètres que vous pouvez modifier pour varier la sortie, comme top-k, top-p, la pénalité de répétition, la pénalité de longueur et la pénalité de diversité, mais ceux-ci sont hors du cadre de ce programme.</p>
+</blockquote>
+<h2 id="bonnes-pratiques">Bonnes pratiques<a class="anchor" href="#bonnes-pratiques" aria-label="Lien vers cette section">#</a></h2>
+<p>Il existe de nombreuses pratiques que vous pouvez appliquer pour essayer d'obtenir ce que vous voulez. Vous trouverez votre propre style au fur et à mesure que vous utiliserez le prompting de plus en plus.</p>
+<p>En plus des techniques que nous avons couvertes, il y a quelques bonnes pratiques à considérer lors du prompting d'un LLM.</p>
+<p>Voici quelques bonnes pratiques à considérer :</p>
+<ul>
+<li><strong>Spécifiez le contexte</strong>. Le contexte importe, plus vous pouvez spécifier comme le domaine, le sujet, etc., mieux c'est.</li>
+<li>Limitez la sortie. Si vous souhaitez un nombre spécifique d'éléments ou une longueur spécifique, précisez-le.</li>
+<li><strong>Spécifiez à la fois quoi et comment</strong>. N'oubliez pas de mentionner à la fois ce que vous voulez et comment vous le voulez, par exemple « Créez une API Web Python avec les routes products et customers, divisez-la en 3 fichiers ».</li>
+<li><strong>Utilisez des modèles</strong>. Souvent, vous voudrez enrichir vos prompts avec des données de votre entreprise. Utilisez des modèles pour cela. Les modèles peuvent avoir des variables que vous remplacez par les données réelles.</li>
+<li><strong>Épelez correctement</strong>. Les LLM peuvent vous fournir une réponse correcte, mais si vous vous exprimez correctement, vous obtiendrez une meilleure réponse.</li>
+</ul>
+<h2 id="exercice">Exercice<a class="anchor" href="#exercice" aria-label="Lien vers cette section">#</a></h2>
+<p>Voici un code en Python montrant comment créer une API simple avec Flask :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hello</span><span class="p">():</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;World&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hello, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">!&#39;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div><p>Utilisez un assistant IA comme GitHub Copilot ou ChatGPT et appliquez la technique de « self-refine » pour améliorer le code.</p>
+<h2 id="solution">Solution<a class="anchor" href="#solution" aria-label="Lien vers cette section">#</a></h2>
+<p>Veuillez essayer de résoudre l'exercice en ajoutant des prompts appropriés au code.</p>
+<blockquote>
+<p>[!TIP]
+Formulez un prompt pour demander à l'améliorer, il est judicieux de limiter le nombre d'améliorations. Vous pouvez aussi demander une amélioration dans un certain domaine, par exemple architecture, performance, sécurité, etc.</p>
+</blockquote>
+<p><a href="../../lecons/05-advanced-prompts/index.html#code-python-aoai-solution-py">Solution</a></p>
+<h2 id="verification-des-connaissances">Vérification des connaissances<a class="anchor" href="#verification-des-connaissances" aria-label="Lien vers cette section">#</a></h2>
+<p>Pourquoi utiliserais-je le prompting en chaîne de pensée ? Montrez-moi 1 réponse correcte et 2 réponses incorrectes.</p>
+<ol>
+<li>Pour enseigner au LLM comment résoudre un problème.</li>
+<li>B, Pour apprendre au LLM à trouver des erreurs dans le code.</li>
+<li>C, Pour instruire le LLM à proposer différentes solutions.</li>
+</ol>
+<p>A : 1, parce que le chaînage de pensée consiste à montrer au LLM comment résoudre un problème en lui fournissant une série d’étapes, ainsi que des problèmes similaires et la manière dont ils ont été résolus.</p>
+<h2 id="challenge">🚀 Challenge<a class="anchor" href="#challenge" aria-label="Lien vers cette section">#</a></h2>
+<p>Vous venez d'utiliser la technique de self-refine dans l'exercice. Prenez un programme que vous avez construit et réfléchissez aux améliorations que vous souhaiteriez y apporter. Utilisez maintenant la technique de self-refine pour appliquer les changements proposés. Quel a été, selon vous, le résultat, meilleur ou pire ?</p>
+<h2 id="excellent-travail-continuez-votre-apprentissage">Excellent travail ! Continuez votre apprentissage<a class="anchor" href="#excellent-travail-continuez-votre-apprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, consultez notre <a href="https://aka.ms/genai-collection" target="_blank" rel="noopener noreferrer">collection d’apprentissage de l’IA générative</a> pour continuer à progresser dans votre connaissance de l’IA générative !</p>
+<p>Rendez-vous à la Leçon 6 où nous appliquerons nos connaissances en Prompt Engineering en <a href="../../lecons/06-text-generation-apps/index.html">créant des applications de génération de texte</a></p>
+<hr />
+<!-- CO-OP TRANSLATOR DISCLAIMER START -->
+<p><strong>Avertissement</strong> :
+Ce document a été traduit à l'aide du service de traduction automatique <a href="https://github.com/Azure/co-op-translator" target="_blank" rel="noopener noreferrer">Co-op Translator</a>. Bien que nous nous efforçions d'assurer l'exactitude, veuillez noter que les traductions automatisées peuvent contenir des erreurs ou des inexactitudes. Le document original dans sa langue native doit être considéré comme la source faisant autorité. Pour les informations critiques, il est recommandé de recourir à une traduction professionnelle réalisée par un humain. Nous ne saurions être tenus responsables des malentendus ou erreurs d'interprétation découlant de l'utilisation de cette traduction.</p>
+<!-- CO-OP TRANSLATOR DISCLAIMER END -->
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de la leçon<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers d'exemple de cette leçon, copiés depuis le dépôt d'origine. Chaque fichier est lisible ici et téléchargeable.</p><div class="tabs" role="tablist"><button class="tabs__btn" role="tab" aria-selected="true" data-tab="javascript">JavaScript</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="python">Python</button></div><div class="tabs__panel" data-tab="javascript"><details class="codefile" id="code-javascript-assignment-js"><summary class="codefile__head"><span class="codefile__name">javascript/assignment.js</span><span class="codefile__size">199 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">javascript</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">)</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">()</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mf">3000</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Example app listening on port 3000!&#39;</span><span class="p">)</span>
+<span class="p">})</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/05-advanced-prompts/javascript/assignment.js" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-javascript-solution-js"><summary class="codefile__head"><span class="codefile__name">javascript/solution.js</span><span class="codefile__size">4 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">javascript</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">// starter code</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">)</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">()</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mf">3000</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Example app listening on port 3000!&#39;</span><span class="p">)</span>
+<span class="p">})</span>
+
+
+<span class="c1">// prompt in Copilot Chat, find 3 improvements to the code and apply</span>
+<span class="c1">// results:</span>
+
+<span class="cm">/*</span>
+<span class="cm">Sure, here are three improvements that can be made to the code:</span>
+
+<span class="cm">1. The warning &quot;File is a CommonJS module; it may be converted to an ES module&quot; can be resolved by adding &quot;type&quot;: &quot;module&quot; to the package.json file. This will allow the use of ES modules in the project.</span>
+
+<span class="cm">1. The warning &quot;&#39;req&#39; is declared but its value is never read&quot; can be resolved by removing the req parameter from the callback function of the app.get() method. Since the req parameter is not used in the function, it can be safely removed.</span>
+
+<span class="cm">1. The console.log() statement in the app.listen() method can be replaced with a more descriptive message. For example, &quot;Server is running on port 3000&quot; would be a more informative message.</span>
+
+<span class="cm">Here is the updated code with the suggested improvements:</span>
+<span class="cm">*/</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mf">3000</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Server is running on port 3000&#39;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Prompt: improve the code and make it more secure</span>
+
+<span class="cm">/* </span>
+<span class="cm">Sure, here are some suggestions to improve the code and make it more secure:</span>
+
+<span class="cm">1. Use environment variables to store sensitive information such as database credentials, API keys, and other secrets. This will prevent the information from being hard-coded in the code and exposed in case of a security breach.</span>
+
+<span class="cm">1. Implement input validation to prevent malicious input from being processed by the server. For example, you can use a library like express-validator to validate user input and sanitize it before processing.</span>
+
+<span class="cm">1. Use HTTPS instead of HTTP to encrypt data in transit and prevent eavesdropping and man-in-the-middle attacks. You can use a library like https to create an HTTPS server and obtain a TLS/SSL certificate from a trusted certificate authority.</span>
+
+<span class="cm">Here is the updated code with the suggested improvements:</span>
+<span class="cm">*/</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">https</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;https&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">fs</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;fs&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">check</span><span class="p">,</span><span class="w"> </span><span class="nx">validationResult</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express-validator&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
+
+<span class="c1">// Use environment variables to store sensitive information</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">3000</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">DB_USER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DB_USER</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">DB_PASS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DB_PASS</span><span class="p">;</span>
+
+<span class="c1">// Implement input validation</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nx">check</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">).</span><span class="nx">isLength</span><span class="p">({</span><span class="w"> </span><span class="nx">min</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="w"> </span><span class="p">}).</span><span class="nx">withMessage</span><span class="p">(</span><span class="s1">&#39;Name must be at least 3 characters&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">check</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">).</span><span class="nx">isEmail</span><span class="p">().</span><span class="nx">withMessage</span><span class="p">(</span><span class="s1">&#39;Invalid email address&#39;</span><span class="p">),</span>
+<span class="p">],</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">errors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">validationResult</span><span class="p">(</span><span class="nx">req</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">errors</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">errors</span><span class="o">:</span><span class="w"> </span><span class="nx">errors</span><span class="p">.</span><span class="nx">array</span><span class="p">()</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="sb">`Hello </span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb"> (</span><span class="si">${</span><span class="nx">email</span><span class="si">}</span><span class="sb">)!`</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Use HTTPS instead of HTTP</span>
+<span class="c1">// SECURITY: Use absolute paths and proper error handling for certificates</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">import</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">certDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CERT_DIR</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">();</span>
+
+<span class="c1">// SECURITY: Validate certificate directory is within allowed path</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">resolvedCertDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">certDir</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">resolvedCertDir</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Certificate directory must be within the application directory&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="nx">options</span><span class="p">;</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">resolvedCertDir</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;server.key&#39;</span><span class="p">)),</span>
+<span class="w">    </span><span class="nx">cert</span><span class="o">:</span><span class="w"> </span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">resolvedCertDir</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;server.cert&#39;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to load SSL certificates:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Please ensure server.key and server.cert files exist in the certificate directory&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">https</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span><span class="w"> </span><span class="nx">app</span><span class="p">).</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Server is running securely on port </span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="cm">/*</span>
+<span class="cm">Note that the server.key and server.cert files are required to create an HTTPS server. You can generate a self-signed certificate using the following command:</span>
+<span class="cm">*/</span>
+
+<span class="sb">```bash</span>
+<span class="sb">openssl req -nodes -new -x509 -keyout server.key -out server.cert</span>
+<span class="sb">```</span>
+
+<span class="cm">/* </span>
+<span class="cm">This will generate a `server.key` and `server.cert` file in the current directory. However, for production use, you should obtain a TLS/SSL certificate from a trusted certificate authority.</span>
+<span class="cm">*/</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/05-advanced-prompts/javascript/solution.js" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="python" hidden><details class="codefile" id="code-python-aoai-assignment-py"><summary class="codefile__head"><span class="codefile__name">python/aoai-assignment.py</span><span class="codefile__size">201 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hello</span><span class="p">():</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;World&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hello, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">!&#39;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/05-advanced-prompts/python/aoai-assignment.py" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-aoai-solution-py"><summary class="codefile__head"><span class="codefile__name">python/aoai-solution.py</span><span class="codefile__size">2 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># here are some suggestions to improve the code:</span>
+
+<span class="c1"># - Add input validation to prevent malicious input from being processed by the server. You can use a library like flask-wtf to validate user input and sanitize it before processing.</span>
+
+<span class="c1"># - Use environment variables to store sensitive information such as database credentials, API keys, and other secrets. This will prevent the information from being hard-coded in the code and exposed in case of a security breach.</span>
+
+<span class="c1"># - Implement error handling to provide meaningful error messages to the user in case of errors. You can use the @app.errorhandler() decorator to handle exceptions and return an error response.</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template_string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask_wtf</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlaskForm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">wtforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringField</span><span class="p">,</span> <span class="n">SubmitField</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">wtforms.validators</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataRequired</span><span class="p">,</span> <span class="n">Length</span><span class="p">,</span> <span class="n">Email</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">markupsafe</span><span class="w"> </span><span class="kn">import</span> <span class="n">escape</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="c1"># SECURITY: Load secret key from environment variable instead of hardcoding</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SECRET_KEY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;FLASK_SECRET_KEY&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">HelloForm</span><span class="p">(</span><span class="n">FlaskForm</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">DataRequired</span><span class="p">(),</span> <span class="n">Length</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">3</span><span class="p">)])</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="s1">&#39;Email&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">DataRequired</span><span class="p">(),</span> <span class="n">Email</span><span class="p">()])</span>
+    <span class="n">submit</span> <span class="o">=</span> <span class="n">SubmitField</span><span class="p">(</span><span class="s1">&#39;Submit&#39;</span><span class="p">)</span>
+
+<span class="c1"># Form template with proper CSRF protection and escaping</span>
+<span class="n">FORM_TEMPLATE</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">&lt;!DOCTYPE html&gt;</span>
+<span class="s1">&lt;html&gt;</span>
+<span class="s1">&lt;head&gt;&lt;title&gt;Hello Form&lt;/title&gt;&lt;/head&gt;</span>
+<span class="s1">&lt;body&gt;</span>
+<span class="s1">    &lt;form method=&quot;POST&quot;&gt;</span>
+<span class="s1">        {{ form.hidden_tag() }}</span>
+<span class="s1">        &lt;p&gt;{{ form.name.label }} {{ form.name(size=32) }}</span>
+<span class="s1">           {</span><span class="si">% f</span><span class="s1">or error in form.name.errors %}&lt;span style=&quot;color: red;&quot;&gt;[{{ error }}]&lt;/span&gt;{</span><span class="si">% e</span><span class="s1">ndfor %}&lt;/p&gt;</span>
+<span class="s1">        &lt;p&gt;{{ form.email.label }} {{ form.email(size=32) }}</span>
+<span class="s1">           {</span><span class="si">% f</span><span class="s1">or error in form.email.errors %}&lt;span style=&quot;color: red;&quot;&gt;[{{ error }}]&lt;/span&gt;{</span><span class="si">% e</span><span class="s1">ndfor %}&lt;/p&gt;</span>
+<span class="s1">        &lt;p&gt;{{ form.submit() }}&lt;/p&gt;</span>
+<span class="s1">    &lt;/form&gt;</span>
+<span class="s1">&lt;/body&gt;</span>
+<span class="s1">&lt;/html&gt;</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hello</span><span class="p">():</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">HelloForm</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+        <span class="c1"># SECURITY: Use escape() to prevent XSS attacks</span>
+        <span class="n">safe_name</span> <span class="o">=</span> <span class="n">escape</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">safe_email</span> <span class="o">=</span> <span class="n">escape</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hello, </span><span class="si">{</span><span class="n">safe_name</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">safe_email</span><span class="si">}</span><span class="s1">)!&#39;</span>
+    <span class="c1"># SECURITY: Use Flask&#39;s render_template_string for proper escaping</span>
+    <span class="k">return</span> <span class="n">render_template_string</span><span class="p">(</span><span class="n">FORM_TEMPLATE</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bad_request</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;Bad request&#39;</span><span class="p">,</span> <span class="mi">400</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/05-advanced-prompts/python/aoai-solution.py" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="done" data-lesson-toggle="05-advanced-prompts">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai terminé la leçon 05 — Créer des prompts avancés</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Fondamentaux de l&#x27;ingénierie des prompts</span></a><a class="prevnext__link prevnext__next" href="../../lecons/06-text-generation-apps/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Construire des applications de génération de texte</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/05-advanced-prompts/README.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/05-advanced-prompts/README.md</a> ·
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/tree/main/05-advanced-prompts" target="_blank" rel="noopener noreferrer">version anglaise</a>
+</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#introduction">Introduction</a></li><li class="toc__item toc__item--h2"><a href="#objectifs-dapprentissage">Objectifs d’apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#prompt-engineering">Prompt engineering</a></li><li class="toc__item toc__item--h3"><a href="#un-exemple-de-prompt">Un exemple de prompt</a></li><li class="toc__item toc__item--h3"><a href="#limitations-dun-prompt-simple">Limitations d’un prompt simple</a></li><li class="toc__item toc__item--h3"><a href="#techniques-de-prompting">Techniques de prompting</a></li><li class="toc__item toc__item--h3"><a href="#prompting-zero-shot">Prompting zero-shot</a></li><li class="toc__item toc__item--h3"><a href="#prompting-few-shot">Prompting few-shot</a></li><li class="toc__item toc__item--h3"><a href="#chain-of-thought">Chain-of-thought</a></li><li class="toc__item toc__item--h3"><a href="#savoir-genere">Savoir généré</a></li><li class="toc__item toc__item--h3"><a href="#least-to-most">Least-to-most</a></li><li class="toc__item toc__item--h3"><a href="#auto-affinement-critique-des-resultats">Auto-affinement, critique des résultats</a></li><li class="toc__item toc__item--h3"><a href="#prompting-maieutique">Prompting maïeutique</a></li><li class="toc__item toc__item--h2"><a href="#variez-votre-sortie">Variez votre sortie</a></li><li class="toc__item toc__item--h3"><a href="#utiliser-la-temperature-pour-varier-votre-sortie">Utiliser la température pour varier votre sortie</a></li><li class="toc__item toc__item--h2"><a href="#bonnes-pratiques">Bonnes pratiques</a></li><li class="toc__item toc__item--h2"><a href="#exercice">Exercice</a></li><li class="toc__item toc__item--h2"><a href="#solution">Solution</a></li><li class="toc__item toc__item--h2"><a href="#verification-des-connaissances">Vérification des connaissances</a></li><li class="toc__item toc__item--h2"><a href="#challenge">🚀 Challenge</a></li><li class="toc__item toc__item--h2"><a href="#excellent-travail-continuez-votre-apprentissage">Excellent travail ! Continuez votre apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de la leçon</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../assets/app.js" defer></script>
+</body>
+</html>

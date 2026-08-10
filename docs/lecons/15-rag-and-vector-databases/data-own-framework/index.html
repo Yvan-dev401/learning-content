@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Introduction aux réseaux de neurones. Perceptron multicouche — leçon 15</title>
+<meta name="description" content="Introduction aux réseaux de neurones. Perceptron multicouche — page annexe de la leçon 15, RAG et bases de données vectorielles.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item is-active" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a><ul class="sidebar__sublist"><li class="sidebar__subitem"><a href="../../../lecons/15-rag-and-vector-databases/data-frameworks/index.html">Frameworks de réseaux de neurones</a></li><li class="sidebar__subitem is-active"><a href="../../../lecons/15-rag-and-vector-databases/data-own-framework/index.html">Introduction aux réseaux de neurones. Perceptron multicouche</a></li><li class="sidebar__subitem"><a href="../../../lecons/15-rag-and-vector-databases/data-perceptron/index.html">Introduction aux réseaux de neurones : Perceptron</a></li></ul></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../parcours/avance/index.html">Techniques avancées</a> <span aria-hidden="true">›</span>
+  <a href="../../../lecons/15-rag-and-vector-databases/index.html">Leçon 15</a> <span aria-hidden="true">›</span>
+  <span>Introduction aux réseaux de neurones. Perceptron multicouche</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page annexe de la leçon 15 — RAG et bases de données vectorielles</p>
+</header>
+<article class="prose">
+<h1 id="introduction-aux-reseaux-de-neurones-perceptron-multicouche">Introduction aux réseaux de neurones. Perceptron multicouche<a class="anchor" href="#introduction-aux-reseaux-de-neurones-perceptron-multicouche" aria-label="Lien vers cette section">#</a></h1>
+<p>Dans la section précédente, vous avez découvert le modèle de réseau de neurones le plus simple : le perceptron à une couche, un modèle linéaire de classification binaire.</p>
+<p>Dans cette section, nous allons étendre ce modèle vers un cadre plus flexible, nous permettant de :</p>
+<ul>
+<li>réaliser une <strong>classification multi-classes</strong> en plus de la classification binaire</li>
+<li>résoudre des <strong>problèmes de régression</strong> en plus de la classification</li>
+<li>séparer des classes qui ne sont pas linéairement séparables</li>
+</ul>
+<p>Nous allons également développer notre propre framework modulaire en Python, qui nous permettra de construire différentes architectures de réseaux de neurones.</p>
+<h2 id="formalisation-de-lapprentissage-automatique">Formalisation de l’apprentissage automatique<a class="anchor" href="#formalisation-de-lapprentissage-automatique" aria-label="Lien vers cette section">#</a></h2>
+<p>Commençons par formaliser le problème d’apprentissage automatique. Supposons que nous disposons d’un jeu de données d’entraînement <strong>X</strong> avec des étiquettes <strong>Y</strong>, et que nous devons construire un modèle <em>f</em> qui fera les prédictions les plus précises possibles. La qualité des prédictions est mesurée par une <strong>fonction de perte</strong> ℒ. Les fonctions de perte suivantes sont souvent utilisées :</p>
+<ul>
+<li>Pour un problème de régression, lorsque l’on doit prédire un nombre, on peut utiliser l’<strong>erreur absolue</strong> ∑<sub>i</sub>|f(x<sup>(i)</sup>)-y<sup>(i)</sup>|, ou l’<strong>erreur quadratique</strong> ∑<sub>i</sub>(f(x<sup>(i)</sup>)-y<sup>(i)</sup>)<sup>2</sup></li>
+<li>Pour la classification, on utilise la <strong>perte 0-1</strong> (qui correspond essentiellement à la <strong>précision</strong> du modèle), ou la <strong>perte logistique</strong>.</li>
+</ul>
+<p>Pour le perceptron à une couche, la fonction <em>f</em> était définie comme une fonction linéaire <em>f(x)=wx+b</em> (ici <em>w</em> est la matrice de poids, <em>x</em> le vecteur des caractéristiques d’entrée, et <em>b</em> le vecteur de biais). Pour différentes architectures de réseaux de neurones, cette fonction peut prendre une forme plus complexe.</p>
+<blockquote>
+<p>Dans le cas de la classification, il est souvent souhaitable d’obtenir des probabilités des classes correspondantes en sortie du réseau. Pour convertir des nombres arbitraires en probabilités (par exemple pour normaliser la sortie), on utilise souvent la fonction <strong>softmax</strong> σ, et la fonction <em>f</em> devient <em>f(x)=σ(wx+b)</em></p>
+</blockquote>
+<p>Dans la définition de <em>f</em> ci-dessus, <em>w</em> et <em>b</em> sont appelés <strong>paramètres</strong> θ=⟨<em>w,b</em>⟩. Étant donné le jeu de données ⟨<strong>X</strong>,<strong>Y</strong>⟩, on peut calculer une erreur globale sur l’ensemble du jeu de données en fonction des paramètres θ.</p>
+<blockquote>
+<p>✅ <strong>L’objectif de l’entraînement du réseau de neurones est de minimiser l’erreur en faisant varier les paramètres θ</strong></p>
+</blockquote>
+<h2 id="optimisation-par-descente-de-gradient">Optimisation par descente de gradient<a class="anchor" href="#optimisation-par-descente-de-gradient" aria-label="Lien vers cette section">#</a></h2>
+<p>Il existe une méthode bien connue d’optimisation de fonction appelée <strong>descente de gradient</strong>. L’idée est que l’on peut calculer une dérivée (dans le cas multidimensionnel appelée <strong>gradient</strong>) de la fonction de perte par rapport aux paramètres, et faire varier ces paramètres de manière à réduire l’erreur. Cela peut se formaliser ainsi :</p>
+<ul>
+<li>Initialiser les paramètres avec des valeurs aléatoires w<sup>(0)</sup>, b<sup>(0)</sup></li>
+<li>Répéter l’étape suivante plusieurs fois :
+<ul>
+<li>w<sup>(i+1)</sup> = w<sup>(i)</sup>-η∂ℒ/∂w</li>
+<li>b<sup>(i+1)</sup> = b<sup>(i)</sup>-η∂ℒ/∂b</li>
+</ul>
+</li>
+</ul>
+<p>Pendant l’entraînement, les étapes d’optimisation sont censées être calculées en considérant l’ensemble du jeu de données (rappelez-vous que la perte est calculée comme une somme sur tous les échantillons d’entraînement). Cependant, dans la pratique, on prend de petites portions du jeu de données appelées <strong>minibatchs</strong>, et on calcule les gradients sur un sous-ensemble des données. Comme ce sous-ensemble est choisi aléatoirement à chaque fois, cette méthode s’appelle <strong>descente de gradient stochastique</strong> (SGD).</p>
+<h2 id="perceptrons-multicouches-et-retropropagation">Perceptrons multicouches et rétropropagation<a class="anchor" href="#perceptrons-multicouches-et-retropropagation" aria-label="Lien vers cette section">#</a></h2>
+<p>Un réseau à une couche, comme nous l’avons vu, est capable de classer des classes linéairement séparables. Pour construire un modèle plus riche, on peut combiner plusieurs couches du réseau. Mathématiquement, cela signifie que la fonction <em>f</em> aura une forme plus complexe, et sera calculée en plusieurs étapes :</p>
+<ul>
+<li>z<sub>1</sub>=w<sub>1</sub>x+b<sub>1</sub></li>
+<li>z<sub>2</sub>=w<sub>2</sub>α(z<sub>1</sub>)+b<sub>2</sub></li>
+<li>f = σ(z<sub>2</sub>)</li>
+</ul>
+<p>Ici, α est une <strong>fonction d’activation non linéaire</strong>, σ est une fonction softmax, et les paramètres θ=&lt;<em>w<sub>1</sub>,b<sub>1</sub>,w<sub>2</sub>,b<sub>2</sub></em>&gt;.</p>
+<p>L’algorithme de descente de gradient reste le même, mais il devient plus difficile de calculer les gradients. En appliquant la règle de dérivation en chaîne, on peut calculer les dérivées comme suit :</p>
+<ul>
+<li>∂ℒ/∂w<sub>2</sub> = (∂ℒ/∂σ)(∂σ/∂z<sub>2</sub>)(∂z<sub>2</sub>/∂w<sub>2</sub>)</li>
+<li>∂ℒ/∂w<sub>1</sub> = (∂ℒ/∂σ)(∂σ/∂z<sub>2</sub>)(∂z<sub>2</sub>/∂α)(∂α/∂z<sub>1</sub>)(∂z<sub>1</sub>/∂w<sub>1</sub>)</li>
+</ul>
+<blockquote>
+<p>✅ La règle de dérivation en chaîne est utilisée pour calculer les dérivées de la fonction de perte par rapport aux paramètres.</p>
+</blockquote>
+<p>Notez que la partie la plus à gauche de toutes ces expressions est la même, ce qui nous permet de calculer efficacement les dérivées en partant de la fonction de perte et en remontant « à rebours » dans le graphe de calcul. C’est pourquoi la méthode d’entraînement d’un perceptron multicouche s’appelle <strong>rétropropagation</strong>, ou 'backprop'.</p>
+<blockquote>
+<p>TODO: image citation</p>
+</blockquote>
+<blockquote>
+<p>✅ Nous aborderons la rétropropagation en beaucoup plus de détails dans notre exemple de notebook.</p>
+</blockquote>
+<h2 id="conclusion">Conclusion<a class="anchor" href="#conclusion" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans cette leçon, nous avons construit notre propre bibliothèque de réseaux de neurones, et nous l’avons utilisée pour une tâche simple de classification bidimensionnelle.</p>
+<h2 id="defi">🚀 Défi<a class="anchor" href="#defi" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans le notebook associé, vous allez implémenter votre propre framework pour construire et entraîner des perceptrons multicouches. Vous pourrez ainsi voir en détail comment fonctionnent les réseaux de neurones modernes.</p>
+<p>Passez au notebook OwnFramework et suivez-le pas à pas.</p>
+<h2 id="revision-auto-apprentissage">Révision &amp; Auto-apprentissage<a class="anchor" href="#revision-auto-apprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>La rétropropagation est un algorithme courant en IA et en apprentissage automatique, qui mérite d’être étudié plus en profondeur.</p>
+<h2 id="exercice">Exercice<a class="anchor" href="#exercice" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans ce laboratoire, vous êtes invité à utiliser le framework que vous avez construit dans cette leçon pour résoudre la classification des chiffres manuscrits MNIST.</p>
+<ul>
+<li>Instructions</li>
+<li>Notebook</li>
+</ul>
+<p><strong>Avertissement</strong> :<br />
+Ce document a été traduit à l’aide du service de traduction automatique <a href="https://github.com/Azure/co-op-translator" target="_blank" rel="noopener noreferrer">Co-op Translator</a>. Bien que nous nous efforcions d’assurer l’exactitude, veuillez noter que les traductions automatiques peuvent contenir des erreurs ou des inexactitudes. Le document original dans sa langue d’origine doit être considéré comme la source faisant foi. Pour les informations critiques, une traduction professionnelle réalisée par un humain est recommandée. Nous déclinons toute responsabilité en cas de malentendus ou de mauvaises interprétations résultant de l’utilisation de cette traduction.</p>
+
+</article>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../../lecons/15-rag-and-vector-databases/data-frameworks/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Frameworks de réseaux de neurones</span></a><a class="prevnext__link prevnext__next" href="../../../lecons/15-rag-and-vector-databases/data-perceptron/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Introduction aux réseaux de neurones : Perceptron</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/15-rag-and-vector-databases/data/own_framework.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/15-rag-and-vector-databases/data/own_framework.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#formalisation-de-lapprentissage-automatique">Formalisation de l’apprentissage automatique</a></li><li class="toc__item toc__item--h2"><a href="#optimisation-par-descente-de-gradient">Optimisation par descente de gradient</a></li><li class="toc__item toc__item--h2"><a href="#perceptrons-multicouches-et-retropropagation">Perceptrons multicouches et rétropropagation</a></li><li class="toc__item toc__item--h2"><a href="#conclusion">Conclusion</a></li><li class="toc__item toc__item--h2"><a href="#defi">🚀 Défi</a></li><li class="toc__item toc__item--h2"><a href="#revision-auto-apprentissage">Révision &amp; Auto-apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#exercice">Exercice</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>
