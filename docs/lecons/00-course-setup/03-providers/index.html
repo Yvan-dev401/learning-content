@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choisir et configurer un fournisseur LLM 🔑 — leçon 00</title>
+<meta name="description" content="Choisir et configurer un fournisseur LLM 🔑 — page annexe de la leçon 00, Démarrer avec ce cours.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item is-active" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a><ul class="sidebar__sublist"><li class="sidebar__subitem"><a href="../../../lecons/00-course-setup/01-setup-cloud/index.html">Configuration cloud ☁️ – GitHub Codespaces</a></li><li class="sidebar__subitem"><a href="../../../lecons/00-course-setup/02-setup-local/index.html">Configuration locale 🖥️</a></li><li class="sidebar__subitem is-active"><a href="../../../lecons/00-course-setup/03-providers/index.html">Choisir et configurer un fournisseur LLM 🔑</a></li></ul></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../parcours/demarrer/index.html">Préparer son environnement</a> <span aria-hidden="true">›</span>
+  <a href="../../../lecons/00-course-setup/index.html">Leçon 00</a> <span aria-hidden="true">›</span>
+  <span>Choisir et configurer un fournisseur LLM 🔑</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page annexe de la leçon 00 — Démarrer avec ce cours</p>
+</header>
+<article class="prose">
+<h1 id="choisir-et-configurer-un-fournisseur-llm">Choisir et configurer un fournisseur LLM 🔑<a class="anchor" href="#choisir-et-configurer-un-fournisseur-llm" aria-label="Lien vers cette section">#</a></h1>
+<p>Les devoirs <strong>peuvent</strong> également être configurés pour fonctionner avec un ou plusieurs déploiements de grands modèles de langage (LLM) via un fournisseur de services pris en charge comme OpenAI, Azure ou Hugging Face. Ceux-ci fournissent un <em>point de terminaison hébergé</em> (API) auquel nous pouvons accéder de manière programmatique avec les bonnes informations d'identification (clé API ou jeton). Dans ce cours, nous abordons ces fournisseurs :</p>
+<ul>
+<li><a href="https://platform.openai.com/docs/models" target="_blank" rel="noopener noreferrer">OpenAI</a> avec divers modèles incluant la série principale GPT.</li>
+<li><a href="https://learn.microsoft.com/azure/ai-services/openai/" target="_blank" rel="noopener noreferrer">Azure OpenAI</a> pour les modèles OpenAI avec un focus sur la préparation entreprise</li>
+<li><a href="https://huggingface.co/docs/hub/index" target="_blank" rel="noopener noreferrer">Hugging Face</a> pour les modèles open-source et le serveur d'inférence</li>
+</ul>
+<p><strong>Vous devrez utiliser vos propres comptes pour ces exercices</strong>. Les devoirs sont optionnels, vous pouvez donc choisir de configurer un, tous - ou aucun - des fournisseurs selon vos intérêts. Quelques conseils pour l'inscription :</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Inscription</th>
+<th style="text-align:left">Coût</th>
+<th style="text-align:left">Clé API</th>
+<th style="text-align:left">Playground</th>
+<th style="text-align:left">Commentaires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://platform.openai.com/signup" target="_blank" rel="noopener noreferrer">OpenAI</a></td>
+<td style="text-align:left"><a href="https://openai.com/pricing#language-models" target="_blank" rel="noopener noreferrer">Tarification</a></td>
+<td style="text-align:left"><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">Basée sur projet</a></td>
+<td style="text-align:left"><a href="https://platform.openai.com/playground" target="_blank" rel="noopener noreferrer">Sans code, Web</a></td>
+<td style="text-align:left">Plusieurs modèles disponibles</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://aka.ms/azure/free" target="_blank" rel="noopener noreferrer">Azure</a></td>
+<td style="text-align:left"><a href="https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/" target="_blank" rel="noopener noreferrer">Tarification</a></td>
+<td style="text-align:left"><a href="https://learn.microsoft.com/azure/ai-services/openai/quickstart" target="_blank" rel="noopener noreferrer">Démarrage rapide SDK</a></td>
+<td style="text-align:left"><a href="https://learn.microsoft.com/azure/ai-services/openai/quickstart" target="_blank" rel="noopener noreferrer">Démarrage rapide Studio</a></td>
+<td style="text-align:left"><a href="https://learn.microsoft.com/azure/ai-services/openai/" target="_blank" rel="noopener noreferrer">Doit postuler à l'avance pour l'accès</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://huggingface.co/join" target="_blank" rel="noopener noreferrer">Hugging Face</a></td>
+<td style="text-align:left"><a href="https://huggingface.co/pricing" target="_blank" rel="noopener noreferrer">Tarification</a></td>
+<td style="text-align:left"><a href="https://huggingface.co/docs/hub/security-tokens" target="_blank" rel="noopener noreferrer">Jetons d'accès</a></td>
+<td style="text-align:left"><a href="https://huggingface.co/chat/" target="_blank" rel="noopener noreferrer">Hugging Chat</a></td>
+<td style="text-align:left"><a href="https://huggingface.co/chat/models" target="_blank" rel="noopener noreferrer">Hugging Chat a des modèles limités</a></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p>Suivez les instructions ci-dessous pour <em>configurer</em> ce dépôt pour une utilisation avec différents fournisseurs. Les devoirs qui nécessitent un fournisseur spécifique contiendront l’un de ces tags dans leur nom de fichier :</p>
+<ul>
+<li><code>aoai</code> - nécessite un point de terminaison Azure OpenAI, clé</li>
+<li><code>oai</code> - nécessite un point de terminaison OpenAI, clé</li>
+<li><code>hf</code> - nécessite un jeton Hugging Face</li>
+</ul>
+<p>Vous pouvez configurer un, aucun ou tous les fournisseurs. Les devoirs associés généreront simplement une erreur en cas d’identifiants manquants.</p>
+<h2 id="creer-le-fichier-env">Créer le fichier <code>.env</code><a class="anchor" href="#creer-le-fichier-env" aria-label="Lien vers cette section">#</a></h2>
+<p>Nous supposons que vous avez déjà lu les conseils ci-dessus, vous êtes inscrit auprès du fournisseur concerné, et avez obtenu les informations d’authentification requises (API_KEY ou jeton). Dans le cas d’Azure OpenAI, nous supposons également que vous disposez d’un déploiement valide d’un service Azure OpenAI (point de terminaison) avec au moins un modèle GPT déployé pour la complétion de chat.</p>
+<p>L’étape suivante consiste à configurer vos <strong>variables d’environnement locales</strong> comme suit :</p>
+<ol>
+<li>
+<p>Cherchez dans le dossier racine un fichier <code>.env.copy</code> qui devrait contenir ceci :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Fournisseur OpenAI</span>
+<span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s1">&#39;&lt;add your OpenAI API key here&gt;&#39;</span>
+
+<span class="c1">## Azure OpenAI</span>
+<span class="nv">AZURE_OPENAI_API_VERSION</span><span class="o">=</span><span class="s1">&#39;2024-02-01&#39;</span><span class="w"> </span><span class="c1"># Par défaut est défini !</span>
+<span class="nv">AZURE_OPENAI_API_KEY</span><span class="o">=</span><span class="s1">&#39;&lt;add your AOAI key here&gt;&#39;</span>
+<span class="nv">AZURE_OPENAI_ENDPOINT</span><span class="o">=</span><span class="s1">&#39;&lt;add your AOIA service endpoint here&gt;&#39;</span>
+<span class="nv">AZURE_OPENAI_DEPLOYMENT</span><span class="o">=</span><span class="s1">&#39;&lt;add your chat completion model name here&gt;&#39;</span><span class="w"> </span>
+<span class="nv">AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT</span><span class="o">=</span><span class="s1">&#39;&lt;add your embeddings model name here&gt;&#39;</span>
+
+<span class="c1">## Hugging Face</span>
+<span class="nv">HUGGING_FACE_API_KEY</span><span class="o">=</span><span class="s1">&#39;&lt;add your HuggingFace API or token here&gt;&#39;</span>
+</pre></div>
+</div></li>
+<li>
+<p>Copiez ce fichier en <code>.env</code> en utilisant la commande ci-dessous. Ce fichier est <em>gitignore</em>, gardant les secrets en sécurité.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.copy<span class="w"> </span>.env
+</pre></div>
+</div></li>
+<li>
+<p>Remplissez les valeurs (remplacez les espaces réservés à droite du <code>=</code>) comme décrit dans la section suivante.</p>
+</li>
+<li>
+<p>(Option) Si vous utilisez GitHub Codespaces, vous avez la possibilité d’enregistrer les variables d’environnement comme <em>secrets Codespaces</em> associés à ce dépôt. Dans ce cas, vous n’aurez pas besoin de configurer un fichier .env local. <strong>Cependant, notez que cette option fonctionne uniquement si vous utilisez GitHub Codespaces.</strong> Vous devrez toujours configurer le fichier .env si vous utilisez Docker Desktop à la place.</p>
+</li>
+</ol>
+<h2 id="remplir-le-fichier-env">Remplir le fichier <code>.env</code><a class="anchor" href="#remplir-le-fichier-env" aria-label="Lien vers cette section">#</a></h2>
+<p>Jetons un coup d’œil rapide aux noms des variables pour comprendre ce qu’elles représentent :</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Variable</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">HUGGING_FACE_API_KEY</td>
+<td style="text-align:left">C’est le jeton d’accès utilisateur que vous avez configuré dans votre profil</td>
+</tr>
+<tr>
+<td style="text-align:left">OPENAI_API_KEY</td>
+<td style="text-align:left">C’est la clé d’autorisation pour utiliser le service pour les points de terminaison non Azure OpenAI</td>
+</tr>
+<tr>
+<td style="text-align:left">AZURE_OPENAI_API_KEY</td>
+<td style="text-align:left">C’est la clé d’autorisation pour utiliser ce service</td>
+</tr>
+<tr>
+<td style="text-align:left">AZURE_OPENAI_ENDPOINT</td>
+<td style="text-align:left">C’est le point de terminaison déployé pour une ressource Azure OpenAI</td>
+</tr>
+<tr>
+<td style="text-align:left">AZURE_OPENAI_DEPLOYMENT</td>
+<td style="text-align:left">C’est le point de terminaison de déploiement du modèle de <em>génération de texte</em></td>
+</tr>
+<tr>
+<td style="text-align:left">AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT</td>
+<td style="text-align:left">C’est le point de terminaison de déploiement du modèle d’<em>embeddings de texte</em></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p>Note : Les deux dernières variables Azure OpenAI correspondent à un modèle par défaut pour la complétion de chat (génération de texte) et la recherche vectorielle (embeddings) respectivement. Les instructions pour les définir seront précisées dans les devoirs concernés.</p>
+<h2 id="configurer-azure-depuis-le-portail">Configurer Azure : depuis le portail<a class="anchor" href="#configurer-azure-depuis-le-portail" aria-label="Lien vers cette section">#</a></h2>
+<p>Les valeurs du point de terminaison et de la clé Azure OpenAI se trouvent dans le <a href="https://portal.azure.com" target="_blank" rel="noopener noreferrer">portail Azure</a>, commençons donc par là.</p>
+<ol>
+<li>Allez sur le <a href="https://portal.azure.com" target="_blank" rel="noopener noreferrer">portail Azure</a></li>
+<li>Cliquez sur l’option <strong>Clés et point de terminaison</strong> dans la barre latérale (menu à gauche).</li>
+<li>Cliquez sur <strong>Afficher les clés</strong> - vous devriez voir ceci : CLÉ 1, CLÉ 2 et Point de terminaison.</li>
+<li>Utilisez la valeur de la CLÉ 1 pour AZURE_OPENAI_API_KEY</li>
+<li>Utilisez la valeur du point de terminaison pour AZURE_OPENAI_ENDPOINT</li>
+</ol>
+<p>Ensuite, nous avons besoin des points de terminaison pour les modèles spécifiques que nous avons déployés.</p>
+<ol>
+<li>Cliquez sur l’option <strong>Déploiements de modèles</strong> dans la barre latérale (menu à gauche) pour la ressource Azure OpenAI.</li>
+<li>Sur la page de destination, cliquez sur <strong>Gérer les déploiements</strong></li>
+</ol>
+<p>Cela vous mènera au site Azure OpenAI Studio, où nous trouverons les autres valeurs comme décrit ci-dessous.</p>
+<h2 id="configurer-azure-depuis-studio">Configurer Azure : depuis Studio<a class="anchor" href="#configurer-azure-depuis-studio" aria-label="Lien vers cette section">#</a></h2>
+<ol>
+<li>Naviguez vers <a href="https://oai.azure.com" target="_blank" rel="noopener noreferrer">Azure OpenAI Studio</a> <strong>depuis votre ressource</strong> comme décrit ci-dessus.</li>
+<li>Cliquez sur l’onglet <strong>Déploiements</strong> (barre latérale, à gauche) pour voir les modèles actuellement déployés.</li>
+<li>Si votre modèle désiré n’est pas déployé, utilisez <strong>Créer un nouveau déploiement</strong> pour le déployer.</li>
+<li>Vous aurez besoin d’un modèle de <em>génération de texte</em> - nous recommandons : <strong>gpt-35-turbo</strong></li>
+<li>Vous aurez besoin d’un modèle d’<em>embedding de texte</em> - nous recommandons <strong>text-embedding-ada-002</strong></li>
+</ol>
+<p>Mettez maintenant à jour les variables d’environnement pour refléter le <em>nom du déploiement</em> utilisé. Ce sera typiquement le même que le nom du modèle sauf si vous l’avez changé explicitement. Par exemple, vous pourriez avoir :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nv">AZURE_OPENAI_DEPLOYMENT</span><span class="o">=</span><span class="s1">&#39;gpt-35-turbo&#39;</span>
+<span class="nv">AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT</span><span class="o">=</span><span class="s1">&#39;text-embedding-ada-002&#39;</span>
+</pre></div>
+</div><p><strong>N’oubliez pas de sauvegarder le fichier .env une fois terminé</strong>. Vous pouvez maintenant quitter le fichier et revenir aux instructions pour exécuter le notebook.</p>
+<h2 id="configurer-openai-depuis-le-profil">Configurer OpenAI : depuis le profil<a class="anchor" href="#configurer-openai-depuis-le-profil" aria-label="Lien vers cette section">#</a></h2>
+<p>Votre clé API OpenAI se trouve dans votre <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">compte OpenAI</a>. Si vous n’en avez pas, vous pouvez vous inscrire et créer une clé API. Une fois que vous avez la clé, vous pouvez l’utiliser pour remplir la variable <code>OPENAI_API_KEY</code> dans le fichier <code>.env</code>.</p>
+<h2 id="configurer-hugging-face-depuis-le-profil">Configurer Hugging Face : depuis le profil<a class="anchor" href="#configurer-hugging-face-depuis-le-profil" aria-label="Lien vers cette section">#</a></h2>
+<p>Votre jeton Hugging Face se trouve dans votre profil sous <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener noreferrer">Jetons d’accès</a>. Ne publiez pas ou ne partagez pas ces jetons publiquement. Créez plutôt un nouveau jeton pour l’utilisation de ce projet et copiez-le dans le fichier <code>.env</code> sous la variable <code>HUGGING_FACE_API_KEY</code>. <em>Note :</em> Ce n’est techniquement pas une clé API mais il est utilisé pour l’authentification, nous conservons donc cette convention de nommage pour la cohérence.</p>
+<hr />
+<!-- CO-OP TRANSLATOR DISCLAIMER START -->
+<p><strong>Avertissement</strong> :<br />
+Ce document a été traduit à l’aide du service de traduction automatique <a href="https://github.com/Azure/co-op-translator" target="_blank" rel="noopener noreferrer">Co-op Translator</a>. Bien que nous nous efforcions d’assurer l’exactitude, veuillez noter que les traductions automatiques peuvent contenir des erreurs ou des inexactitudes. Le document original dans sa langue d’origine doit être considéré comme la source faisant foi. Pour les informations critiques, une traduction professionnelle réalisée par un humain est recommandée. Nous déclinons toute responsabilité en cas de malentendus ou de mauvaises interprétations résultant de l’utilisation de cette traduction.</p>
+<!-- CO-OP TRANSLATOR DISCLAIMER END -->
+
+</article>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../../lecons/00-course-setup/02-setup-local/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Configuration locale 🖥️</span></a><a class="prevnext__link prevnext__next" href="../../../lecons/01-introduction-to-genai/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Introduction à l&#x27;IA générative et aux LLM</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/00-course-setup/03-providers.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/00-course-setup/03-providers.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#creer-le-fichier-env">Créer le fichier `.env`</a></li><li class="toc__item toc__item--h2"><a href="#remplir-le-fichier-env">Remplir le fichier `.env`</a></li><li class="toc__item toc__item--h2"><a href="#configurer-azure-depuis-le-portail">Configurer Azure : depuis le portail</a></li><li class="toc__item toc__item--h2"><a href="#configurer-azure-depuis-studio">Configurer Azure : depuis Studio</a></li><li class="toc__item toc__item--h2"><a href="#configurer-openai-depuis-le-profil">Configurer OpenAI : depuis le profil</a></li><li class="toc__item toc__item--h2"><a href="#configurer-hugging-face-depuis-le-profil">Configurer Hugging Face : depuis le profil</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>15 · RAG et bases de données vectorielles — IA Générative</title>
+<meta name="description" content="Ancrer les réponses du modèle dans vos documents grâce à la génération augmentée par récupération.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item is-active" data-lesson="15-rag-and-vector-databases"><a href="../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a><ul class="sidebar__sublist"><li class="sidebar__subitem"><a href="../../lecons/15-rag-and-vector-databases/data-frameworks/index.html">Frameworks de réseaux de neurones</a></li><li class="sidebar__subitem"><a href="../../lecons/15-rag-and-vector-databases/data-own-framework/index.html">Introduction aux réseaux de neurones. Perceptron multicouche</a></li><li class="sidebar__subitem"><a href="../../lecons/15-rag-and-vector-databases/data-perceptron/index.html">Introduction aux réseaux de neurones : Perceptron</a></li></ul></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../parcours/avance/index.html">Techniques avancées</a> <span aria-hidden="true">›</span>
+  <span>Leçon 15</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Leçon 15 · Techniques avancées · ≈ 45 min</p>
+  <p class="pagehead__summary">Ancrer les réponses du modèle dans vos documents grâce à la génération augmentée par récupération.</p>
+</header>
+<article class="prose">
+<h1 id="generation-augmentee-par-recuperation-rag-et-bases-de-donnees-vectorielles">Génération Augmentée par Récupération (RAG) et Bases de Données Vectorielles<a class="anchor" href="#generation-augmentee-par-recuperation-rag-et-bases-de-donnees-vectorielles" aria-label="Lien vers cette section">#</a></h1>
+<p><a href="https://youtu.be/4l8zhHUBeyI?si=BmvDmL1fnHtgQYkL" target="_blank" rel="noopener noreferrer"><img src="../../assets/images/15-lesson-banner.webp" alt="Génération Augmentée par Récupération (RAG) et Bases de Données Vectorielles" loading="lazy" decoding="async" /></a></p>
+<p>Dans la leçon sur les applications de recherche, nous avons brièvement appris comment intégrer vos propres données dans les grands modèles de langage (LLM). Dans cette leçon, nous approfondirons les concepts de l'ancrage de vos données dans votre application LLM, les mécanismes du processus et les méthodes de stockage des données, y compris les embeddings et le texte.</p>
+<blockquote>
+<p><strong>Vidéo bientôt disponible</strong></p>
+</blockquote>
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans cette leçon, nous couvrirons les points suivants :</p>
+<ul>
+<li>
+<p>Une introduction à RAG, ce que c'est et pourquoi il est utilisé en IA (intelligence artificielle).</p>
+</li>
+<li>
+<p>Comprendre ce que sont les bases de données vectorielles et en créer une pour notre application.</p>
+</li>
+<li>
+<p>Un exemple pratique sur comment intégrer RAG dans une application.</p>
+</li>
+</ul>
+<h2 id="objectifs-dapprentissage">Objectifs d'apprentissage<a class="anchor" href="#objectifs-dapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, vous serez capable de :</p>
+<ul>
+<li>
+<p>Expliquer l'importance de RAG dans la récupération et le traitement de données.</p>
+</li>
+<li>
+<p>Configurer une application RAG et ancrer vos données à un LLM.</p>
+</li>
+<li>
+<p>Intégrer efficacement RAG et les bases de données vectorielles dans les applications LLM.</p>
+</li>
+</ul>
+<h2 id="notre-scenario-enrichir-nos-llm-avec-nos-propres-donnees">Notre scénario : enrichir nos LLM avec nos propres données<a class="anchor" href="#notre-scenario-enrichir-nos-llm-avec-nos-propres-donnees" aria-label="Lien vers cette section">#</a></h2>
+<p>Pour cette leçon, nous souhaitons ajouter nos propres notes dans la startup éducative, ce qui permettra au chatbot d’obtenir plus d’informations sur les différents sujets. En utilisant les notes que nous avons, les apprenants pourront mieux étudier et comprendre les différents thèmes, facilitant ainsi la révision pour leurs examens. Pour créer notre scénario, nous utiliserons :</p>
+<ul>
+<li>
+<p><code>Azure OpenAI :</code> le LLM que nous utiliserons pour créer notre chatbot</p>
+</li>
+<li>
+<p><code>Leçon AI for beginners sur les réseaux neuronaux</code> : ce seront les données sur lesquelles nous ancrerons notre LLM</p>
+</li>
+<li>
+<p><code>Azure AI Search</code> et <code>Azure Cosmos DB :</code> base de données vectorielle pour stocker nos données et créer un index de recherche</p>
+</li>
+</ul>
+<p>Les utilisateurs pourront créer des quiz d'entraînement à partir de leurs notes, des fiches de révision et résumer ces informations en synthèses concises. Pour commencer, regardons ce qu’est RAG et comment il fonctionne :</p>
+<h2 id="generation-augmentee-par-recuperation-rag">Génération Augmentée par Récupération (RAG)<a class="anchor" href="#generation-augmentee-par-recuperation-rag" aria-label="Lien vers cette section">#</a></h2>
+<p>Un chatbot alimenté par un LLM traite les requêtes des utilisateurs pour générer des réponses. Il est conçu pour être interactif et engage des conversations sur un large éventail de sujets. Cependant, ses réponses sont limitées au contexte fourni et à ses données d'entraînement fondamentales. Par exemple, la connaissance de GPT-4 s'arrête en septembre 2021, ce qui signifie qu’il ne connaît pas les événements survenus après cette date. De plus, les données utilisées pour entraîner les LLM n'incluent pas les informations confidentielles telles que les notes personnelles ou le manuel produit d'une entreprise.</p>
+<h3 id="comment-fonctionnent-les-rags-generation-augmentee-par-recuperation">Comment fonctionnent les RAGs (Génération Augmentée par Récupération)<a class="anchor" href="#comment-fonctionnent-les-rags-generation-augmentee-par-recuperation" aria-label="Lien vers cette section">#</a></h3>
+<p><img src="../../assets/images/how-rag-works.webp" alt="dessin montrant comment fonctionnent les RAGs" loading="lazy" decoding="async" /></p>
+<p>Supposons que vous souhaitez déployer un chatbot qui crée des quiz à partir de vos notes, vous aurez besoin d’une connexion à la base de connaissances. C’est là que RAG intervient. Les RAGs fonctionnent de la manière suivante :</p>
+<ul>
+<li>
+<p><strong>Base de connaissances :</strong> Avant la récupération, ces documents doivent être ingérés et prétraités, généralement en découpant les grands documents en petits fragments, en les transformant en embeddings textuels et en les stockant dans une base de données.</p>
+</li>
+<li>
+<p><strong>Requête utilisateur :</strong> l'utilisateur pose une question</p>
+</li>
+<li>
+<p><strong>Récupération :</strong> lorsque l’utilisateur pose une question, le modèle d’embedding récupère les informations pertinentes de notre base de connaissances pour fournir plus de contexte qui sera incorporé dans le prompt.</p>
+</li>
+<li>
+<p><strong>Génération augmentée :</strong> le LLM améliore sa réponse sur la base des données récupérées. Cela permet à la réponse générée de ne pas se baser uniquement sur les données pré-entraînées mais aussi sur les informations pertinentes du contexte ajouté. Les données récupérées servent à augmenter les réponses du LLM. Le LLM retourne ensuite une réponse à la question de l’utilisateur.</p>
+</li>
+</ul>
+<p><img src="../../assets/images/encoder-decode.webp" alt="dessin montrant l’architecture des RAGs" loading="lazy" decoding="async" /></p>
+<p>L’architecture des RAGs est implémentée à l’aide de transformers comprenant deux parties : un encodeur et un décodeur. Par exemple, lorsqu’un utilisateur pose une question, le texte d’entrée est « encodé » en vecteurs qui capturent le sens des mots et les vecteurs sont « décodés » dans notre index documentaire pour générer un nouveau texte basé sur la requête. Le LLM utilise un modèle encodeur-décodeur pour générer la sortie.</p>
+<p>Deux approches pour implémenter RAG selon l’article proposé : <a href="https://arxiv.org/pdf/2005.11401.pdf" target="_blank" rel="noopener noreferrer">Retrieval-Augmented Generation for Knowledge Intensive NLP Tasks</a> sont :</p>
+<ul>
+<li>
+<p><strong><em>RAG-Sequence</em></strong> utilisant les documents récupérés pour prédire la meilleure réponse possible à une requête utilisateur</p>
+</li>
+<li>
+<p><strong>RAG-Token</strong> utilisant des documents pour générer le token suivant, puis les récupérer pour répondre à la requête utilisateur</p>
+</li>
+</ul>
+<h3 id="pourquoi-utiliser-les-rags">Pourquoi utiliser les RAGs ?<a class="anchor" href="#pourquoi-utiliser-les-rags" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>
+<p><strong>Richesse d'information :</strong> garantit que les réponses textuelles sont à jour. Cela améliore donc les performances sur les tâches spécifiques au domaine en accédant à la base de connaissances interne.</p>
+</li>
+<li>
+<p>Réduit les fabrications en utilisant des <strong>données vérifiables</strong> dans la base de connaissances pour fournir du contexte aux questions des utilisateurs.</p>
+</li>
+<li>
+<p>C’est <strong>économique</strong>, car ils sont moins coûteux comparés à un ajustement fin d'un LLM.</p>
+</li>
+</ul>
+<h2 id="creation-dune-base-de-connaissances">Création d’une base de connaissances<a class="anchor" href="#creation-dune-base-de-connaissances" aria-label="Lien vers cette section">#</a></h2>
+<p>Notre application est basée sur nos données personnelles, c’est-à-dire la leçon sur les réseaux neuronaux dans le programme AI For Beginners.</p>
+<h3 id="bases-de-donnees-vectorielles">Bases de données vectorielles<a class="anchor" href="#bases-de-donnees-vectorielles" aria-label="Lien vers cette section">#</a></h3>
+<p>Une base de données vectorielle, contrairement aux bases de données traditionnelles, est une base spécialisée conçue pour stocker, gérer et rechercher des vecteurs intégrés. Elle stocke des représentations numériques des documents. Fractionner les données en embeddings numériques facilite la compréhension et le traitement des données par notre système IA.</p>
+<p>Nous stockons nos embeddings dans des bases de données vectorielles car les LLM ont une limite sur le nombre de tokens qu’ils acceptent en entrée. Comme on ne peut pas passer l’intégralité des embeddings à un LLM, il faudra les découper en fragments et, lorsqu’un utilisateur pose une question, les embeddings les plus proches de la question seront retournés avec le prompt. Le fractionnement réduit aussi les coûts liés au nombre de tokens transmis à un LLM.</p>
+<p>Quelques bases de données vectorielles populaires incluent Azure Cosmos DB, Clarifyai, Pinecone, Chromadb, ScaNN, Qdrant et DeepLake. Vous pouvez créer un modèle Azure Cosmos DB en utilisant Azure CLI avec la commande suivante :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>az<span class="w"> </span>login
+az<span class="w"> </span>group<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>&lt;resource-group-name&gt;<span class="w"> </span>-l<span class="w"> </span>&lt;location&gt;
+az<span class="w"> </span>cosmosdb<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>&lt;cosmos-db-name&gt;<span class="w"> </span>-r<span class="w"> </span>&lt;resource-group-name&gt;
+az<span class="w"> </span>cosmosdb<span class="w"> </span>list-keys<span class="w"> </span>-n<span class="w"> </span>&lt;cosmos-db-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;resource-group-name&gt;
+</pre></div>
+</div><h3 id="du-texte-aux-embeddings">Du texte aux embeddings<a class="anchor" href="#du-texte-aux-embeddings" aria-label="Lien vers cette section">#</a></h3>
+<p>Avant de stocker nos données, nous devons les convertir en embeddings vectoriels avant de les enregistrer dans la base de données. Si vous travaillez avec de longs documents ou textes, vous pouvez les découper selon vos requêtes attendues. Le découpage peut se faire au niveau des phrases ou au niveau des paragraphes. Comme le découpage tire le sens des mots alentour, vous pouvez ajouter un autre contexte à un fragment, par exemple en ajoutant le titre du document ou incluant un texte avant ou après le fragment. Vous pouvez découper les données comme suit :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">min_length</span><span class="p">):</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current_chunk</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="n">current_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_chunk</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">max_length</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_chunk</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">min_length</span><span class="p">:</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_chunk</span><span class="p">))</span>
+            <span class="n">current_chunk</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Si le dernier morceau n&#39;a pas atteint la longueur minimale, ajoutez-le quand même</span>
+    <span class="k">if</span> <span class="n">current_chunk</span><span class="p">:</span>
+        <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_chunk</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">chunks</span>
+</pre></div>
+</div><p>Une fois découpés, nous pouvons ensuite représenter notre texte sous forme d'embeddings avec différents modèles d’embeddings. Certains modèles que vous pouvez utiliser incluent : word2vec, ada-002 de OpenAI, Azure Computer Vision et bien d’autres. Le choix d’un modèle dépendra des langues utilisées, du type de contenu encodé (texte/image/audio), de la taille d’entrée qu’il peut encoder et de la longueur de sortie de l’embedding.</p>
+<p>Un exemple de texte encodé avec le modèle <code>text-embedding-ada-002</code> d’OpenAI est :
+<img src="../../assets/images/cat.webp" alt="un embedding du mot chat" loading="lazy" decoding="async" /></p>
+<h2 id="recuperation-et-recherche-vectorielle">Récupération et recherche vectorielle<a class="anchor" href="#recuperation-et-recherche-vectorielle" aria-label="Lien vers cette section">#</a></h2>
+<p>Quand un utilisateur pose une question, le récupérateur la transforme en vecteur via l’encodeur de requête, puis il recherche dans notre index de documents les vecteurs pertinents liés à l’entrée. Une fois fait, il convertit à la fois le vecteur d'entrée et les vecteurs documents en texte et les passe au LLM.</p>
+<h3 id="recuperation">Récupération<a class="anchor" href="#recuperation" aria-label="Lien vers cette section">#</a></h3>
+<p>La récupération intervient quand le système essaie rapidement de trouver les documents dans l’index qui satisfont les critères de recherche. L’objectif du récupérateur est d’obtenir des documents qui fourniront du contexte et ancreront le LLM sur vos données.</p>
+<p>Il y a plusieurs façons de faire la recherche dans notre base de données, telles que :</p>
+<ul>
+<li>
+<p><strong>Recherche par mots-clés</strong> - utilisée pour les recherches textuelles</p>
+</li>
+<li>
+<p><strong>Recherche vectorielle</strong> - convertit les documents de texte en représentations vectorielles via des modèles d’embeddings, permettant une <strong>recherche sémantique</strong> basée sur le sens des mots. La récupération se fait en interrogeant les documents dont les représentations vectorielles sont les plus proches de la question utilisateur.</p>
+</li>
+<li>
+<p><strong>Hybride</strong> - une combinaison de la recherche par mots-clés et vectorielle.</p>
+</li>
+</ul>
+<p>Un défi apparaît quand il n’y a pas de réponse similaire dans la base à la requête ; le système retourne alors la meilleure information disponible. Cependant, vous pouvez utiliser des tactiques comme définir la distance maximale pour la pertinence ou utiliser une recherche hybride combinant mots-clés et recherche vectorielle. Dans cette leçon, nous utiliserons la recherche hybride, combinaison des deux méthodes. Nous stockerons nos données dans un dataframe avec des colonnes contenant les fragments ainsi que les embeddings.</p>
+<h3 id="similarite-vectorielle">Similarité vectorielle<a class="anchor" href="#similarite-vectorielle" aria-label="Lien vers cette section">#</a></h3>
+<p>Le récupérateur va chercher dans la base de connaissances les embeddings proches les uns des autres, le voisin le plus proche, car ce sont des textes similaires. Dans notre scénario, lorsqu’un utilisateur fait une requête, elle est d'abord encodée puis associée aux embeddings similaires. La mesure couramment utilisée pour savoir à quel point différents vecteurs sont similaires est la similarité cosinus, qui se base sur l’angle entre deux vecteurs.</p>
+<p>Nous pouvons mesurer la similarité avec d’autres alternatives comme la distance Euclidienne, qui est la ligne droite entre les extrémités de vecteurs, ou le produit scalaire qui mesure la somme des produits des éléments correspondants de deux vecteurs.</p>
+<h3 id="index-de-recherche">Index de recherche<a class="anchor" href="#index-de-recherche" aria-label="Lien vers cette section">#</a></h3>
+<p>Lors de la récupération, nous devons créer un index de recherche pour notre base de connaissances avant d’exécuter la recherche. Un index stockera nos embeddings et pourra rapidement récupérer les fragments les plus similaires même dans une grande base de données. Nous pouvons créer notre index localement en utilisant :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">NearestNeighbors</span>
+
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">flattened_df</span><span class="p">[</span><span class="s1">&#39;embeddings&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+<span class="c1"># Créer l&#39;index de recherche</span>
+<span class="n">nbrs</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;ball_tree&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>
+
+<span class="c1"># Pour interroger l&#39;index, vous pouvez utiliser la méthode kneighbors</span>
+<span class="n">distances</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">nbrs</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>
+</pre></div>
+</div><h3 id="reorganisation-des-resultats">Réorganisation des résultats<a class="anchor" href="#reorganisation-des-resultats" aria-label="Lien vers cette section">#</a></h3>
+<p>Une fois que vous avez interrogé la base de données, vous pourriez avoir besoin de trier les résultats du plus pertinent. Un LLM de réorganisation utilise le Machine Learning pour améliorer la pertinence des résultats en les ordonnant du plus pertinent. Avec Azure AI Search, la réorganisation est faite automatiquement pour vous grâce à un réorganisateur sémantique. Un exemple de fonctionnement de la réorganisation avec les plus proches voisins :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Trouver les documents les plus similaires</span>
+<span class="n">distances</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">nbrs</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">([</span><span class="n">query_vector</span><span class="p">])</span>
+
+<span class="n">index</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Imprimer les documents les plus similaires</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">flattened_df</span><span class="p">[</span><span class="s1">&#39;chunks&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">flattened_df</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">flattened_df</span><span class="p">[</span><span class="s1">&#39;distances&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> not found in DataFrame&quot;</span><span class="p">)</span>
+</pre></div>
+</div><h2 id="mettons-tout-ensemble">Mettons tout ensemble<a class="anchor" href="#mettons-tout-ensemble" aria-label="Lien vers cette section">#</a></h2>
+<p>La dernière étape consiste à intégrer notre LLM dans le processus pour obtenir des réponses ancrées dans nos données. Nous pouvons l’implémenter comme suit :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">user_input</span> <span class="o">=</span> <span class="s2">&quot;what is a perceptron?&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">chatbot</span><span class="p">(</span><span class="n">user_input</span><span class="p">):</span>
+    <span class="c1"># Convertir la question en un vecteur de requête</span>
+    <span class="n">query_vector</span> <span class="o">=</span> <span class="n">create_embeddings</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+
+    <span class="c1"># Trouver les documents les plus similaires</span>
+    <span class="n">distances</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">nbrs</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">([</span><span class="n">query_vector</span><span class="p">])</span>
+
+    <span class="c1"># ajouter les documents à la requête pour fournir le contexte</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flattened_df</span><span class="p">[</span><span class="s1">&#39;chunks&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+
+    <span class="c1"># combiner l&#39;historique et l&#39;entrée utilisateur</span>
+    <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+
+    <span class="c1"># créer un objet message</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are an AI assistant that helps with AI questions.&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">history</span><span class="p">)</span> <span class="p">}</span>
+    <span class="p">]</span>
+
+    <span class="c1"># utiliser la complétion de chat pour générer une réponse</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+        <span class="n">max_tokens</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+        <span class="n">messages</span><span class="o">=</span><span class="n">messages</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span>
+
+<span class="n">chatbot</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+</pre></div>
+</div><h2 id="evaluation-de-notre-application">Évaluation de notre application<a class="anchor" href="#evaluation-de-notre-application" aria-label="Lien vers cette section">#</a></h2>
+<h3 id="metriques-devaluation">Métriques d’évaluation<a class="anchor" href="#metriques-devaluation" aria-label="Lien vers cette section">#</a></h3>
+<ul>
+<li>
+<p>Qualité des réponses fournies, assurant qu’elles paraissent naturelles, fluides et humaines</p>
+</li>
+<li>
+<p>Ancrage des données : évaluer si la réponse vient bien des documents fournis</p>
+</li>
+<li>
+<p>Pertinence : évaluer si la réponse correspond et est liée à la question posée</p>
+</li>
+<li>
+<p>Fluidité : vérifier si la réponse a un sens grammatical</p>
+</li>
+</ul>
+<h2 id="cas-dusage-de-rag-generation-augmentee-par-recuperation-et-bases-de-donnees-vectorielles">Cas d’usage de RAG (Génération Augmentée par Récupération) et bases de données vectorielles<a class="anchor" href="#cas-dusage-de-rag-generation-augmentee-par-recuperation-et-bases-de-donnees-vectorielles" aria-label="Lien vers cette section">#</a></h2>
+<p>Il existe de nombreux cas où les appels de fonctions peuvent améliorer votre application, tels que :</p>
+<ul>
+<li>
+<p>Questions et réponses : ancrer vos données d’entreprise dans un chat que les employés peuvent interroger.</p>
+</li>
+<li>
+<p>Systèmes de recommandation : où vous pouvez créer un système qui associe les valeurs les plus similaires, par exemple des films, restaurants et bien plus.</p>
+</li>
+<li>
+<p>Services de chatbot : vous pouvez stocker l’historique des conversations et personnaliser la conversation en fonction des données utilisateur.</p>
+</li>
+<li>
+<p>Recherche d’images basée sur des embeddings vectoriels, utile pour la reconnaissance d’images et la détection d’anomalies.</p>
+</li>
+</ul>
+<h2 id="resume">Résumé<a class="anchor" href="#resume" aria-label="Lien vers cette section">#</a></h2>
+<p>Nous avons couvert les domaines fondamentaux de RAG depuis l’ajout de nos données à l’application, la requête utilisateur jusqu’à la sortie. Pour simplifier la création de RAG, vous pouvez utiliser des frameworks comme Semantic Kernel, Langchain ou Autogen.</p>
+<h2 id="exercice">Exercice<a class="anchor" href="#exercice" aria-label="Lien vers cette section">#</a></h2>
+<p>Pour poursuivre votre apprentissage de la Génération Augmentée par Récupération (RAG), vous pouvez construire :</p>
+<ul>
+<li>
+<p>Construire une interface frontale pour l’application en utilisant le framework de votre choix</p>
+</li>
+<li>
+<p>Utiliser un framework, soit LangChain soit Semantic Kernel, et recréer votre application.</p>
+</li>
+</ul>
+<p>Félicitations pour avoir terminé la leçon 👏.</p>
+<h2 id="lapprentissage-ne-sarrete-pas-ici-continuez-le-voyage">L’apprentissage ne s’arrête pas ici, continuez le voyage<a class="anchor" href="#lapprentissage-ne-sarrete-pas-ici-continuez-le-voyage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, consultez notre <a href="https://aka.ms/genai-collection" target="_blank" rel="noopener noreferrer">collection d’apprentissage en IA générative</a> pour continuer à améliorer vos connaissances en IA générative !</p>
+<hr />
+<!-- CO-OP TRANSLATOR DISCLAIMER START -->
+<p><strong>Avertissement</strong> :<br />
+Ce document a été traduit à l’aide du service de traduction automatique <a href="https://github.com/Azure/co-op-translator" target="_blank" rel="noopener noreferrer">Co-op Translator</a>. Bien que nous nous efforcions d’assurer l’exactitude, veuillez noter que les traductions automatiques peuvent contenir des erreurs ou des inexactitudes. Le document original dans sa langue d’origine doit être considéré comme la source faisant foi. Pour les informations critiques, une traduction professionnelle réalisée par un humain est recommandée. Nous déclinons toute responsabilité pour tout malentendu ou mauvaise interprétation résultant de l’utilisation de cette traduction.</p>
+<!-- CO-OP TRANSLATOR DISCLAIMER END -->
+
+</article>
+<section class="subpages"><h2 id="pages-de-la-lecon">Pages de cette leçon<a class="anchor" href="#pages-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../lecons/15-rag-and-vector-databases/data-frameworks/index.html">Frameworks de réseaux de neurones</a></li><li><a href="../../lecons/15-rag-and-vector-databases/data-own-framework/index.html">Introduction aux réseaux de neurones. Perceptron multicouche</a></li><li><a href="../../lecons/15-rag-and-vector-databases/data-perceptron/index.html">Introduction aux réseaux de neurones : Perceptron</a></li></ul></section>
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de la leçon<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers d'exemple de cette leçon, copiés depuis le dépôt d'origine. Chaque fichier est lisible ici et téléchargeable.</p><div class="tabs__panel" data-tab="fichiers"><details class="codefile" id="code-notebook-rag-vector-databases-ipynb"><summary class="codefile__head"><span class="codefile__name">notebook-rag-vector-databases.ipynb</span><span class="codefile__size">113 ko</span></summary><div class="codefile__body"><p class="note">Fichier généré ou volumineux : il n'est pas affiché ici.</p><p class="codefile__actions"><a href="../../assets/code/15-rag-and-vector-databases/notebook-rag-vector-databases.ipynb" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="done" data-lesson-toggle="15-rag-and-vector-databases">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai terminé la leçon 15 — RAG et bases de données vectorielles</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Le cycle de vie d&#x27;une application d&#x27;IA générative</span></a><a class="prevnext__link prevnext__next" href="../../lecons/15-rag-and-vector-databases/data-frameworks/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Frameworks de réseaux de neurones</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/15-rag-and-vector-databases/README.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/15-rag-and-vector-databases/README.md</a> ·
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/tree/main/15-rag-and-vector-databases" target="_blank" rel="noopener noreferrer">version anglaise</a>
+</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#introduction">Introduction</a></li><li class="toc__item toc__item--h2"><a href="#objectifs-dapprentissage">Objectifs d&#x27;apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#notre-scenario-enrichir-nos-llm-avec-nos-propres-donnees">Notre scénario : enrichir nos LLM avec nos propres données</a></li><li class="toc__item toc__item--h2"><a href="#generation-augmentee-par-recuperation-rag">Génération Augmentée par Récupération (RAG)</a></li><li class="toc__item toc__item--h3"><a href="#comment-fonctionnent-les-rags-generation-augmentee-par-recuperation">Comment fonctionnent les RAGs (Génération Augmentée par Récupération)</a></li><li class="toc__item toc__item--h3"><a href="#pourquoi-utiliser-les-rags">Pourquoi utiliser les RAGs ?</a></li><li class="toc__item toc__item--h2"><a href="#creation-dune-base-de-connaissances">Création d’une base de connaissances</a></li><li class="toc__item toc__item--h3"><a href="#bases-de-donnees-vectorielles">Bases de données vectorielles</a></li><li class="toc__item toc__item--h3"><a href="#du-texte-aux-embeddings">Du texte aux embeddings</a></li><li class="toc__item toc__item--h2"><a href="#recuperation-et-recherche-vectorielle">Récupération et recherche vectorielle</a></li><li class="toc__item toc__item--h3"><a href="#recuperation">Récupération</a></li><li class="toc__item toc__item--h3"><a href="#similarite-vectorielle">Similarité vectorielle</a></li><li class="toc__item toc__item--h3"><a href="#index-de-recherche">Index de recherche</a></li><li class="toc__item toc__item--h3"><a href="#reorganisation-des-resultats">Réorganisation des résultats</a></li><li class="toc__item toc__item--h2"><a href="#mettons-tout-ensemble">Mettons tout ensemble</a></li><li class="toc__item toc__item--h2"><a href="#evaluation-de-notre-application">Évaluation de notre application</a></li><li class="toc__item toc__item--h3"><a href="#metriques-devaluation">Métriques d’évaluation</a></li><li class="toc__item toc__item--h2"><a href="#cas-dusage-de-rag-generation-augmentee-par-recuperation-et-bases-de-donnees-vectorielles">Cas d’usage de RAG (Génération Augmentée par Récupération) et bases de données vectorielles</a></li><li class="toc__item toc__item--h2"><a href="#resume">Résumé</a></li><li class="toc__item toc__item--h2"><a href="#exercice">Exercice</a></li><li class="toc__item toc__item--h2"><a href="#lapprentissage-ne-sarrete-pas-ici-continuez-le-voyage">L’apprentissage ne s’arrête pas ici, continuez le voyage</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de la leçon</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../assets/app.js" defer></script>
+</body>
+</html>

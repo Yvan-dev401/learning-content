@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13 · Sécuriser vos applications d&#x27;IA générative — IA Générative</title>
+<meta name="description" content="Injection de prompt, empoisonnement de données, fuite de secrets : menaces et contre-mesures.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item is-active" data-lesson="13-securing-ai-applications"><a href="../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a> <span aria-hidden="true">›</span>
+  <span>Leçon 13</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Leçon 13 · Concevoir, sécuriser, industrialiser · ≈ 40 min</p>
+  <p class="pagehead__summary">Injection de prompt, empoisonnement de données, fuite de secrets : menaces et contre-mesures.</p>
+</header>
+<article class="prose">
+<h1 id="securiser-vos-applications-dia-generative">Sécuriser vos applications d'IA générative<a class="anchor" href="#securiser-vos-applications-dia-generative" aria-label="Lien vers cette section">#</a></h1>
+<p><a href="https://youtu.be/m0vXwsx5DNg?si=TYkr936GMKz15K0L" target="_blank" rel="noopener noreferrer"><img src="../../assets/images/13-lesson-banner.webp" alt="Sécuriser vos applications d'IA générative" loading="lazy" decoding="async" /></a></p>
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction" aria-label="Lien vers cette section">#</a></h2>
+<p>Cette leçon couvrira :</p>
+<ul>
+<li>La sécurité dans le contexte des systèmes d'IA.</li>
+<li>Les risques et menaces courants pour les systèmes d'IA.</li>
+<li>Les méthodes et considérations pour sécuriser les systèmes d'IA.</li>
+</ul>
+<h2 id="objectifs-dapprentissage">Objectifs d'apprentissage<a class="anchor" href="#objectifs-dapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, vous comprendrez :</p>
+<ul>
+<li>Les menaces et risques pour les systèmes d'IA.</li>
+<li>Les méthodes et pratiques courantes pour sécuriser les systèmes d'IA.</li>
+<li>Comment la mise en œuvre de tests de sécurité peut prévenir des résultats inattendus et la perte de confiance des utilisateurs.</li>
+</ul>
+<h2 id="que-signifie-la-securite-dans-le-contexte-de-lia-generative">Que signifie la sécurité dans le contexte de l'IA générative ?<a class="anchor" href="#que-signifie-la-securite-dans-le-contexte-de-lia-generative" aria-label="Lien vers cette section">#</a></h2>
+<p>Alors que les technologies d'Intelligence Artificielle (IA) et d'Apprentissage Automatique (ML) façonnent de plus en plus nos vies, il est essentiel de protéger non seulement les données des clients, mais aussi les systèmes d'IA eux-mêmes. L'IA/ML est de plus en plus utilisée pour soutenir des processus décisionnels de grande valeur dans des industries où une mauvaise décision peut entraîner des conséquences graves.</p>
+<p>Voici les points clés à considérer :</p>
+<ul>
+<li><strong>Impact de l'IA/ML</strong> : L'IA/ML ont des impacts significatifs sur la vie quotidienne et, en tant que tels, leur protection est devenue essentielle.</li>
+<li><strong>Défis de sécurité</strong> : L'impact de l'IA/ML nécessite une attention particulière pour répondre au besoin de protéger les produits basés sur l'IA contre des attaques sophistiquées, qu'elles proviennent de trolls ou de groupes organisés.</li>
+<li><strong>Problèmes stratégiques</strong> : L'industrie technologique doit aborder de manière proactive les défis stratégiques pour garantir la sécurité des clients et la protection des données à long terme.</li>
+</ul>
+<p>De plus, les modèles d'apprentissage automatique sont largement incapables de distinguer les entrées malveillantes des données anormales bénignes. Une source importante de données d'entraînement provient de jeux de données publics non modérés et non vérifiés, ouverts aux contributions de tiers. Les attaquants n'ont pas besoin de compromettre les jeux de données lorsqu'ils peuvent y contribuer librement. Avec le temps, des données malveillantes à faible confiance deviennent des données de haute confiance si leur structure/format reste correct.</p>
+<p>C'est pourquoi il est crucial de garantir l'intégrité et la protection des bases de données que vos modèles utilisent pour prendre des décisions.</p>
+<h2 id="comprendre-les-menaces-et-risques-lies-a-lia">Comprendre les menaces et risques liés à l'IA<a class="anchor" href="#comprendre-les-menaces-et-risques-lies-a-lia" aria-label="Lien vers cette section">#</a></h2>
+<p>En ce qui concerne l'IA et les systèmes associés, l'empoisonnement des données est aujourd'hui la menace de sécurité la plus importante. L'empoisonnement des données se produit lorsque quelqu'un modifie intentionnellement les informations utilisées pour entraîner une IA, ce qui la conduit à commettre des erreurs. Cela est dû à l'absence de méthodes standardisées de détection et de mitigation, combinée à notre dépendance à des jeux de données publics non vérifiés ou non modérés pour l'entraînement. Pour maintenir l'intégrité des données et éviter un processus d'entraînement défectueux, il est crucial de suivre l'origine et la provenance de vos données. Sinon, l'adage &quot;garbage in, garbage out&quot; reste vrai, entraînant une performance compromise du modèle.</p>
+<p>Voici des exemples de la manière dont l'empoisonnement des données peut affecter vos modèles :</p>
+<ol>
+<li><strong>Renversement des étiquettes</strong> : Dans une tâche de classification binaire, un adversaire modifie intentionnellement les étiquettes d'un petit sous-ensemble de données d'entraînement. Par exemple, des échantillons bénins sont étiquetés comme malveillants, ce qui conduit le modèle à apprendre des associations incorrectes.<br />
+<strong>Exemple</strong> : Un filtre anti-spam classant à tort des courriels légitimes comme spam en raison d'étiquettes manipulées.</li>
+<li><strong>Empoisonnement des caractéristiques</strong> : Un attaquant modifie subtilement les caractéristiques des données d'entraînement pour introduire des biais ou induire le modèle en erreur.<br />
+<strong>Exemple</strong> : Ajouter des mots-clés non pertinents aux descriptions de produits pour manipuler les systèmes de recommandation.</li>
+<li><strong>Injection de données</strong> : Injecter des données malveillantes dans l'ensemble d'entraînement pour influencer le comportement du modèle.<br />
+<strong>Exemple</strong> : Introduire de fausses critiques d'utilisateurs pour fausser les résultats d'analyse de sentiment.</li>
+<li><strong>Attaques par porte dérobée</strong> : Un adversaire insère un motif caché (porte dérobée) dans les données d'entraînement. Le modèle apprend à reconnaître ce motif et agit de manière malveillante lorsqu'il est déclenché.<br />
+<strong>Exemple</strong> : Un système de reconnaissance faciale entraîné avec des images contenant des portes dérobées qui identifie à tort une personne spécifique.</li>
+</ol>
+<p>La MITRE Corporation a créé <a href="https://atlas.mitre.org/" target="_blank" rel="noopener noreferrer">ATLAS (Adversarial Threat Landscape for Artificial-Intelligence Systems)</a>, une base de connaissances sur les tactiques et techniques utilisées par les adversaires dans des attaques réelles contre les systèmes d'IA.</p>
+<blockquote>
+<p>Il existe un nombre croissant de vulnérabilités dans les systèmes activés par l'IA, car l'intégration de l'IA augmente la surface d'attaque des systèmes existants au-delà de celles des cyberattaques traditionnelles. Nous avons développé ATLAS pour sensibiliser à ces vulnérabilités uniques et en évolution, alors que la communauté mondiale intègre de plus en plus l'IA dans divers systèmes. ATLAS est basé sur le cadre MITRE ATT&amp;CK® et ses tactiques, techniques et procédures (TTP) sont complémentaires à celles d'ATT&amp;CK.</p>
+</blockquote>
+<p>Tout comme le cadre MITRE ATT&amp;CK®, largement utilisé en cybersécurité traditionnelle pour planifier des scénarios avancés d'émulation de menaces, ATLAS fournit un ensemble de TTP facilement consultables qui peuvent aider à mieux comprendre et se préparer à défendre contre les attaques émergentes.</p>
+<p>De plus, l'Open Web Application Security Project (OWASP) a créé une &quot;<a href="https://llmtop10.com/" target="_blank" rel="noopener noreferrer">liste des 10 principales vulnérabilités</a>&quot; les plus critiques trouvées dans les applications utilisant des LLM. La liste met en évidence les risques de menaces telles que l'empoisonnement des données mentionné précédemment, ainsi que d'autres comme :</p>
+<ul>
+<li><strong>Injection de prompts</strong> : une technique où les attaquants manipulent un modèle de langage large (LLM) via des entrées soigneusement conçues, le faisant agir en dehors de son comportement prévu.</li>
+<li><strong>Vulnérabilités de la chaîne d'approvisionnement</strong> : Les composants et logiciels qui composent les applications utilisées par un LLM, tels que les modules Python ou les jeux de données externes, peuvent eux-mêmes être compromis, entraînant des résultats inattendus, des biais introduits et même des vulnérabilités dans l'infrastructure sous-jacente.</li>
+<li><strong>Dépendance excessive</strong> : Les LLM sont faillibles et ont tendance à halluciner, fournissant des résultats inexacts ou dangereux. Dans plusieurs circonstances documentées, les gens ont pris les résultats pour argent comptant, entraînant des conséquences négatives imprévues dans le monde réel.</li>
+</ul>
+<p>Rod Trent, Cloud Advocate chez Microsoft, a écrit un ebook gratuit, <a href="https://github.com/rod-trent/OpenAISecurity/tree/main/Must_Learn/Book_Version" target="_blank" rel="noopener noreferrer">Must Learn AI Security</a>, qui explore en profondeur ces menaces émergentes liées à l'IA et fournit des conseils détaillés sur la meilleure façon de gérer ces scénarios.</p>
+<h2 id="tests-de-securite-pour-les-systemes-dia-et-les-llm">Tests de sécurité pour les systèmes d'IA et les LLM<a class="anchor" href="#tests-de-securite-pour-les-systemes-dia-et-les-llm" aria-label="Lien vers cette section">#</a></h2>
+<p>L'intelligence artificielle (IA) transforme divers domaines et industries, offrant de nouvelles possibilités et avantages pour la société. Cependant, l'IA pose également des défis et des risques importants, tels que la confidentialité des données, les biais, le manque d'explicabilité et les utilisations potentielles abusives. Il est donc crucial de s'assurer que les systèmes d'IA sont sécurisés et responsables, c'est-à-dire qu'ils respectent les normes éthiques et légales et qu'ils peuvent être dignes de confiance pour les utilisateurs et les parties prenantes.</p>
+<p>Les tests de sécurité sont le processus d'évaluation de la sécurité d'un système d'IA ou d'un LLM, en identifiant et en exploitant leurs vulnérabilités. Cela peut être effectué par des développeurs, des utilisateurs ou des auditeurs tiers, en fonction de l'objectif et de la portée des tests. Certaines des méthodes de test de sécurité les plus courantes pour les systèmes d'IA et les LLM sont :</p>
+<ul>
+<li><strong>Assainissement des données</strong> : Il s'agit du processus de suppression ou d'anonymisation des informations sensibles ou privées des données d'entraînement ou des entrées d'un système d'IA ou d'un LLM. L'assainissement des données peut aider à prévenir les fuites de données et les manipulations malveillantes en réduisant l'exposition des données confidentielles ou personnelles.</li>
+<li><strong>Tests adverses</strong> : Il s'agit du processus de génération et d'application d'exemples adverses aux entrées ou sorties d'un système d'IA ou d'un LLM pour évaluer sa robustesse et sa résilience face aux attaques adverses. Les tests adverses peuvent aider à identifier et à atténuer les vulnérabilités et faiblesses d'un système d'IA ou d'un LLM qui pourraient être exploitées par des attaquants.</li>
+<li><strong>Vérification du modèle</strong> : Il s'agit du processus de vérification de l'exactitude et de l'exhaustivité des paramètres ou de l'architecture du modèle d'un système d'IA ou d'un LLM. La vérification du modèle peut aider à détecter et à prévenir le vol de modèle en s'assurant que le modèle est protégé et authentifié.</li>
+<li><strong>Validation des sorties</strong> : Il s'agit du processus de validation de la qualité et de la fiabilité des sorties d'un système d'IA ou d'un LLM. La validation des sorties peut aider à détecter et à corriger les manipulations malveillantes en s'assurant que les sorties sont cohérentes et précises.</li>
+</ul>
+<p>OpenAI, un leader dans les systèmes d'IA, a mis en place une série d'<em>évaluations de sécurité</em> dans le cadre de leur initiative de réseau de red teaming, visant à tester les sorties des systèmes d'IA dans l'espoir de contribuer à la sécurité de l'IA.</p>
+<blockquote>
+<p>Les évaluations peuvent aller de simples tests de questions-réponses à des simulations plus complexes. Voici des exemples concrets d'évaluations développées par OpenAI pour évaluer les comportements de l'IA sous différents angles :</p>
+</blockquote>
+<h4 id="persuasion">Persuasion<a class="anchor" href="#persuasion" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li><a href="https://github.com/openai/evals/tree/main/evals/elsuite/make_me_say/readme.md" target="_blank" rel="noopener noreferrer">MakeMeSay</a> : Dans quelle mesure un système d'IA peut-il tromper un autre système d'IA pour qu'il dise un mot secret ?</li>
+<li><a href="https://github.com/openai/evals/tree/main/evals/elsuite/make_me_pay/readme.md" target="_blank" rel="noopener noreferrer">MakeMePay</a> : Dans quelle mesure un système d'IA peut-il convaincre un autre système d'IA de faire un don d'argent ?</li>
+<li><a href="https://github.com/openai/evals/tree/main/evals/elsuite/ballots/readme.md" target="_blank" rel="noopener noreferrer">Ballot Proposal</a> : Dans quelle mesure un système d'IA peut-il influencer le soutien d'un autre système d'IA à une proposition politique ?</li>
+</ul>
+<h4 id="steganographie-messages-caches">Stéganographie (messages cachés)<a class="anchor" href="#steganographie-messages-caches" aria-label="Lien vers cette section">#</a></h4>
+<ul>
+<li><a href="https://github.com/openai/evals/tree/main/evals/elsuite/steganography/readme.md" target="_blank" rel="noopener noreferrer">Steganography</a> : Dans quelle mesure un système d'IA peut-il transmettre des messages secrets sans être détecté par un autre système d'IA ?</li>
+<li><a href="https://github.com/openai/evals/tree/main/evals/elsuite/text_compression/readme.md" target="_blank" rel="noopener noreferrer">Text Compression</a> : Dans quelle mesure un système d'IA peut-il compresser et décompresser des messages pour permettre de cacher des messages secrets ?</li>
+<li><a href="https://github.com/openai/evals/blob/main/evals/elsuite/schelling_point/README.md" target="_blank" rel="noopener noreferrer">Schelling Point</a> : Dans quelle mesure un système d'IA peut-il se coordonner avec un autre système d'IA, sans communication directe ?</li>
+</ul>
+<h3 id="securite-de-lia">Sécurité de l'IA<a class="anchor" href="#securite-de-lia" aria-label="Lien vers cette section">#</a></h3>
+<p>Il est impératif de protéger les systèmes d'IA contre les attaques malveillantes, les abus ou les conséquences involontaires. Cela inclut de prendre des mesures pour garantir la sécurité, la fiabilité et la confiance des systèmes d'IA, telles que :</p>
+<ul>
+<li>Sécuriser les données et algorithmes utilisés pour entraîner et exécuter les modèles d'IA.</li>
+<li>Prévenir l'accès non autorisé, la manipulation ou le sabotage des systèmes d'IA.</li>
+<li>Détecter et atténuer les biais, discriminations ou problèmes éthiques dans les systèmes d'IA.</li>
+<li>Garantir la responsabilité, la transparence et l'explicabilité des décisions et actions de l'IA.</li>
+<li>Aligner les objectifs et les valeurs des systèmes d'IA avec ceux des humains et de la société.</li>
+</ul>
+<p>La sécurité de l'IA est essentielle pour garantir l'intégrité, la disponibilité et la confidentialité des systèmes d'IA et des données. Certains des défis et opportunités liés à la sécurité de l'IA sont :</p>
+<ul>
+<li>Opportunité : Intégrer l'IA dans les stratégies de cybersécurité, car elle peut jouer un rôle crucial dans l'identification des menaces et l'amélioration des temps de réponse. L'IA peut aider à automatiser et à augmenter la détection et la mitigation des cyberattaques, telles que le phishing, les logiciels malveillants ou les ransomwares.</li>
+<li>Défi : L'IA peut également être utilisée par des adversaires pour lancer des attaques sophistiquées, telles que la génération de contenu faux ou trompeur, l'usurpation d'identité ou l'exploitation de vulnérabilités dans les systèmes d'IA. Par conséquent, les développeurs d'IA ont une responsabilité unique de concevoir des systèmes robustes et résilients contre les abus.</li>
+</ul>
+<h3 id="protection-des-donnees">Protection des données<a class="anchor" href="#protection-des-donnees" aria-label="Lien vers cette section">#</a></h3>
+<p>Les LLM peuvent présenter des risques pour la confidentialité et la sécurité des données qu'ils utilisent. Par exemple, les LLM peuvent potentiellement mémoriser et divulguer des informations sensibles provenant de leurs données d'entraînement, telles que des noms personnels, des adresses, des mots de passe ou des numéros de carte de crédit. Ils peuvent également être manipulés ou attaqués par des acteurs malveillants cherchant à exploiter leurs vulnérabilités ou biais. Il est donc important d'être conscient de ces risques et de prendre des mesures appropriées pour protéger les données utilisées avec les LLM. Voici plusieurs étapes que vous pouvez suivre pour protéger les données utilisées avec les LLM :</p>
+<ul>
+<li><strong>Limiter la quantité et le type de données partagées avec les LLM</strong> : Partagez uniquement les données nécessaires et pertinentes pour les objectifs visés, et évitez de partager des données sensibles, confidentielles ou personnelles. Les utilisateurs devraient également anonymiser ou chiffrer les données qu'ils partagent avec les LLM, par exemple en supprimant ou masquant toute information identifiante, ou en utilisant des canaux de communication sécurisés.</li>
+<li><strong>Vérifier les données générées par les LLM</strong> : Vérifiez toujours l'exactitude et la qualité des sorties générées par les LLM pour vous assurer qu'elles ne contiennent pas d'informations indésirables ou inappropriées.</li>
+<li><strong>Signaler et alerter en cas de violation ou d'incident de données</strong> : Soyez vigilant face à toute activité ou comportement suspect ou anormal des LLM, comme la génération de textes qui sont hors sujet, inexacts, offensants ou nuisibles. Cela pourrait indiquer une violation de données ou un incident de sécurité.</li>
+</ul>
+<p>La sécurité, la gouvernance et la conformité des données sont essentielles pour toute organisation souhaitant exploiter la puissance des données et de l'IA dans un environnement multi-cloud. Sécuriser et gouverner toutes vos données est une entreprise complexe et multifacette. Vous devez sécuriser et gouverner différents types de données (structurées, non structurées et données générées par l'IA) dans différents emplacements à travers plusieurs clouds, et vous devez tenir compte des réglementations existantes et futures en matière de sécurité des données, de gouvernance et d'IA. Pour protéger vos données, vous devez adopter certaines bonnes pratiques et précautions, telles que :</p>
+<ul>
+<li>Utiliser des services ou plateformes cloud offrant des fonctionnalités de protection et de confidentialité des données.</li>
+<li>Utiliser des outils de qualité et de validation des données pour vérifier vos données afin de détecter les erreurs, incohérences ou anomalies.</li>
+<li>Utiliser des cadres de gouvernance et d'éthique des données pour garantir que vos données sont utilisées de manière responsable et transparente.</li>
+</ul>
+<h3 id="emulation-des-menaces-reelles-red-teaming-pour-lia">Émulation des menaces réelles - Red teaming pour l'IA<a class="anchor" href="#emulation-des-menaces-reelles-red-teaming-pour-lia" aria-label="Lien vers cette section">#</a></h3>
+<p>Simuler des menaces réelles est désormais considéré comme une pratique standard pour construire des systèmes d'IA résilients en utilisant des outils, tactiques et procédures similaires afin d'identifier les risques pour les systèmes et tester la réponse des défenseurs.</p>
+<blockquote>
+<p>La pratique du red teaming en IA a évolué pour prendre une signification plus large : elle ne se limite pas à rechercher des vulnérabilités de sécurité, mais inclut également l'exploration d'autres défaillances du système, telles que la génération de contenu potentiellement nuisible. Les systèmes d'IA présentent de nouveaux risques, et le red teaming est essentiel pour comprendre ces risques inédits, comme l'injection de prompts et la production de contenu non fondé. - <a href="https://www.microsoft.com/security/blog/2023/08/07/microsoft-ai-red-team-building-future-of-safer-ai/" target="_blank" rel="noopener noreferrer">Microsoft AI Red Team building future of safer AI</a></p>
+</blockquote>
+<p><a href="#"><img src="../../assets/images/13-AI-red-team.webp" alt="Conseils et ressources pour le red teaming" loading="lazy" decoding="async" /></a></p>
+<p>Voici les principaux enseignements qui ont façonné le programme de Red Team IA de Microsoft.</p>
+<ol>
+<li>
+<p><strong>Portée étendue du red teaming en IA :</strong><br />
+Le red teaming en IA englobe désormais à la fois les résultats en matière de sécurité et ceux liés à l'IA responsable (RAI). Traditionnellement, le red teaming se concentrait sur les aspects de sécurité, en traitant le modèle comme un vecteur (par exemple, le vol du modèle sous-jacent). Cependant, les systèmes d'IA introduisent de nouvelles vulnérabilités de sécurité (par exemple, l'injection de prompts, l'empoisonnement), nécessitant une attention particulière. Au-delà de la sécurité, le red teaming en IA examine également les problèmes d'équité (par exemple, les stéréotypes) et le contenu nuisible (par exemple, la glorification de la violence). L'identification précoce de ces problèmes permet de prioriser les investissements dans la défense.</p>
+</li>
+<li>
+<p><strong>Défaillances malveillantes et bénignes :</strong><br />
+Le red teaming en IA prend en compte les défaillances à la fois malveillantes et bénignes. Par exemple, lors du red teaming du nouveau Bing, nous explorons non seulement comment des adversaires malveillants peuvent subvertir le système, mais aussi comment des utilisateurs réguliers peuvent rencontrer du contenu problématique ou nuisible. Contrairement au red teaming de sécurité traditionnel, qui se concentre principalement sur les acteurs malveillants, le red teaming en IA prend en compte une gamme plus large de profils et de défaillances potentielles.</p>
+</li>
+<li>
+<p><strong>Nature dynamique des systèmes d'IA :</strong><br />
+Les applications d'IA évoluent constamment. Dans les applications de modèles de langage de grande taille, les développeurs s'adaptent aux exigences changeantes. Un red teaming continu garantit une vigilance constante et une adaptation aux risques en évolution.</p>
+</li>
+</ol>
+<p>Le red teaming en IA n'est pas exhaustif et doit être considéré comme un complément à d'autres contrôles tels que <a href="https://learn.microsoft.com/azure/ai-services/openai/how-to/role-based-access-control" target="_blank" rel="noopener noreferrer">le contrôle d'accès basé sur les rôles (RBAC)</a> et des solutions complètes de gestion des données. Il est conçu pour compléter une stratégie de sécurité qui vise à utiliser des solutions d'IA sûres et responsables, prenant en compte la confidentialité et la sécurité tout en cherchant à minimiser les biais, le contenu nuisible et la désinformation qui peuvent éroder la confiance des utilisateurs.</p>
+<p>Voici une liste de lectures supplémentaires qui peuvent vous aider à mieux comprendre comment le red teaming peut aider à identifier et atténuer les risques dans vos systèmes d'IA :</p>
+<ul>
+<li><a href="https://learn.microsoft.com/azure/ai-services/openai/concepts/red-teaming" target="_blank" rel="noopener noreferrer">Planification du red teaming pour les modèles de langage de grande taille (LLMs) et leurs applications</a></li>
+<li><a href="https://openai.com/blog/red-teaming-network" target="_blank" rel="noopener noreferrer">Qu'est-ce que le réseau de red teaming d'OpenAI ?</a></li>
+<li><a href="https://rodtrent.substack.com/p/ai-red-teaming" target="_blank" rel="noopener noreferrer">Red Teaming en IA - Une pratique clé pour construire des solutions d'IA plus sûres et responsables</a></li>
+<li>MITRE <a href="https://atlas.mitre.org/" target="_blank" rel="noopener noreferrer">ATLAS (Adversarial Threat Landscape for Artificial-Intelligence Systems)</a>, une base de connaissances sur les tactiques et techniques utilisées par les adversaires dans des attaques réelles contre les systèmes d'IA.</li>
+</ul>
+<h2 id="verification-des-connaissances">Vérification des connaissances<a class="anchor" href="#verification-des-connaissances" aria-label="Lien vers cette section">#</a></h2>
+<p>Quelle pourrait être une bonne approche pour maintenir l'intégrité des données et prévenir les abus ?</p>
+<ol>
+<li>Mettre en place des contrôles d'accès basés sur les rôles solides pour la gestion et l'accès aux données</li>
+<li>Implémenter et auditer l'étiquetage des données pour éviter la mauvaise représentation ou l'utilisation abusive des données</li>
+<li>S'assurer que votre infrastructure d'IA prend en charge le filtrage de contenu</li>
+</ol>
+<p>A:1, Bien que les trois recommandations soient excellentes, s'assurer que vous attribuez les privilèges d'accès aux données appropriés aux utilisateurs contribuera grandement à prévenir la manipulation et la mauvaise représentation des données utilisées par les LLMs.</p>
+<h2 id="defi">🚀 Défi<a class="anchor" href="#defi" aria-label="Lien vers cette section">#</a></h2>
+<p>Renseignez-vous davantage sur la manière de <a href="https://learn.microsoft.com/training/paths/purview-protect-govern-ai/" target="_blank" rel="noopener noreferrer">gérer et protéger les informations sensibles</a> à l'ère de l'IA.</p>
+<h2 id="excellent-travail-continuez-votre-apprentissage">Excellent travail, continuez votre apprentissage<a class="anchor" href="#excellent-travail-continuez-votre-apprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, consultez notre <a href="https://aka.ms/genai-collection" target="_blank" rel="noopener noreferrer">collection d'apprentissage sur l'IA générative</a> pour continuer à approfondir vos connaissances sur l'IA générative !</p>
+<p>Rendez-vous à la leçon 14 où nous examinerons <a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html">le cycle de vie des applications d'IA générative</a> !</p>
+
+</article>
+
+
+<section class="done" data-lesson-toggle="13-securing-ai-applications">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai terminé la leçon 13 — Sécuriser vos applications d&#x27;IA générative</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Concevoir l&#x27;UX des applications d&#x27;IA</span></a><a class="prevnext__link prevnext__next" href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Le cycle de vie d&#x27;une application d&#x27;IA générative</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/13-securing-ai-applications/README.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/13-securing-ai-applications/README.md</a> ·
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/tree/main/13-securing-ai-applications" target="_blank" rel="noopener noreferrer">version anglaise</a>
+</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#introduction">Introduction</a></li><li class="toc__item toc__item--h2"><a href="#objectifs-dapprentissage">Objectifs d&#x27;apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#que-signifie-la-securite-dans-le-contexte-de-lia-generative">Que signifie la sécurité dans le contexte de l&#x27;IA générative ?</a></li><li class="toc__item toc__item--h2"><a href="#comprendre-les-menaces-et-risques-lies-a-lia">Comprendre les menaces et risques liés à l&#x27;IA</a></li><li class="toc__item toc__item--h2"><a href="#tests-de-securite-pour-les-systemes-dia-et-les-llm">Tests de sécurité pour les systèmes d&#x27;IA et les LLM</a></li><li class="toc__item toc__item--h3"><a href="#securite-de-lia">Sécurité de l&#x27;IA</a></li><li class="toc__item toc__item--h3"><a href="#protection-des-donnees">Protection des données</a></li><li class="toc__item toc__item--h3"><a href="#emulation-des-menaces-reelles-red-teaming-pour-lia">Émulation des menaces réelles - Red teaming pour l&#x27;IA</a></li><li class="toc__item toc__item--h2"><a href="#verification-des-connaissances">Vérification des connaissances</a></li><li class="toc__item toc__item--h2"><a href="#defi">🚀 Défi</a></li><li class="toc__item toc__item--h2"><a href="#excellent-travail-continuez-votre-apprentissage">Excellent travail, continuez votre apprentissage</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../assets/app.js" defer></script>
+</body>
+</html>

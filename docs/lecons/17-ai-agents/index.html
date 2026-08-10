@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>17 · Les agents IA — IA Générative</title>
+<meta name="description" content="Passer de l&#x27;assistant à l&#x27;agent : outils, état et frameworks d&#x27;agents.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item is-active" data-lesson="17-ai-agents"><a href="../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../parcours/avance/index.html">Techniques avancées</a> <span aria-hidden="true">›</span>
+  <span>Leçon 17</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Leçon 17 · Techniques avancées · ≈ 30 min</p>
+  <p class="pagehead__summary">Passer de l&#x27;assistant à l&#x27;agent : outils, état et frameworks d&#x27;agents.</p>
+</header>
+<article class="prose">
+<h1 id="titre">Les agents IA</h1><p><a href="https://youtu.be/yAXVW-lUINc?si=bOtW9nL6jc3XJgOM" target="_blank" rel="noopener noreferrer"><img src="../../assets/images/17-lesson-banner.webp" alt="Modèles Open Source" loading="lazy" decoding="async" /></a></p>
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction" aria-label="Lien vers cette section">#</a></h2>
+<p>Les agents IA représentent un développement passionnant dans l'IA générative, permettant aux grands modèles de langage (LLM) d'évoluer d'assistants à des agents capables d'exécuter des actions. Les frameworks d'agents IA permettent aux développeurs de créer des applications qui donnent aux LLM un accès à des outils et à la gestion d'état. Ces frameworks améliorent également la visibilité, permettant aux utilisateurs et aux développeurs de surveiller les actions planifiées par les LLM, améliorant ainsi la gestion de l'expérience.</p>
+<p>La leçon couvrira les domaines suivants :</p>
+<ul>
+<li>Comprendre ce qu'est un agent IA - Qu'est-ce qu'un agent IA exactement ?</li>
+<li>Explorer quatre frameworks différents d'agents IA - Qu'est-ce qui les rend uniques ?</li>
+<li>Appliquer ces agents IA à différents cas d'usage - Quand devrions-nous utiliser des agents IA ?</li>
+</ul>
+<h2 id="objectifs-dapprentissage">Objectifs d'apprentissage<a class="anchor" href="#objectifs-dapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir suivi cette leçon, vous serez capable de :</p>
+<ul>
+<li>Expliquer ce que sont les agents IA et comment ils peuvent être utilisés.</li>
+<li>Avoir une compréhension des différences entre certains des frameworks populaires d'agents IA, et comment ils diffèrent.</li>
+<li>Comprendre comment fonctionnent les agents IA afin de créer des applications avec eux.</li>
+</ul>
+<h2 id="quest-ce-quun-agent-ia">Qu'est-ce qu'un agent IA ?<a class="anchor" href="#quest-ce-quun-agent-ia" aria-label="Lien vers cette section">#</a></h2>
+<p>Les agents IA constituent un domaine très excitant dans le monde de l'IA générative. Avec cet enthousiasme vient parfois une confusion des termes et de leur application. Pour simplifier et inclure la plupart des outils qui se réfèrent aux agents IA, nous allons utiliser cette définition :</p>
+<p>Les agents IA permettent aux grands modèles de langage (LLM) d'exécuter des tâches en leur donnant accès à un <strong>état</strong> et des <strong>outils</strong>.</p>
+<p><img src="../../assets/images/what-agent.webp" alt="Modèle d'agent" loading="lazy" decoding="async" /></p>
+<p>Définissons ces termes :</p>
+<p><strong>Grands modèles de langage</strong> - Il s'agit des modèles mentionnés tout au long de ce cours tels que GPT-3.5, GPT-4, Llama-2, etc.</p>
+<p><strong>État</strong> - Cela fait référence au contexte dans lequel le LLM travaille. Le LLM utilise le contexte de ses actions passées et le contexte actuel pour guider sa prise de décision pour les actions suivantes. Les frameworks d'agents IA permettent aux développeurs de maintenir ce contexte plus facilement.</p>
+<p><strong>Outils</strong> - Pour accomplir la tâche que l'utilisateur a demandée et que le LLM a planifiée, le LLM a besoin d'accéder à des outils. Quelques exemples d'outils peuvent être une base de données, une API, une application externe ou même un autre LLM !</p>
+<p>Ces définitions devraient vous donner une bonne base pour la suite, alors que nous examinons comment ils sont mis en œuvre. Explorons quelques frameworks différents d'agents IA :</p>
+<h2 id="langchain-agents">LangChain Agents<a class="anchor" href="#langchain-agents" aria-label="Lien vers cette section">#</a></h2>
+<p><a href="https://python.langchain.com/docs/how_to/#agents" target="_blank" rel="noopener noreferrer">LangChain Agents</a> est une implémentation des définitions que nous avons fournies ci-dessus.</p>
+<p>Pour gérer l'<strong>état</strong>, il utilise une fonction intégrée appelée <code>AgentExecutor</code>. Celle-ci accepte l'<code>agent</code> défini et les <code>outils</code> qui lui sont disponibles.</p>
+<p>Le <code>Agent Executor</code> stocke également l'historique du chat pour fournir le contexte de la conversation.</p>
+<p><img src="../../assets/images/langchain-agents.webp" alt="Agents Langchain" loading="lazy" decoding="async" /></p>
+<p>LangChain offre un <a href="https://integrations.langchain.com/tools" target="_blank" rel="noopener noreferrer">catalogue d'outils</a> qui peuvent être importés dans votre application et auxquels le LLM peut accéder. Ces outils sont réalisés par la communauté et par l'équipe LangChain.</p>
+<p>Vous pouvez alors définir ces outils et les passer au <code>Agent Executor</code>.</p>
+<p>La visibilité est un autre aspect important lorsqu'on parle d'agents IA. Il est important que les développeurs d'applications comprennent quel outil le LLM utilise et pourquoi. Pour cela, l'équipe de LangChain a développé LangSmith.</p>
+<h2 id="autogen">AutoGen<a class="anchor" href="#autogen" aria-label="Lien vers cette section">#</a></h2>
+<p>Le prochain framework d'agents IA dont nous parlerons est <a href="https://microsoft.github.io/autogen/" target="_blank" rel="noopener noreferrer">AutoGen</a>. L'accent principal d'AutoGen est sur les conversations. Les agents sont à la fois <strong>conversables</strong> et <strong>personnalisables</strong>.</p>
+<p><strong>Conversable -</strong> Les LLM peuvent démarrer et poursuivre une conversation avec un autre LLM afin d'accomplir une tâche. Cela se fait en créant des <code>AssistantAgents</code> et en leur donnant un message système spécifique.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">autogen</span><span class="o">.</span><span class="n">AssistantAgent</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Coder&quot;</span><span class="p">,</span> <span class="n">llm_config</span><span class="o">=</span><span class="n">llm_config</span><span class="p">,</span> <span class="p">)</span> <span class="n">pm</span> <span class="o">=</span> <span class="n">autogen</span><span class="o">.</span><span class="n">AssistantAgent</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Product_manager&quot;</span><span class="p">,</span> <span class="n">system_message</span><span class="o">=</span><span class="s2">&quot;Creative in software product ideas.&quot;</span><span class="p">,</span> <span class="n">llm_config</span><span class="o">=</span><span class="n">llm_config</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div><p><strong>Personnalisable</strong> - Les agents peuvent être définis non seulement comme des LLM mais aussi comme un utilisateur ou un outil. En tant que développeur, vous pouvez définir un <code>UserProxyAgent</code> qui est responsable d'interagir avec l'utilisateur pour obtenir des retours sur l'accomplissement d'une tâche. Ce retour peut soit continuer l'exécution de la tâche, soit la stopper.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">user_proxy</span> <span class="o">=</span> <span class="n">UserProxyAgent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;user_proxy&quot;</span><span class="p">)</span>
+</pre></div>
+</div><h3 id="etat-et-outils">État et outils<a class="anchor" href="#etat-et-outils" aria-label="Lien vers cette section">#</a></h3>
+<p>Pour changer et gérer l'état, un agent assistant génère du code Python pour compléter la tâche.</p>
+<p>Voici un exemple du processus :</p>
+<p><img src="../../assets/images/autogen.webp" alt="AutoGen" loading="lazy" decoding="async" /></p>
+<h4 id="llm-defini-avec-un-message-systeme">LLM défini avec un message système<a class="anchor" href="#llm-defini-avec-un-message-systeme" aria-label="Lien vers cette section">#</a></h4>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">system_message</span><span class="o">=</span><span class="s2">&quot;For weather related tasks, only use the functions you have been provided with. Reply TERMINATE when the task is done.&quot;</span>
+</pre></div>
+</div><p>Ce message système dirige ce LLM spécifique vers les fonctions pertinentes pour sa tâche. Rappelez-vous, avec AutoGen vous pouvez avoir plusieurs AssistantAgents définis avec différents messages système.</p>
+<h4 id="le-chat-est-initie-par-lutilisateur">Le chat est initié par l'utilisateur<a class="anchor" href="#le-chat-est-initie-par-lutilisateur" aria-label="Lien vers cette section">#</a></h4>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">user_proxy</span><span class="o">.</span><span class="n">initiate_chat</span><span class="p">(</span> <span class="n">chatbot</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;I am planning a trip to NYC next week, can you help me pick out what to wear? &quot;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div><p>Ce message du user_proxy (humain) est ce qui va démarrer le processus de l'agent pour explorer les fonctions possibles qu'il devrait exécuter.</p>
+<h4 id="fonction-executee">Fonction exécutée<a class="anchor" href="#fonction-executee" aria-label="Lien vers cette section">#</a></h4>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>chatbot<span class="w"> </span><span class="o">(</span>to<span class="w"> </span>user_proxy<span class="o">)</span>:
+
+*****<span class="w"> </span>Suggested<span class="w"> </span>tool<span class="w"> </span>Call:<span class="w"> </span>get_weather<span class="w"> </span>*****<span class="w"> </span>Arguments:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;location&quot;</span>:<span class="s2">&quot;New York City, NY&quot;</span>,<span class="s2">&quot;time_periond:&quot;</span><span class="m">7</span><span class="s2">&quot;,&quot;</span>temperature_unit<span class="s2">&quot;:&quot;</span>Celsius<span class="s2">&quot;} ******************************************************** --------------------------------------------------------------------------------</span>
+
+<span class="s2">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; EXECUTING FUNCTION get_weather... user_proxy (to chatbot): ***** Response from calling function &quot;</span>get_weather<span class="s2">&quot; ***** 112.22727272727272 EUR ****************************************************************</span>
+</pre></div>
+</div><p>Une fois le chat initial traité, l'agent enverra l'outil suggéré à appeler. Dans ce cas, c'est une fonction appelée <code>get_weather</code>. Selon votre configuration, cette fonction peut être exécutée automatiquement et lue par l'agent ou exécutée sur demande de l'utilisateur.</p>
+<p>Vous pouvez trouver une liste d'<a href="https://microsoft.github.io/autogen/docs/Examples/" target="_blank" rel="noopener noreferrer">exemples de code AutoGen</a> pour explorer davantage comment démarrer la construction.</p>
+<h2 id="taskweaver">Taskweaver<a class="anchor" href="#taskweaver" aria-label="Lien vers cette section">#</a></h2>
+<p>Le prochain framework d’agents que nous allons explorer est <a href="https://microsoft.github.io/TaskWeaver/" target="_blank" rel="noopener noreferrer">Taskweaver</a>. Il est connu comme un agent &quot;code-first&quot; car au lieu de travailler strictement avec des <code>strings</code>, il peut travailler avec des DataFrames en Python. Cela devient extrêmement utile pour les tâches d'analyse et de génération de données. Cela peut être des choses comme créer des graphiques ou générer des nombres aléatoires.</p>
+<h3 id="etat-et-outils-2">État et outils<a class="anchor" href="#etat-et-outils-2" aria-label="Lien vers cette section">#</a></h3>
+<p>Pour gérer l'état de la conversation, TaskWeaver utilise le concept de <code>Planner</code>. Le <code>Planner</code> est un LLM qui prend la requête des utilisateurs et planifie les tâches nécessaires pour répondre à cette demande.</p>
+<p>Pour accomplir les tâches, le <code>Planner</code> a accès à une collection d'outils appelée <code>Plugins</code>. Cela peut être des classes Python ou un interpréteur de code général. Ces plugins sont stockés sous forme d'embeddings afin que le LLM puisse mieux rechercher le plugin approprié.</p>
+<p><img src="../../assets/images/taskweaver.webp" alt="Taskweaver" loading="lazy" decoding="async" /></p>
+<p>Voici un exemple de plugin pour gérer la détection d'anomalies :</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">AnomalyDetectionPlugin</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span> <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">time_col_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value_col_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</pre></div>
+</div><p>Le code est vérifié avant exécution. Une autre fonctionnalité pour gérer le contexte dans Taskweaver est l'<code>experience</code>. L'expérience permet que le contexte d'une conversation soit conservé sur le long terme dans un fichier YAML. Cela peut être configuré pour que le LLM s'améliore avec le temps sur certaines tâches, à condition qu'il soit exposé aux conversations antérieures.</p>
+<h2 id="jarvis">JARVIS<a class="anchor" href="#jarvis" aria-label="Lien vers cette section">#</a></h2>
+<p>Le dernier framework d'agents que nous allons explorer est <a href="https://github.com/microsoft/JARVIS?tab=readme-ov-file" target="_blank" rel="noopener noreferrer">JARVIS</a>. Ce qui rend JARVIS unique, c'est qu'il utilise un LLM pour gérer l'<code>état</code> de la conversation et que les <code>outils</code> sont d'autres modèles d'IA. Chacun des modèles d'IA est spécialisé dans certaines tâches telles que la détection d'objets, la transcription ou le sous-titrage d'images.</p>
+<p><img src="../../assets/images/jarvis.webp" alt="JARVIS" loading="lazy" decoding="async" /></p>
+<p>Le LLM, étant un modèle polyvalent, reçoit la requête de l'utilisateur et identifie la tâche spécifique ainsi que les arguments/données nécessaires pour accomplir la tâche.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;object-detection&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;dep&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="s2">&quot;e1.jpg&quot;</span> <span class="p">}}]</span>
+</pre></div>
+</div><p>Le LLM formate alors la requête d'une manière que le modèle IA spécialisé peut interpréter, comme du JSON. Une fois que le modèle IA a renvoyé sa prédiction basée sur la tâche, le LLM reçoit la réponse.</p>
+<p>Si plusieurs modèles sont nécessaires pour accomplir la tâche, il interprétera aussi les réponses de ces modèles avant de les assembler pour générer la réponse destinée à l'utilisateur.</p>
+<p>L'exemple ci-dessous montre comment cela fonctionne lorsque l'utilisateur demande une description et le comptage des objets dans une image :</p>
+<h2 id="devoir">Devoir<a class="anchor" href="#devoir" aria-label="Lien vers cette section">#</a></h2>
+<p>Pour continuer votre apprentissage des agents IA, vous pouvez construire avec AutoGen :</p>
+<ul>
+<li>Une application qui simule une réunion d'affaires avec différents départements d'une startup éducative.</li>
+<li>Créer des messages système qui guident les LLM à comprendre différentes personas et priorités, et permettre à l'utilisateur de présenter une nouvelle idée de produit.</li>
+<li>Le LLM devrait alors générer des questions de suivi de chaque département pour affiner et améliorer la présentation et l'idée de produit.</li>
+</ul>
+<h2 id="lapprentissage-ne-sarrete-pas-ici-continuez-le-voyage">L'apprentissage ne s'arrête pas ici, continuez le voyage<a class="anchor" href="#lapprentissage-ne-sarrete-pas-ici-continuez-le-voyage" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, consultez notre <a href="https://aka.ms/genai-collection" target="_blank" rel="noopener noreferrer">collection d'apprentissage sur l'IA générative</a> pour continuer à développer vos connaissances en IA générative !</p>
+<hr />
+<!-- CO-OP TRANSLATOR DISCLAIMER START -->
+<p><strong>Avertissement</strong> :<br />
+Ce document a été traduit à l’aide du service de traduction automatique <a href="https://github.com/Azure/co-op-translator" target="_blank" rel="noopener noreferrer">Co-op Translator</a>. Bien que nous fassions tout notre possible pour assurer l’exactitude, veuillez noter que les traductions automatisées peuvent contenir des erreurs ou des inexactitudes. Le document original dans sa langue d’origine doit être considéré comme la source faisant foi. Pour les informations critiques, il est recommandé de recourir à une traduction professionnelle réalisée par un humain. Nous déclinons toute responsabilité en cas de malentendus ou de mauvaises interprétations résultant de l’utilisation de cette traduction.</p>
+<!-- CO-OP TRANSLATOR DISCLAIMER END -->
+
+</article>
+
+
+<section class="done" data-lesson-toggle="17-ai-agents">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai terminé la leçon 17 — Les agents IA</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../lecons/16-open-source-models/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Modèles open source et Hugging Face</span></a><a class="prevnext__link prevnext__next" href="../../lecons/18-fine-tuning/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Affiner (fine-tuner) un LLM</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/17-ai-agents/README.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/17-ai-agents/README.md</a> ·
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/tree/main/17-ai-agents" target="_blank" rel="noopener noreferrer">version anglaise</a>
+</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#introduction">Introduction</a></li><li class="toc__item toc__item--h2"><a href="#objectifs-dapprentissage">Objectifs d&#x27;apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#quest-ce-quun-agent-ia">Qu&#x27;est-ce qu&#x27;un agent IA ?</a></li><li class="toc__item toc__item--h2"><a href="#langchain-agents">LangChain Agents</a></li><li class="toc__item toc__item--h2"><a href="#autogen">AutoGen</a></li><li class="toc__item toc__item--h3"><a href="#etat-et-outils">État et outils</a></li><li class="toc__item toc__item--h2"><a href="#taskweaver">Taskweaver</a></li><li class="toc__item toc__item--h3"><a href="#etat-et-outils-2">État et outils</a></li><li class="toc__item toc__item--h2"><a href="#jarvis">JARVIS</a></li><li class="toc__item toc__item--h2"><a href="#devoir">Devoir</a></li><li class="toc__item toc__item--h2"><a href="#lapprentissage-ne-sarrete-pas-ici-continuez-le-voyage">L&#x27;apprentissage ne s&#x27;arrête pas ici, continuez le voyage</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../assets/app.js" defer></script>
+</body>
+</html>

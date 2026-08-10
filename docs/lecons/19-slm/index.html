@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19 · Construire avec les petits modèles (SLM) — IA Générative</title>
+<meta name="description" content="La famille Phi et les atouts des petits modèles : coût, latence, exécution locale.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item is-active" data-lesson="19-slm"><a href="../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../parcours/modeles/index.html">Familles de modèles</a> <span aria-hidden="true">›</span>
+  <span>Leçon 19</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Leçon 19 · Familles de modèles · ≈ 45 min</p>
+  <p class="pagehead__summary">La famille Phi et les atouts des petits modèles : coût, latence, exécution locale.</p>
+</header>
+<article class="prose">
+<h1 id="introduction-aux-petits-modeles-de-langage-pour-lia-generative-pour-debutants">Introduction aux petits modèles de langage pour l’IA générative pour débutants<a class="anchor" href="#introduction-aux-petits-modeles-de-langage-pour-lia-generative-pour-debutants" aria-label="Lien vers cette section">#</a></h1>
+<p>L’IA générative est un domaine fascinant de l’intelligence artificielle qui se concentre sur la création de systèmes capables de générer du contenu nouveau. Ce contenu peut aller du texte et des images à la musique et même à des environnements virtuels entiers. L’une des applications les plus excitantes de l’IA générative se trouve dans le domaine des modèles de langage.</p>
+<h2 id="que-sont-les-petits-modeles-de-langage">Que sont les petits modèles de langage ?<a class="anchor" href="#que-sont-les-petits-modeles-de-langage" aria-label="Lien vers cette section">#</a></h2>
+<p>Un petit modèle de langage (Small Language Model, SLM) représente une variante réduite d’un grand modèle de langage (LLM), utilisant bon nombre des principes architecturaux et des techniques des LLM, tout en affichant une empreinte computationnelle significativement réduite.</p>
+<p>Les SLM sont un sous-ensemble de modèles de langage conçus pour générer un texte semblable à celui produit par un humain. Contrairement à leurs homologues plus grands, tels que GPT-4, les SLM sont plus compacts et efficaces, ce qui les rend idéaux pour des applications où les ressources informatiques sont limitées. Malgré leur petite taille, ils peuvent effectuer diverses tâches. En général, les SLM sont construits en compressant ou distillant des LLM, dans le but de conserver une grande partie des fonctionnalités et capacités linguistiques du modèle original. Cette réduction de la taille du modèle diminue la complexité globale, rendant les SLM plus efficaces en termes d’utilisation de mémoire et de besoins informatiques. Malgré ces optimisations, les SLM peuvent toujours réaliser un large éventail de tâches de traitement du langage naturel (NLP) :</p>
+<ul>
+<li>Génération de texte : création de phrases ou paragraphes cohérents et contextuellement pertinents.</li>
+<li>Complétion de texte : prédiction et complétion de phrases à partir d’un prompt donné.</li>
+<li>Traduction : conversion de texte d’une langue à une autre.</li>
+<li>Résumé : condensation de longs textes en résumés plus courts et digestes.</li>
+</ul>
+<p>Cependant, cela implique certains compromis en termes de performance ou de profondeur de compréhension comparativement à leurs grands homologues.</p>
+<h2 id="comment-fonctionnent-les-petits-modeles-de-langage">Comment fonctionnent les petits modèles de langage ?<a class="anchor" href="#comment-fonctionnent-les-petits-modeles-de-langage" aria-label="Lien vers cette section">#</a></h2>
+<p>Les SLM sont entraînés sur d’énormes quantités de données textuelles. Pendant l’entraînement, ils apprennent les motifs et structures du langage, leur permettant de générer du texte à la fois grammaticalement correct et contextuellement approprié. Le processus d’entraînement comprend :</p>
+<ul>
+<li>Collecte de données : rassemblement de larges ensembles de données textuelles provenant de diverses sources.</li>
+<li>Prétraitement : nettoyage et organisation des données pour les rendre adaptées à l’entraînement.</li>
+<li>Entraînement : utilisation d’algorithmes d’apprentissage automatique pour enseigner au modèle comment comprendre et générer du texte.</li>
+<li>Affinage : ajustement du modèle pour améliorer ses performances sur des tâches spécifiques.</li>
+</ul>
+<p>Le développement des SLM répond au besoin croissant de modèles pouvant être déployés dans des environnements aux ressources limitées, comme les appareils mobiles ou les plateformes de calcul en périphérie, où les LLM à grande échelle peuvent être impraticables en raison de leurs lourdes exigences en ressources. En mettant l’accent sur l’efficacité, les SLM équilibrent performance et accessibilité, permettant une application plus large dans divers domaines.</p>
+<p><img src="../../assets/images/slm.webp" alt="slm" loading="lazy" decoding="async" /></p>
+<h2 id="objectifs-dapprentissage">Objectifs d’apprentissage<a class="anchor" href="#objectifs-dapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>Dans cette leçon, nous espérons introduire la connaissance des SLM et la combiner avec Microsoft Phi-3 pour apprendre différents scénarios dans le contenu textuel, la vision et MoE.</p>
+<p>À la fin de cette leçon, vous devriez être capable de répondre aux questions suivantes :</p>
+<ul>
+<li>Qu’est-ce qu’un SLM ?</li>
+<li>Quelle est la différence entre un SLM et un LLM ?</li>
+<li>Qu’est-ce que la famille Microsoft Phi-3/3.5 ?</li>
+<li>Comment exécuter une inférence avec la famille Microsoft Phi-3/3.5 ?</li>
+</ul>
+<p>Prêt ? Commençons.</p>
+<h2 id="les-distinctions-entre-les-grands-modeles-de-langage-llm-et-les-petits-modeles-de-langage-slm">Les distinctions entre les grands modèles de langage (LLM) et les petits modèles de langage (SLM)<a class="anchor" href="#les-distinctions-entre-les-grands-modeles-de-langage-llm-et-les-petits-modeles-de-langage-slm" aria-label="Lien vers cette section">#</a></h2>
+<p>Les LLM et les SLM reposent tous deux sur des principes fondamentaux d’apprentissage machine probabiliste, suivant des approches similaires dans leur conception architecturale, leurs méthodologies d’entraînement, leurs processus de génération de données et leurs techniques d’évaluation des modèles. Cependant, plusieurs facteurs clés distinguent ces deux types de modèles.</p>
+<h2 id="applications-des-petits-modeles-de-langage">Applications des petits modèles de langage<a class="anchor" href="#applications-des-petits-modeles-de-langage" aria-label="Lien vers cette section">#</a></h2>
+<p>Les SLM ont un large éventail d’applications, notamment :</p>
+<ul>
+<li>Chatbots : fournir un support client et interagir avec les utilisateurs de façon conversationnelle.</li>
+<li>Création de contenu : assister les écrivains en générant des idées ou même en rédigeant des articles entiers.</li>
+<li>Éducation : aider les étudiants dans leurs rédactions ou l’apprentissage de nouvelles langues.</li>
+<li>Accessibilité : créer des outils pour les personnes en situation de handicap, comme les systèmes de synthèse vocale.</li>
+</ul>
+<p><strong>Taille</strong></p>
+<p>Une distinction principale entre les LLM et les SLM réside dans l’échelle des modèles. Les LLM, tels que ChatGPT (GPT-4), peuvent contenir environ 1,76 trillion de paramètres, tandis que des SLM open source comme Mistral 7B sont conçus avec beaucoup moins de paramètres — environ 7 milliards. Cette disparité s’explique principalement par des différences dans l’architecture des modèles et leurs processus d’entraînement. Par exemple, ChatGPT utilise un mécanisme d’attention auto-référencé dans une architecture encodeur-décodeur, tandis que Mistral 7B emploie une attention par fenêtre glissante, ce qui permet un entraînement plus efficace dans un modèle uniquement décodeur. Cette différence architecturale a des implications importantes sur la complexité et la performance de ces modèles.</p>
+<p><strong>Compréhension</strong></p>
+<p>Les SLM sont généralement optimisés pour des performances dans des domaines spécifiques, ce qui les rend très spécialisés mais potentiellement limités dans leur capacité à fournir une compréhension contextuelle large à travers plusieurs domaines de connaissance. En revanche, les LLM visent à simuler une intelligence humaine sur un niveau plus complet. Entraînés sur des jeux de données vastes et variés, les LLM sont conçus pour bien performer dans divers domaines, offrant ainsi une plus grande polyvalence et adaptabilité. Par conséquent, les LLM conviennent mieux à une gamme plus étendue de tâches en aval, comme le traitement du langage naturel et la programmation.</p>
+<p><strong>Calcul</strong></p>
+<p>L’entraînement et le déploiement des LLM sont des processus très gourmands en ressources, nécessitant souvent une infrastructure informatique importante, incluant de grands clusters de GPU. Par exemple, entraîner un modèle comme ChatGPT à partir de zéro peut nécessiter des milliers de GPU sur de longues périodes. À l’inverse, les SLM, avec leur nombre réduit de paramètres, sont plus accessibles en termes de ressources informatiques. Des modèles comme Mistral 7B peuvent être entraînés et exécutés sur des machines locales équipées de GPU modérés, bien que l’entraînement nécessite toujours plusieurs heures et plusieurs GPU.</p>
+<p><strong>Biais</strong></p>
+<p>Le biais est un problème bien connu des LLM, principalement en raison de la nature des données d’entraînement. Ces modèles s’appuient souvent sur des données brutes, librement disponibles sur Internet, qui peuvent sous-représenter ou déformer certains groupes, introduire des étiquetages erronés ou refléter des biais linguistiques influencés par des dialectes, des variations géographiques et des règles grammaticales. De plus, la complexité des architectures LLM peut involontairement exacerber ces biais, qui peuvent passer inaperçus sans affinement attentif. En revanche, les SLM, étant entraînés sur des ensembles de données plus restreints et spécifiques à un domaine, sont intrinsèquement moins susceptibles à ces biais, même s’ils ne sont pas complètement immunisés.</p>
+<p><strong>Inférence</strong></p>
+<p>La taille réduite des SLM leur confère un avantage significatif en termes de vitesse d’inférence, leur permettant de générer des sorties efficacement sur du matériel local sans nécessité de traitements parallèles étendus. À l’inverse, les LLM, en raison de leur taille et de leur complexité, requièrent souvent d’importantes ressources de calcul parallèles pour obtenir des temps d’inférence acceptables. La présence de multiples utilisateurs simultanés ralentit encore davantage les temps de réponse des LLM, notamment lorsqu’ils sont déployés à grande échelle.</p>
+<p>En résumé, bien que LLM et SLM partagent une base fondamentale en apprentissage machine, ils diffèrent significativement en termes de taille de modèle, besoins en ressources, compréhension contextuelle, susceptibilité aux biais et vitesse d’inférence. Ces différences reflètent leur adéquation respective à différents cas d’utilisation, les LLM étant plus polyvalents mais gourmands en ressources, tandis que les SLM offrent une efficacité spécifique à un domaine avec des besoins informatiques réduits.</p>
+<p><em><strong>Note : Dans cette leçon, nous présenterons les SLM en utilisant Microsoft Phi-3 / 3.5 comme exemple.</strong></em></p>
+<h2 id="presentation-de-la-famille-phi-3-phi-35">Présentation de la famille Phi-3 / Phi-3.5<a class="anchor" href="#presentation-de-la-famille-phi-3-phi-35" aria-label="Lien vers cette section">#</a></h2>
+<p>La famille Phi-3 / 3.5 cible principalement les scénarios d’application texte, vision et Agent (MoE) :</p>
+<h3 id="phi-3-35-instruct">Phi-3 / 3.5 Instruct<a class="anchor" href="#phi-3-35-instruct" aria-label="Lien vers cette section">#</a></h3>
+<p>Principalement pour la génération de texte, la complétion de conversation et l’extraction d’informations de contenu, etc.</p>
+<p><strong>Phi-3-mini</strong></p>
+<p>Le modèle de langage 3.8B est disponible sur Microsoft Azure AI Studio, Hugging Face et Ollama. Les modèles Phi-3 surpassent significativement les modèles de taille égale ou supérieure sur les benchmarks clés (voir chiffres des benchmarks ci-dessous, plus les chiffres sont élevés mieux c’est). Phi-3-mini surpasse des modèles deux fois plus gros, tandis que Phi-3-small et Phi-3-medium surpassent des modèles plus volumineux, y compris GPT-3.5.</p>
+<p><strong>Phi-3-small &amp; medium</strong></p>
+<p>Avec seulement 7 milliards de paramètres, Phi-3-small dépasse GPT-3.5T sur divers benchmarks de langage, raisonnement, codage et mathématiques.</p>
+<p>Le Phi-3-medium avec 14 milliards de paramètres poursuit cette tendance et surpasse le Gemini 1.0 Pro.</p>
+<p><strong>Phi-3.5-mini</strong></p>
+<p>On peut le voir comme une mise à niveau de Phi-3-mini. Bien que le nombre de paramètres reste inchangé, il améliore la capacité à supporter plusieurs langues (plus de 20 langues : arabe, chinois, tchèque, danois, néerlandais, anglais, finnois, français, allemand, hébreu, hongrois, italien, japonais, coréen, norvégien, polonais, portugais, russe, espagnol, suédois, thaï, turc, ukrainien) et offre un support renforcé pour les longs contextes.</p>
+<p>Phi-3.5-mini avec 3,8 milliards de paramètres surpasse les modèles de sa taille et est comparable aux modèles deux fois plus volumineux.</p>
+<h3 id="phi-3-35-vision">Phi-3 / 3.5 Vision<a class="anchor" href="#phi-3-35-vision" aria-label="Lien vers cette section">#</a></h3>
+<p>On peut considérer le modèle Instruct de Phi-3/3.5 comme la capacité de Phi à comprendre, et Vision est ce qui donne à Phi des yeux pour comprendre le monde.</p>
+<p><strong>Phi-3-Vision</strong></p>
+<p>Phi-3-vision, avec seulement 4,2 milliards de paramètres, poursuit cette tendance et surpasse des modèles plus gros tels que Claude-3 Haiku et Gemini 1.0 Pro V sur des tâches générales de raisonnement visuel, OCR, ainsi que sur la compréhension de tableaux et diagrammes.</p>
+<p><strong>Phi-3.5-Vision</strong></p>
+<p>Phi-3.5-Vision est aussi une mise à niveau de Phi-3-Vision, ajoutant le support pour plusieurs images. Vous pouvez le voir comme une amélioration en vision : non seulement vous pouvez voir des images, mais aussi des vidéos.</p>
+<p>Phi-3.5-vision surpasse des modèles plus grands tels que Claude-3.5 Sonnet et Gemini 1.5 Flash dans les tâches OCR, de compréhension de tableaux et graphiques, et est équivalent sur les tâches générales de raisonnement par connaissances visuelles. Supporte les entrées multi-images, c’est-à-dire effectue un raisonnement sur plusieurs images d’entrée.</p>
+<h3 id="phi-35-moe">Phi-3.5-MoE<a class="anchor" href="#phi-35-moe" aria-label="Lien vers cette section">#</a></h3>
+<p><em><strong>Mixture of Experts (MoE)</strong></em> permet d’entraîner les modèles avec beaucoup moins de calcul, ce qui signifie que vous pouvez augmenter considérablement la taille du modèle ou du jeu de données avec le même budget de calcul qu’un modèle dense. En particulier, un modèle MoE devrait atteindre la même qualité que son homologue dense beaucoup plus rapidement lors de la pré-formation.</p>
+<p>Phi-3.5-MoE comprend 16 modules experts de 3,8 milliards chacun. Phi-3.5-MoE, avec seulement 6,6 milliards de paramètres actifs, atteint un niveau comparable de raisonnement, compréhension linguistique et mathématiques que des modèles beaucoup plus gros.</p>
+<p>Nous pouvons utiliser la famille de modèles Phi-3/3.5 selon différents scénarios. Contrairement aux LLM, vous pouvez déployer Phi-3/3.5-mini ou Phi-3/3.5-Vision sur des appareils en périphérie.</p>
+<h2 id="comment-utiliser-les-modeles-de-la-famille-phi-335">Comment utiliser les modèles de la famille Phi-3/3.5<a class="anchor" href="#comment-utiliser-les-modeles-de-la-famille-phi-335" aria-label="Lien vers cette section">#</a></h2>
+<p>Nous espérons utiliser Phi-3/3.5 dans différents scénarios. Ensuite, nous utiliserons Phi-3/3.5 selon différents scénarios.</p>
+<p><img src="../../assets/images/phi3.webp" alt="phi3" loading="lazy" decoding="async" /></p>
+<h3 id="inference-via-les-api-cloud">Inférence via les API cloud<a class="anchor" href="#inference-via-les-api-cloud" aria-label="Lien vers cette section">#</a></h3>
+<p><strong>GitHub Models</strong></p>
+<p>GitHub Models est la manière la plus directe. Vous pouvez rapidement accéder au modèle Phi-3/3.5-Instruct via GitHub Models. Combiné avec le SDK Azure AI Inference / OpenAI SDK, vous pouvez accéder à l’API par code pour effectuer un appel Phi-3/3.5-Instruct. Vous pouvez aussi tester différents effets via Playground.</p>
+<ul>
+<li>Démo : Comparaison des effets de Phi-3-mini et Phi-3.5-mini dans des scénarios en chinois</li>
+</ul>
+<p><img src="../../assets/images/gh1.webp" alt="phi3" loading="lazy" decoding="async" /></p>
+<p><img src="../../assets/images/gh2.webp" alt="phi35" loading="lazy" decoding="async" /></p>
+<p><strong>Azure AI Studio</strong></p>
+<p>Ou si vous souhaitez utiliser les modèles vision et MoE, vous pouvez utiliser Azure AI Studio pour effectuer cet appel. Si vous êtes intéressé, vous pouvez lire le &quot;Phi-3 Cookbook&quot; pour apprendre comment appeler Phi-3/3.5 Instruct, Vision, MoE via Azure AI Studio <a href="https://github.com/microsoft/Phi-3CookBook/blob/main/md/02.QuickStart/AzureAIStudio_QuickStart.md" target="_blank" rel="noopener noreferrer">Cliquez sur ce lien</a></p>
+<p><strong>NVIDIA NIM</strong></p>
+<p>En plus des solutions de catalogue de modèles basées sur le cloud fournies par Azure et GitHub, vous pouvez également utiliser <a href="https://developer.nvidia.com/nim" target="_blank" rel="noopener noreferrer">NVIDIA NIM</a> pour effectuer les appels liés. Vous pouvez visiter NVIDIA NIM pour effectuer les appels API de la famille Phi-3/3.5. NVIDIA NIM (NVIDIA Inference Microservices) est un ensemble de microservices d’inférence accélérés conçus pour aider les développeurs à déployer efficacement des modèles d’IA dans divers environnements, y compris clouds, centres de données et stations de travail.</p>
+<p>Voici quelques fonctionnalités clés de NVIDIA NIM :</p>
+<ul>
+<li><strong>Facilité de déploiement :</strong> NIM permet le déploiement de modèles d’IA avec une seule commande, ce qui facilite son intégration dans les flux de travail existants.</li>
+<li><strong>Performance optimisée :</strong> Il exploite les moteurs d’inférence pré-optimisés de NVIDIA, tels que TensorRT et TensorRT-LLM, pour garantir une faible latence et un débit élevé.</li>
+<li><strong>Évolutivité :</strong> NIM prend en charge l’autoscaling sur Kubernetes, lui permettant de gérer efficacement des charges de travail variables.</li>
+<li><strong>Sécurité et contrôle :</strong> Les organisations peuvent conserver le contrôle de leurs données et applications en auto-hébergeant les microservices NIM sur leur propre infrastructure gérée.</li>
+<li><strong>API standard :</strong> NIM fournit des API standards de l’industrie, facilitant la création et l’intégration d’applications IA telles que les chatbots, assistants IA, et plus encore.</li>
+</ul>
+<p>NIM fait partie de NVIDIA AI Enterprise, qui vise à simplifier le déploiement et l’opérationnalisation des modèles IA, en assurant leur exécution efficace sur les GPU NVIDIA.</p>
+<ul>
+<li>Démo : Utilisation de NVIDIA NIM pour appeler Phi-3.5-Vision-API  [<a href="../../lecons/19-slm/index.html#code-python-phi-3-vision-nividia-nim-ipynb">Cliquez sur ce lien</a>]</li>
+</ul>
+<h3 id="execution-locale-de-phi-335">Exécution locale de Phi-3/3.5<a class="anchor" href="#execution-locale-de-phi-335" aria-label="Lien vers cette section">#</a></h3>
+<p>L’inférence en relation avec Phi-3, ou tout modèle de langage comme GPT-3, fait référence au processus de génération de réponses ou de prédictions basées sur l’entrée reçue. Lorsque vous fournissez une invite ou une question à Phi-3, il utilise son réseau neuronal entraîné pour inférer la réponse la plus probable et pertinente en analysant les motifs et relations dans les données d’entraînement.</p>
+<p><strong>Hugging Face Transformer</strong><br />
+Hugging Face Transformers est une bibliothèque puissante conçue pour le traitement du langage naturel (NLP) et d’autres tâches d’apprentissage automatique. Voici quelques points clés à son sujet :</p>
+<ol>
+<li>
+<p><strong>Modèles préentraînés :</strong> Elle propose des milliers de modèles préentraînés utilisables pour diverses tâches telles que la classification de texte, la reconnaissance d’entités nommées, la réponse aux questions, le résumé, la traduction et la génération de texte.</p>
+</li>
+<li>
+<p><strong>Interopérabilité des frameworks :</strong> La bibliothèque supporte plusieurs frameworks d’apprentissage profond, y compris PyTorch, TensorFlow et JAX. Cela permet de former un modèle dans un framework et de l’utiliser dans un autre.</p>
+</li>
+<li>
+<p><strong>Capacités multimodales :</strong> En plus du NLP, Hugging Face Transformers prend également en charge des tâches en vision par ordinateur (p. ex. classification d’image, détection d’objet) et en traitement audio (p. ex. reconnaissance vocale, classification audio).</p>
+</li>
+<li>
+<p><strong>Facilité d’utilisation :</strong> La bibliothèque offre des API et des outils pour télécharger et affiner facilement les modèles, la rendant accessible aux débutants comme aux experts.</p>
+</li>
+<li>
+<p><strong>Communauté et ressources :</strong> Hugging Face possède une communauté dynamique et une documentation étendue, des tutoriels, et des guides pour aider les utilisateurs à démarrer et exploiter pleinement la bibliothèque.<br />
+<a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noopener noreferrer">documentation officielle</a> ou leur <a href="https://github.com/huggingface/transformers" target="_blank" rel="noopener noreferrer">dépôt GitHub</a>.</p>
+</li>
+</ol>
+<p>C’est la méthode la plus couramment utilisée, mais elle nécessite également une accélération GPU. Après tout, des scénarios tels que Vision et MoE nécessitent beaucoup de calculs, ce qui sera très lent sur CPU s’ils ne sont pas quantifiés.</p>
+<ul>
+<li>
+<p>Démo : Utilisation de Transformer pour appeler Phi-3.5-Instruct <a href="../../lecons/19-slm/index.html#code-python-phi35-instruct-demo-ipynb">Cliquez sur ce lien</a></p>
+</li>
+<li>
+<p>Démo : Utilisation de Transformer pour appeler Phi-3.5-Vision <a href="../../lecons/19-slm/index.html#code-python-phi35-vision-demo-ipynb">Cliquez sur ce lien</a></p>
+</li>
+<li>
+<p>Démo : Utilisation de Transformer pour appeler Phi-3.5-MoE <a href="../../lecons/19-slm/index.html#code-python-phi35-moe-demo-ipynb">Cliquez sur ce lien</a></p>
+</li>
+</ul>
+<p><strong>Ollama</strong><br />
+<a href="https://ollama.com/" target="_blank" rel="noopener noreferrer">Ollama</a> est une plateforme conçue pour faciliter l’exécution locale de grands modèles de langage (LLM) sur votre machine. Elle prend en charge divers modèles comme Llama 3.1, Phi 3, Mistral et Gemma 2, entre autres. La plateforme simplifie le processus en regroupant les poids du modèle, la configuration et les données dans un seul paquet, ce qui la rend plus accessible pour les utilisateurs souhaitant personnaliser et créer leurs propres modèles. Ollama est disponible pour macOS, Linux et Windows. C’est un excellent outil si vous souhaitez expérimenter ou déployer des LLM sans dépendre de services cloud. Ollama est la méthode la plus directe, il suffit d’exécuter la commande suivante.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">bash</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>ollama<span class="w"> </span>run<span class="w"> </span>phi3.5
+</pre></div>
+</div><p><strong>ONNX Runtime pour GenAI</strong></p>
+<p><a href="https://github.com/microsoft/onnxruntime-genai" target="_blank" rel="noopener noreferrer">ONNX Runtime</a> est un accélérateur d’inférence et d’entraînement d’apprentissage automatique multiplateforme. ONNX Runtime pour Generative AI (GENAI) est un outil puissant qui vous aide à exécuter efficacement des modèles d’IA générative sur différentes plateformes.</p>
+<h2 id="quest-ce-que-onnx-runtime">Qu’est-ce que ONNX Runtime ?<a class="anchor" href="#quest-ce-que-onnx-runtime" aria-label="Lien vers cette section">#</a></h2>
+<p>ONNX Runtime est un projet open source qui permet une inférence haute performance des modèles d’apprentissage automatique. Il prend en charge les modèles au format Open Neural Network Exchange (ONNX), qui est une norme pour représenter les modèles d’apprentissage automatique. L’inférence ONNX Runtime peut offrir des expériences client plus rapides et des coûts réduits, en supportant des modèles issus de frameworks d’apprentissage profond comme PyTorch et TensorFlow/Keras ainsi que des bibliothèques d’apprentissage automatique classiques telles que scikit-learn, LightGBM, XGBoost, etc. ONNX Runtime est compatible avec différents matériels, pilotes et systèmes d’exploitation, et fournit des performances optimales en tirant parti des accélérateurs matériels là où c’est applicable, ainsi que des optimisations et transformations du graphe.</p>
+<h2 id="quest-ce-que-lia-generative">Qu’est-ce que l’IA générative ?<a class="anchor" href="#quest-ce-que-lia-generative" aria-label="Lien vers cette section">#</a></h2>
+<p>L’IA générative désigne les systèmes d’IA capables de générer du nouveau contenu, comme du texte, des images ou de la musique, à partir des données sur lesquelles ils ont été entraînés. Par exemples, les modèles de langage comme GPT-3 et les modèles de génération d’images comme Stable Diffusion. La bibliothèque ONNX Runtime pour GenAI fournit la boucle d’IA générative pour les modèles ONNX, incluant l’inférence avec ONNX Runtime, le traitement des logits, la recherche et l’échantillonnage, ainsi que la gestion du cache KV.</p>
+<h2 id="onnx-runtime-pour-genai">ONNX Runtime pour GENAI<a class="anchor" href="#onnx-runtime-pour-genai" aria-label="Lien vers cette section">#</a></h2>
+<p>ONNX Runtime pour GENAI étend les capacités d’ONNX Runtime pour supporter les modèles IA générative. Voici quelques fonctionnalités clés :</p>
+<ul>
+<li><strong>Support large des plateformes :</strong> Il fonctionne sur diverses plateformes, y compris Windows, Linux, macOS, Android et iOS.</li>
+<li><strong>Support des modèles :</strong> Il prend en charge de nombreux modèles populaires d’IA générative, tels que LLaMA, GPT-Neo, BLOOM, et plus encore.</li>
+<li><strong>Optimisation des performances :</strong> Il inclut des optimisations pour différents accélérateurs matériels comme les GPU NVIDIA, les GPU AMD, et plus2.</li>
+<li><strong>Facilité d’utilisation :</strong> Il fournit des API pour une intégration facile dans les applications, vous permettant de générer texte, images et autres contenus avec un minimum de code.</li>
+<li>Les utilisateurs peuvent appeler une méthode generate() de haut niveau, ou exécuter chaque itération du modèle dans une boucle, générant un token à la fois, et en mettant éventuellement à jour les paramètres de génération dans la boucle.</li>
+<li>ONNX runtime supporte aussi la recherche gloutonne/de faisceaux et l’échantillonnage TopP, TopK pour générer des séquences de tokens et possède un traitement intégré des logits comme les pénalités de répétition. Vous pouvez aussi facilement ajouter un scoring personnalisé.</li>
+</ul>
+<h2 id="pour-commencer">Pour commencer<a class="anchor" href="#pour-commencer" aria-label="Lien vers cette section">#</a></h2>
+<p>Pour débuter avec ONNX Runtime pour GENAI, vous pouvez suivre ces étapes :</p>
+<h3 id="installer-onnx-runtime">Installer ONNX Runtime :<a class="anchor" href="#installer-onnx-runtime" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">Python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">onnxruntime</span>
+</pre></div>
+</div><h3 id="installer-les-extensions-de-lia-generative">Installer les extensions de l’IA générative :<a class="anchor" href="#installer-les-extensions-de-lia-generative" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">Python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">onnxruntime</span><span class="o">-</span><span class="n">genai</span>
+</pre></div>
+</div><h3 id="executer-un-modele-voici-un-exemple-simple-en-python">Exécuter un modèle : Voici un exemple simple en Python :<a class="anchor" href="#executer-un-modele-voici-un-exemple-simple-en-python" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">Python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">onnxruntime_genai</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">og</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">og</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s1">&#39;path_to_your_model.onnx&#39;</span><span class="p">)</span>
+
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">og</span><span class="o">.</span><span class="n">Tokenizer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="n">input_text</span> <span class="o">=</span> <span class="s2">&quot;Hello, how are you?&quot;</span>
+
+<span class="n">input_tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">input_text</span><span class="p">)</span>
+
+<span class="n">output_tokens</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">input_tokens</span><span class="p">)</span>
+
+<span class="n">output_text</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">output_tokens</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">output_text</span><span class="p">)</span> 
+</pre></div>
+</div><h3 id="demo-utilisation-de-onnx-runtime-genai-pour-appeler-phi-35-vision">Démo : Utilisation de ONNX Runtime GenAI pour appeler Phi-3.5-Vision<a class="anchor" href="#demo-utilisation-de-onnx-runtime-genai-pour-appeler-phi-35-vision" aria-label="Lien vers cette section">#</a></h3>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">onnxruntime_genai</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">og</span>
+
+<span class="n">model_path</span> <span class="o">=</span> <span class="s1">&#39;./Your Phi-3.5-vision-instruct ONNX Path&#39;</span>
+
+<span class="n">img_path</span> <span class="o">=</span> <span class="s1">&#39;./Your Image Path&#39;</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">og</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+
+<span class="n">processor</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">create_multimodal_processor</span><span class="p">()</span>
+
+<span class="n">tokenizer_stream</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">create_stream</span><span class="p">()</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Your Prompt&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&lt;|user|&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+<span class="n">prompt</span> <span class="o">+=</span> <span class="s2">&quot;&lt;|image_1|&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+<span class="n">prompt</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&lt;|end|&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+<span class="n">prompt</span> <span class="o">+=</span> <span class="s2">&quot;&lt;|assistant|&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">og</span><span class="o">.</span><span class="n">Images</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">processor</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">images</span><span class="o">=</span><span class="n">image</span><span class="p">)</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="n">og</span><span class="o">.</span><span class="n">GeneratorParams</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="n">params</span><span class="o">.</span><span class="n">set_inputs</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
+<span class="n">params</span><span class="o">.</span><span class="n">set_search_options</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">3072</span><span class="p">)</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">og</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="ow">not</span> <span class="n">generator</span><span class="o">.</span><span class="n">is_done</span><span class="p">():</span>
+
+    <span class="n">generator</span><span class="o">.</span><span class="n">compute_logits</span><span class="p">()</span>
+    
+    <span class="n">generator</span><span class="o">.</span><span class="n">generate_next_token</span><span class="p">()</span>
+
+    <span class="n">new_token</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">get_next_tokens</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">output</span> <span class="o">=</span> <span class="n">tokenizer_stream</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">new_token</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="n">tokenizer_stream</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">new_token</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div><p><strong>Autres</strong></p>
+<p>En plus d’ONNX Runtime et d’Ollama comme méthodes de référence, nous pouvons aussi compléter la référence des modèles quantitatifs basée sur les méthodes de référence des fabricants différents. Comme le framework Apple MLX avec Apple Metal, Qualcomm QNN avec NPU, Intel OpenVINO avec CPU/GPU, etc. Vous pouvez aussi obtenir plus de contenu sur le <a href="https://github.com/microsoft/phi-3cookbook" target="_blank" rel="noopener noreferrer">Phi-3 Cookbook</a>.</p>
+<h2 id="plus">Plus<a class="anchor" href="#plus" aria-label="Lien vers cette section">#</a></h2>
+<p>Nous avons appris les bases de la famille Phi-3/3.5, mais pour en savoir plus sur SLM, nous avons besoin de connaissances supplémentaires. Vous pouvez trouver les réponses dans le Phi-3 Cookbook. Si vous souhaitez en apprendre davantage, veuillez visiter le <a href="https://github.com/microsoft/phi-3cookbook" target="_blank" rel="noopener noreferrer">Phi-3 Cookbook</a>.</p>
+<hr />
+<!-- CO-OP TRANSLATOR DISCLAIMER START -->
+<p><strong>Avis de non-responsabilité</strong> :<br />
+Ce document a été traduit à l’aide du service de traduction automatique <a href="https://github.com/Azure/co-op-translator" target="_blank" rel="noopener noreferrer">Co-op Translator</a>. Bien que nous nous efforcions d’assurer l’exactitude, veuillez noter que les traductions automatiques peuvent contenir des erreurs ou des inexactitudes. Le document original dans sa langue d’origine doit être considéré comme la source faisant foi. Pour les informations critiques, il est recommandé de recourir à une traduction professionnelle réalisée par un humain. Nous ne saurions être tenus responsables des malentendus ou interprétations erronées résultant de l’utilisation de cette traduction.</p>
+<!-- CO-OP TRANSLATOR DISCLAIMER END -->
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de la leçon<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers d'exemple de cette leçon, copiés depuis le dépôt d'origine. Chaque fichier est lisible ici et téléchargeable.</p><div class="tabs__panel" data-tab="python"><details class="codefile" id="code-python-phi-3-vision-nividia-nim-ipynb"><summary class="codefile__head"><span class="codefile__name">python/Phi-3-Vision-Nividia-NIM.ipynb</span><span class="codefile__size">8 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="w"> </span><span class="nn">base64</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">invoke_url</span> <span class="o">=</span> <span class="s2">&quot;https://ai.api.nvidia.com/v1/vlm/microsoft/phi-3-vision-128k-instruct&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./img/demo.png&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+  <span class="n">image_b64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">image_b64</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_b64</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">180_000</span><span class="p">,</span> \
+  <span class="s2">&quot;To upload larger images, use the assets API (see docs)&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">stream</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer Your Nvidia NIM API Key&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/event-stream&quot;</span> <span class="k">if</span> <span class="n">stream</span> <span class="k">else</span> <span class="s2">&quot;application/json&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># payload = {</span>
+<span class="c1">#   &quot;messages&quot;: [</span>
+<span class="c1">#     {</span>
+<span class="c1">#       &quot;role&quot;: &quot;user&quot;,</span>
+<span class="c1">#       &quot;content&quot;: f&#39;Tell me what is in the picture &lt;img src=&quot;data:image/png;base64,{image_b64}&quot; /&gt;&#39;</span>
+<span class="c1">#     }</span>
+<span class="c1">#   ],</span>
+<span class="c1">#   &quot;max_tokens&quot;: 1024,</span>
+<span class="c1">#   &quot;temperature&quot;: 0.6,</span>
+<span class="c1">#   &quot;top_p&quot;: 1.0,</span>
+<span class="c1">#   &quot;stream&quot;: stream</span>
+<span class="c1"># }</span>
+
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;Please create Python code for image, and use plt to save the new picture under imgs/ and name it phi-3-vision.jpg. &lt;img src=&quot;data:image/png;base64,</span><span class="si">{</span><span class="n">image_b64</span><span class="si">}</span><span class="s1">&quot; /&gt;&#39;</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;max_tokens&quot;</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span>
+  <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span>
+  <span class="s2">&quot;top_p&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+  <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="n">stream</span>
+<span class="p">}</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">invoke_url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">stream</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">iter_lines</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;choices&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">code</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Find the starting index of the Python code block within the generated code</span>
+<span class="c1"># The index function locates the substring &#39;```python&#39; and adds 9 to skip past it</span>
+<span class="n">begin</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;```python&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">9</span>
+
+<span class="c1"># Slice the code string from the calculated starting index to the end</span>
+<span class="c1"># This removes the initial part of the string up to and including &#39;```python&#39;</span>
+<span class="n">code</span> <span class="o">=</span> <span class="n">code</span><span class="p">[</span><span class="n">begin</span><span class="p">:]</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">end</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;```&#39;</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">code</span> <span class="o">=</span> <span class="n">code</span><span class="p">[:</span><span class="n">end</span><span class="p">]</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">code</span>
+</pre></div>
+</div></div><p class="codefile__actions"><a href="../../assets/code/19-slm/python/Phi-3-Vision-Nividia-NIM.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-phi35-instruct-demo-ipynb"><summary class="codefile__head"><span class="codefile__name">python/phi35-instruct-demo.ipynb</span><span class="codefile__size">8 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span> 
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoModelForCausalLM</span><span class="p">,</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">pipeline</span> 
+</pre></div>
+</div><pre class="notebook__out">2024-08-20 03:12:24.098444: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcudart.so.11.0&#x27;; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
+2024-08-20 03:12:24.098474: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> 
+<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span> 
+    <span class="s2">&quot;../phi-3-instruct&quot;</span><span class="p">,</span>  
+    <span class="n">device_map</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>  
+    <span class="n">torch_dtype</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>  
+    <span class="n">trust_remote_code</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  
+<span class="p">)</span> 
+</pre></div>
+</div><pre class="notebook__out">Loading checkpoint shards:   0%|          | 0/2 [00:00&lt;?, ?it/s]</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;../phi-3-instruct&quot;</span><span class="p">)</span> 
+</pre></div>
+</div><pre class="notebook__out">You are using the default legacy behaviour of the &lt;class &#x27;transformers.models.llama.tokenization_llama_fast.LlamaTokenizerFast&#x27;&gt;. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565 - if you loaded a llama tokenizer from a GGUF file you can ignore this message.</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># messages = [ </span>
+<span class="c1">#     {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是我的人工智能助手，协助我用中文解答问题&quot;}, </span>
+<span class="c1">#     {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;你能否介绍一下如何提升学习效率吗?&quot;}, </span>
+<span class="c1"># ] </span>
+
+<span class="c1"># &lt;|system|&gt;</span>
+<span class="c1"># You are a helpful assistant.&lt;|end|&gt;</span>
+<span class="c1"># &lt;|user|&gt;</span>
+<span class="c1"># Question?&lt;|end|&gt;</span>
+<span class="c1"># &lt;|assistant|&gt;</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="s2">&quot;&lt;|system|&gt;</span><span class="se">\n</span><span class="s2"> 你是我的人工智能助手，协助我用中文解答问题.</span><span class="se">\n</span><span class="s2">&lt;|end|&gt;&lt;|user|&gt;</span><span class="se">\n</span><span class="s2"> 你知道长沙吗？? </span><span class="se">\n</span><span class="s2">&lt;|end|&gt;&lt;|assistant|&gt;&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span> 
+    <span class="s2">&quot;text-generation&quot;</span><span class="p">,</span> 
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> 
+    <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span> 
+<span class="p">)</span> 
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">generation_args</span> <span class="o">=</span> <span class="p">{</span> 
+    <span class="s2">&quot;max_new_tokens&quot;</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span> 
+    <span class="s2">&quot;return_full_text&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> 
+    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> 
+    <span class="s2">&quot;do_sample&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> 
+<span class="p">}</span> 
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">generation_args</span><span class="p">)</span> 
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;generated_text&#39;</span><span class="p">]</span>
+</pre></div>
+</div><pre class="notebook__out">&#x27; 是的，我知道长沙。长沙是中国南部的一座大城市，位于湖南省中部，是中国的国际性大都市。它拥有丰富的历史和文化，曾是明朝的都城。长沙以其繁华的商业、独特的自然风光和丰富的历史遗迹而闻名，如橘子洲、岳麓山和长沙博物院。此外，长沙也是中国重要的科技和教育中心，包括中国工程院和中国科学院长沙分院。&#x27;</pre></div><p class="codefile__actions"><a href="../../assets/code/19-slm/python/phi35-instruct-demo.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-phi35-vision-demo-ipynb"><summary class="codefile__head"><span class="codefile__name">python/phi35-vision-demo.ipynb</span><span class="codefile__size">20 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># pip install opencv-python</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># import cv2</span>
+<span class="c1"># import numpy as np</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># def save_keyframes(video_path, output_folder):</span>
+<span class="c1">#     videoCapture = cv2.VideoCapture(video_path)</span>
+<span class="c1">#     success, frame = videoCapture.read()</span>
+<span class="c1">#     i = 0</span>
+<span class="c1">#     while success:</span>
+<span class="c1">#         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)</span>
+        
+<span class="c1">#         hist = cv2.calcHist([gray_frame], [0], None, [256], [0, 256])</span>
+        
+<span class="c1">#         success, next_frame = videoCapture.read()</span>
+<span class="c1">#         if not success:</span>
+<span class="c1">#             break</span>
+        
+<span class="c1">#         next_gray_frame = cv2.cvtColor(next_frame, cv2.COLOR_BGR2GRAY)</span>
+        
+<span class="c1">#         next_hist = cv2.calcHist([next_gray_frame], [0], None, [256], [0, 256])</span>
+        
+<span class="c1">#         similarity = cv2.compareHist(hist, next_hist, cv2.HISTCMP_CORREL)</span>
+        
+<span class="c1">#         if similarity &lt; 0.9:</span>
+<span class="c1">#             i += 1</span>
+<span class="c1">#             cv2.imwrite(f&quot;{output_folder}/keyframe_{i}.jpg&quot;, frame)</span>
+<span class="c1">#             print(f&quot;Saved keyframe {i}&quot;)</span>
+        
+<span class="c1">#         frame = next_frame</span>
+
+<span class="c1">#     videoCapture.release()</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># save_keyframes(&#39;../video/copilot.mp4&#39;, &#39;../output&#39;)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="w"> </span><span class="nn">base64</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">images</span> <span class="o">=</span> <span class="p">[]</span> 
+<span class="n">placeholder</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> 
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">22</span><span class="p">):</span> 
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../output/keyframe_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+
+        <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;../output/keyframe_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;.jpg&quot;</span><span class="p">))</span>
+        <span class="n">placeholder</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&lt;|image_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">|&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="c1"># print(i)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">images</span>
+</pre></div>
+</div><pre class="notebook__out">[&lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;,
+ &lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1280x720&gt;]</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoModelForCausalLM</span> 
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoProcessor</span>
+</pre></div>
+</div><pre class="notebook__out">2024-08-19 12:00:55.508879: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcudart.so.11.0&#x27;; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
+2024-08-19 12:00:55.508910: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">model_id</span> <span class="o">=</span> <span class="s2">&quot;../Phi3Vision&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_id</span><span class="p">,</span> <span class="n">device_map</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="n">trust_remote_code</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">_attn_implementation</span><span class="o">=</span><span class="s1">&#39;flash_attention_2&#39;</span><span class="p">)</span>
+</pre></div>
+</div><pre class="notebook__out">Loading checkpoint shards:   0%|          | 0/2 [00:00&lt;?, ?it/s]</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">placeholder</span><span class="o">+</span><span class="s2">&quot;Summarize the video.&quot;</span><span class="p">},</span> 
+<span class="p">]</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">transformers</span> <span class="o">-</span><span class="n">U</span>
+</pre></div>
+</div><pre class="notebook__out">Requirement already satisfied: transformers in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (4.44.0)
+Requirement already satisfied: safetensors&gt;=0.4.1 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (0.4.3)
+Requirement already satisfied: requests in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (2.31.0)
+Requirement already satisfied: pyyaml&gt;=5.1 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (6.0.1)
+Requirement already satisfied: huggingface-hub&lt;1.0,&gt;=0.23.2 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (0.24.5)
+Requirement already satisfied: filelock in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (3.14.0)
+Requirement already satisfied: tqdm&gt;=4.27 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (4.66.2)
+Requirement already satisfied: regex!=2019.12.17 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (2024.4.28)
+Requirement already satisfied: packaging&gt;=20.0 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (24.0)
+Requirement already satisfied: numpy&gt;=1.17 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (1.23.5)
+Requirement already satisfied: tokenizers&lt;0.20,&gt;=0.19 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from transformers) (0.19.1)
+Requirement already satisfied: typing-extensions&gt;=3.7.4.3 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from huggingface-hub&lt;1.0,&gt;=0.23.2-&gt;transformers) (4.12.2)
+Requirement already satisfied: fsspec&gt;=2023.5.0 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from huggingface-hub&lt;1.0,&gt;=0.23.2-&gt;transformers) (2023.10.0)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from requests-&gt;transformers) (2022.9.24)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from requests-&gt;transformers) (3.3.2)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from requests-&gt;transformers) (3.7)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from requests-&gt;transformers) (1.26.18)
+Note: you may need to restart the kernel to use updated packages.</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoModelForCausalLM</span> 
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoProcessor</span>
+
+
+<span class="c1"># from image_embedding_phi3_v import Phi3VImageProcessor </span>
+
+<span class="c1"># transformers.Phi3VImageProcessor = Phi3VImageProcessor </span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">processor</span> <span class="o">=</span> <span class="n">AutoProcessor</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_id</span><span class="p">,</span> <span class="n">trust_remote_code</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_crops</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div><pre class="notebook__out">/anaconda/envs/azureml_py38/lib/python3.9/site-packages/transformers/models/auto/image_processing_auto.py:513: FutureWarning: The image_processor_class argument is deprecated and will be removed in v4.42. Please use `slow_image_processor_class`, or `fast_image_processor_class` instead
+  warnings.warn(</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">jinja2</span> <span class="o">-</span><span class="n">U</span>
+</pre></div>
+</div><pre class="notebook__out">Requirement already satisfied: jinja2 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (3.1.4)
+Requirement already satisfied: MarkupSafe&gt;=2.0 in /anaconda/envs/azureml_py38/lib/python3.9/site-packages (from jinja2) (2.0.1)
+Note: you may need to restart the kernel to use updated packages.</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="n">processor</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">generation_args</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;max_new_tokens&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;do_sample&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="p">}</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">generate_ids</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">eos_token_id</span><span class="o">=</span><span class="n">processor</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span><span class="p">,</span> <span class="o">**</span><span class="n">generation_args</span><span class="p">)</span>
+</pre></div>
+</div><pre class="notebook__out">/anaconda/envs/azureml_py38/lib/python3.9/site-packages/transformers/generation/configuration_utils.py:567: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+The `seen_tokens` attribute is deprecated and will be removed in v4.41. Use the `cache_position` model input instead.</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">generate_ids</span> <span class="o">=</span> <span class="n">generate_ids</span><span class="p">[:,</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;input_ids&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:]</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">batch_decode</span><span class="p">(</span><span class="n">generate_ids</span><span class="p">,</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clean_up_tokenization_spaces</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span>
+</pre></div>
+</div><pre class="notebook__out">&quot;The video appears to be a promotional or informational piece about a product or service called &#x27;Copilot&#x27;. It showcases various individuals in different settings, such as an office and a home office, engaging with the product. The video includes text overlays that suggest the product can help with tasks like lowering production costs, managing meetings, and creating presentations. There are also screenshots of a chat interface and a summary of a product launch discussion, indicating that the product may be related to project management or collaboration. The video seems to emphasize the efficiency and effectiveness of the Copilot product in a professional context.&quot;</pre></div><p class="codefile__actions"><a href="../../assets/code/19-slm/python/phi35-vision-demo.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-phi35-moe-demo-ipynb"><summary class="codefile__head"><span class="codefile__name">python/phi35_moe_demo.ipynb</span><span class="codefile__size">22 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># pip install transformers</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># pip install torch torchvision torchaudio -U</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># pip install flash-attn --no-build-isolation</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># ! pip install flash_attn -U</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">bfloat16</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">transformers</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">model_id</span> <span class="o">=</span> <span class="s2">&quot;../Phi3MOE&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+    <span class="n">model_id</span><span class="p">,</span>
+    <span class="n">trust_remote_code</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">torch_dtype</span><span class="o">=</span><span class="n">bfloat16</span><span class="p">,</span>
+    <span class="n">device_map</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div><pre class="notebook__out">Loading checkpoint shards:   0%|          | 0/17 [00:00&lt;?, ?it/s]WARNING:root:Some parameters are on the meta device device because they were offloaded to the cpu.</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+</pre></div>
+</div><pre class="notebook__out">PhiMoEForCausalLM(
+  (model): PhiMoEModel(
+    (embed_tokens): Embedding(32064, 4096)
+    (layers): ModuleList(
+      (0-31): 32 x PhiMoEDecoderLayer(
+        (self_attn): PhiMoESdpaAttention(
+          (q_proj): Linear(in_features=4096, out_features=4096, bias=True)
+          (k_proj): Linear(in_features=4096, out_features=1024, bias=True)
+          (v_proj): Linear(in_features=4096, out_features=1024, bias=True)
+          (o_proj): Linear(in_features=4096, out_features=4096, bias=True)
+          (rotary_emb): Phi3LongRoPEScaledRotaryEmbedding()
+        )
+        (block_sparse_moe): PhiMoESparseMoeBlock(
+          (gate): Linear(in_features=4096, out_features=16, bias=False)
+          (experts): ModuleList(
+            (0-15): 16 x PhiMoEBlockSparseTop2MLP(
+              (w1): Linear(in_features=4096, out_features=6400, bias=False)
+              (w2): Linear(in_features=6400, out_features=4096, bias=False)
+              (w3): Linear(in_features=4096, out_features=6400, bias=False)
+              (act_fn): SiLU()
+            )
+          )
+        )
+        (input_layernorm): LayerNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (post_attention_layernorm): LayerNorm((4096,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (norm): LayerNorm((4096,), eps=1e-05, elementwise_affine=True)
+  )
+  (lm_head): Linear(in_features=4096, out_features=32064, bias=True)
+… (1 lignes supplémentaires)</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># generate_text = transformers.pipeline(</span>
+<span class="c1">#     model=model, tokenizer=tokenizer,</span>
+<span class="c1">#     return_full_text=False,  # if using langchain set True</span>
+<span class="c1">#     task=&quot;text-generation&quot;,</span>
+<span class="c1">#     # we pass model parameters here too</span>
+<span class="c1">#     temperature=0.1,  # &#39;randomness&#39; of outputs, 0.0 is the min and 1.0 the max</span>
+<span class="c1">#     top_p=0.15,  # select from top tokens whose probability add up to 15%</span>
+<span class="c1">#     top_k=0,  # select from top 0 tokens (because zero, relies on top_p)</span>
+<span class="c1">#     max_new_tokens=2048,  # max number of tokens to generate in the output</span>
+<span class="c1">#     repetition_penalty=1.1  # if output begins repeating increase</span>
+<span class="c1"># )</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">pipeline</span><span class="p">(</span>
+
+    <span class="s2">&quot;text-generation&quot;</span><span class="p">,</span>
+
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+
+    <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
+
+<span class="p">)</span>
+</pre></div>
+</div><pre class="notebook__out">2024-08-20 04:51:54.431510: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcudart.so.11.0&#x27;; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
+2024-08-20 04:51:54.431543: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+The model &#x27;PhiMoEForCausalLM&#x27; is not supported for text-generation. Supported models are [&#x27;BartForCausalLM&#x27;, &#x27;BertLMHeadModel&#x27;, &#x27;BertGenerationDecoder&#x27;, &#x27;BigBirdForCausalLM&#x27;, &#x27;BigBirdPegasusForCausalLM&#x27;, &#x27;BioGptForCausalLM&#x27;, &#x27;BlenderbotForCausalLM&#x27;, &#x27;BlenderbotSmallForCausalLM&#x27;, &#x27;BloomForCausalLM&#x27;, &#x27;CamembertForCausalLM&#x27;, &#x27;LlamaForCausalLM&#x27;, &#x27;CodeGenForCausalLM&#x27;, &#x27;CohereForCausalLM&#x27;, &#x27;CpmAntForCausalLM&#x27;, &#x27;CTRLLMHeadModel&#x27;, &#x27;Data2VecTextForCausalLM&#x27;, &#x27;DbrxForCausalLM&#x27;, &#x27;ElectraForCausalLM&#x27;, &#x27;ErnieForCausalLM&#x27;, &#x27;FalconForCausalLM&#x27;, &#x27;FuyuForCausalLM&#x27;, &#x27;GemmaForCausalLM&#x27;, &#x27;Gemma2ForCausalLM&#x27;, &#x27;GitForCausalLM&#x27;, &#x27;GPT2LMHeadModel&#x27;, &#x27;GPT2LMHeadModel&#x27;, &#x27;GPTBigCodeForCausalLM&#x27;, &#x27;GPTNeoForCausalLM&#x27;, &#x27;GPTNeoXForCausalLM&#x27;, &#x27;GPTNeoXJapaneseForCausalLM&#x27;, &#x27;GPTJForCausalLM&#x27;, &#x27;JambaForCausalLM&#x27;, &#x27;JetMoeForCausalLM&#x27;, &#x27;LlamaForCausalLM&#x27;, &#x27;MambaForCausalLM&#x27;, &#x27;Mamba2ForCausalLM&#x27;, &#x27;MarianForCausalLM&#x27;, &#x27;MBartForCausalLM&#x27;, &#x27;MegaForCausalLM&#x27;, &#x27;MegatronBertForCausalLM&#x27;, &#x27;MistralForCausalLM&#x27;, &#x27;MixtralForCausalLM&#x27;, &#x27;MptForCausalLM&#x27;, &#x27;MusicgenForCausalLM&#x27;, &#x27;MusicgenMelodyForCausalLM&#x27;, &#x27;MvpForCausalLM&#x27;, &#x27;NemotronForCausalLM&#x27;, &#x27;OlmoForCausalLM&#x27;, &#x27;OpenLlamaForCausalLM&#x27;, &#x27;OpenAIGPTLMHeadModel&#x27;, &#x27;OPTForCausalLM&#x27;, &#x27;PegasusForCausalLM&#x27;, &#x27;PersimmonForCausalLM&#x27;, &#x27;PhiForCausalLM&#x27;, &#x27;Phi3ForCausalLM&#x27;, &#x27;PLBartForCausalLM&#x27;, &#x27;ProphetNetForCausalLM&#x27;, &#x27;QDQBertLMHeadModel&#x27;, &#x27;Qwen2ForCausalLM&#x27;, &#x27;Qwen2MoeForCausalLM&#x27;, &#x27;RecurrentGemmaForCausalLM&#x27;, &#x27;ReformerModelWithLMHead&#x27;, &#x27;RemBertForCausalLM&#x27;, &#x27;RobertaForCausalLM&#x27;, &#x27;RobertaPreLayerNormForCausalLM&#x27;, &#x27;RoCBertForCausalLM&#x27;, &#x27;RoFormerForCausalLM&#x27;, &#x27;RwkvForCausalLM&#x27;, &#x27;Speech2Text2ForCausalLM&#x27;, &#x27;StableLmForCausalLM&#x27;, &#x27;Starcoder2ForCausalLM&#x27;, &#x27;TransfoXLLMHeadModel&#x27;, &#x27;TrOCRForCausalLM&#x27;, &#x27;WhisperForCausalLM&#x27;, &#x27;XGLMForCausalLM&#x27;, &#x27;XLMWithLMHeadModel&#x27;, &#x27;XLMProphetNetForCausalLM&#x27;, &#x27;XLMRobertaForCausalLM&#x27;, &#x27;XLMRobertaXLForCausalLM&#x27;, &#x27;XLNetLMHeadModel&#x27;, &#x27;XmodForCausalLM&#x27;].</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">generation_args</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="s2">&quot;max_new_tokens&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span>
+
+    <span class="s2">&quot;return_full_text&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+
+    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+
+    <span class="s2">&quot;do_sample&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+
+<span class="p">}</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">sys_msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a helpful AI assistant, you are an agent capable of using a variety of tools to answer a question. Here are a few of the tools available to you:</span>
+
+<span class="s2">- Blog: This tool helps you describe a certain knowledge point and content, and finally write it into Twitter or Facebook style content</span>
+<span class="s2">- Translate: This is a tool that helps you translate into any language, using plain language as required</span>
+
+<span class="s2">To use these tools you must always respond in JSON format containing `&quot;tool_name&quot;` and `&quot;input&quot;` key-value pairs. For example, to answer the question, &quot;Build Muliti Agents with MOE models&quot; you must use the calculator tool like so:</span>
+
+<span class="s2">```json</span>
+
+<span class="s2">{</span>
+<span class="s2">    &quot;tool_name&quot;: &quot;Blog&quot;,</span>
+<span class="s2">    &quot;input&quot;: &quot;Build Muliti Agents with MOE models&quot;</span>
+<span class="s2">}</span>
+
+<span class="s2">```</span>
+
+<span class="s2">Or to translate the question &quot;can you introduce yourself in Chinese&quot; you must respond:</span>
+
+<span class="s2">```json</span>
+
+<span class="s2">{</span>
+<span class="s2">    &quot;tool_name&quot;: &quot;Search&quot;,</span>
+<span class="s2">    &quot;input&quot;: &quot;can you introduce yourself in Chinese&quot;</span>
+<span class="s2">}</span>
+
+<span class="s2">```</span>
+
+<span class="s2">Remember just output the final result, output in JSON format containing `&quot;agentid&quot;`,`&quot;tool_name&quot;` , `&quot;input&quot;` and `&quot;output&quot;`  key-value pairs .:</span>
+
+<span class="s2">```json</span>
+
+<span class="s2">[</span>
+
+
+<span class="s2">{   &quot;agentid&quot;: &quot;step1&quot;,</span>
+<span class="s2">    &quot;tool_name&quot;: &quot;Blog&quot;,</span>
+<span class="s2">    &quot;input&quot;: &quot;Build Muliti Agents with MOE models&quot;,</span>
+<span class="s2">    &quot;output&quot;: &quot;.........&quot;</span>
+<span class="s2">},</span>
+
+<span class="s2">{   &quot;agentid&quot;: &quot;step2&quot;,</span>
+<span class="s2">    &quot;tool_name&quot;: &quot;Search&quot;,</span>
+<span class="s2">    &quot;input&quot;: &quot;can you introduce yourself in Chinese&quot;,</span>
+<span class="s2">    &quot;output&quot;: &quot;.........&quot;</span>
+<span class="s2">},</span>
+<span class="s2">{</span>
+<span class="s2">    &quot;agentid&quot;: &quot;final&quot;</span>
+<span class="s2">    &quot;tool_name&quot;: &quot;Result&quot;,</span>
+<span class="s2">    &quot;output&quot;: &quot;.........&quot;</span>
+<span class="s2">}</span>
+<span class="s2">]</span>
+
+<span class="s2">```</span>
+
+<span class="s2">The users answer is as follows.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">instruction_format</span><span class="p">(</span><span class="n">sys_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="c1"># note, don&#39;t &quot;&lt;/s&gt;&quot; to the end</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;|system|&gt; </span><span class="si">{</span><span class="n">sys_message</span><span class="si">}</span><span class="s1"> &lt;|end|&gt;</span><span class="se">\n</span><span class="s1">&lt;|user|&gt; </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s1"> &lt;|end|&gt;</span><span class="se">\n</span><span class="s1">&lt;|assistant|&gt;&#39;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span><span class="s1">&#39;Write something about Generative AI with MOE , translate it to Chinese&#39;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">input_prompt</span> <span class="o">=</span> <span class="n">instruction_format</span><span class="p">(</span><span class="n">sys_msg</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">input_prompt</span>
+</pre></div>
+</div><pre class="notebook__out">&#x27;&lt;|system|&gt; You are a helpful AI assistant, you are an agent capable of using a variety of tools to answer a question. Here are a few of the tools available to you:\n\n- Blog: This tool helps you describe a certain knowledge point and content, and finally write it into Twitter or Facebook style content\n- Translate: This is a tool that helps you translate into any language, using plain language as required\n\nTo use these tools you must always respond in JSON format containing `&quot;tool_name&quot;` and `&quot;input&quot;` key-value pairs. For example, to answer the question, &quot;Build Muliti Agents with MOE models&quot; you must use the calculator tool like so:\n\n```json\n\n{\n    &quot;tool_name&quot;: &quot;Blog&quot;,\n    &quot;input&quot;: &quot;Build Muliti Agents with MOE models&quot;\n}\n\n```\n\nOr to translate the question &quot;can you introduce yourself in Chinese&quot; you must respond:\n\n```json\n\n{\n    &quot;tool_name&quot;: &quot;Search&quot;,\n    &quot;input&quot;: &quot;can you introduce yourself in Chinese&quot;\n}\n\n```\n\nRemember just output the final result, output in JSON format containing `&quot;agentid&quot;`,`&quot;tool_name&quot;` , `&quot;input&quot;` and `&quot;output&quot;`  key-value pairs .:\n\n```json\n\n[\n\n\n{   &quot;agentid&quot;: &quot;step1&quot;,\n    &quot;tool_name&quot;: &quot;Blog&quot;,\n    &quot;input&quot;: &quot;Build Muliti Agents with MOE models&quot;,\n    &quot;output&quot;: &quot;.........&quot;\n},\n\n{   &quot;agentid&quot;: &quot;step2&quot;,\n    &quot;tool_name&quot;: &quot;Search&quot;,\n    &quot;input&quot;: &quot;can you introduce yourself in Chinese&quot;,\n    &quot;output&quot;: &quot;.........&quot;\n},\n{\n    &quot;agentid&quot;: &quot;final&quot;\n    &quot;tool_name&quot;: &quot;Result&quot;,\n    &quot;output&quot;: &quot;.........&quot;\n}\n]\n\n```\n\nThe users answer is as follows.\n &lt;|end|&gt;\n&lt;|user|&gt; Write something about Generative AI with MOE , translate it to Chinese &lt;|end|&gt;\n&lt;|assistant|&gt;&#x27;</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span> 
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYTORCH_CUDA_ALLOC_CONF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;expandable_segments:True &quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># res = generate_text(input_prompt)</span>
+
+<span class="n">output</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">(</span><span class="n">input_prompt</span><span class="p">,</span> <span class="o">**</span><span class="n">generation_args</span><span class="p">)</span>
+</pre></div>
+</div><pre class="notebook__out">/anaconda/envs/azureml_py38/lib/python3.9/site-packages/transformers/generation/configuration_utils.py:567: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.3` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+The `seen_tokens` attribute is deprecated and will be removed in v4.41. Use the `cache_position` model input instead.</pre><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;generated_text&#39;</span><span class="p">]</span>
+</pre></div>
+</div><pre class="notebook__out">&#x27; ```json\n\n[\n\n{   &quot;agentid&quot;: &quot;step1&quot;,\n    &quot;tool_name&quot;: &quot;Blog&quot;,\n    &quot;input&quot;: &quot;Generative AI with MOE&quot;,\n    &quot;output&quot;: &quot;Generative AI with MOE (Mixture of Experts) is a powerful approach that combines the strengths of generative models and the flexibility of MOE architecture. This hybrid model can generate high-quality, diverse, and contextually relevant content, making it suitable for various applications such as content creation, data augmentation, and more.&quot;\n},\n\n{   &quot;agentid&quot;: &quot;step2&quot;,\n    &quot;tool_name&quot;: &quot;Translate&quot;,\n    &quot;input&quot;: &quot;Generative AI with MOE is a powerful approach that combines the strengths of generative models and the flexibility of MOE architecture. This hybrid model can generate high-quality, diverse, and contextually relevant content, making it suitable for various applications such as content creation, data augmentation, and more.&quot;,\n    &quot;output&quot;: &quot;基于生成AI的MOE（Mixture of Experts）是一种强大的方法，它结合了生成模型的优势和MOE架构的灵活性。这种混合模型可以生成高质量、多样化且上下文相关的内容，使其适用于各种应用，如内容创建、数据增强等。&quot;\n},\n{\n    &quot;agentid&quot;: &quot;final&quot;,\n    &quot;tool_name&quot;: &quot;Result&quot;,\n    &quot;output&quot;: &quot;基于生成AI的MOE（Mixture of Experts）是一种强大的方法，它结合了生成模型的优势和MOE架构的灵活性。这种混合模型可以生成高质量、多样化且上下文相关的内容，使其适用于各种应用，如内容创建、数据增强等。&quot;\n}\n]\n```&#x27;</pre></div><p class="codefile__actions"><a href="../../assets/code/19-slm/python/phi35_moe_demo.ipynb" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="done" data-lesson-toggle="19-slm">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai terminé la leçon 19 — Construire avec les petits modèles (SLM)</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../lecons/18-fine-tuning/resources/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Ressources pour l’auto-apprentissage</span></a><a class="prevnext__link prevnext__next" href="../../lecons/20-mistral/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Construire avec les modèles Mistral</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/19-slm/README.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/19-slm/README.md</a> ·
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/tree/main/19-slm" target="_blank" rel="noopener noreferrer">version anglaise</a>
+</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#que-sont-les-petits-modeles-de-langage">Que sont les petits modèles de langage ?</a></li><li class="toc__item toc__item--h2"><a href="#comment-fonctionnent-les-petits-modeles-de-langage">Comment fonctionnent les petits modèles de langage ?</a></li><li class="toc__item toc__item--h2"><a href="#objectifs-dapprentissage">Objectifs d’apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#les-distinctions-entre-les-grands-modeles-de-langage-llm-et-les-petits-modeles-de-langage-slm">Les distinctions entre les grands modèles de langage (LLM) et les petits modèles de langage (SLM)</a></li><li class="toc__item toc__item--h2"><a href="#applications-des-petits-modeles-de-langage">Applications des petits modèles de langage</a></li><li class="toc__item toc__item--h2"><a href="#presentation-de-la-famille-phi-3-phi-35">Présentation de la famille Phi-3 / Phi-3.5</a></li><li class="toc__item toc__item--h3"><a href="#phi-3-35-instruct">Phi-3 / 3.5 Instruct</a></li><li class="toc__item toc__item--h3"><a href="#phi-3-35-vision">Phi-3 / 3.5 Vision</a></li><li class="toc__item toc__item--h3"><a href="#phi-35-moe">Phi-3.5-MoE</a></li><li class="toc__item toc__item--h2"><a href="#comment-utiliser-les-modeles-de-la-famille-phi-335">Comment utiliser les modèles de la famille Phi-3/3.5</a></li><li class="toc__item toc__item--h3"><a href="#inference-via-les-api-cloud">Inférence via les API cloud</a></li><li class="toc__item toc__item--h3"><a href="#execution-locale-de-phi-335">Exécution locale de Phi-3/3.5</a></li><li class="toc__item toc__item--h2"><a href="#quest-ce-que-onnx-runtime">Qu’est-ce que ONNX Runtime ?</a></li><li class="toc__item toc__item--h2"><a href="#quest-ce-que-lia-generative">Qu’est-ce que l’IA générative ?</a></li><li class="toc__item toc__item--h2"><a href="#onnx-runtime-pour-genai">ONNX Runtime pour GENAI</a></li><li class="toc__item toc__item--h2"><a href="#pour-commencer">Pour commencer</a></li><li class="toc__item toc__item--h3"><a href="#installer-onnx-runtime">Installer ONNX Runtime :</a></li><li class="toc__item toc__item--h3"><a href="#installer-les-extensions-de-lia-generative">Installer les extensions de l’IA générative :</a></li><li class="toc__item toc__item--h3"><a href="#executer-un-modele-voici-un-exemple-simple-en-python">Exécuter un modèle : Voici un exemple simple en Python :</a></li><li class="toc__item toc__item--h3"><a href="#demo-utilisation-de-onnx-runtime-genai-pour-appeler-phi-35-vision">Démo : Utilisation de ONNX Runtime GenAI pour appeler Phi-3.5-Vision</a></li><li class="toc__item toc__item--h2"><a href="#plus">Plus</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de la leçon</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../assets/app.js" defer></script>
+</body>
+</html>

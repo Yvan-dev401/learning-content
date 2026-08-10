@@ -1,0 +1,1198 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07 · Construire des applications de chat — IA Générative</title>
+<meta name="description" content="Gérer l&#x27;historique de conversation, le contexte et l&#x27;expérience conversationnelle.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item is-active" data-lesson="07-building-chat-applications"><a href="../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="18-fine-tuning"><a href="../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../parcours/construire/index.html">Construire des applications</a> <span aria-hidden="true">›</span>
+  <span>Leçon 07</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Leçon 07 · Construire des applications · ≈ 40 min</p>
+  <p class="pagehead__summary">Gérer l&#x27;historique de conversation, le contexte et l&#x27;expérience conversationnelle.</p>
+</header>
+<article class="prose">
+<h1 id="construire-des-applications-de-chat-alimentees-par-lia-generative">Construire des applications de chat alimentées par l'IA générative<a class="anchor" href="#construire-des-applications-de-chat-alimentees-par-lia-generative" aria-label="Lien vers cette section">#</a></h1>
+<p><a href="https://youtu.be/R9V0ZY1BEQo?si=IHuU-fS9YWT8s4sA" target="_blank" rel="noopener noreferrer"><img src="../../assets/images/07-lesson-banner.webp" alt="Construire des applications de chat alimentées par l'IA générative" loading="lazy" decoding="async" /></a></p>
+<blockquote>
+<p><em>(Cliquez sur l'image ci-dessus pour visionner la vidéo de cette leçon)</em></p>
+</blockquote>
+<p>Maintenant que nous avons vu comment créer des applications de génération de texte, intéressons-nous aux applications de chat.</p>
+<p>Les applications de chat sont devenues une partie intégrante de notre quotidien, offrant bien plus qu'un simple moyen de conversation informelle. Elles jouent un rôle essentiel dans le service client, le support technique et même dans les systèmes de conseil sophistiqués. Il est probable que vous ayez récemment reçu de l'aide d'une application de chat. À mesure que nous intégrons des technologies plus avancées comme l'IA générative dans ces plateformes, leur complexité augmente, tout comme les défis qu'elles posent.</p>
+<p>Certaines questions auxquelles nous devons répondre sont :</p>
+<ul>
+<li><strong>Créer l'application</strong>. Comment construire et intégrer efficacement ces applications alimentées par l'IA pour des cas d'utilisation spécifiques ?</li>
+<li><strong>Surveillance</strong>. Une fois déployées, comment pouvons-nous surveiller et garantir que les applications fonctionnent au plus haut niveau de qualité, tant en termes de fonctionnalité que de respect des <a href="https://www.microsoft.com/ai/responsible-ai" target="_blank" rel="noopener noreferrer">six principes de l'IA responsable</a> ?</li>
+</ul>
+<p>Alors que nous avançons dans une ère définie par l'automatisation et les interactions fluides entre humains et machines, comprendre comment l'IA générative transforme la portée, la profondeur et l'adaptabilité des applications de chat devient essentiel. Cette leçon examinera les aspects de l'architecture qui soutiennent ces systèmes complexes, explorera les méthodologies pour les adapter à des tâches spécifiques à un domaine et évaluera les métriques et considérations pertinentes pour garantir un déploiement responsable de l'IA.</p>
+<h2 id="introduction">Introduction<a class="anchor" href="#introduction" aria-label="Lien vers cette section">#</a></h2>
+<p>Cette leçon couvre :</p>
+<ul>
+<li>Les techniques pour construire et intégrer efficacement des applications de chat.</li>
+<li>Comment appliquer la personnalisation et l'adaptation aux applications.</li>
+<li>Les stratégies et considérations pour surveiller efficacement les applications de chat.</li>
+</ul>
+<h2 id="objectifs-dapprentissage">Objectifs d'apprentissage<a class="anchor" href="#objectifs-dapprentissage" aria-label="Lien vers cette section">#</a></h2>
+<p>À la fin de cette leçon, vous serez capable de :</p>
+<ul>
+<li>Décrire les considérations pour construire et intégrer des applications de chat dans des systèmes existants.</li>
+<li>Personnaliser les applications de chat pour des cas d'utilisation spécifiques.</li>
+<li>Identifier les métriques clés et les considérations pour surveiller et maintenir efficacement la qualité des applications de chat alimentées par l'IA.</li>
+<li>Garantir que les applications de chat utilisent l'IA de manière responsable.</li>
+</ul>
+<h2 id="integrer-lia-generative-dans-les-applications-de-chat">Intégrer l'IA générative dans les applications de chat<a class="anchor" href="#integrer-lia-generative-dans-les-applications-de-chat" aria-label="Lien vers cette section">#</a></h2>
+<p>Améliorer les applications de chat grâce à l'IA générative ne consiste pas seulement à les rendre plus intelligentes ; il s'agit d'optimiser leur architecture, leurs performances et leur interface utilisateur pour offrir une expérience utilisateur de qualité. Cela implique d'examiner les bases architecturales, les intégrations API et les considérations d'interface utilisateur. Cette section vise à vous offrir une feuille de route complète pour naviguer dans ces paysages complexes, que vous les intégriez dans des systèmes existants ou que vous les construisiez comme des plateformes autonomes.</p>
+<p>À la fin de cette section, vous serez équipé des compétences nécessaires pour construire et intégrer efficacement des applications de chat.</p>
+<h3 id="chatbot-ou-application-de-chat">Chatbot ou application de chat ?<a class="anchor" href="#chatbot-ou-application-de-chat" aria-label="Lien vers cette section">#</a></h3>
+<p>Avant de plonger dans la création d'applications de chat, comparons les &quot;chatbots&quot; aux &quot;applications de chat alimentées par l'IA&quot;, qui remplissent des rôles et des fonctionnalités distincts. Le principal objectif d'un chatbot est d'automatiser des tâches conversationnelles spécifiques, comme répondre à des questions fréquemment posées ou suivre un colis. Il est généralement régi par une logique basée sur des règles ou des algorithmes d'IA complexes. En revanche, une application de chat alimentée par l'IA est un environnement beaucoup plus vaste conçu pour faciliter diverses formes de communication numérique, telles que les discussions textuelles, vocales et vidéo entre utilisateurs humains. Sa caractéristique principale est l'intégration d'un modèle d'IA générative qui simule des conversations nuancées et humaines, générant des réponses basées sur une grande variété d'entrées et d'indices contextuels. Une application de chat alimentée par l'IA générative peut engager des discussions ouvertes, s'adapter à des contextes conversationnels évolutifs et même produire des dialogues créatifs ou complexes.</p>
+<p>Le tableau ci-dessous présente les principales différences et similitudes pour nous aider à comprendre leurs rôles uniques dans la communication numérique.</p>
+<table>
+<thead>
+<tr>
+<th>Chatbot</th>
+<th>Application de chat alimentée par l'IA générative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Axé sur des tâches et basé sur des règles</td>
+<td>Sensible au contexte</td>
+</tr>
+<tr>
+<td>Souvent intégré dans des systèmes plus vastes</td>
+<td>Peut héberger un ou plusieurs chatbots</td>
+</tr>
+<tr>
+<td>Limité à des fonctions programmées</td>
+<td>Intègre des modèles d'IA générative</td>
+</tr>
+<tr>
+<td>Interactions spécialisées et structurées</td>
+<td>Capable de discussions ouvertes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exploiter-des-fonctionnalites-preconstruites-avec-des-sdk-et-des-api">Exploiter des fonctionnalités préconstruites avec des SDK et des API<a class="anchor" href="#exploiter-des-fonctionnalites-preconstruites-avec-des-sdk-et-des-api" aria-label="Lien vers cette section">#</a></h3>
+<p>Lors de la création d'une application de chat, une excellente première étape consiste à évaluer ce qui existe déjà. Utiliser des SDK et des API pour construire des applications de chat est une stratégie avantageuse pour diverses raisons. En intégrant des SDK et des API bien documentés, vous positionnez stratégiquement votre application pour un succès à long terme, en répondant aux préoccupations de scalabilité et de maintenance.</p>
+<ul>
+<li><strong>Accélère le processus de développement et réduit les frais généraux</strong> : S'appuyer sur des fonctionnalités préconstruites plutôt que sur le processus coûteux de les développer soi-même vous permet de vous concentrer sur d'autres aspects de votre application, comme la logique métier.</li>
+<li><strong>Meilleures performances</strong> : En construisant des fonctionnalités à partir de zéro, vous finirez par vous demander &quot;Comment cela évolue-t-il ? Cette application est-elle capable de gérer un afflux soudain d'utilisateurs ?&quot; Les SDK et API bien entretenus ont souvent des solutions intégrées pour ces préoccupations.</li>
+<li><strong>Maintenance simplifiée</strong> : Les mises à jour et améliorations sont plus faciles à gérer, car la plupart des API et SDK nécessitent simplement une mise à jour de la bibliothèque lorsqu'une nouvelle version est publiée.</li>
+<li><strong>Accès à des technologies de pointe</strong> : Exploiter des modèles qui ont été affinés et entraînés sur des ensembles de données étendus offre à votre application des capacités de langage naturel.</li>
+</ul>
+<p>L'accès aux fonctionnalités d'un SDK ou d'une API implique généralement d'obtenir l'autorisation d'utiliser les services fournis, souvent via une clé unique ou un jeton d'authentification. Nous utiliserons la bibliothèque Python OpenAI pour explorer à quoi cela ressemble. Vous pouvez également l'essayer par vous-même dans le <a href="../../lecons/07-building-chat-applications/index.html#code-python-oai-assignment-ipynb">notebook pour OpenAI</a> ou le <a href="../../lecons/07-building-chat-applications/index.html#code-python-aoai-assignment-ipynb">notebook pour Azure OpenAI Services</a> de cette leçon.</p>
+<div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span>
+    <span class="p">)</span>
+
+<span class="n">chat_completion</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span> <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Suggest two titles for an instructional lesson on chat applications for generative AI.&quot;</span><span class="p">}])</span>
+</pre></div>
+</div><p>L'exemple ci-dessus utilise le modèle GPT-3.5 Turbo pour compléter l'invite, mais notez que la clé API est définie avant de le faire. Vous obtiendriez une erreur si vous ne définissiez pas la clé.</p>
+<h2 id="experience-utilisateur-ux">Expérience utilisateur (UX)<a class="anchor" href="#experience-utilisateur-ux" aria-label="Lien vers cette section">#</a></h2>
+<p>Les principes généraux de l'UX s'appliquent aux applications de chat, mais voici quelques considérations supplémentaires qui deviennent particulièrement importantes en raison des composants d'apprentissage automatique impliqués.</p>
+<ul>
+<li><strong>Mécanisme pour traiter l'ambiguïté</strong> : Les modèles d'IA générative génèrent parfois des réponses ambiguës. Une fonctionnalité permettant aux utilisateurs de demander des clarifications peut être utile en cas de problème.</li>
+<li><strong>Rétention du contexte</strong> : Les modèles d'IA générative avancés ont la capacité de se souvenir du contexte dans une conversation, ce qui peut être un atout nécessaire pour l'expérience utilisateur. Donner aux utilisateurs la possibilité de contrôler et de gérer le contexte améliore l'expérience utilisateur, mais introduit le risque de conserver des informations sensibles. Les considérations sur la durée de conservation de ces informations, comme l'introduction d'une politique de rétention, peuvent équilibrer le besoin de contexte et la confidentialité.</li>
+<li><strong>Personnalisation</strong> : Avec la capacité d'apprendre et de s'adapter, les modèles d'IA offrent une expérience individualisée à un utilisateur. Adapter l'expérience utilisateur grâce à des fonctionnalités comme les profils utilisateur non seulement permet à l'utilisateur de se sentir compris, mais l'aide également dans sa recherche de réponses spécifiques, créant une interaction plus efficace et satisfaisante.</li>
+</ul>
+<p>Un exemple de personnalisation est les paramètres &quot;Instructions personnalisées&quot; dans ChatGPT d'OpenAI. Cela vous permet de fournir des informations sur vous-même qui peuvent être un contexte important pour vos invites. Voici un exemple d'instruction personnalisée.</p>
+<p><img src="../../assets/images/custom-instructions.webp" alt="Paramètres d'instructions personnalisées dans ChatGPT" loading="lazy" decoding="async" /></p>
+<p>Ce &quot;profil&quot; invite ChatGPT à créer un plan de cours sur les listes chaînées. Notez que ChatGPT prend en compte que l'utilisateur peut vouloir un plan de cours plus approfondi en fonction de son expérience.</p>
+<p><img src="../../assets/images/lesson-plan-prompt.webp" alt="Une invite dans ChatGPT pour un plan de cours sur les listes chaînées" loading="lazy" decoding="async" /></p>
+<h3 id="cadre-de-message-systeme-de-microsoft-pour-les-modeles-de-langage-etendu">Cadre de message système de Microsoft pour les modèles de langage étendu<a class="anchor" href="#cadre-de-message-systeme-de-microsoft-pour-les-modeles-de-langage-etendu" aria-label="Lien vers cette section">#</a></h3>
+<p><a href="https://learn.microsoft.com/azure/ai-services/openai/concepts/system-message#define-the-models-output-format" target="_blank" rel="noopener noreferrer">Microsoft a fourni des conseils</a> pour rédiger des messages système efficaces lors de la génération de réponses à partir de modèles de langage étendu, décomposés en 4 domaines :</p>
+<ol>
+<li>Définir pour qui est le modèle, ainsi que ses capacités et ses limites.</li>
+<li>Définir le format de sortie du modèle.</li>
+<li>Fournir des exemples spécifiques qui démontrent le comportement attendu du modèle.</li>
+<li>Fournir des garde-fous comportementaux supplémentaires.</li>
+</ol>
+<h3 id="accessibilite">Accessibilité<a class="anchor" href="#accessibilite" aria-label="Lien vers cette section">#</a></h3>
+<p>Qu'un utilisateur ait des déficiences visuelles, auditives, motrices ou cognitives, une application de chat bien conçue doit être utilisable par tous. La liste suivante détaille les fonctionnalités spécifiques visant à améliorer l'accessibilité pour divers types de handicaps.</p>
+<ul>
+<li><strong>Fonctionnalités pour les déficiences visuelles</strong> : Thèmes à contraste élevé et texte redimensionnable, compatibilité avec les lecteurs d'écran.</li>
+<li><strong>Fonctionnalités pour les déficiences auditives</strong> : Fonctions de synthèse vocale et de reconnaissance vocale, indices visuels pour les notifications audio.</li>
+<li><strong>Fonctionnalités pour les déficiences motrices</strong> : Prise en charge de la navigation au clavier, commandes vocales.</li>
+<li><strong>Fonctionnalités pour les déficiences cognitives</strong> : Options de langage simplifié.</li>
+</ul>
+<h2 id="personnalisation-et-ajustement-pour-les-modeles-de-langage-specifiques-a-un-domaine">Personnalisation et ajustement pour les modèles de langage spécifiques à un domaine<a class="anchor" href="#personnalisation-et-ajustement-pour-les-modeles-de-langage-specifiques-a-un-domaine" aria-label="Lien vers cette section">#</a></h2>
+<p>Imaginez une application de chat qui comprend le jargon de votre entreprise et anticipe les requêtes spécifiques de sa base d'utilisateurs. Il existe quelques approches qui méritent d'être mentionnées :</p>
+<ul>
+<li><strong>Exploiter les modèles DSL</strong>. DSL signifie langage spécifique au domaine. Vous pouvez exploiter un modèle DSL, entraîné sur un domaine spécifique, pour comprendre ses concepts et scénarios.</li>
+<li><strong>Appliquer un ajustement</strong>. L'ajustement est le processus de formation supplémentaire de votre modèle avec des données spécifiques.</li>
+</ul>
+<h2 id="personnalisation-utiliser-un-dsl">Personnalisation : Utiliser un DSL<a class="anchor" href="#personnalisation-utiliser-un-dsl" aria-label="Lien vers cette section">#</a></h2>
+<p>Exploiter des modèles de langage spécifiques à un domaine (modèles DSL) peut améliorer l'engagement des utilisateurs en fournissant des interactions spécialisées et contextuellement pertinentes. C'est un modèle qui est entraîné ou ajusté pour comprendre et générer du texte lié à un domaine, une industrie ou un sujet spécifique. Les options pour utiliser un modèle DSL peuvent varier entre en entraîner un à partir de zéro, utiliser des modèles préexistants via des SDK et des API, ou appliquer un ajustement, qui consiste à adapter un modèle pré-entraîné à un domaine spécifique.</p>
+<h2 id="personnalisation-appliquer-un-ajustement">Personnalisation : Appliquer un ajustement<a class="anchor" href="#personnalisation-appliquer-un-ajustement" aria-label="Lien vers cette section">#</a></h2>
+<p>L'ajustement est souvent envisagé lorsqu'un modèle pré-entraîné ne répond pas aux attentes dans un domaine spécialisé ou une tâche spécifique.</p>
+<p>Par exemple, les questions médicales sont complexes et nécessitent beaucoup de contexte. Lorsqu'un professionnel de santé diagnostique un patient, il se base sur divers facteurs tels que le mode de vie ou les conditions préexistantes, et peut même s'appuyer sur des revues médicales récentes pour valider son diagnostic. Dans de tels scénarios nuancés, une application de chat alimentée par une IA généraliste ne peut pas être une source fiable.</p>
+<h3 id="scenario-une-application-medicale">Scénario : une application médicale<a class="anchor" href="#scenario-une-application-medicale" aria-label="Lien vers cette section">#</a></h3>
+<p>Considérons une application de chat conçue pour aider les praticiens médicaux en fournissant des références rapides aux directives de traitement, aux interactions médicamenteuses ou aux dernières découvertes de recherche.</p>
+<p>Un modèle généraliste pourrait être adéquat pour répondre à des questions médicales de base ou fournir des conseils généraux, mais il pourrait rencontrer des difficultés dans les cas suivants :</p>
+<ul>
+<li><strong>Cas très spécifiques ou complexes</strong>. Par exemple, un neurologue pourrait demander à l'application : &quot;Quelles sont les meilleures pratiques actuelles pour gérer l'épilepsie résistante aux médicaments chez les patients pédiatriques ?&quot;</li>
+<li><strong>Manque d'avancées récentes</strong>. Un modèle généraliste pourrait avoir du mal à fournir une réponse actuelle qui intègre les avancées les plus récentes en neurologie et pharmacologie.</li>
+</ul>
+<p>Dans de tels cas, ajuster le modèle avec un ensemble de données médicales spécialisé peut améliorer considérablement sa capacité à traiter ces questions médicales complexes de manière plus précise et fiable. Cela nécessite l'accès à un ensemble de données large et pertinent qui représente les défis et les questions spécifiques au domaine à traiter.</p>
+<h2 id="considerations-pour-une-experience-de-chat-alimentee-par-lia-de-haute-qualite">Considérations pour une expérience de chat alimentée par l'IA de haute qualité<a class="anchor" href="#considerations-pour-une-experience-de-chat-alimentee-par-lia-de-haute-qualite" aria-label="Lien vers cette section">#</a></h2>
+<p>Cette section décrit les critères des applications de chat &quot;de haute qualité&quot;, qui incluent la capture de métriques exploitables et le respect d'un cadre qui utilise la technologie de l'IA de manière responsable.</p>
+<h3 id="metriques-cles">Métriques clés<a class="anchor" href="#metriques-cles" aria-label="Lien vers cette section">#</a></h3>
+<p>Pour maintenir la performance de haute qualité d'une application, il est essentiel de suivre des métriques clés et des considérations. Ces mesures permettent non seulement de garantir le bon fonctionnement de l'application, mais aussi d'évaluer la qualité du modèle d'IA et de l'expérience utilisateur. Voici une liste qui couvre les métriques de base, d'IA et d'expérience utilisateur à prendre en compte.</p>
+<table>
+<thead>
+<tr>
+<th>Métrique</th>
+<th>Définition</th>
+<th>Considérations pour le développeur de chat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Disponibilité</strong></td>
+<td>Mesure le temps pendant lequel l'application est opérationnelle et accessible aux utilisateurs.</td>
+<td>Comment minimiser les temps d'arrêt ?</td>
+</tr>
+<tr>
+<td><strong>Temps de réponse</strong></td>
+<td>Temps nécessaire à l'application pour répondre à une requête utilisateur.</td>
+<td>Comment optimiser le traitement des requêtes pour améliorer le temps de réponse ?</td>
+</tr>
+<tr>
+<td><strong>Précision</strong></td>
+<td>Le ratio des prédictions positives correctes par rapport au nombre total de prédictions positives.</td>
+<td>Comment valider la précision de votre modèle ?</td>
+</tr>
+<tr>
+<td><strong>Rappel (sensibilité)</strong></td>
+<td>Le ratio des prédictions positives correctes par rapport au nombre réel de positifs.</td>
+<td>Comment mesurer et améliorer le rappel ?</td>
+</tr>
+<tr>
+<td><strong>Score F1</strong></td>
+<td>Moyenne harmonique de la précision et du rappel, qui équilibre le compromis entre les deux.</td>
+<td>Quel est votre score F1 cible ? Comment équilibrer précision et rappel ?</td>
+</tr>
+<tr>
+<td><strong>Perplexité</strong></td>
+<td>Mesure dans quelle mesure la distribution de probabilité prédite par le modèle s'aligne avec la distribution réelle des données.</td>
+<td>Comment minimiser la perplexité ?</td>
+</tr>
+<tr>
+<td><strong>Métriques de satisfaction utilisateur</strong></td>
+<td>Mesure la perception de l'utilisateur vis-à-vis de l'application. Souvent capturée via des enquêtes.</td>
+<td>À quelle fréquence collecterez-vous les retours des utilisateurs ? Comment vous adapterez-vous en fonction de ces retours ?</td>
+</tr>
+<tr>
+<td><strong>Taux d'erreur</strong></td>
+<td>Taux auquel le modèle commet des erreurs dans la compréhension ou la production.</td>
+<td>Quelles stratégies avez-vous en place pour réduire les taux d'erreur ?</td>
+</tr>
+<tr>
+<td><strong>Cycles de réentraînement</strong></td>
+<td>Fréquence à laquelle le modèle est mis à jour pour intégrer de nouvelles données et idées.</td>
+<td>À quelle fréquence réentraînerez-vous le modèle ? Qu'est-ce qui déclenche un cycle de réentraînement ?</td>
+</tr>
+<tr>
+<td><strong>Détection d'anomalies</strong></td>
+<td>Outils et techniques pour identifier des schémas inhabituels qui ne correspondent pas au comportement attendu.</td>
+<td>Comment allez-vous réagir face aux anomalies ?</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mettre-en-œuvre-des-pratiques-dia-responsable-dans-les-applications-de-chat">Mettre en œuvre des pratiques d'IA responsable dans les applications de chat<a class="anchor" href="#mettre-en-œuvre-des-pratiques-dia-responsable-dans-les-applications-de-chat" aria-label="Lien vers cette section">#</a></h3>
+<p>L'approche de Microsoft en matière d'IA responsable a identifié six principes qui devraient guider le développement et l'utilisation de l'IA. Voici les principes, leur définition, ainsi que les éléments à considérer pour un développeur de chat et les raisons pour lesquelles ils sont importants.</p>
+<table>
+<thead>
+<tr>
+<th>Principes</th>
+<th>Définition de Microsoft</th>
+<th>Considérations pour le développeur de chat</th>
+<th>Pourquoi c'est important</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Équité</td>
+<td>Les systèmes d'IA doivent traiter toutes les personnes de manière équitable.</td>
+<td>Assurez-vous que l'application de chat ne discrimine pas en fonction des données utilisateur.</td>
+<td>Pour instaurer la confiance et l'inclusivité parmi les utilisateurs ; évite les conséquences juridiques.</td>
+</tr>
+<tr>
+<td>Fiabilité et sécurité</td>
+<td>Les systèmes d'IA doivent fonctionner de manière fiable et sûre.</td>
+<td>Mettez en œuvre des tests et des mécanismes de sécurité pour minimiser les erreurs et les risques.</td>
+<td>Garantit la satisfaction des utilisateurs et prévient les dommages potentiels.</td>
+</tr>
+<tr>
+<td>Confidentialité et sécurité</td>
+<td>Les systèmes d'IA doivent être sécurisés et respecter la vie privée.</td>
+<td>Mettez en place des mesures de cryptage et de protection des données solides.</td>
+<td>Pour protéger les données sensibles des utilisateurs et se conformer aux lois sur la confidentialité.</td>
+</tr>
+<tr>
+<td>Inclusivité</td>
+<td>Les systèmes d'IA doivent permettre à tout le monde de participer et d'interagir.</td>
+<td>Concevez une interface utilisateur/expérience utilisateur accessible et facile à utiliser pour des publics divers.</td>
+<td>Garantit qu'un large éventail de personnes peut utiliser l'application efficacement.</td>
+</tr>
+<tr>
+<td>Transparence</td>
+<td>Les systèmes d'IA doivent être compréhensibles.</td>
+<td>Fournissez une documentation claire et des explications sur les réponses de l'IA.</td>
+<td>Les utilisateurs sont plus susceptibles de faire confiance à un système s'ils comprennent comment les décisions sont prises.</td>
+</tr>
+<tr>
+<td>Responsabilité</td>
+<td>Les personnes doivent être responsables des systèmes d'IA.</td>
+<td>Établissez un processus clair pour auditer et améliorer les décisions de l'IA.</td>
+<td>Permet une amélioration continue et des mesures correctives en cas d'erreurs.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="devoir">Devoir<a class="anchor" href="#devoir" aria-label="Lien vers cette section">#</a></h2>
+<p>Voir <a href="../../lecons/07-building-chat-applications/index.html#code">devoir</a>. Il vous guidera à travers une série d'exercices allant de l'exécution de vos premières invites de chat, à la classification et au résumé de texte, et plus encore. Notez que les devoirs sont disponibles dans différents langages de programmation !</p>
+<h2 id="excellent-travail-continuez-votre-parcours">Excellent travail ! Continuez votre parcours<a class="anchor" href="#excellent-travail-continuez-votre-parcours" aria-label="Lien vers cette section">#</a></h2>
+<p>Après avoir terminé cette leçon, consultez notre <a href="https://aka.ms/genai-collection" target="_blank" rel="noopener noreferrer">collection d'apprentissage sur l'IA générative</a> pour continuer à approfondir vos connaissances sur l'IA générative !</p>
+<p>Rendez-vous à la leçon 8 pour découvrir comment commencer à <a href="../../lecons/08-building-search-applications/index.html">créer des applications de recherche</a> !</p>
+
+</article>
+
+<section class="codepanel" id="code"><h2 id="code-de-la-lecon">Code de la leçon<a class="anchor" href="#code-de-la-lecon" aria-label="Lien vers cette section">#</a></h2><p class="codepanel__intro">Tous les fichiers d'exemple de cette leçon, copiés depuis le dépôt d'origine. Chaque fichier est lisible ici et téléchargeable.</p><div class="tabs" role="tablist"><button class="tabs__btn" role="tab" aria-selected="true" data-tab="dotnet">.NET</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="js-githubmodels">JavaScript (GitHub Models)</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="python">Python</button><button class="tabs__btn" role="tab" aria-selected="false" data-tab="typescript">TypeScript</button></div><div class="tabs__panel" data-tab="dotnet"><details class="codefile" id="code-dotnet-notebook-azure-openai-dib"><summary class="codefile__head"><span class="codefile__name">dotnet/notebook-azure-openai.dib</span><span class="codefile__size">940 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>#!meta
+
+{&quot;kernelInfo&quot;:{&quot;defaultKernelName&quot;:&quot;csharp&quot;,&quot;items&quot;:[{&quot;aliases&quot;:[],&quot;name&quot;:&quot;csharp&quot;}]}}
+
+#!csharp
+
+#r &quot;nuget: Azure.AI.OpenAI, 2.1.0&quot;
+
+#!csharp
+
+using Azure;
+using Azure.AI.OpenAI;
+using OpenAI.Chat;
+using System.ClientModel;
+using static System.Environment;
+
+#!csharp
+
+string endpoint = &quot;&lt;replace with endpoint&gt;&quot;;
+string key = &quot;&lt;replace with API key&gt;&quot;;
+
+// Enter the deployment name you chose when you deployed the model (for example: gpt-5-mini).
+string deployment = &quot;&lt;replace with deployment&gt;&quot;;
+
+AzureOpenAIClient azureClient = new(new Uri(endpoint), new ApiKeyCredential(key));
+ChatClient chatClient = azureClient.GetChatClient(deployment);
+
+ChatCompletion response = chatClient.CompleteChat(
+    new SystemChatMessage(&quot;You are the president of France&quot;),
+    new SystemChatMessage(&quot;You have just resigned&quot;),
+    new UserChatMessage(&quot;What tasks needs doing?&quot;));
+
+Console.WriteLine(response.Content[0].Text);
+
+Console.WriteLine();
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/dotnet/notebook-azure-openai.dib" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="js-githubmodels" hidden><details class="codefile" id="code-js-githubmodels-app-js"><summary class="codefile__head"><span class="codefile__name">js-githubmodels/app.js</span><span class="codefile__size">2 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">javascript</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nx">ModelClient</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@azure-rest/ai-inference&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AzureKeyCredential</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@azure/core-auth&quot;</span><span class="p">;</span>
+
+<span class="c1">// SECURITY: Validate required environment variables</span>
+<span class="c1">// Get these from your Microsoft Foundry project&#39;s &quot;Overview&quot; page</span>
+<span class="c1">// (GitHub Models is retiring end of July 2026 - see https://ai.azure.com/catalog/models)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="s2">&quot;AZURE_INFERENCE_CREDENTIAL&quot;</span><span class="p">];</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;AZURE_INFERENCE_CREDENTIAL environment variable is required. Please set it before running this application.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">endpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="s2">&quot;AZURE_INFERENCE_ENDPOINT&quot;</span><span class="p">];</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">endpoint</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;AZURE_INFERENCE_ENDPOINT environment variable is required. Please set it before running this application.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* By using the Azure AI Inference SDK, you can easily experiment with different models</span>
+<span class="cm">   by modifying the value of `modelName` in the code below. The following models are</span>
+<span class="cm">   available in the Microsoft Foundry Models catalog:</span>
+
+<span class="cm">   Cohere: Cohere-command-r-08-2024, Cohere-command-r-plus-08-2024</span>
+<span class="cm">   Meta: Meta-Llama-3.1-405B-Instruct, Meta-Llama-3.1-70B-Instruct, Meta-Llama-3.1-8B-Instruct, Llama-3.2-11B-Vision-Instruct, Llama-3.2-90B-Vision-Instruct</span>
+<span class="cm">   Mistral AI: Mistral-large-2411, Mistral-small-2503, Codestral-2501, Ministral-3B</span>
+<span class="cm">   OpenAI: gpt-5-mini, gpt-4o-mini, gpt-4o, gpt-4.1, gpt-4.1-mini</span>
+<span class="cm">   Microsoft: Phi-4, Phi-4-mini-instruct, Phi-4-multimodal-instruct, Phi-4-reasoning */</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">modelName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;gpt-5-mini&quot;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ModelClient</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AzureKeyCredential</span><span class="p">(</span><span class="nx">token</span><span class="p">));</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">path</span><span class="p">(</span><span class="s2">&quot;/chat/completions&quot;</span><span class="p">).</span><span class="nx">post</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">messages</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;system&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;You&#39;re the president of France&quot;</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;system&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;You have just resigned&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;What tasks needs doing?&quot;</span><span class="w">  </span><span class="p">},</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="nx">modelName</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">&quot;200&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">error</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">choice</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">choices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">choice</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">main</span><span class="p">().</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;The sample encountered an error:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/js-githubmodels/app.js" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-js-githubmodels-package-lock-json"><summary class="codefile__head"><span class="codefile__name">js-githubmodels/package-lock.json</span><span class="codefile__size">10 ko</span></summary><div class="codefile__body"><p class="note">Fichier généré ou volumineux : il n'est pas affiché ici.</p><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/js-githubmodels/package-lock.json" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-js-githubmodels-package-json"><summary class="codefile__head"><span class="codefile__name">js-githubmodels/package.json</span><span class="codefile__size">155 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">json</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;module&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;@azure-rest/ai-inference&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;latest&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;@azure/core-auth&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;latest&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;@azure/core-sse&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;latest&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/js-githubmodels/package.json" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="python" hidden><details class="codefile" id="code-python-aoai-assigment-simple-ipynb"><summary class="codefile__head"><span class="codefile__name">python/aoai-assigment-simple.ipynb</span><span class="codefile__size">2 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AZURE_OPENAI_API_KEY&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">API_KEY</span><span class="p">,</span> <span class="s2">&quot;ERROR: Azure OpenAI Key is missing&quot;</span>
+
+<span class="n">RESOURCE_ENDPOINT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AZURE_OPENAI_ENDPOINT&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">RESOURCE_ENDPOINT</span><span class="p">,</span> <span class="s2">&quot;ERROR: Azure OpenAI Endpoint is missing&quot;</span>
+<span class="k">assert</span> <span class="s2">&quot;openai.azure.com&quot;</span> <span class="ow">in</span> <span class="n">RESOURCE_ENDPOINT</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s2">&quot;ERROR: Azure OpenAI Endpoint should be in the form: </span><span class="se">\n\n\t</span><span class="s2">&lt;your unique endpoint identifier&gt;.openai.azure.com&quot;</span>
+
+<span class="n">deployment</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AZURE_OPENAI_DEPLOYMENT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">deployment</span><span class="p">,</span> <span class="s2">&quot;ERROR: Azure OpenAI Deployment name is missing&quot;</span>
+
+<span class="c1"># The OpenAI client points at the Azure OpenAI (Microsoft Foundry) /openai/v1/ endpoint</span>
+<span class="c1"># for the Responses API - no api_version needed.</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">RESOURCE_ENDPOINT</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">/openai/v1/&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Create your first prompt</span>
+<span class="n">text_prompt</span> <span class="o">=</span> <span class="s2">&quot; My foot hurts, what can be wrong?&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">deployment</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;I&#39;m a doctor, specialist on surgery&quot;</span><span class="p">},</span>
+      <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">text_prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div></div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/python/aoai-assigment-simple.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-aoai-assignment-ipynb"><summary class="codefile__head"><span class="codefile__name">python/aoai-assignment.ipynb</span><span class="codefile__size">35 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="notebook__md"><h1>Chapter 7: Building Chat Applications</h1>
+<h2>Azure OpenAI API Quickstart</h2>
+</div><div class="notebook__md"><h2>Overview</h2>
+<p>This notebook is adapted from the <a href="https://github.com/Azure/azure-openai-samples?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Azure OpenAI Samples Repository</a> that includes notebooks that also access the <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/07-building-chat-applications/python/notebook-openai.ipynb" target="_blank" rel="noopener noreferrer">OpenAI</a> service.</p>
+<p>The Python OpenAI API works with Azure OpenAI as well, with a few modifications. Learn more about the differences here: <a href="https://learn.microsoft.com/azure/ai-foundry/openai/how-to/switching-endpoints?WT.mc_id=academic-109527-jasmineg" target="_blank" rel="noopener noreferrer">How to switch between OpenAI and Azure OpenAI endpoints with Python</a></p>
+<p>For more quickstart examples please refer to the official <a href="https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=programming-language-studio&amp;WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Azure OpenAI Quickstart Documentation</a></p>
+</div><div class="notebook__md"><h2>Table of Contents</h2>
+<p><a href="#code-python-aoai-assignment-ipynb">Overview</a><br />
+<a href="#code-python-aoai-assignment-ipynb">Getting started with Azure OpenAI Service</a><br />
+<a href="#code-python-aoai-assignment-ipynb">Build your first prompt</a></p>
+<p><a href="#code-python-aoai-assignment-ipynb">Use Cases</a><br />
+<a href="#code-python-aoai-assignment-ipynb">1. Summarize Text</a><br />
+<a href="#code-python-aoai-assignment-ipynb">2. Classify Text</a><br />
+<a href="#code-python-aoai-assignment-ipynb">3. Generate New Product Names</a><br />
+<a href="#code-python-aoai-assignment-ipynb">4. Fine Tune a Classifier</a><br />
+<a href="#code-python-aoai-assignment-ipynb">5. Embeddings</a></p>
+<p><a href="#code-python-aoai-assignment-ipynb">References</a></p>
+</div><div class="notebook__md"><h3>Getting started with Azure OpenAI Service</h3>
+<p>New customers will need to <a href="https://aka.ms/oai/access?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">apply for access</a> to Azure OpenAI Service.<br />
+After approval is complete, customers can log into the Azure portal, create an Azure OpenAI Service resource, and start experimenting with models via the studio</p>
+<p><a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/azure-openai-service-is-now-generally-available/3719177?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Great resource for getting started quickly</a></p>
+</div><div class="notebook__md"><h3>Build your first prompt</h3>
+<p>This short exercise will provide a basic introduction for submitting prompts to an OpenAI model for a simple task &quot;summarization&quot;.</p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>Install OpenAI library in your python environment</li>
+<li>Load standard helper libraries and set your typical OpenAI security credentials for the OpenAI Service that you've created</li>
+<li>Choose a model for your task</li>
+<li>Create a simple prompt for the model</li>
+<li>Submit your request to the model API!</li>
+</ol>
+</div><div class="notebook__md"><h3>1. Install OpenAI</h3>
+</div><div class="notebook__md"><blockquote>
+<p>[!NOTE] This step is not necessary if run this notebook on Codespaces or within a Devcontainer</p>
+</blockquote>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">openai</span> <span class="n">python</span><span class="o">-</span><span class="n">dotenv</span>
+</pre></div>
+</div><div class="notebook__md"><h3>2. Import helper libraries and instantiate credentials</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="c1">#validate data inside .env file</span>
+
+<span class="c1"># The Responses API is served from the Azure OpenAI (Microsoft Foundry) v1 endpoint,</span>
+<span class="c1"># so we point the OpenAI client at &lt;your-endpoint&gt;/openai/v1/ (no api_version needed).</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AZURE_OPENAI_ENDPOINT&#39;</span><span class="p">]</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+  <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AZURE_OPENAI_API_KEY&#39;</span><span class="p">],</span>
+  <span class="n">base_url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">endpoint</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">/openai/v1/&quot;</span><span class="p">,</span>
+  <span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>3. Finding the right model</h3>
+<p>Models like GPT-4o and GPT-4o mini can understand and generate natural language. Azure OpenAI in Microsoft Foundry offers a range of model capabilities, each with different levels of power and speed suitable for different tasks.</p>
+<p><a href="https://learn.microsoft.com/azure/ai-foundry/foundry-models/concepts/models-sold-directly-by-azure?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Azure OpenAI in Microsoft Foundry models</a></p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Select the deployment name configured in your .env file</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AZURE_OPENAI_DEPLOYMENT&#39;</span><span class="p">]</span>
+</pre></div>
+</div><div class="notebook__md"><h2>4. Prompt Design</h2>
+<p>&quot;The magic of large language models is that by being trained to minimize this prediction error over vast quantities of text, the models end up learning concepts useful for these predictions. For example, they learn concepts like&quot;(1):</p>
+<ul>
+<li>how to spell</li>
+<li>how grammar works</li>
+<li>how to paraphrase</li>
+<li>how to answer questions</li>
+<li>how to hold a conversation</li>
+<li>how to write in many languages</li>
+<li>how to code</li>
+<li>etc.</li>
+</ul>
+<h4>How to control a large language model</h4>
+<p>&quot;Of all the inputs to a large language model, by far the most influential is the text prompt(1).</p>
+<p>Large language models can be prompted to produce output in a few ways:</p>
+<ul>
+<li>Instruction: Tell the model what you want</li>
+<li>Completion: Induce the model to complete the beginning of what you want</li>
+<li>Demonstration: Show the model what you want, with either:</li>
+<li>A few examples in the prompt</li>
+<li>Many hundreds or thousands of examples in a fine-tuning training dataset</li>
+</ul>
+<h4>There are three basic guidelines to creating prompts:</h4>
+<p><strong>Show and tell</strong>. Make it clear what you want either through instructions, examples, or a combination of the two. If you want the model to rank a list of items in alphabetical order or to classify a paragraph by sentiment, show it that's what you want.</p>
+<p><strong>Provide quality data</strong>. If you're trying to build a classifier or get the model to follow a pattern, make sure that there are enough examples. Be sure to proofread your examples — the model is usually smart enough to see through basic spelling mistakes and give you a response, but it also might assume this is intentional and it can affect the response.</p>
+<p><strong>Check your settings.</strong> The temperature and top_p settings control how deterministic the model is in generating a response. If you're asking it for a response where there's only one right answer, then you'd want to set these lower. If you're looking for more diverse responses, then you might want to set them higher. The number one mistake people make with these settings is assuming that they're &quot;cleverness&quot; or &quot;creativity&quot; controls.</p>
+<p>Source: https://learn.microsoft.com/azure/ai-foundry/openai/overview</p>
+</div><div class="notebook__md"><p>image is creating your first text prompt!</p>
+</div><div class="notebook__md"><h3>5. Submit!</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Create your first prompt</span>
+<span class="n">text_prompt</span> <span class="o">=</span> <span class="s2">&quot;Should oxford commas always be used?&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">text_prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Repeat the same call, how do the results compare?</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">text_prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Summarize Text</h2>
+<h4>Challenge</h4>
+<p>Summarize text by adding a 'tl;dr:' to the end of a text passage. Notice how the model understands how to perform a number of tasks with no additional instructions. You can experiment with more descriptive prompts than tl;dr to modify the model’s behavior and customize the summarization you receive(3).</p>
+<p>Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something that current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches.</p>
+<p>Tl;dr</p>
+</div><div class="notebook__md"><h1>Exercises for several use cases</h1>
+<ol>
+<li>Summarize Text</li>
+<li>Classify Text</li>
+<li>Generate New Product Names</li>
+<li>Embeddings</li>
+<li>Fine tune a classifier</li>
+</ol>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something that current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches.</span><span class="se">\n\n</span><span class="s2">tl;dr&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#Setting a few additional, typical parameters during API Call</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Classify Text</h2>
+<h4>Challenge</h4>
+<p>Classify items into categories provided at inference time. In the following example, we provide both the categories and the text to classify in the prompt(*playground_reference).</p>
+<p>Customer Inquiry: Hello, one of the keys on my laptop keyboard broke recently and I'll need a replacement:</p>
+<p>Classified category:</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Classify the following inquiry into one of the following: categories: [Pricing, Hardware Support, Software Support]</span><span class="se">\n\n</span><span class="s2">inquiry: Hello, one of the keys on my laptop keyboard broke recently and I&#39;ll need a replacement:</span><span class="se">\n\n</span><span class="s2">Classified category:&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#Setting a few additional, typical parameters during API Call</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Generate New Product Names</h2>
+<h4>Challenge</h4>
+<p>Create product names from examples words. Here we include in the prompt information about the product we are going to generate names for. We also provide a similar example to show the pattern we wish to receive. We have also set the temperature value high to increase randomness and more innovative responses.</p>
+<p>Product description: A home milkshake maker
+Seed words: fast, healthy, compact.
+Product names: HomeShaker, Fit Shaker, QuickShake, Shake Maker</p>
+<p>Product description: A pair of shoes that can fit any foot size.
+Seed words: adaptable, fit, omni-fit.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Product description: A home milkshake maker</span><span class="se">\n</span><span class="s2">Seed words: fast, healthy, compact.</span><span class="se">\n</span><span class="s2">Product names: HomeShaker, Fit Shaker, QuickShake, Shake Maker</span><span class="se">\n\n</span><span class="s2">Product description: A pair of shoes that can fit any foot size.</span><span class="se">\n</span><span class="s2">Seed words: adaptable, fit, omni-fit.&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#Setting a few additional, typical parameters during API Call</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">prompt</span><span class="p">}],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Embeddings</h2>
+<p>This section will show how to retrieve embeddings, and find similarities between words, sentences, and documents. In order to run the following notebooks you need to deploy a model that uses <code>text-embedding-ada-002</code> as base model and set his deployment name inside .env file, using the <code>AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT</code> variable.</p>
+</div><div class="notebook__md"><h3>Model Taxonomy - Choosing an embedding model</h3>
+<p><strong>Model taxonomy</strong>: {family} - {capability} - {input-type} - {identifier}</p>
+<p>{family}     --&gt; text-embedding  (embeddings family)<br />
+{capability} --&gt; ada             (all the other embedding models will be retired in 2024)<br />
+{input-type} --&gt; n/a             (only specified for search models)<br />
+{identifier} --&gt; 002             (version 002)</p>
+<p>model = 'text-embedding-ada-002'</p>
+</div><div class="notebook__md"><blockquote>
+<p>[!NOTE] The following step is not necessary if run this notebook on Codespaces or within a Devcontainer</p>
+</blockquote>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Dependencies for embeddings_utils</span>
+<span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">matplotlib</span> <span class="n">plotly</span> <span class="n">scikit</span><span class="o">-</span><span class="n">learn</span> <span class="n">pandas</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">cosine_similarity</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;the quick brown fox jumped over the lazy dog&#39;</span>
+<span class="n">model</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT&#39;</span><span class="p">]</span>
+<span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s1">&#39;[text]&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># compare several words</span>
+<span class="n">automobile_embedding</span>  <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s1">&#39;automobile&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+<span class="n">vehicle_embedding</span>     <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s1">&#39;vehicle&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+<span class="n">dinosaur_embedding</span>    <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s1">&#39;dinosaur&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+<span class="n">stick_embedding</span>       <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s1">&#39;stick&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">automobile_embedding</span><span class="p">,</span> <span class="n">vehicle_embedding</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">automobile_embedding</span><span class="p">,</span> <span class="n">dinosaur_embedding</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">automobile_embedding</span><span class="p">,</span> <span class="n">stick_embedding</span><span class="p">))</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Comparing article from cnn daily news dataset</h2>
+<p>source: https://huggingface.co/datasets/cnn_dailymail</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="n">cnn_daily_articles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BREMEN, Germany -- Carlos Alberto, who scored in FC Porto</span><span class="se">\&#39;</span><span class="s1">s Champions League final victory against Monaco in 2004, has joined Bundesliga club Werder Bremen for a club record fee of 7.8 million euros ($10.7 million). Carlos Alberto enjoyed success at FC Porto under Jose Mourinho. &quot;I</span><span class="se">\&#39;</span><span class="s1">m here to win titles with Werder,&quot; the 22-year-old said after his first training session with his new club. &quot;I like Bremen and would only have wanted to come here.&quot; Carlos Alberto started his career with Fluminense, and helped them to lift the Campeonato Carioca in 2002. In January 2004 he moved on to FC Porto, who were coached by José Mourinho, and the club won the Portuguese title as well as the Champions League. Early in 2005, he moved to Corinthians, where he impressed as they won the Brasileirão,but in 2006 Corinthians had a poor season and Carlos Alberto found himself at odds with manager, Emerson Leão. Their poor relationship came to a climax at a Copa Sul-Americana game against Club Atlético Lanús, and Carlos Alberto declared that he would not play for Corinthians again while Leão remained as manager. Since January this year he has been on loan with his first club Fluminense. Bundesliga champions VfB Stuttgart said on Sunday that they would sign a loan agreement with Real Zaragoza on Monday for Ewerthon, the third top Brazilian player to join the German league in three days. A VfB spokesman said Ewerthon, who played in the Bundesliga for Borussia Dortmund from 2001 to 2005, was expected to join the club for their pre-season training in Austria on Monday. On Friday, Ailton returned to Germany where he was the league</span><span class="se">\&#39;</span><span class="s1">s top scorer in 2004, signing a one-year deal with Duisburg on a transfer from Red Star Belgrade. E-mail to a friend .&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;(CNN) -- Football superstar, celebrity, fashion icon, multimillion-dollar heartthrob. Now, David Beckham is headed for the Hollywood Hills as he takes his game to U.S. Major League Soccer. CNN looks at how Bekham fulfilled his dream of playing for Manchester United, and his time playing for England. The world</span><span class="se">\&#39;</span><span class="s1">s famous footballer has begun a five-year contract with the Los Angeles Galaxy team, and on Friday Beckham will meet the press and reveal his new shirt number. This week, we take an in depth look at the life and times of Beckham, as CNN</span><span class="se">\&#39;</span><span class="s1">s very own &quot;Becks,&quot; Becky Anderson, sets out to examine what makes the man tick -- as footballer, fashion icon and global phenomenon. It</span><span class="se">\&#39;</span><span class="s1">s a long way from the streets of east London to the Hollywood Hills and Becky charts Beckham</span><span class="se">\&#39;</span><span class="s1">s incredible rise to football stardom, a journey that has seen his skills grace the greatest stages in world soccer. She goes in pursuit of the current hottest property on the sports/celebrity circuit in the U.S. and along the way explores exactly what</span><span class="se">\&#39;</span><span class="s1">s behind the man with the golden boot. CNN will look back at the life of Beckham, the wonderfully talented youngster who fulfilled his dream of playing for Manchester United, his marriage to pop star Victoria, and the trials and tribulations of playing for England. We</span><span class="se">\&#39;</span><span class="s1">ll look at the highs (scoring against Greece), the lows (being sent off during the World Cup), the Man. U departure for the Galacticos of Madrid -- and now the Home Depot stadium in L.A. We</span><span class="se">\&#39;</span><span class="s1">ll ask how Beckham and his family will adapt to life in Los Angeles -- the people, the places to see and be seen and the celebrity endorsement. Beckham is no stranger to exposure. He has teamed with Reggie Bush in an Adidas commercial, is the face of Motorola, is the face on a PlayStation game and doesn</span><span class="se">\&#39;</span><span class="s1">t need fashion tips as he has his own international clothing line. But what does the star couple need to do to become an accepted part of Tinseltown</span><span class="se">\&#39;</span><span class="s1">s glitterati? The road to major league football in the U.S.A. is a well-worn route for some of the world</span><span class="se">\&#39;</span><span class="s1">s greatest players. We talk to some of the former greats who came before him and examine what impact these overseas stars had on U.S. soccer and look at what is different now. We also get a rare glimpse inside the David Beckham academy in L.A, find out what drives the kids and who are their heroes. The perception that in the U.S.A. soccer is a &quot;game for girls&quot; after the teenage years is changing. More and more young kids are choosing the European game over the traditional U.S. sports. E-mail to a friend .&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;LOS ANGELES, California (CNN) -- Youssif, the 5-year-old burned Iraqi boy, rounded the corner at Universal Studios when suddenly the little boy hero met his favorite superhero. Youssif has always been a huge Spider-Man fan. Meeting him was &quot;my favorite thing,&quot; he said. Spider-Man was right smack dab in front of him, riding a four-wheeler amid a convoy of other superheroes. The legendary climber of buildings and fighter of evil dismounted, walked over to Youssif and introduced himself. Spidey then gave the boy from a far-away land a gentle hug, embracing him in his iconic blue and red tights. He showed Youssif a few tricks, like how to shoot a web from his wrist. Only this time, no web was spun. &quot;All right Youssif!&quot; Spider-Man said after the boy mimicked his wrist movement. Other superheroes crowded around to get a closer look. Even the Green Goblin stopped his villainous ways to tell the boy hi. Youssif remained unfazed. He didn</span><span class="se">\&#39;</span><span class="s1">t take a liking to Spider-Man</span><span class="se">\&#39;</span><span class="s1">s nemesis. Spidey was just too cool. &quot;It was my favorite thing,&quot; the boy said later. &quot;I want to see him again.&quot; He then felt compelled to add: &quot;I know it</span><span class="se">\&#39;</span><span class="s1">s not the real Spider-Man.&quot; This was the day of dreams when the boy</span><span class="se">\&#39;</span><span class="s1">s nightmares were, at least temporarily, forgotten. He met SpongeBob, Lassie and a 3-year-old orangutan named Archie. The hairy, brownish-red primate took to the boy, grabbing his hand and holding it. Even when Youssif pulled away, Archie would inch his hand back toward the boy</span><span class="se">\&#39;</span><span class="s1">s and then snatch it. See Youssif enjoy being a boy again » . The boy giggled inside a play area where sponge-like balls shot out of toy guns. It was a far different artillery than what he was used to seeing in central Baghdad, as recently as a week ago. He squealed with delight and raced around the room collecting as many balls as he could. He rode a tram through the back stages at Universal Studios. At one point, the car shook. Fire and smoke filled the air, debris cascaded down and a big rig skidded toward the vehicle. The boy and his family survived the pretend earthquake unscathed. &quot;Even I was scared,&quot; the dad said. &quot;Well, I wasn</span><span class="se">\&#39;</span><span class="s1">t,&quot; Youssif replied. The father and mother grinned from ear to ear throughout the day. Youssif pushed his 14-month-old sister, Ayaa, in a stroller. &quot;Did you even need to ask us if we were interested in coming here?&quot; Youssif</span><span class="se">\&#39;</span><span class="s1">s father said in amazement. &quot;Other than my wedding day, this is the happiest day of my life,&quot; he said. Just a day earlier, the mother and father talked about their journey out of Iraq and to the United States. They also discussed that day nine months ago when masked men grabbed their son outside the family home, doused him in gas and set him on fire. His mother heard her boy screaming from inside. The father sought help for his boy across Baghdad, but no one listened. He remembers his son</span><span class="se">\&#39;</span><span class="s1">s two months of hospitalization. The doctors didn</span><span class="se">\&#39;</span><span class="s1">t use anesthetics. He could hear his boy</span><span class="se">\&#39;</span><span class="s1">s piercing screams from the other side of the hospital. Watch Youssif meet his doctor and play with his little sister » . The father knew that speaking to CNN would put his family</span><span class="se">\&#39;</span><span class="s1">s lives in jeopardy. The possibility of being killed was better than seeing his son suffer, he said. &quot;Anything for Youssif,&quot; he said. &quot;We had to do it.&quot; They described a life of utter chaos in Baghdad. Neighbors had recently given birth to a baby girl. Shortly afterward, the father was kidnapped and killed. Then, there was the time when some girls wore tanktops and jeans. They were snatched off the street by gunmen. The stories can be even more gruesome. The couple said they had heard reports that a young girl was kidnapped and beheaded --and her killers sewed a dog</span><span class="se">\&#39;</span><span class="s1">s head on the corpse and delivered it to her family</span><span class="se">\&#39;</span><span class="s1">s doorstep. &quot;These are just some of the stories,&quot; said Youssif</span><span class="se">\&#39;</span><span class="s1">s mother, Zainab. Under Saddam Hussein, there was more security and stability, they said. There was running water and electricity most of the time. But still life was tough under the dictator, like the time when Zainab</span><span class="se">\&#39;</span><span class="s1">s uncle disappeared and was never heard from again after he read a &quot;religious book,&quot; she said. Sitting in the parking lot of a Target in suburban Los Angeles, Youssif</span><span class="se">\&#39;</span><span class="s1">s father watched as husbands and wives, boyfriends and girlfriends, parents and their children, came and went. Some held hands. Others smiled and laughed. &quot;Iraq finished,&quot; he said in what few English words he knows. He elaborated in Arabic: His homeland won</span><span class="se">\&#39;</span><span class="s1">t be enjoying such freedoms anytime soon. It</span><span class="se">\&#39;</span><span class="s1">s just not possible. Too much violence. Too many killings. His two children have only seen war. But this week, the family has seen a much different side of America -- an outpouring of generosity and a peaceful nation at home. &quot;It</span><span class="se">\&#39;</span><span class="s1">s been a dream,&quot; the father said. He used to do a lot of volunteer work back in Baghdad. &quot;Maybe that</span><span class="se">\&#39;</span><span class="s1">s why I</span><span class="se">\&#39;</span><span class="s1">m being helped now,&quot; the father said. At Universal Studios, he looked out across the valley below. The sun glistened off treetops and buildings. It was a picturesque sight fit for a Hollywood movie. &quot;Good America, good America,&quot; he said in English. E-mail to a friend . CNN</span><span class="se">\&#39;</span><span class="s1">s Arwa Damon contributed to this report.&#39;</span>
+<span class="p">]</span>
+
+<span class="n">cnn_daily_article_highlights</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Werder Bremen pay a club record $10.7 million for Carlos Alberto .</span><span class="se">\n</span><span class="s1">The Brazilian midfielder won the Champions League with FC Porto in 2004 .</span><span class="se">\n</span><span class="s1">Since January he has been on loan with his first club, Fluminense .&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;Beckham has agreed to a five-year contract with Los Angeles Galaxy .</span><span class="se">\n</span><span class="s1">New contract took effect July 1, 2007 .</span><span class="se">\n</span><span class="s1">Former English captain to meet press, unveil new shirt number Friday .</span><span class="se">\n</span><span class="s1">CNN to look at Beckham as footballer, fashion icon and global phenomenon .&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;Boy on meeting Spider-Man: &quot;It was my favorite thing&quot;</span><span class="se">\n</span><span class="s1">Youssif also met SpongeBob, Lassie and an orangutan at Universal Studios .</span><span class="se">\n</span><span class="s1">Dad: &quot;Other than my wedding day, this is the happiest day of my life&quot;&#39;</span>
+<span class="p">]</span>
+
+<span class="n">cnn_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;articles&quot;</span><span class="p">:</span><span class="n">cnn_daily_articles</span><span class="p">,</span> <span class="s2">&quot;highligths&quot;</span><span class="p">:</span><span class="n">cnn_daily_article_highlights</span><span class="p">})</span>
+
+<span class="n">cnn_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">article1_embedding</span>    <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">cnn_df</span><span class="o">.</span><span class="n">articles</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+<span class="n">article2_embedding</span>    <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">cnn_df</span><span class="o">.</span><span class="n">articles</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+<span class="n">article3_embedding</span>    <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">cnn_df</span><span class="o">.</span><span class="n">articles</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">article1_embedding</span><span class="p">,</span> <span class="n">article2_embedding</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">article1_embedding</span><span class="p">,</span> <span class="n">article3_embedding</span><span class="p">))</span>
+</pre></div>
+</div><div class="notebook__md"><h1>References</h1>
+<ul>
+<li><a href="https://learn.microsoft.com/azure/ai-foundry/foundry-models/concepts/models-sold-directly-by-azure?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Microsoft Foundry - Azure OpenAI Models</a></li>
+<li><a href="https://ai.azure.com?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Microsoft Foundry portal</a></li>
+</ul>
+</div><div class="notebook__md"><h1>For More Help</h1>
+<p><a href="mailto:AzureOpenAITeam@microsoft.com">OpenAI Commercialization Team</a></p>
+</div><div class="notebook__md"><h1>Contributors</h1>
+<ul>
+<li>Louis Li</li>
+</ul>
+</div></div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/python/aoai-assignment.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-githubmodels-assignment-simple-ipynb"><summary class="codefile__head"><span class="codefile__name">python/githubmodels-assignment-simple.ipynb</span><span class="codefile__size">2 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatCompletionsClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.inference.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">UserMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">azure.core.credentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">AzureKeyCredential</span>
+
+<span class="c1"># Get these from your Microsoft Foundry project&#39;s &quot;Overview&quot; page</span>
+<span class="c1"># (GitHub Models is retiring end of July 2026 - see https://ai.azure.com/catalog/models)</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AZURE_INFERENCE_CREDENTIAL&quot;</span><span class="p">]</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AZURE_INFERENCE_ENDPOINT&quot;</span><span class="p">]</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">ChatCompletionsClient</span><span class="p">(</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span>
+    <span class="n">credential</span><span class="o">=</span><span class="n">AzureKeyCredential</span><span class="p">(</span><span class="n">token</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;gpt-5-mini&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Create your first prompt</span>
+<span class="n">text_prompt</span> <span class="o">=</span> <span class="s2">&quot; My foot hurts, what can be wrong?&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;I&#39;m a doctor, specialist on surgery&quot;</span><span class="p">},</span>
+      <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">text_prompt</span><span class="p">},])</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+</div></div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/python/githubmodels-assignment-simple.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-githubmodels-assignment-ipynb"><summary class="codefile__head"><span class="codefile__name">python/githubmodels-assignment.ipynb</span><span class="codefile__size">19 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="notebook__md"><h1>Chapter 7: Building Chat Applications</h1>
+<h2>Microsoft Foundry Models API Quickstart</h2>
+<p>This notebook is adapted from the <a href="https://github.com/Azure/azure-openai-samples?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Azure OpenAI Samples Repository</a> that includes notebooks that access <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/07-building-chat-applications/python/notebook-azure-openai.ipynb" target="_blank" rel="noopener noreferrer">Azure OpenAI</a> services.</p>
+<blockquote>
+<p><strong>Note:</strong> GitHub Models is retiring at the end of July 2026. This notebook now targets <a href="https://ai.azure.com/catalog/models?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Microsoft Foundry Models</a>, which offers the same free-to-try model catalog and Azure AI Inference SDK experience.</p>
+</blockquote>
+</div><div class="notebook__md"><h1>Overview</h1>
+<p>&quot;Large language models are functions that map text to text. Given an input string of text, a large language model tries to predict the text that will come next&quot;(1). This &quot;quickstart&quot; notebook will introduce users to high-level LLM concepts, core package requirements for getting started with AML, a soft introduction to prompt design, and several short examples of different use cases.</p>
+</div><div class="notebook__md"><h2>Table of Contents</h2>
+<p><a href="#code-python-githubmodels-assignment-ipynb">Overview</a><br />
+<a href="#code-python-githubmodels-assignment-ipynb">How to use OpenAI Service</a><br />
+<a href="#code-python-githubmodels-assignment-ipynb">1. Creating your OpenAI Service</a><br />
+<a href="#code-python-githubmodels-assignment-ipynb">2. Installation</a><br />
+<a href="#code-python-githubmodels-assignment-ipynb">3. Credentials</a></p>
+<p><a href="#code-python-githubmodels-assignment-ipynb">Use Cases</a><br />
+<a href="#code-python-githubmodels-assignment-ipynb">1. Summarize Text</a><br />
+<a href="#code-python-githubmodels-assignment-ipynb">2. Classify Text</a><br />
+<a href="#code-python-githubmodels-assignment-ipynb">3. Generate New Product Names</a><br />
+<a href="#code-python-githubmodels-assignment-ipynb">4. Fine Tune a Classifier</a></p>
+<p><a href="#code-python-githubmodels-assignment-ipynb">References</a></p>
+</div><div class="notebook__md"><h3>Build your first prompt</h3>
+<p>This short exercise will provide a basic introduction for submitting prompts to a model in Microsoft Foundry Models for a simple task &quot;summarization&quot;.</p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>Install <code>azure-ai-inference</code> library in your python environment, if you haven't done so.</li>
+<li>Load standard helper libraries and set up your Microsoft Foundry Models credentials.</li>
+<li>Choose a model for your task</li>
+<li>Create a simple prompt for the model</li>
+<li>Submit your request to the model API!</li>
+</ol>
+</div><div class="notebook__md"><h3>1. Install <code>azure-ai-inference</code></h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">azure</span><span class="o">-</span><span class="n">ai</span><span class="o">-</span><span class="n">inference</span>
+</pre></div>
+</div><div class="notebook__md"><h3>2. Import helper libraries and instantiate credentials</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatCompletionsClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">azure.ai.inference.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemMessage</span><span class="p">,</span> <span class="n">UserMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">azure.core.credentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">AzureKeyCredential</span>
+
+<span class="c1"># Get these from your Microsoft Foundry project&#39;s &quot;Overview&quot; page</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AZURE_INFERENCE_CREDENTIAL&quot;</span><span class="p">]</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AZURE_INFERENCE_ENDPOINT&quot;</span><span class="p">]</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">ChatCompletionsClient</span><span class="p">(</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span>
+    <span class="n">credential</span><span class="o">=</span><span class="n">AzureKeyCredential</span><span class="p">(</span><span class="n">token</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>3. Finding the right model</h3>
+<p>Models like GPT-4o and GPT-4o mini can understand and generate natural language, and are available in the Microsoft Foundry Models catalog alongside models from Meta, Mistral, Cohere, and Microsoft.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Select a general purpose chat model</span>
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;gpt-5-mini&quot;</span>
+</pre></div>
+</div><div class="notebook__md"><h2>4. Prompt Design</h2>
+<p>&quot;The magic of large language models is that by being trained to minimize this prediction error over vast quantities of text, the models end up learning concepts useful for these predictions. For example, they learn concepts like&quot;(1):</p>
+<ul>
+<li>how to spell</li>
+<li>how grammar works</li>
+<li>how to paraphrase</li>
+<li>how to answer questions</li>
+<li>how to hold a conversation</li>
+<li>how to write in many languages</li>
+<li>how to code</li>
+<li>etc.</li>
+</ul>
+<h4>How to control a large language model</h4>
+<p>&quot;Of all the inputs to a large language model, by far the most influential is the text prompt(1).</p>
+<p>Large language models can be prompted to produce output in a few ways:</p>
+<p>Instruction: Tell the model what you want
+Completion: Induce the model to complete the beginning of what you want
+Demonstration: Show the model what you want, with either:
+A few examples in the prompt
+Many hundreds or thousands of examples in a fine-tuning training dataset&quot;</p>
+<h4>There are three basic guidelines to creating prompts:</h4>
+<p><strong>Show and tell</strong>. Make it clear what you want either through instructions, examples, or a combination of the two. If you want the model to rank a list of items in alphabetical order or to classify a paragraph by sentiment, show it that's what you want.</p>
+<p><strong>Provide quality data</strong>. If you're trying to build a classifier or get the model to follow a pattern, make sure that there are enough examples. Be sure to proofread your examples — the model is usually smart enough to see through basic spelling mistakes and give you a response, but it also might assume this is intentional and it can affect the response.</p>
+<p><strong>Check your settings.</strong> The temperature and top_p settings control how deterministic the model is in generating a response. If you're asking it for a response where there's only one right answer, then you'd want to set these lower. If you're looking for more diverse responses, then you might want to set them higher. The number one mistake people make with these settings is assuming that they're &quot;cleverness&quot; or &quot;creativity&quot; controls.</p>
+<p>Source: https://learn.microsoft.com/azure/ai-foundry/openai/overview</p>
+</div><div class="notebook__md"><h3>5. Submit!</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Create your first prompt</span>
+<span class="n">text_prompt</span> <span class="o">=</span> <span class="s2">&quot;Should oxford commas always be used?&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">messages</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">text_prompt</span><span class="p">},])</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Repeat the same call, how do the results compare?</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">messages</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">text_prompt</span><span class="p">},])</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Summarize Text</h2>
+<h4>Challenge</h4>
+<p>Summarize text by adding a 'tl;dr:' to the end of a text passage. Notice how the model understands how to perform a number of tasks with no additional instructions. You can experiment with more descriptive prompts than tl;dr to modify the model’s behavior and customize the summarization you receive(3).</p>
+<p>Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something that current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches.</p>
+<p>Tl;dr</p>
+</div><div class="notebook__md"><h1>Exercises for several use cases</h1>
+<ol>
+<li>Summarize Text</li>
+<li>Classify Text</li>
+<li>Generate New Product Names</li>
+</ol>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something that current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches.</span><span class="se">\n\n</span><span class="s2">Tl;dr&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#Setting a few additional, typical parameters during API Call</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">messages</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">prompt</span><span class="p">},])</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Classify Text</h2>
+<h4>Challenge</h4>
+<p>Classify items into categories provided at inference time. In the following example, we provide both the categories and the text to classify in the prompt(*playground_reference).</p>
+<p>Customer Inquiry: Hello, one of the keys on my laptop keyboard broke recently and I'll need a replacement:</p>
+<p>Classified category:</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Classify the following inquiry into one of the following: categories: [Pricing, Hardware Support, Software Support]</span><span class="se">\n\n</span><span class="s2">inquiry: Hello, one of the keys on my laptop keyboard broke recently and I&#39;ll need a replacement:</span><span class="se">\n\n</span><span class="s2">Classified category:&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#Setting a few additional, typical parameters during API Call</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">messages</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">prompt</span><span class="p">},])</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Generate New Product Names</h2>
+<h4>Challenge</h4>
+<p>Create product names from examples words. Here we include in the prompt information about the product we are going to generate names for. We also provide a similar example to show the pattern we wish to receive. We have also set the temperature value high to increase randomness and more innovative responses.</p>
+<p>Product description: A home milkshake maker
+Seed words: fast, healthy, compact.
+Product names: HomeShaker, Fit Shaker, QuickShake, Shake Maker</p>
+<p>Product description: A pair of shoes that can fit any foot size.
+Seed words: adaptable, fit, omni-fit.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Product description: A home milkshake maker</span><span class="se">\n</span><span class="s2">Seed words: fast, healthy, compact.</span><span class="se">\n</span><span class="s2">Product names: HomeShaker, Fit Shaker, QuickShake, Shake Maker</span><span class="se">\n\n</span><span class="s2">Product description: A pair of shoes that can fit any foot size.</span><span class="se">\n</span><span class="s2">Seed words: adaptable, fit, omni-fit.&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#Setting a few additional, typical parameters during API Call</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+  <span class="n">messages</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">prompt</span><span class="p">}])</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+</div><div class="notebook__md"><h1>References</h1>
+<ul>
+<li><a href="https://github.com/openai/openai-cookbook?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Openai Cookbook</a></li>
+<li><a href="https://ai.azure.com?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Microsoft Foundry portal</a></li>
+<li><a href="https://platform.openai.com/docs/guides/fine-tuning?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Best practices for fine-tuning GPT models to classify text</a></li>
+</ul>
+</div><div class="notebook__md"><h1>For More Help</h1>
+<p><a href="mailto:AzureOpenAITeam@microsoft.com">OpenAI Commercialization Team</a></p>
+</div><div class="notebook__md"><h1>Contributors</h1>
+<ul>
+<li><a href="https://www.linkedin.com/in/cyyam/" target="_blank" rel="noopener noreferrer">Chew-Yean Yam</a></li>
+</ul>
+</div></div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/python/githubmodels-assignment.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-oai-assigment-simple-ipynb"><summary class="codefile__head"><span class="codefile__name">python/oai-assigment-simple.ipynb</span><span class="codefile__size">1 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">API_KEY</span><span class="p">,</span> <span class="s2">&quot;ERROR: OpenAI Key is missing&quot;</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span>
+    <span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;gpt-5-mini&quot;</span> 
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Create your first prompt</span>
+<span class="n">text_prompt</span> <span class="o">=</span> <span class="s2">&quot; My foot hurts, what can be wrong?&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;I&#39;m a doctor, specialist on surgery&quot;</span><span class="p">},</span>
+      <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">text_prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div></div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/python/oai-assigment-simple.ipynb" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-python-oai-assignment-ipynb"><summary class="codefile__head"><span class="codefile__name">python/oai-assignment.ipynb</span><span class="codefile__size">18 ko</span></summary><div class="codefile__body"><div class="notebook"><div class="notebook__md"><h1>Chapter 7: Building Chat Applications</h1>
+<h2>OpenAI API Quickstart</h2>
+<p>This notebook is adapted from the <a href="https://github.com/Azure/azure-openai-samples?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Azure OpenAI Samples Repository</a> that includes notebooks that access <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/07-building-chat-applications/python/notebook-azure-openai.ipynb" target="_blank" rel="noopener noreferrer">Azure OpenAI</a> services.</p>
+<p>The Python OpenAI API works with Azure OpenAI Models as well, with a few modifications. Learn more about the differences here: <a href="https://learn.microsoft.com/azure/ai-foundry/openai/how-to/switching-endpoints?WT.mc_id=academic-109527-jasmineg" target="_blank" rel="noopener noreferrer">How to switch between OpenAI and Azure OpenAI endpoints with Python</a></p>
+</div><div class="notebook__md"><h1>Overview</h1>
+<p>&quot;Large language models are functions that map text to text. Given an input string of text, a large language model tries to predict the text that will come next&quot;(1). This &quot;quickstart&quot; notebook will introduce users to high-level LLM concepts, core package requirements for getting started with AML, a soft introduction to prompt design, and several short examples of different use cases.</p>
+</div><div class="notebook__md"><h2>Table of Contents</h2>
+<p><a href="#code-python-oai-assignment-ipynb">Overview</a><br />
+<a href="#code-python-oai-assignment-ipynb">How to use OpenAI Service</a><br />
+<a href="#code-python-oai-assignment-ipynb">1. Creating your OpenAI Service</a><br />
+<a href="#code-python-oai-assignment-ipynb">2. Installation</a><br />
+<a href="#code-python-oai-assignment-ipynb">3. Credentials</a></p>
+<p><a href="#code-python-oai-assignment-ipynb">Use Cases</a><br />
+<a href="#code-python-oai-assignment-ipynb">1. Summarize Text</a><br />
+<a href="#code-python-oai-assignment-ipynb">2. Classify Text</a><br />
+<a href="#code-python-oai-assignment-ipynb">3. Generate New Product Names</a><br />
+<a href="#code-python-oai-assignment-ipynb">4. Fine Tune a Classifier</a></p>
+<p><a href="#code-python-oai-assignment-ipynb">References</a></p>
+</div><div class="notebook__md"><h3>Build your first prompt</h3>
+<p>This short exercise will provide a basic introduction for submitting prompts to an OpenAI model for a simple task &quot;summarization&quot;.</p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li>Install OpenAI library in your python environment</li>
+<li>Load standard helper libraries and set your typical OpenAI security credentials for the OpenAI Service that you've created</li>
+<li>Choose a model for your task</li>
+<li>Create a simple prompt for the model</li>
+<li>Submit your request to the model API!</li>
+</ol>
+</div><div class="notebook__md"><h3>1. Install OpenAI</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">openai</span> <span class="n">python</span><span class="o">-</span><span class="n">dotenv</span>
+</pre></div>
+</div><div class="notebook__md"><h3>2. Import helper libraries and instantiate credentials</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">API_KEY</span><span class="p">,</span> <span class="s2">&quot;ERROR: OpenAI Key is missing&quot;</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span>
+    <span class="p">)</span>
+</pre></div>
+</div><div class="notebook__md"><h3>3. Finding the right model</h3>
+<p>Models like GPT-4o and GPT-4o mini can understand and generate natural language, and are available on the OpenAI platform with different levels of power and speed suitable for different tasks.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Select a general purpose chat model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;gpt-5-mini&quot;</span>
+</pre></div>
+</div><div class="notebook__md"><h2>4. Prompt Design</h2>
+<p>&quot;The magic of large language models is that by being trained to minimize this prediction error over vast quantities of text, the models end up learning concepts useful for these predictions. For example, they learn concepts like&quot;(1):</p>
+<ul>
+<li>how to spell</li>
+<li>how grammar works</li>
+<li>how to paraphrase</li>
+<li>how to answer questions</li>
+<li>how to hold a conversation</li>
+<li>how to write in many languages</li>
+<li>how to code</li>
+<li>etc.</li>
+</ul>
+<h4>How to control a large language model</h4>
+<p>&quot;Of all the inputs to a large language model, by far the most influential is the text prompt(1).</p>
+<p>Large language models can be prompted to produce output in a few ways:</p>
+<p>Instruction: Tell the model what you want
+Completion: Induce the model to complete the beginning of what you want
+Demonstration: Show the model what you want, with either:
+A few examples in the prompt
+Many hundreds or thousands of examples in a fine-tuning training dataset&quot;</p>
+<h4>There are three basic guidelines to creating prompts:</h4>
+<p><strong>Show and tell</strong>. Make it clear what you want either through instructions, examples, or a combination of the two. If you want the model to rank a list of items in alphabetical order or to classify a paragraph by sentiment, show it that's what you want.</p>
+<p><strong>Provide quality data</strong>. If you're trying to build a classifier or get the model to follow a pattern, make sure that there are enough examples. Be sure to proofread your examples — the model is usually smart enough to see through basic spelling mistakes and give you a response, but it also might assume this is intentional and it can affect the response.</p>
+<p><strong>Check your settings.</strong> The temperature and top_p settings control how deterministic the model is in generating a response. If you're asking it for a response where there's only one right answer, then you'd want to set these lower. If you're looking for more diverse responses, then you might want to set them higher. The number one mistake people make with these settings is assuming that they're &quot;cleverness&quot; or &quot;creativity&quot; controls.</p>
+<p>Source: https://learn.microsoft.com/azure/ai-foundry/openai/overview</p>
+</div><div class="notebook__md"><h3>5. Submit!</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Create your first prompt</span>
+<span class="n">text_prompt</span> <span class="o">=</span> <span class="s2">&quot;Should oxford commas always be used?&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">text_prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h3>Repeat the same call, how do the results compare?</h3>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">text_prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Summarize Text</h2>
+<h4>Challenge</h4>
+<p>Summarize text by adding a 'tl;dr:' to the end of a text passage. Notice how the model understands how to perform a number of tasks with no additional instructions. You can experiment with more descriptive prompts than tl;dr to modify the model’s behavior and customize the summarization you receive(3).</p>
+<p>Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something that current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches.</p>
+<p>Tl;dr</p>
+</div><div class="notebook__md"><h1>Exercises for several use cases</h1>
+<ol>
+<li>Summarize Text</li>
+<li>Classify Text</li>
+<li>Generate New Product Names</li>
+</ol>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Recent work has demonstrated substantial gains on many NLP tasks and benchmarks by pre-training on a large corpus of text followed by fine-tuning on a specific task. While typically task-agnostic in architecture, this method still requires task-specific fine-tuning datasets of thousands or tens of thousands of examples. By contrast, humans can generally perform a new language task from only a few examples or from simple instructions - something that current NLP systems still largely struggle to do. Here we show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches.</span><span class="se">\n\n</span><span class="s2">Tl;dr&quot;</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#Setting a few additional, typical parameters during API Call</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Classify Text</h2>
+<h4>Challenge</h4>
+<p>Classify items into categories provided at inference time. In the following example, we provide both the categories and the text to classify in the prompt(*playground_reference).</p>
+<p>Customer Inquiry: Hello, one of the keys on my laptop keyboard broke recently and I'll need a replacement:</p>
+<p>Classified category:</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Classify the following inquiry into one of the following: categories: [Pricing, Hardware Support, Software Support]</span><span class="se">\n\n</span><span class="s2">inquiry: Hello, one of the keys on my laptop keyboard broke recently and I&#39;ll need a replacement:</span><span class="se">\n\n</span><span class="s2">Classified category:&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#Setting a few additional, typical parameters during API Call</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">prompt</span><span class="p">},],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h2>Generate New Product Names</h2>
+<h4>Challenge</h4>
+<p>Create product names from examples words. Here we include in the prompt information about the product we are going to generate names for. We also provide a similar example to show the pattern we wish to receive. We have also set the temperature value high to increase randomness and more innovative responses.</p>
+<p>Product description: A home milkshake maker
+Seed words: fast, healthy, compact.
+Product names: HomeShaker, Fit Shaker, QuickShake, Shake Maker</p>
+<p>Product description: A pair of shoes that can fit any foot size.
+Seed words: adaptable, fit, omni-fit.</p>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Product description: A home milkshake maker</span><span class="se">\n</span><span class="s2">Seed words: fast, healthy, compact.</span><span class="se">\n</span><span class="s2">Product names: HomeShaker, Fit Shaker, QuickShake, Shake Maker</span><span class="se">\n\n</span><span class="s2">Product description: A pair of shoes that can fit any foot size.</span><span class="se">\n</span><span class="s2">Seed words: adaptable, fit, omni-fit.&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</pre></div>
+</div><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">python</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1">#Setting a few additional, typical parameters during API Call</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+  <span class="nb">input</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+               <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span><span class="n">prompt</span><span class="p">}],</span>
+  <span class="n">store</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">output_text</span>
+</pre></div>
+</div><div class="notebook__md"><h1>References</h1>
+<ul>
+<li><a href="https://github.com/openai/openai-cookbook?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Openai Cookbook</a></li>
+<li><a href="https://ai.azure.com?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Microsoft Foundry portal</a></li>
+<li><a href="https://platform.openai.com/docs/guides/fine-tuning?WT.mc_id=academic-105485-koreyst" target="_blank" rel="noopener noreferrer">Best practices for fine-tuning GPT models to classify text</a></li>
+</ul>
+</div><div class="notebook__md"><h1>For More Help</h1>
+<p><a href="mailto:AzureOpenAITeam@microsoft.com">OpenAI Commercialization Team</a></p>
+</div><div class="notebook__md"><h1>Contributors</h1>
+<ul>
+<li>Louis Li</li>
+</ul>
+</div></div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/python/oai-assignment.ipynb" download>Télécharger ce fichier</a></p></div></details></div><div class="tabs__panel" data-tab="typescript" hidden><details class="codefile" id="code-typescript-gitignore"><summary class="codefile__head"><span class="codefile__name">typescript/.gitignore</span><span class="codefile__size">28 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>node_modules
+build
+.env
+dist
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/typescript/.gitignore" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-typescript-chat-completions-app-env-sample"><summary class="codefile__head"><span class="codefile__name">typescript/chat-completions-app/.env-sample</span><span class="codefile__size">239 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">ini</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="c1"># Used to authenticate with the Azure OpenAI. Retrieve these</span>
+<span class="c1"># values from an Azure OpenAI instance in the Azure Portal.</span>
+
+<span class="na">ENDPOINT</span><span class="o">=</span><span class="s">&quot;https://&lt;resource name&gt;.openai.azure.com&quot;</span>
+<span class="na">AZURE_API_KEY</span><span class="o">=</span><span class="s">&quot;&lt;azure api key&gt;&quot;</span>
+<span class="na">OPENAI_API_KEY</span><span class="o">=</span><span class="s">&quot;&lt;openai api key&gt;&quot;</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/typescript/chat-completions-app/.env-sample" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-typescript-chat-completions-app-package-lock-json"><summary class="codefile__head"><span class="codefile__name">typescript/chat-completions-app/package-lock.json</span><span class="codefile__size">32 ko</span></summary><div class="codefile__body"><p class="note">Fichier généré ou volumineux : il n'est pas affiché ici.</p><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/typescript/chat-completions-app/package-lock.json" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-typescript-chat-completions-app-package-json"><summary class="codefile__head"><span class="codefile__name">typescript/chat-completions-app/package.json</span><span class="codefile__size">751 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">json</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat-completions-app&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a simple application how to use the chat completions with Azure OpenAI in TypeScript&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main.js&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;build&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rimraf build &amp;&amp; tsc&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;preserve&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npm run build&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nodemon&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;keywords&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;typescript&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;azure&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;openai&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;@types/node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^20.10.8&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;nodemon&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^3.1.14&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ts-node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^10.9.2&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;typescript&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^5.3.3&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;openai&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^4.77.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;dotenv&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^16.3.1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;rimraf&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^6.1.3&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;nodemonConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;watch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;src&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;ext&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ts&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;exec&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npx ts-node ./src/main.ts&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/typescript/chat-completions-app/package.json" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-typescript-chat-completions-app-src-main-ts"><summary class="codefile__head"><span class="codefile__name">typescript/chat-completions-app/src/main.ts</span><span class="codefile__size">1 ko</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">typescript</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nx">OpenAI</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">dotenv</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;dotenv&quot;</span><span class="p">;</span>
+
+<span class="nx">dotenv</span><span class="p">.</span><span class="nx">config</span><span class="p">();</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">endpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AZURE_OPENAI_ENDPOINT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">azureApiKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AZURE_OPENAI_API_KEY</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+<span class="c1">// The Responses API is served from the Azure OpenAI (Microsoft Foundry) v1 endpoint,</span>
+<span class="c1">// so we point the OpenAI client at &lt;your-endpoint&gt;/openai/v1/.</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OpenAI</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">apiKey</span><span class="o">:</span><span class="w"> </span><span class="kt">azureApiKey</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">endpoint</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\/$/</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">/openai/v1/`</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;== Chat Completions App ==&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Use the deployment name configured in your .env file</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">deploymentName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AZURE_OPENAI_DEPLOYMENT</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;gpt-5-mini&#39;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">responses</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">            </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="kt">deploymentName</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;system&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;You&#39;re the president of France&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;system&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;You have just resigned&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;What tasks needs doing?&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nx">max_output_tokens</span><span class="o">:</span><span class="w"> </span><span class="kt">100</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">store</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">output_text</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;The sample encountered an error: &quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">main</span><span class="p">();</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/typescript/chat-completions-app/src/main.ts" download>Télécharger ce fichier</a></p></div></details><details class="codefile" id="code-typescript-chat-completions-app-tsconfig-json"><summary class="codefile__head"><span class="codefile__name">typescript/chat-completions-app/tsconfig.json</span><span class="codefile__size">428 o</span></summary><div class="codefile__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">json</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;outDir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./dist&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rootDir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ES2020&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;commonjs&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;checkJs&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;experimentalDecorators&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;emitDecoratorMetadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;esModuleInterop&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;noImplicitAny&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;moduleResolution&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;forceConsistentCasingInFileNames&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;strict&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;skipLibCheck&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div><p class="codefile__actions"><a href="../../assets/code/07-building-chat-applications/typescript/chat-completions-app/tsconfig.json" download>Télécharger ce fichier</a></p></div></details></div></section>
+<section class="done" data-lesson-toggle="07-building-chat-applications">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai terminé la leçon 07 — Construire des applications de chat</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../lecons/06-text-generation-apps/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Construire des applications de génération de texte</span></a><a class="prevnext__link prevnext__next" href="../../lecons/08-building-search-applications/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Construire des applications de recherche (embeddings)</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/07-building-chat-applications/README.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/07-building-chat-applications/README.md</a> ·
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/tree/main/07-building-chat-applications" target="_blank" rel="noopener noreferrer">version anglaise</a>
+</p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#introduction">Introduction</a></li><li class="toc__item toc__item--h2"><a href="#objectifs-dapprentissage">Objectifs d&#x27;apprentissage</a></li><li class="toc__item toc__item--h2"><a href="#integrer-lia-generative-dans-les-applications-de-chat">Intégrer l&#x27;IA générative dans les applications de chat</a></li><li class="toc__item toc__item--h3"><a href="#chatbot-ou-application-de-chat">Chatbot ou application de chat ?</a></li><li class="toc__item toc__item--h3"><a href="#exploiter-des-fonctionnalites-preconstruites-avec-des-sdk-et-des-api">Exploiter des fonctionnalités préconstruites avec des SDK et des API</a></li><li class="toc__item toc__item--h2"><a href="#experience-utilisateur-ux">Expérience utilisateur (UX)</a></li><li class="toc__item toc__item--h3"><a href="#cadre-de-message-systeme-de-microsoft-pour-les-modeles-de-langage-etendu">Cadre de message système de Microsoft pour les modèles de langage étendu</a></li><li class="toc__item toc__item--h3"><a href="#accessibilite">Accessibilité</a></li><li class="toc__item toc__item--h2"><a href="#personnalisation-et-ajustement-pour-les-modeles-de-langage-specifiques-a-un-domaine">Personnalisation et ajustement pour les modèles de langage spécifiques à un domaine</a></li><li class="toc__item toc__item--h2"><a href="#personnalisation-utiliser-un-dsl">Personnalisation : Utiliser un DSL</a></li><li class="toc__item toc__item--h2"><a href="#personnalisation-appliquer-un-ajustement">Personnalisation : Appliquer un ajustement</a></li><li class="toc__item toc__item--h3"><a href="#scenario-une-application-medicale">Scénario : une application médicale</a></li><li class="toc__item toc__item--h2"><a href="#considerations-pour-une-experience-de-chat-alimentee-par-lia-de-haute-qualite">Considérations pour une expérience de chat alimentée par l&#x27;IA de haute qualité</a></li><li class="toc__item toc__item--h3"><a href="#metriques-cles">Métriques clés</a></li><li class="toc__item toc__item--h3"><a href="#mettre-en-œuvre-des-pratiques-dia-responsable-dans-les-applications-de-chat">Mettre en œuvre des pratiques d&#x27;IA responsable dans les applications de chat</a></li><li class="toc__item toc__item--h2"><a href="#devoir">Devoir</a></li><li class="toc__item toc__item--h2"><a href="#excellent-travail-continuez-votre-parcours">Excellent travail ! Continuez votre parcours</a></li><li class="toc__item toc__item--h2"><a href="#code-de-la-lecon">Code de la leçon</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../assets/app.js" defer></script>
+</body>
+</html>

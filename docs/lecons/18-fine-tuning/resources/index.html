@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ressources pour l’auto-apprentissage — leçon 18</title>
+<meta name="description" content="Ressources pour l’auto-apprentissage — page annexe de la leçon 18, Affiner (fine-tuner) un LLM.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/highlight.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('genai-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="page-lesson" data-base="../../../">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="topbar">
+  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  <a class="topbar__brand" href="../../../index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <div class="search" role="search">
+    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
+           aria-label="Rechercher dans le cours" autocomplete="off">
+    <div class="search__results" hidden></div>
+  </div>
+  <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
+    <span class="topbar__theme-light" aria-hidden="true">☀</span><span class="topbar__theme-dark" aria-hidden="true">☾</span>
+  </button>
+</header>
+<div class="shell">
+  <nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner"><a class="sidebar__home" href="../../../index.html">Accueil du cours</a><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">⚙️</span><a href="../../../parcours/demarrer/index.html">Préparer son environnement</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="00-course-setup"><a href="../../../lecons/00-course-setup/index.html"><span class="sidebar__num">00</span><span class="sidebar__label">Démarrer avec ce cours</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧠</span><a href="../../../parcours/comprendre/index.html">Comprendre l&#x27;IA générative</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="01-introduction-to-genai"><a href="../../../lecons/01-introduction-to-genai/index.html"><span class="sidebar__num">01</span><span class="sidebar__label">Introduction à l&#x27;IA générative et aux LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="02-exploring-and-comparing-different-llms"><a href="../../../lecons/02-exploring-and-comparing-different-llms/index.html"><span class="sidebar__num">02</span><span class="sidebar__label">Explorer et comparer différents LLM</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="03-using-generative-ai-responsibly"><a href="../../../lecons/03-using-generative-ai-responsibly/index.html"><span class="sidebar__num">03</span><span class="sidebar__label">Utiliser l&#x27;IA générative de manière responsable</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">✍️</span><a href="../../../parcours/prompts/index.html">Maîtriser le prompt engineering</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="04-prompt-engineering-fundamentals"><a href="../../../lecons/04-prompt-engineering-fundamentals/index.html"><span class="sidebar__num">04</span><span class="sidebar__label">Fondamentaux de l&#x27;ingénierie des prompts</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="05-advanced-prompts"><a href="../../../lecons/05-advanced-prompts/index.html"><span class="sidebar__num">05</span><span class="sidebar__label">Créer des prompts avancés</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛠️</span><a href="../../../parcours/construire/index.html">Construire des applications</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="06-text-generation-apps"><a href="../../../lecons/06-text-generation-apps/index.html"><span class="sidebar__num">06</span><span class="sidebar__label">Construire des applications de génération de texte</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="07-building-chat-applications"><a href="../../../lecons/07-building-chat-applications/index.html"><span class="sidebar__num">07</span><span class="sidebar__label">Construire des applications de chat</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="08-building-search-applications"><a href="../../../lecons/08-building-search-applications/index.html"><span class="sidebar__num">08</span><span class="sidebar__label">Construire des applications de recherche (embeddings)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="09-building-image-applications"><a href="../../../lecons/09-building-image-applications/index.html"><span class="sidebar__num">09</span><span class="sidebar__label">Construire des applications de génération d&#x27;images</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="10-building-low-code-ai-applications"><a href="../../../lecons/10-building-low-code-ai-applications/index.html"><span class="sidebar__num">10</span><span class="sidebar__label">Construire des applications IA low-code</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="11-integrating-with-function-calling"><a href="../../../lecons/11-integrating-with-function-calling/index.html"><span class="sidebar__num">11</span><span class="sidebar__label">Intégrer des services externes avec l&#x27;appel de fonctions</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🛡️</span><a href="../../../parcours/industrialiser/index.html">Concevoir, sécuriser, industrialiser</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="12-designing-ux-for-ai-applications"><a href="../../../lecons/12-designing-ux-for-ai-applications/index.html"><span class="sidebar__num">12</span><span class="sidebar__label">Concevoir l&#x27;UX des applications d&#x27;IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="13-securing-ai-applications"><a href="../../../lecons/13-securing-ai-applications/index.html"><span class="sidebar__num">13</span><span class="sidebar__label">Sécuriser vos applications d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="14-the-generative-ai-application-lifecycle"><a href="../../../lecons/14-the-generative-ai-application-lifecycle/index.html"><span class="sidebar__num">14</span><span class="sidebar__label">Le cycle de vie d&#x27;une application d&#x27;IA générative</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🚀</span><a href="../../../parcours/avance/index.html">Techniques avancées</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="15-rag-and-vector-databases"><a href="../../../lecons/15-rag-and-vector-databases/index.html"><span class="sidebar__num">15</span><span class="sidebar__label">RAG et bases de données vectorielles</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="16-open-source-models"><a href="../../../lecons/16-open-source-models/index.html"><span class="sidebar__num">16</span><span class="sidebar__label">Modèles open source et Hugging Face</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="17-ai-agents"><a href="../../../lecons/17-ai-agents/index.html"><span class="sidebar__num">17</span><span class="sidebar__label">Les agents IA</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item is-active" data-lesson="18-fine-tuning"><a href="../../../lecons/18-fine-tuning/index.html"><span class="sidebar__num">18</span><span class="sidebar__label">Affiner (fine-tuner) un LLM</span><span class="sidebar__check" aria-hidden="true"></span></a><ul class="sidebar__sublist"><li class="sidebar__subitem is-active"><a href="../../../lecons/18-fine-tuning/resources/index.html">Ressources pour l’auto-apprentissage</a></li></ul></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧩</span><a href="../../../parcours/modeles/index.html">Familles de modèles</a></h2><ul class="sidebar__list"><li class="sidebar__item" data-lesson="19-slm"><a href="../../../lecons/19-slm/index.html"><span class="sidebar__num">19</span><span class="sidebar__label">Construire avec les petits modèles (SLM)</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="20-mistral"><a href="../../../lecons/20-mistral/index.html"><span class="sidebar__num">20</span><span class="sidebar__label">Construire avec les modèles Mistral</span><span class="sidebar__check" aria-hidden="true"></span></a></li><li class="sidebar__item" data-lesson="21-meta"><a href="../../../lecons/21-meta/index.html"><span class="sidebar__num">21</span><span class="sidebar__label">Construire avec les modèles Meta</span><span class="sidebar__check" aria-hidden="true"></span></a></li></ul></section><section class="sidebar__track"><h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">📎</span><a href="../../../annexes/index.html">Annexes</a></h2></section></div></nav>
+  <main id="contenu" class="main">
+
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="../../../index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="../../../parcours/avance/index.html">Techniques avancées</a> <span aria-hidden="true">›</span>
+  <a href="../../../lecons/18-fine-tuning/index.html">Leçon 18</a> <span aria-hidden="true">›</span>
+  <span>Ressources pour l’auto-apprentissage</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">Page annexe de la leçon 18 — Affiner (fine-tuner) un LLM</p>
+</header>
+<article class="prose">
+<h1 id="ressources-pour-lauto-apprentissage">Ressources pour l’auto-apprentissage<a class="anchor" href="#ressources-pour-lauto-apprentissage" aria-label="Lien vers cette section">#</a></h1>
+<p>Cette leçon a été construite en s’appuyant sur plusieurs ressources principales d’OpenAI et d’Azure OpenAI comme références pour la terminologie et les tutoriels. Voici une liste non exhaustive, pour vos propres parcours d’apprentissage autonome.</p>
+<h2 id="1-ressources-principales">1. Ressources principales<a class="anchor" href="#1-ressources-principales" aria-label="Lien vers cette section">#</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Titre/Lien</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://platform.openai.com/docs/guides/fine-tuning" target="_blank" rel="noopener noreferrer">Fine-tuning with OpenAI Models</a></td>
+<td style="text-align:left">Le fine-tuning améliore l’apprentissage par few-shot en s’entraînant sur beaucoup plus d’exemples que ce qui peut tenir dans le prompt, ce qui vous fait économiser des coûts, améliore la qualité des réponses et permet des requêtes à plus faible latence. <strong>Découvrez une vue d’ensemble du fine-tuning par OpenAI.</strong></td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://learn.microsoft.com/azure/ai-services/openai/concepts/fine-tuning-considerations#what-is-fine-tuning-with-azure-openai" target="_blank" rel="noopener noreferrer">What is Fine-Tuning with Azure OpenAI?</a></td>
+<td style="text-align:left">Comprenez <strong>ce qu’est le fine-tuning (concept)</strong>, pourquoi vous devriez vous y intéresser (problématique motivante), quelles données utiliser (entraînement) et comment mesurer la qualité</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://learn.microsoft.com/azure/ai-services/openai/how-to/fine-tuning?tabs=turbo%2Cpython&amp;pivots=programming-language-studio#continuous-fine-tuning" target="_blank" rel="noopener noreferrer">Customize a model with fine-tuning</a></td>
+<td style="text-align:left">Le service Azure OpenAI vous permet d’adapter nos modèles à vos propres jeux de données grâce au fine-tuning. Apprenez <strong>comment faire du fine-tuning (processus)</strong> et sélectionner des modèles via Azure AI Studio, le SDK Python ou l’API REST.</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://learn.microsoft.com/ai/playbook/technology-guidance/generative-ai/working-with-llms/fine-tuning-recommend" target="_blank" rel="noopener noreferrer">Recommendations for LLM fine-tuning</a></td>
+<td style="text-align:left">Les LLM peuvent ne pas bien fonctionner sur certains domaines, tâches ou jeux de données spécifiques, ou produire des résultats inexacts ou trompeurs. <strong>Quand devriez-vous envisager le fine-tuning</strong> comme solution possible ?</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://learn.microsoft.com/azure/ai-services/openai/how-to/fine-tuning?tabs=turbo%2Cpython&amp;pivots=programming-language-studio#continuous-fine-tuning" target="_blank" rel="noopener noreferrer">Continuous Fine Tuning</a></td>
+<td style="text-align:left">Le fine-tuning continu est un processus itératif qui consiste à prendre un modèle déjà fine-tuné comme modèle de base et à <strong>le fine-tuner davantage</strong> sur de nouveaux ensembles d’exemples d’entraînement.</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://learn.microsoft.com/azure/ai-services/openai/how-to/fine-tuning-functions" target="_blank" rel="noopener noreferrer">Fine-tuning and function calling</a></td>
+<td style="text-align:left">Le fine-tuning de votre modèle <strong>avec des exemples d’appels de fonctions</strong> peut améliorer la sortie du modèle en obtenant des réponses plus précises et cohérentes – avec des réponses formatées de manière similaire et des économies de coûts.</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://learn.microsoft.com/azure/ai-services/openai/concepts/models#fine-tuning-models" target="_blank" rel="noopener noreferrer">Fine-tuning Models: Azure OpenAI Guidance</a></td>
+<td style="text-align:left">Consultez ce tableau pour comprendre <strong>quels modèles peuvent être fine-tunés</strong> dans Azure OpenAI, et dans quelles régions ils sont disponibles. Vérifiez leurs limites de tokens et les dates d’expiration des données d’entraînement si nécessaire.</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://learn.microsoft.com/shows/ai-show/to-fine-tune-or-not-fine-tune-that-is-the-question" target="_blank" rel="noopener noreferrer">To Fine Tune or Not To Fine Tune? That is the Question</a></td>
+<td style="text-align:left">Cet épisode de 30 minutes de l’AI Show, diffusé en <strong>octobre 2023</strong>, aborde les avantages, inconvénients et retours d’expérience pratiques pour vous aider à prendre cette décision.</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://learn.microsoft.com/ai/playbook/technology-guidance/generative-ai/working-with-llms/fine-tuning-recommend" target="_blank" rel="noopener noreferrer">Getting Started With LLM Fine-Tuning</a></td>
+<td style="text-align:left">Cette ressource du <strong>AI Playbook</strong> vous guide à travers les exigences en données, le formatage, le réglage des hyperparamètres et les défis/limitations à connaître.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Tutoriel</strong> : <a href="https://learn.microsoft.com/azure/ai-services/openai/tutorials/fine-tune?tabs=python%2Ccommand-line" target="_blank" rel="noopener noreferrer">Azure OpenAI GPT3.5 Turbo Fine-Tuning</a></td>
+<td style="text-align:left">Apprenez à créer un jeu de données d’exemple pour le fine-tuning, préparer le fine-tuning, lancer un travail de fine-tuning et déployer le modèle fine-tuné sur Azure.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Tutoriel</strong> : <a href="https://learn.microsoft.com/azure/ai-studio/how-to/fine-tune-model-llama" target="_blank" rel="noopener noreferrer">Fine-tune a Llama 2 model in Azure AI Studio</a></td>
+<td style="text-align:left">Azure AI Studio vous permet d’adapter les grands modèles de langage à vos propres jeux de données <em>via un workflow basé sur une interface utilisateur adapté aux développeurs low-code</em>. Découvrez cet exemple.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Tutoriel</strong> : <a href="https://learn.microsoft.com/azure/databricks/machine-learning/train-model/huggingface/fine-tune-model" target="_blank" rel="noopener noreferrer">Fine-tune Hugging Face models for a single GPU on Azure</a></td>
+<td style="text-align:left">Cet article explique comment fine-tuner un modèle Hugging Face avec la bibliothèque transformers de Hugging Face sur un GPU unique avec Azure DataBricks et les bibliothèques Hugging Face Trainer.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Formation :</strong> <a href="https://learn.microsoft.com/training/modules/finetune-foundation-model-with-azure-machine-learning/" target="_blank" rel="noopener noreferrer">Fine-tune a foundation model with Azure Machine Learning</a></td>
+<td style="text-align:left">Le catalogue de modèles dans Azure Machine Learning propose de nombreux modèles open source que vous pouvez fine-tuner pour votre tâche spécifique. Essayez ce module issu du <a href="https://learn.microsoft.com/training/paths/work-with-generative-models-azure-machine-learning/" target="_blank" rel="noopener noreferrer">parcours d’apprentissage AzureML Generative AI</a>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Tutoriel :</strong> <a href="https://docs.wandb.ai/guides/integrations/azure-openai-fine-tuning" target="_blank" rel="noopener noreferrer">Azure OpenAI Fine-Tuning</a></td>
+<td style="text-align:left">Le fine-tuning des modèles GPT-3.5 ou GPT-4 sur Microsoft Azure avec W&amp;B permet un suivi et une analyse détaillés des performances du modèle. Ce guide étend les concepts du guide OpenAI Fine-Tuning avec des étapes et fonctionnalités spécifiques à Azure OpenAI.</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-ressources-secondaires">2. Ressources secondaires<a class="anchor" href="#2-ressources-secondaires" aria-label="Lien vers cette section">#</a></h2>
+<p>Cette section regroupe des ressources supplémentaires qui valent la peine d’être explorées, mais que nous n’avons pas eu le temps d’aborder dans cette leçon. Elles pourront être traitées dans une leçon future, ou comme option de devoir secondaire, à une date ultérieure. Pour l’instant, utilisez-les pour approfondir vos connaissances et votre expertise sur ce sujet.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Titre/Lien</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>OpenAI Cookbook</strong> : <a href="https://cookbook.openai.com/examples/chat_finetuning_data_prep" target="_blank" rel="noopener noreferrer">Préparation et analyse des données pour le fine-tuning de modèles de chat</a></td>
+<td style="text-align:left">Ce notebook sert d’outil pour prétraiter et analyser le jeu de données de chat utilisé pour le fine-tuning d’un modèle de chat. Il vérifie les erreurs de format, fournit des statistiques de base et estime le nombre de tokens pour le calcul des coûts de fine-tuning. Voir : <a href="https://platform.openai.com/docs/guides/fine-tuning" target="_blank" rel="noopener noreferrer">Méthode de fine-tuning pour gpt-3.5-turbo</a>.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>OpenAI Cookbook</strong> : <a href="https://cookbook.openai.com/examples/fine-tuned_qa/ft_retrieval_augmented_generation_qdrant" target="_blank" rel="noopener noreferrer">Fine-tuning pour Retrieval Augmented Generation (RAG) avec Qdrant</a></td>
+<td style="text-align:left">Ce notebook a pour but de présenter un exemple complet de fine-tuning des modèles OpenAI pour la génération augmentée par récupération (RAG). Nous intégrerons également Qdrant et le Few-Shot Learning pour améliorer les performances du modèle et réduire les erreurs factuelles.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>OpenAI Cookbook</strong> : <a href="https://cookbook.openai.com/examples/third_party/gpt_finetuning_with_wandb" target="_blank" rel="noopener noreferrer">Fine-tuning GPT avec Weights &amp; Biases</a></td>
+<td style="text-align:left">Weights &amp; Biases (W&amp;B) est une plateforme pour développeurs IA, avec des outils pour entraîner des modèles, faire du fine-tuning et exploiter des modèles de base. Lisez d’abord leur guide <a href="https://docs.wandb.ai/guides/integrations/openai-fine-tuning/" target="_blank" rel="noopener noreferrer">OpenAI Fine-Tuning</a>, puis essayez l’exercice du Cookbook.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Tutoriel communautaire</strong> <a href="https://huggingface.co/blog/g-ronimo/phinetuning" target="_blank" rel="noopener noreferrer">Phinetuning 2.0</a> - fine-tuning pour petits modèles de langage</td>
+<td style="text-align:left">Découvrez <a href="https://www.microsoft.com/research/blog/phi-2-the-surprising-power-of-small-language-models/" target="_blank" rel="noopener noreferrer">Phi-2</a>, le nouveau petit modèle de Microsoft, étonnamment puissant et compact. Ce tutoriel vous guide pour fine-tuner Phi-2, en montrant comment construire un jeu de données unique et fine-tuner le modèle avec QLoRA.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Tutoriel Hugging Face</strong> <a href="https://www.philschmid.de/fine-tune-llms-in-2024-with-trl" target="_blank" rel="noopener noreferrer">Comment fine-tuner des LLM en 2024 avec Hugging Face</a></td>
+<td style="text-align:left">Ce billet de blog vous explique comment fine-tuner des LLM open source avec Hugging Face TRL, Transformers et datasets en 2024. Vous définissez un cas d’usage, configurez un environnement de dev, préparez un jeu de données, fine-tunez le modèle, le testez et l’évaluez, puis le déployez en production.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Hugging Face : <a href="https://github.com/huggingface/autotrain-advanced" target="_blank" rel="noopener noreferrer">AutoTrain Advanced</a></strong></td>
+<td style="text-align:left">Facilite l’entraînement et le déploiement rapides de <a href="https://twitter.com/abhi1thakur/status/1755167674894557291" target="_blank" rel="noopener noreferrer">modèles d’apprentissage automatique de pointe</a>. Le dépôt propose des tutoriels compatibles Colab avec des vidéos YouTube, pour le fine-tuning. <strong>Reflète la récente mise à jour <a href="https://twitter.com/abhi1thakur/status/1750828141805777057" target="_blank" rel="noopener noreferrer">local-first</a></strong>. Consultez la <a href="https://huggingface.co/autotrain" target="_blank" rel="noopener noreferrer">documentation AutoTrain</a></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Avertissement</strong> :<br />
+Ce document a été traduit à l’aide du service de traduction automatique <a href="https://github.com/Azure/co-op-translator" target="_blank" rel="noopener noreferrer">Co-op Translator</a>. Bien que nous nous efforcions d’assurer l’exactitude, veuillez noter que les traductions automatiques peuvent contenir des erreurs ou des inexactitudes. Le document original dans sa langue d’origine doit être considéré comme la source faisant foi. Pour les informations critiques, une traduction professionnelle réalisée par un humain est recommandée. Nous déclinons toute responsabilité en cas de malentendus ou de mauvaises interprétations résultant de l’utilisation de cette traduction.</p>
+
+</article>
+<nav class="prevnext" aria-label="Navigation entre les leçons"><a class="prevnext__link prevnext__prev" href="../../../lecons/18-fine-tuning/index.html"><span class="prevnext__dir">← Précédent</span><span class="prevnext__title">Affiner (fine-tuner) un LLM</span></a><a class="prevnext__link prevnext__next" href="../../../lecons/19-slm/index.html"><span class="prevnext__dir">Suivant →</span><span class="prevnext__title">Construire avec les petits modèles (SLM)</span></a></nav>
+<p class="sourcelink">Version d'origine :
+  <a href="https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/fr/18-fine-tuning/RESOURCES.md" target="_blank" rel="noopener noreferrer">
+    translations/fr/18-fine-tuning/RESOURCES.md</a></p>
+
+  </main>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#1-ressources-principales">1. Ressources principales</a></li><li class="toc__item toc__item--h2"><a href="#2-ressources-secondaires">2. Ressources secondaires</a></li></ul></div></aside>
+</div>
+<footer class="footer">
+  <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
+     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
+  <p class="footer__meta">© 2026 Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+</footer>
+<script src="../../../assets/app.js" defer></script>
+</body>
+</html>
