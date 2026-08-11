@@ -34,6 +34,7 @@ ASSETS_SRC = Path(__file__).resolve().parent / "assets"
 UPSTREAM = "https://github.com/microsoft/generative-ai-for-beginners"
 UPSTREAM_FR = f"{UPSTREAM}/blob/main/translations/fr"
 APPS_UPSTREAM = "https://github.com/Shubhamsaboo/awesome-llm-apps"
+PROMPTS_UPSTREAM = "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools"
 
 LANG_BY_EXT = {
     ".py": "python", ".ts": "typescript", ".js": "javascript", ".cs": "csharp",
@@ -42,6 +43,19 @@ LANG_BY_EXT = {
     ".html": "html", ".css": "css", ".md": "markdown", ".txt": "text",
     ".dib": "text", ".env-sample": "ini", ".gitignore": "text",
 }
+# Fichiers d'`assets/` produits par ce script, et donc les seuls qu'il ait le droit
+# d'effacer avant de régénérer. Le reste appartient aux scripts d'ingestion.
+BUILD_ASSETS = {"style.css", "app.js", "highlight.css", "search-index.js"}
+COLLECTIONS = {
+    "cours":    {"order": 1, "icon": "📘", "label": "Leçon",  "plural": "Leçons",
+                 "verb": "Apprendre", "url": "index.html"},
+    "ateliers": {"order": 2, "icon": "🧪", "label": "Atelier", "plural": "Ateliers",
+                 "verb": "Construire", "url": "ateliers/index.html"},
+    "prompts":  {"order": 3, "icon": "🔍", "label": "Prompt système", "plural": "Prompts système",
+                 "verb": "Décortiquer", "url": "prompts-systeme/index.html"},
+}
+# Sert à ordonner les prompts : les plus instructifs d'abord.
+COLLECTION_ORDER_HINT = {"incontournable": 0, "tres-demande": 1, "utile": 2, "survol": 3}
 GROUP_LABELS = {
     "python": "Python", "typescript": "TypeScript", "javascript": "JavaScript",
     "js-githubmodels": "JavaScript (GitHub Models)", "dotnet": ".NET", "scripts": "Scripts",
@@ -128,6 +142,9 @@ class Site:
         self.apps = read_json(CONTENT / "_apps.json", {"categories": {}, "projects": {}})
         self.apps_meta = read_json(CONTENT / "_apps_meta.json", {"categories": {}, "projects": {}})
         self.services = read_json(CONTENT / "_services.json", {"categories": {}, "services": {}})
+        self.prompts = read_json(CONTENT / "_prompts.json", {"tools": {}, "skipped": []})
+        self.prompts_meta = read_json(CONTENT / "_prompts_meta.json", {"tools": {}})
+        self.topicdef = read_json(CONTENT / "_topics.json", {"topics": {}})["topics"]
         self.tagdef = self.meta.get("tags", {"groups": {}, "values": {}})
         self.tracks = self.meta["tracks"]
         self.lesson_meta = self.meta["lessons"]
@@ -149,6 +166,17 @@ class Site:
         self.app_subpages: dict[str, list[dict]] = {}
         self.services_of: dict[str, list[str]] = {}   # id de page -> ids de services
         self.tags_of: dict[str, list[str]] = {}       # id de page -> tags résolus
+        self.prompt_order: list[str] = sorted(
+            self.prompts["tools"],
+            key=lambda t: (COLLECTION_ORDER_HINT.get(
+                self.prompts_meta["tools"].get(t, {}).get("tags", ["utile"])[0], 9),
+                self.prompts_meta["tools"].get(t, {}).get("title", t)),
+        )
+        # Registre unifié : tout ce qui donne une page de contenu, quelle que soit sa famille.
+        # C'est ce qui permet aux sujets, au catalogue et à la recherche de traiter les trois
+        # collections de la même façon — et à une quatrième source de ne rien coûter.
+        self.items: dict[str, dict] = {}
+        self.topics_of: dict[str, list[str]] = {}
         # Les notebooks référencent les images anglaises : on les retrouve par leur nom
         # de base parmi celles déjà publiées (la variante traduite porte le même nom).
         img_dir = DOCS / "assets" / "images"
@@ -255,6 +283,17 @@ class Site:
             chosen["cout"] = self.cost_tag(owner)
             self.tags_of[owner] = self.sort_tags(list(chosen.values()))
 
+        for tid in self.prompt_order:
+            fr = self.prompts_meta["tools"].get(tid, {})
+            chosen = {g: t for g, t in
+                      ((self.group_of(t), t) for t in fr.get("tags", [])) if g}
+            chosen.setdefault("interet", "utile")
+            chosen.setdefault("difficulte", "intermediaire")
+            # Un prompt se lit : rien à installer, rien à payer.
+            chosen["nature"] = chosen.get("nature", "theorie")
+            chosen["cout"] = "gratuit"
+            self.tags_of[f"prompts/{tid}"] = self.sort_tags(list(chosen.values()))
+
         unknown = {t for tags in self.tags_of.values() for t in tags} - set(self.tagdef["values"])
         for t in sorted(unknown):
             self.warnings.append(f"tag absent du vocabulaire : {t}")
@@ -300,6 +339,158 @@ class Site:
     def categories_for_lesson(self, slug: str) -> list[dict]:
         return [self.category(c) for c in self.cat_order
                 if slug in self.apps_meta["categories"].get(c, {}).get("lessons", [])]
+
+    # -- prompts système ---------------------------------------------------
+
+    def prompt(self, tid: str) -> dict:
+        """Vue fusionnée d'un outil : fichiers extraits + habillage français."""
+        raw = self.prompts["tools"][tid]
+        fr = self.prompts_meta["tools"].get(tid, {})
+        owner = f"prompts/{tid}"
+        return {
+            "id": tid,
+            "path": raw["path"],
+            "title": fr.get("title") or raw["name"],
+            "editor": fr.get("editor", ""),
+            "what": fr.get("what", ""),
+            "learn": fr.get("learn", []),
+            "files": raw["files"],
+            "chars": raw["chars"],
+            "tool_defs": raw["tool_defs"],
+            "lessons": [l for l in fr.get("lessons", []) if l in self.lesson_meta],
+            "tags": self.tags_of.get(owner, []),
+            "topics": self.topics_of.get(owner, []),
+            "url": f"prompts-systeme/{tid}/index.html",
+        }
+
+    def prompt_observations(self, tid: str) -> list[str]:
+        """Constats mesurés sur les fichiers, par opposition à l'analyse rédigée.
+
+        Ce qui est calculé ici ne peut pas se tromper : longueur, mode de structuration,
+        nombre d'outils déclarés. L'avis éditorial reste dans `_prompts_meta.json`.
+        """
+        raw = self.prompts["tools"][tid]
+        texts = []
+        for f in raw["files"]:
+            path = DOCS / "assets" / "prompts-systeme" / tid / f["name"]
+            if f["kind"] == "prompt" and path.is_file():
+                texts.append(path.read_text(encoding="utf-8", errors="replace"))
+        blob = "\n".join(texts)
+        if not blob.strip():
+            return []
+        words = len(blob.split())
+        obs = [f"Environ <strong>{words:,} mots</strong> répartis sur "
+               f"{len(raw['files'])} fichier(s)."
+               .replace(",", " ")]
+        xml = len(re.findall(r"^<[a-z][a-z0-9_]*>\s*$", blob, re.MULTILINE))
+        md = len(re.findall(r"^#{1,3} \S", blob, re.MULTILINE))
+        if xml >= 3:
+            obs.append(f"Structuré par <strong>balises</strong> : {xml} blocs délimités "
+                       f"(<code>&lt;nom&gt;…&lt;/nom&gt;</code>).")
+        elif md >= 3:
+            obs.append(f"Structuré par <strong>titres Markdown</strong> : {md} sections.")
+        else:
+            obs.append("Texte peu structuré : ni balises ni titres marqués.")
+        if raw["tool_defs"]:
+            obs.append(f"<strong>{raw['tool_defs']} outils</strong> déclarés dans un fichier "
+                       f"séparé, avec leurs paramètres.")
+        interdits = len(re.findall(r"\b(never|must not|do not|don't|avoid|refuse)\b", blob, re.I))
+        if interdits:
+            obs.append(f"<strong>{interdits} interdictions</strong> explicites "
+                       f"(« never », « must not », « do not »…) — l'essentiel du cadrage "
+                       f"passe par ce qu'il ne faut pas faire.")
+        return obs
+
+    # -- registre unifié ---------------------------------------------------
+
+    def register_items(self) -> None:
+        """Convertit les trois manifestes en éléments de même forme."""
+        for slug in self.order:
+            lm, track = self.lesson_meta[slug], self.track_of[slug]
+            self.items[slug] = {
+                "id": slug, "pkey": slug, "collection": "cours", "title": lm["title"],
+                "summary": lm["summary"], "url": f"lecons/{slug}/index.html",
+                "context": track["title"], "label": f'Leçon {lm["num"]}',
+                "declared_topics": lm.get("topics", []),
+                "headings": [],
+            }
+        for pid in self.app_order:
+            raw, fr = self.apps["projects"][pid], self.apps_meta["projects"].get(pid, {})
+            cat = self.apps_meta["categories"].get(raw["category"], {})
+            self.items[f"ateliers/{pid}"] = {
+                "id": f"ateliers/{pid}", "pkey": f"atelier:{pid}", "collection": "ateliers",
+                "title": fr.get("title") or raw["title_en"],
+                "summary": fr.get("summary") or (raw.get("features") or [""])[0],
+                "url": f"ateliers/{pid}/index.html",
+                "context": cat.get("title", ""), "label": "Atelier",
+                "declared_topics": fr.get("topics") or cat.get("topics", []),
+                "headings": raw.get("features", []),
+            }
+        for tid in self.prompt_order:
+            fr = self.prompts_meta["tools"].get(tid, {})
+            raw = self.prompts["tools"][tid]
+            self.items[f"prompts/{tid}"] = {
+                "id": f"prompts/{tid}", "pkey": f"prompt:{tid}", "collection": "prompts",
+                "title": fr.get("title") or raw["name"],
+                "summary": fr.get("what", ""),
+                "url": f"prompts-systeme/{tid}/index.html",
+                "context": fr.get("editor", ""), "label": "Prompt système",
+                "declared_topics": fr.get("topics", []),
+                "headings": fr.get("learn", []),
+            }
+
+    def scan_topics(self) -> None:
+        """Sujet déclaré d'abord ; sinon détection par mots-clés sur titre, résumé et
+        intertitres — jamais sur le corps entier, qui produirait trop de faux positifs."""
+        patterns = {
+            tid: re.compile("|".join(re.escape(k) for k in t["keywords"]), re.IGNORECASE)
+            for tid, t in self.topicdef.items() if t.get("keywords")
+        }
+        for iid, item in self.items.items():
+            topics = [t for t in item["declared_topics"] if t in self.topicdef]
+            if not topics:
+                blob = " ".join([item["title"], item["summary"]] + list(item["headings"]))
+                topics = [tid for tid, pat in patterns.items() if pat.search(blob)]
+            item["topics"] = self.sort_topics(topics)
+            self.topics_of[iid] = item["topics"]
+            if not topics:
+                self.warnings.append(f"contenu sans sujet : {iid}")
+
+    def sort_topics(self, topics: list[str]) -> list[str]:
+        return sorted(dict.fromkeys(t for t in topics if t in self.topicdef),
+                      key=lambda t: self.topicdef[t]["order"])
+
+    def items_by_topic(self, topic: str, collection: str | None = None) -> list[dict]:
+        return [i for i in self.items.values()
+                if topic in i.get("topics", [])
+                and (collection is None or i["collection"] == collection)]
+
+    def related_items(self, iid: str, limit: int = 6) -> list[dict]:
+        """Contenus des *autres* familles partageant un sujet — c'est le lien entre
+        « sujets similaires » que réclamait la réorganisation."""
+        item = self.items.get(iid)
+        if not item or not item.get("topics"):
+            return []
+        mine = set(item["topics"])
+        scored = []
+        for other in self.items.values():
+            if other["id"] == iid or other["collection"] == item["collection"]:
+                continue
+            shared = mine & set(other.get("topics", []))
+            if shared:
+                scored.append((len(shared), other))
+        scored.sort(key=lambda kv: (-kv[0], kv[1]["collection"], kv[1]["title"]))
+        out, seen = [], set()
+        for _, other in scored:                    # équilibrer entre les familles
+            if sum(1 for o in out if o["collection"] == other["collection"]) >= limit // 2:
+                continue
+            if other["id"] in seen:
+                continue
+            seen.add(other["id"])
+            out.append(other)
+            if len(out) >= limit:
+                break
+        return out
 
     # -- pages ------------------------------------------------------------
 
@@ -656,10 +847,10 @@ def layout(*, site: Site, base: str, title: str, description: str, body: str,
 <a class="skip" href="#contenu">Aller au contenu</a>
 <header class="topbar">
   <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
-  <a class="topbar__brand" href="{base}index.html"><span aria-hidden="true">🧠</span> IA Générative — le cours</a>
+  <a class="topbar__brand" href="{base}index.html"><span aria-hidden="true">🧠</span> IA Générative</a>
   <div class="search" role="search">
-    <input class="search__input" type="search" placeholder="Rechercher dans le cours…"
-           aria-label="Rechercher dans le cours" autocomplete="off">
+    <input class="search__input" type="search" placeholder="Rechercher sur tout le site…"
+           aria-label="Rechercher sur tout le site" autocomplete="off">
     <div class="search__results" hidden></div>
   </div>
   <button class="topbar__theme" type="button" aria-label="Changer de thème" title="Changer de thème">
@@ -687,7 +878,7 @@ def layout(*, site: Site, base: str, title: str, description: str, body: str,
 def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | None = None,
                  current_cat: str | None = None) -> str:
     out = ['<nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner">']
-    out.append(f'<a class="sidebar__home" href="{base}index.html">Accueil du cours</a>')
+    out.append(f'<a class="sidebar__home" href="{base}index.html">Accueil</a>')
     for track in site.tracks:
         out.append('<section class="sidebar__track">')
         out.append(
@@ -736,10 +927,39 @@ def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | 
                 f'<span class="sidebar__count">{len(c["projects"])}</span></a></li>'
             )
         out.append("</ul></section>")
+    if site.prompt_order:
+        out.append('<section class="sidebar__track">')
+        out.append(
+            f'<h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🔍</span>'
+            f'<a href="{base}prompts-systeme/index.html">Prompts système</a></h2>'
+            f'<ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat">'
+            f'<a href="{base}prompts-systeme/index.html">'
+            f'<span class="sidebar__num" aria-hidden="true">📄</span>'
+            f'<span class="sidebar__label">Les {len(site.prompt_order)} outils</span></a></li></ul>'
+        )
+        out.append("</section>")
+    out.append(
+        f'<section class="sidebar__track"><h2 class="sidebar__track-title">'
+        f'<span class="sidebar__icon" aria-hidden="true">🗺️</span>'
+        f'<a href="{base}sujets/index.html">Par sujet</a></h2>'
+        f'<ul class="sidebar__list">'
+        + "".join(
+            f'<li class="sidebar__item sidebar__item--cat"><a href="{base}sujets/{tid}/index.html">'
+            f'<span class="sidebar__num" aria-hidden="true">{t["icon"]}</span>'
+            f'<span class="sidebar__label">{esc(t["title"])}</span>'
+            f'<span class="sidebar__count">{len(site.items_by_topic(tid))}</span></a></li>'
+            for tid, t in sorted(site.topicdef.items(), key=lambda kv: kv[1]["order"])
+        )
+        + "</ul></section>"
+    )
     out.append(
         f'<section class="sidebar__track"><h2 class="sidebar__track-title">'
         f'<span class="sidebar__icon" aria-hidden="true">📎</span>'
         f'<a href="{base}annexes/index.html">Annexes</a></h2>'
+        f'<ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat">'
+        f'<a href="{base}catalogue/index.html">'
+        f'<span class="sidebar__num" aria-hidden="true">🗂️</span>'
+        f'<span class="sidebar__label">Catalogue complet</span></a></li></ul>'
         f'<ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat">'
         f'<a href="{base}annexes/alternatives-gratuites/index.html">'
         f'<span class="sidebar__num" aria-hidden="true">🆓</span>'
@@ -776,33 +996,118 @@ def tag_attr(tags: list[str]) -> str:
     return " ".join(tags)
 
 
-def filter_bar(site: Site, base: str, *, target: str, noun: str) -> str:
-    """Barre de filtrage par tag. Le filtrage se fait côté client sur `target`."""
-    groups = sorted(site.tagdef["groups"].items(), key=lambda kv: kv[1]["order"])
+def facet_group(legend: str, facet: str, buttons: str) -> str:
+    return (f'<div class="filters__group"><span class="filters__legend">{esc(legend)}</span>'
+            f'<div class="filters__row" data-facet="{facet}">{buttons}</div></div>')
+
+
+def filter_bar(site: Site, base: str, *, target: str, noun: str,
+               facets: tuple[str, ...] = ("tags",)) -> str:
+    """Barre de filtrage. Chaque groupe est une facette indépendante ; le filtrage client
+    combine les facettes en ET, ce qui permet « incontournable » × « RAG » × « atelier »."""
     blocks = []
-    for gid, g in groups:
-        values = [(t, v) for t, v in site.tagdef["values"].items() if v["group"] == gid]
-        if not values:
-            continue
+
+    if "type" in facets:
         btns = "".join(
-            f'<button class="filters__tag tag tag--{gid}" type="button" data-tag="{t}" '
-            f'aria-pressed="false" title="{esc(v["desc"])}">'
-            f'<span class="tag__icon" aria-hidden="true">{v["icon"]}</span>'
-            f'<span class="tag__label">{esc(v["label"])}</span></button>'
-            for t, v in values
+            f'<button class="filters__tag tag tag--type" type="button" data-facet-value="{cid}" '
+            f'aria-pressed="false" title="{esc(c["plural"])}">'
+            f'<span class="tag__icon" aria-hidden="true">{c["icon"]}</span>'
+            f'<span class="tag__label">{esc(c["plural"])}</span></button>'
+            for cid, c in sorted(COLLECTIONS.items(), key=lambda kv: kv[1]["order"])
         )
-        blocks.append(f'<div class="filters__group"><span class="filters__legend">'
-                      f'{esc(g["title"])}</span><div class="filters__row">{btns}</div></div>')
+        blocks.append(facet_group("Type", "type", btns))
+
+    if "topics" in facets:
+        btns = "".join(
+            f'<button class="filters__tag tag tag--topic" type="button" data-facet-value="{tid}" '
+            f'aria-pressed="false" title="{esc(t["summary"])}">'
+            f'<span class="tag__icon" aria-hidden="true">{t["icon"]}</span>'
+            f'<span class="tag__label">{esc(t["title"])}</span></button>'
+            for tid, t in sorted(site.topicdef.items(), key=lambda kv: kv[1]["order"])
+        )
+        blocks.append(facet_group("Sujet", "topics", btns))
+
+    if "tags" in facets:
+        for gid, g in sorted(site.tagdef["groups"].items(), key=lambda kv: kv[1]["order"]):
+            values = [(t, v) for t, v in site.tagdef["values"].items() if v["group"] == gid]
+            if not values:
+                continue
+            btns = "".join(
+                f'<button class="filters__tag tag tag--{gid}" type="button" data-facet-value="{t}" '
+                f'aria-pressed="false" title="{esc(v["desc"])}">'
+                f'<span class="tag__icon" aria-hidden="true">{v["icon"]}</span>'
+                f'<span class="tag__label">{esc(v["label"])}</span></button>'
+                for t, v in values
+            )
+            blocks.append(facet_group(g["title"], "tags", btns))
+
+    hint = ("Cumulez les filtres pour cibler ce qui vous intéresse. "
+            f'<a href="{base}tags/index.html">Que veulent dire ces tags ?</a>')
+    if "topics" in facets:
+        hint = ("Combinez type, sujet et tags. "
+                f'<a href="{base}sujets/index.html">Voir les sujets</a> · '
+                f'<a href="{base}tags/index.html">comprendre les tags</a>')
     return (
         f'<section class="filters" data-filter-target="{target}" data-filter-noun="{noun}">'
         f'<div class="filters__head"><h2 class="filters__title">Filtrer</h2>'
-        f'<p class="filters__hint">Cumulez les filtres pour cibler ce qui vous intéresse. '
-        f'<a href="{base}tags/index.html">Que veulent dire ces tags ?</a></p></div>'
+        f'<p class="filters__hint">{hint}</p></div>'
         f'{"".join(blocks)}'
         f'<p class="filters__status" role="status" aria-live="polite"></p>'
         f'<button class="filters__reset" type="button" hidden>Tout afficher</button>'
         f'</section>'
     )
+
+
+def topic_chips(site: Site, topics: list[str], base: str) -> str:
+    if not topics:
+        return ""
+    out = "".join(
+        f'<li class="tag tag--topic"><a href="{base}sujets/{t}/index.html" '
+        f'title="{esc(site.topicdef[t]["summary"])}">'
+        f'<span class="tag__icon" aria-hidden="true">{site.topicdef[t]["icon"]}</span>'
+        f'<span class="tag__label">{esc(site.topicdef[t]["title"])}</span></a></li>'
+        for t in topics if t in site.topicdef
+    )
+    return f'<ul class="tags tags--topics">{out}</ul>'
+
+
+def item_card(site: Site, item: dict, base: str, *, show_type: bool = False) -> str:
+    """Carte d'un contenu, identique quelle que soit sa famille — c'est ce qui permet au
+    catalogue et aux pages de sujet de mélanger les trois sans code dédié."""
+    c = COLLECTIONS[item["collection"]]
+    tags = site.tags_of.get(item["id"], [])
+    kind = (f'<span class="lcard__kind"><span aria-hidden="true">{c["icon"]}</span> '
+            f'{esc(c["label"])}</span>') if show_type else ""
+    context = f'<span class="lcard__ctx">{esc(item["context"])}</span>' if item["context"] else ""
+    return (
+        f'<article class="lcard" data-item="{item["pkey"]}" data-type="{item["collection"]}" '
+        f'data-topics="{" ".join(item.get("topics", []))}" data-tags="{tag_attr(tags)}">'
+        f'<a class="lcard__link" href="{base}{item["url"]}">'
+        f'{kind}{context}'
+        f'<h3 class="lcard__title">{esc(item["title"])}'
+        f'<span class="sidebar__check" aria-hidden="true"></span></h3>'
+        f'<p class="lcard__summary">{esc(item["summary"])}</p></a>'
+        f'{tag_chips(site, tags)}'
+        f'{topic_chips(site, item.get("topics", []), base)}'
+        f'</article>'
+    )
+
+
+def related_block(site: Site, iid: str, base: str) -> str:
+    related = site.related_items(iid)
+    if not related:
+        return ""
+    items = "".join(
+        f'<li class="related__item"><a href="{base}{r["url"]}">'
+        f'<span class="related__kind" aria-hidden="true">{COLLECTIONS[r["collection"]]["icon"]}</span>'
+        f'<span class="related__title">{esc(r["title"])}</span>'
+        f'<span class="related__summary">{esc(r["summary"])}</span></a></li>'
+        for r in related
+    )
+    return ('<section class="related"><h2 id="sur-le-meme-sujet">Sur le même sujet'
+            '<a class="anchor" href="#sur-le-meme-sujet" aria-label="Lien vers cette section">#</a></h2>'
+            '<p class="related__intro">Les mêmes notions, vues sous un autre angle :</p>'
+            f'<ul class="related__list">{items}</ul></section>')
 
 
 def alternatives_box(site: Site, owner: str, base: str) -> str:
@@ -934,6 +1239,32 @@ def render_code_file(entry: dict, owner: str, renderer: Renderer, base: str) -> 
     return f'<details class="codefile" id="{entry["anchor"]}">{head}<div class="codefile__body">{body}</div></details>'
 
 
+def tool_definitions_html(tools: list[dict]) -> str:
+    """Rend un catalogue d'outils en liste lisible plutôt qu'en JSON brut : c'est la
+    description des outils, pas leur sérialisation, qui a une valeur pédagogique."""
+    out = ['<div class="tooldefs">']
+    for t in tools:
+        params = "".join(
+            f'<li><code>{esc(p["name"])}</code>'
+            + (f' <span class="tooldefs__type">{esc(p["type"])}</span>' if p["type"] else "")
+            + (' <span class="tooldefs__req">requis</span>' if p["required"] else "")
+            + (f' — {esc(p["description"][:300])}' if p["description"] else "")
+            + "</li>"
+            for p in t["params"]
+        )
+        desc = esc(t["description"][:1200]) + ("…" if len(t["description"]) > 1200 else "")
+        out.append(
+            f'<details class="tooldef"><summary class="tooldef__head">'
+            f'<code class="tooldef__name">{esc(t["name"])}</code>'
+            f'<span class="tooldef__count">{len(t["params"])} paramètre(s)</span></summary>'
+            f'<div class="tooldef__body"><p class="tooldef__desc">{desc}</p>'
+            + (f'<ul class="tooldef__params">{params}</ul>' if params else "")
+            + "</div></details>"
+        )
+    out.append("</div>")
+    return "".join(out)
+
+
 def prevnext_html(site: Site, url: str, base: str) -> str:
     prev, nxt = site.neighbours(url)
     if not prev and not nxt:
@@ -960,9 +1291,10 @@ class Builder:
         path.write_text(content, encoding="utf-8")
 
     def index_search(self, *, url: str, title: str, kind: str, context: str,
-                     summary: str, md_text: str, toc: list[dict]) -> None:
+                     summary: str, md_text: str, toc: list[dict],
+                     ctype: str = "") -> None:
         self.site.search.append({
-            "u": url, "t": title, "k": kind, "c": context, "s": summary,
+            "u": url, "t": title, "k": kind, "c": context, "s": summary, "y": ctype,
             "h": [t["text"] for t in toc][:25],
             "b": plain_text(md_text)[:SEARCH_BODY_CHARS],
         })
@@ -1024,6 +1356,27 @@ class Builder:
             for c in s.cat_order
         )
         n_rag = len(s.apps["categories"].get("rag-tutorials", {}).get("projects", []))
+        doors = "".join(
+            f'<a class="door door--{cid}" href="{c["url"]}">'
+            f'<span class="door__icon" aria-hidden="true">{c["icon"]}</span>'
+            f'<span class="door__verb">{esc(c["verb"])}</span>'
+            f'<span class="door__what">{esc(label)}</span>'
+            f'<span class="door__why">{esc(why)}</span></a>'
+            for cid, c, label, why in [
+                ("cours", COLLECTIONS["cours"], f"{total} leçons en 7 parcours",
+                 "Les concepts, dans l'ordre. Commencez ici si vous débutez."),
+                ("ateliers", COLLECTIONS["ateliers"], f"{len(s.app_order)} applications complètes",
+                 "Du code qui tourne, à lire et à détourner."),
+                ("prompts", COLLECTIONS["prompts"], f"{len(s.prompt_order)} outils décortiqués",
+                 "Les consignes internes de produits réels — du prompt engineering grandeur nature."),
+            ]
+        )
+        topic_chips_home = "".join(
+            f'<a class="chipcat" href="sujets/{tid}/index.html">'
+            f'<span aria-hidden="true">{t["icon"]}</span> {esc(t["title"])}'
+            f'<span class="chipcat__count">{len(s.items_by_topic(tid))}</span></a>'
+            for tid, t in sorted(s.topicdef.items(), key=lambda kv: kv[1]["order"])
+        )
         annexes = "".join(
             f'<li><a href="annexes/{k}/index.html">{esc(v["title"])}</a> — {esc(v["summary"])}</li>'
             for k, v in s.annexe_meta["pages"].items()
@@ -1035,14 +1388,11 @@ class Builder:
         )
         body = f"""
 <div class="hero">
-  <p class="hero__eyebrow">Cours complet · {total} leçons · en français</p>
+  <p class="hero__eyebrow">{total} leçons · {len(s.app_order)} ateliers · {len(s.prompt_order)} prompts système · en français</p>
   <h1 class="hero__title">{esc(meta["title"])}</h1>
   <p class="hero__tagline">{esc(meta["tagline"])}</p>
   <p class="hero__intro">{meta["intro"]}</p>
-  <div class="hero__actions">
-    <a class="btn btn--primary" href="lecons/{s.order[0]}/index.html">Commencer le cours</a>
-    <a class="btn" href="lecons/01-introduction-to-genai/index.html">J'ai déjà mon environnement</a>
-  </div>
+  <div class="doors">{doors}</div>
   <div class="progress" data-global-progress>
     <div class="progress__bar"><span class="progress__fill"></span></div>
     <p class="progress__label">Progression : <strong class="progress__text">0 / {total}</strong> leçons terminées
@@ -1057,6 +1407,16 @@ class Builder:
      où le temps investi rapporte le plus.</p>
   {filter_bar(s, "", target=".tcard__lesson", noun="leçon")}
   <div class="tcards">{"".join(cards)}</div>
+</section>
+
+<section class="section">
+  <h2 class="section__title">Par sujet</h2>
+  <p class="section__intro">Le cours, les ateliers et les prompts système parlent souvent des
+     mêmes choses. Chaque sujet les rassemble : la théorie, la mise en pratique, et ce qu'en
+     fait l'industrie.</p>
+  <div class="chipcats">{topic_chips_home}</div>
+  <p><a class="btn" href="sujets/index.html">Voir les {len(s.topicdef)} sujets</a>
+     <a class="btn" href="catalogue/index.html">Catalogue complet ({len(s.items)} contenus)</a></p>
 </section>
 
 <section class="section">
@@ -1199,6 +1559,7 @@ class Builder:
   <p class="pagehead__eyebrow">Leçon {lm["num"]} · {esc(track["title"])} · ≈ {lm["minutes"]} min</p>
   <p class="pagehead__summary">{esc(lm["summary"])}</p>
   {tag_chips(s, s.tags_of.get(slug, []), base, link=True)}
+  {topic_chips(s, s.topics_of.get(slug, []), base)}
 </header>
 {alternatives_box(s, slug, base)}
 <article class="prose">
@@ -1207,6 +1568,7 @@ class Builder:
 {subs_html}
 {code}
 {practice}
+{related_block(s, slug, base)}
 <section class="done" data-lesson-toggle="{slug}">
   <label class="done__label">
     <input class="done__box" type="checkbox">
@@ -1326,17 +1688,7 @@ class Builder:
     # -- ateliers ---------------------------------------------------------
 
     def app_card(self, pid: str, base: str) -> str:
-        a = self.site.app(pid)
-        ncode = len(a["code"])
-        return (
-            f'<article class="lcard" data-item="atelier:{pid}" data-tags="{tag_attr(a["tags"])}">'
-            f'<a class="lcard__link" href="{base}{a["url"]}">'
-            f'<h3 class="lcard__title">{esc(a["title"])}'
-            f'<span class="sidebar__check" aria-hidden="true"></span></h3>'
-            f'<p class="lcard__summary">{esc(a["summary"])}</p></a>'
-            f'{tag_chips(self.site, a["tags"])}'
-            f'<p class="lcard__meta">{ncode} fichier(s) de code</p></article>'
-        )
+        return item_card(self.site, self.site.items[f"ateliers/{pid}"], base)
 
     def build_apps_index(self) -> None:
         s, base = self.site, "../"
@@ -1475,6 +1827,7 @@ class Builder:
   <h1 class="pagehead__title">{esc(a["title"])}</h1>
   <p class="pagehead__summary">{esc(a["summary"])}</p>
   {tag_chips(s, a["tags"], base, link=True)}
+  {topic_chips(s, s.topics_of.get(owner, []), base)}
 </header>
 {alternatives_box(s, owner, base)}
 {feats}
@@ -1486,6 +1839,7 @@ class Builder:
 {subs_html}
 {code}
 {theory}
+{related_block(s, owner, base)}
 <section class="done" data-lesson-toggle="atelier:{pid}">
   <label class="done__label">
     <input class="done__box" type="checkbox">
@@ -1543,6 +1897,273 @@ class Builder:
         ))
         self.index_search(url=url, title=sub["title"], kind="Page d'atelier",
                           context=a["title"], summary="", md_text=md_text, toc=toc)
+
+    # -- prompts système ---------------------------------------------------
+
+    def build_prompts_index(self) -> None:
+        s, base = self.site, "../"
+        sec = s.prompts_meta.get("section", {})
+        cards = "".join(item_card(s, s.items[f"prompts/{t}"], base) for t in s.prompt_order)
+        n_files = sum(len(s.prompts["tools"][t]["files"]) for t in s.prompt_order)
+        n_defs = sum(s.prompts["tools"][t]["tool_defs"] for t in s.prompt_order)
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span><span>Prompts système</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🔍</span> Décortiquer</p>
+  <h1 class="pagehead__title">{esc(sec.get("title", "Prompts système"))}</h1>
+  <p class="pagehead__summary">{esc(sec.get("tagline", ""))}</p>
+  <p class="pagehead__intro">{sec.get("intro", "")}</p>
+</header>
+<aside class="alts alts--warn">
+  <p class="alts__lead"><span aria-hidden="true">⚠️</span> <strong>À lire avant de commencer.</strong>
+     {esc(sec.get("disclaimer", ""))}</p>
+</aside>
+<p class="langnote"><span aria-hidden="true">🌐</span> Les prompts sont reproduits
+   <strong>en anglais et sans aucune modification</strong> — c'est leur intérêt. Le titre,
+   le résumé et l'analyse qui les accompagnent sont en français.</p>
+<p class="statline">{len(s.prompt_order)} outils · {n_files} fichiers ·
+   {n_defs} définitions d'outils · {sum(s.prompts["tools"][t]["chars"] for t in s.prompt_order) // 1000} k caractères</p>
+{filter_bar(s, base, target=".lcards > .lcard", noun="outil", facets=("topics", "tags"))}
+<div class="lcards">{cards}</div>
+"""
+        self.write("prompts-systeme/index.html", layout(
+            site=s, base=base, title="Prompts système — IA Générative",
+            description=sec.get("tagline", ""), body=body,
+            sidebar=sidebar_html(s, base, None), body_class="page-track",
+        ))
+        self.index_search(url="prompts-systeme/index.html", title="Prompts système",
+                          kind="Prompts système", context="", summary=sec.get("tagline", ""),
+                          md_text=sec.get("tagline", ""), toc=[], ctype="prompts")
+
+    def build_prompt(self, tid: str) -> None:
+        s, base = self.site, "../../"
+        p, item = s.prompt(tid), s.items[f"prompts/{tid}"]
+        toc: list[dict] = []
+
+        learn = ""
+        if p["learn"]:
+            learn = ('<section class="feats"><h2 id="ce-quon-en-retient">Ce qu\'on en retient'
+                     '<a class="anchor" href="#ce-quon-en-retient" aria-label="Lien vers cette section">#</a></h2>'
+                     + "<ul>" + "".join(f"<li>{x}</li>" for x in p["learn"]) + "</ul></section>")
+            toc.append({"id": "ce-quon-en-retient", "text": "Ce qu'on en retient", "level": 2})
+
+        obs = s.prompt_observations(tid)
+        obs_html = ""
+        if obs:
+            obs_html = ('<section class="obs"><h2 id="constats">Constats mesurés'
+                        '<a class="anchor" href="#constats" aria-label="Lien vers cette section">#</a></h2>'
+                        '<p class="obs__note">Calculés sur les fichiers eux-mêmes, sans interprétation.</p>'
+                        + "<ul>" + "".join(f"<li>{x}</li>" for x in obs) + "</ul></section>")
+            toc.append({"id": "constats", "text": "Constats mesurés", "level": 2})
+
+        blocks = []
+        for f in p["files"]:
+            anchor = "fichier-" + slugify(f["name"])
+            toc.append({"id": anchor, "text": f["name"], "level": 3})
+            dl = f'{base}assets/prompts-systeme/{tid}/{f["name"]}'
+            head = (f'<h3 id="{anchor}">{esc(f["name"])}'
+                    f'<a class="anchor" href="#{anchor}" aria-label="Lien vers cette section">#</a></h3>'
+                    f'<p class="promptfile__meta">{human_size(f["size"])} · {f["lines"]} lignes · '
+                    f'<a href="{dl}" download>télécharger</a></p>')
+            if f["kind"] == "outils" and f.get("tools"):
+                blocks.append(head + tool_definitions_html(f["tools"]))
+            else:
+                path = DOCS / "assets" / "prompts-systeme" / tid / f["name"]
+                text = path.read_text(encoding="utf-8", errors="replace")
+                blocks.append(head + code_block(text, "text", label=f["name"]))
+        files_html = ('<section class="promptfiles"><h2 id="le-texte">Le texte intégral'
+                      '<a class="anchor" href="#le-texte" aria-label="Lien vers cette section">#</a></h2>'
+                      + "".join(blocks) + "</section>")
+        toc.insert(len(toc) - len(p["files"]), {"id": "le-texte", "text": "Le texte intégral", "level": 2})
+
+        lessons = "".join(
+            f'<li><a href="{base}lecons/{sl}/index.html">'
+            f'{s.lesson_meta[sl]["num"]} · {esc(s.lesson_meta[sl]["title"])}</a></li>'
+            for sl in p["lessons"])
+        theory = (f'<section class="linkback"><h2 id="la-theorie">La théorie correspondante'
+                  f'<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2>'
+                  f'<ul class="linklist">{lessons}</ul></section>') if lessons else ""
+
+        idx = s.prompt_order.index(tid)
+        prev = s.prompt_order[idx - 1] if idx > 0 else None
+        nxt = s.prompt_order[idx + 1] if idx + 1 < len(s.prompt_order) else None
+        left = (f'<a class="prevnext__link prevnext__prev" href="{base}prompts-systeme/{prev}/index.html">'
+                f'<span class="prevnext__dir">← Précédent</span>'
+                f'<span class="prevnext__title">{esc(s.prompt(prev)["title"])}</span></a>'
+                ) if prev else "<span></span>"
+        right = (f'<a class="prevnext__link prevnext__next" href="{base}prompts-systeme/{nxt}/index.html">'
+                 f'<span class="prevnext__dir">Suivant →</span>'
+                 f'<span class="prevnext__title">{esc(s.prompt(nxt)["title"])}</span></a>'
+                 ) if nxt else "<span></span>"
+
+        editor = f' · {esc(p["editor"])}' if p["editor"] else ""
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="{base}prompts-systeme/index.html">Prompts système</a>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🔍</span> Prompt système{editor}</p>
+  <h1 class="pagehead__title">{esc(p["title"])}</h1>
+  <p class="pagehead__summary">{esc(p["what"])}</p>
+  {tag_chips(s, p["tags"], base, link=True)}
+  {topic_chips(s, p["topics"], base)}
+</header>
+<aside class="alts alts--warn"><p class="alts__lead"><span aria-hidden="true">⚠️</span>
+  Texte extrait d'un produit commercial par un tiers : ni officiel, ni vérifiable, et
+  possiblement périmé. Reproduit ici à des fins d'étude.</p></aside>
+{learn}
+{obs_html}
+{files_html}
+{theory}
+{related_block(s, item["id"], base)}
+<section class="done" data-lesson-toggle="prompt:{tid}">
+  <label class="done__label">
+    <input class="done__box" type="checkbox">
+    <span>J'ai lu ce prompt</span>
+  </label>
+</section>
+<nav class="prevnext" aria-label="Navigation entre les prompts">{left}{right}</nav>
+<p class="sourcelink">Source :
+  <a href="{PROMPTS_UPSTREAM}/tree/main/{p["path"].replace(" ", "%20")}"
+     target="_blank" rel="noopener noreferrer">{esc(p["path"])}</a>
+  dans system-prompts-and-models-of-ai-tools (GPL-3.0). Fichiers repris à l'octet près.</p>
+"""
+        self.write(p["url"], layout(
+            site=s, base=base, title=f'{p["title"]} — prompt système',
+            description=p["what"] or f'Le prompt système de {p["title"]}.', body=body,
+            sidebar=sidebar_html(s, base, None), toc=toc_html(toc), body_class="page-lesson",
+        ))
+        self.index_search(url=p["url"], title=p["title"], kind="Prompt système",
+                          context=p["editor"], summary=p["what"],
+                          md_text=" ".join([p["what"]] + [re.sub(r"<[^>]+>", "", x) for x in p["learn"]]),
+                          toc=toc, ctype="prompts")
+
+    # -- sujets et catalogue -----------------------------------------------
+
+    def build_topics_index(self) -> None:
+        s, base = self.site, "../"
+        cards = []
+        for tid, t in sorted(s.topicdef.items(), key=lambda kv: kv[1]["order"]):
+            counts = "".join(
+                f'<span class="tcard__count"><span aria-hidden="true">{c["icon"]}</span> '
+                f'{len(s.items_by_topic(tid, cid))}</span>'
+                for cid, c in sorted(COLLECTIONS.items(), key=lambda kv: kv[1]["order"])
+                if s.items_by_topic(tid, cid)
+            )
+            cards.append(
+                f'<article class="tcard"><a class="tcard__head" href="{base}sujets/{tid}/index.html">'
+                f'<span class="tcard__icon" aria-hidden="true">{t["icon"]}</span>'
+                f'<h3 class="tcard__title">{esc(t["title"])}</h3></a>'
+                f'<p class="tcard__summary">{esc(t["summary"])}</p>'
+                f'<p class="tcard__meta">{counts}</p></article>'
+            )
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span><span>Sujets</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🗺️</span> Par thème</p>
+  <h1 class="pagehead__title">Les {len(s.topicdef)} sujets</h1>
+  <p class="pagehead__summary">Le cours, les ateliers et les prompts système parlent souvent
+     des mêmes choses. Chaque sujet rassemble au même endroit ce que les trois familles en
+     disent — la théorie, la mise en pratique, et ce qu'en fait l'industrie.</p>
+</header>
+<div class="tcards">{"".join(cards)}</div>
+"""
+        self.write("sujets/index.html", layout(
+            site=s, base=base, title="Sujets — IA Générative",
+            description="Les grands thèmes du site, chacun croisant leçons, ateliers et prompts système.",
+            body=body, sidebar=sidebar_html(s, base, None), body_class="page-track",
+        ))
+        self.index_search(url="sujets/index.html", title="Les sujets", kind="Sujets", context="",
+                          summary="Les grands thèmes, croisant les trois familles de contenu.",
+                          md_text=" ".join(t["title"] + " " + t["summary"] for t in s.topicdef.values()),
+                          toc=[])
+
+    def build_topic(self, tid: str) -> None:
+        s, base = self.site, "../../"
+        t = s.topicdef[tid]
+        sections, toc = [], []
+        for cid, c in sorted(COLLECTIONS.items(), key=lambda kv: kv[1]["order"]):
+            found = sorted(s.items_by_topic(tid, cid), key=lambda i: i["title"])
+            if not found:
+                continue
+            anchor = slugify(c["verb"])
+            toc.append({"id": anchor, "text": f'{c["verb"]} ({len(found)})', "level": 2})
+            cards = "".join(item_card(s, i, base) for i in found)
+            sections.append(
+                f'<section class="topicsec"><h2 id="{anchor}">'
+                f'<span aria-hidden="true">{c["icon"]}</span> {esc(c["verb"])}'
+                f'<span class="topicsec__count">{len(found)} {esc(c["label"].lower())}'
+                f'{"s" if len(found) > 1 else ""}</span>'
+                f'<a class="anchor" href="#{anchor}" aria-label="Lien vers cette section">#</a></h2>'
+                f'<div class="lcards">{cards}</div></section>'
+            )
+        others = "".join(
+            f'<a class="chipcat" href="{base}sujets/{o}/index.html">'
+            f'<span aria-hidden="true">{s.topicdef[o]["icon"]}</span> {esc(s.topicdef[o]["title"])}</a>'
+            for o in sorted(s.topicdef, key=lambda x: s.topicdef[x]["order"]) if o != tid
+        )
+        total = len(s.items_by_topic(tid))
+        content = "".join(sections) or (
+            '<p class="note">Aucun contenu rattaché à ce sujet pour le moment.</p>')
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="{base}sujets/index.html">Sujets</a> <span aria-hidden="true">›</span>
+  <span>{esc(t["title"])}</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">{t["icon"]}</span> Sujet</p>
+  <h1 class="pagehead__title">{esc(t["title"])}</h1>
+  <p class="pagehead__summary">{esc(t["summary"])}</p>
+  <p class="statline">{total} contenu(s) sur ce sujet</p>
+</header>
+{content}
+<section class="othertopics"><h2>Les autres sujets</h2>
+  <div class="chipcats">{others}</div></section>
+"""
+        self.write(f"sujets/{tid}/index.html", layout(
+            site=s, base=base, title=f'{t["title"]} — sujet', description=t["summary"],
+            body=body, sidebar=sidebar_html(s, base, None), toc=toc_html(toc),
+            body_class="page-track",
+        ))
+        self.index_search(url=f"sujets/{tid}/index.html", title=t["title"], kind="Sujet",
+                          context="Sujets", summary=t["summary"], md_text=t["summary"], toc=toc)
+
+    def build_catalogue(self) -> None:
+        s, base = self.site, "../"
+        order = sorted(s.items.values(),
+                       key=lambda i: (COLLECTIONS[i["collection"]]["order"], i["title"]))
+        cards = "".join(item_card(s, i, base, show_type=True) for i in order)
+        counts = " · ".join(
+            f'{sum(1 for i in order if i["collection"] == cid)} {c["plural"].lower()}'
+            for cid, c in sorted(COLLECTIONS.items(), key=lambda kv: kv[1]["order"]))
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span><span>Catalogue</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🗂️</span> Tout le contenu</p>
+  <h1 class="pagehead__title">Catalogue</h1>
+  <p class="pagehead__summary">Les {len(order)} contenus du site en une seule liste :
+     {counts}. Croisez type, sujet et tags pour trouver exactement ce que vous cherchez.</p>
+</header>
+{filter_bar(s, base, target=".lcards > .lcard", noun="contenu",
+            facets=("type", "topics", "tags"))}
+<div class="lcards">{cards}</div>
+"""
+        self.write("catalogue/index.html", layout(
+            site=s, base=base, title="Catalogue — IA Générative",
+            description=f"Les {len(order)} contenus du site, filtrables par type, sujet et tags.",
+            body=body, sidebar=sidebar_html(s, base, None), body_class="page-track",
+        ))
+        self.index_search(url="catalogue/index.html", title="Catalogue", kind="Catalogue",
+                          context="", summary="Tout le contenu, filtrable.",
+                          md_text="catalogue tout le contenu filtrer type sujet tags", toc=[])
 
     # -- tags et alternatives ---------------------------------------------
 
@@ -1724,14 +2345,17 @@ class Builder:
         s.scan_app_pages()
         s.scan_services()
         s.scan_tags()
+        s.register_items()
+        s.scan_topics()
 
         if DOCS.exists():
             for child in DOCS.iterdir():
                 if child.name == "assets":
-                    # images/ et code/ sont produits par l'ingestion, pas par ce script :
-                    # les effacer obligerait à tout réimporter à chaque génération.
+                    # N'effacer que ce que *ce* script produit. Tout le reste d'`assets/`
+                    # vient de l'ingestion (images, code, prompts) et serait perdu ; la
+                    # liste est en positif pour qu'une future source survive d'office.
                     for a in child.iterdir():
-                        if a.name not in ("images", "code"):
+                        if a.name in BUILD_ASSETS:
                             shutil.rmtree(a) if a.is_dir() else a.unlink()
                     continue
                 shutil.rmtree(child) if child.is_dir() else child.unlink()
@@ -1750,6 +2374,14 @@ class Builder:
                 self.build_app_category(cat)
             for pid in s.app_order:
                 self.build_app(pid)
+        if s.prompt_order:
+            self.build_prompts_index()
+            for tid in s.prompt_order:
+                self.build_prompt(tid)
+        self.build_topics_index()
+        for tid in s.topicdef:
+            self.build_topic(tid)
+        self.build_catalogue()
         self.build_annexes()
         self.build_alternatives_page()
         self.build_tags_page()
@@ -1775,6 +2407,8 @@ class Builder:
         print(f"  {len(s.order)} leçons + {sum(len(v) for v in s.subpages.values())} pages annexes")
         print(f"  {len(s.app_order)} ateliers dans {len(s.cat_order)} catégories "
               f"+ {sum(len(v) for v in s.app_subpages.values())} pages d'atelier")
+        print(f"  {len(s.prompt_order)} prompts système · {len(s.topicdef)} sujets "
+              f"· {len(s.items)} contenus au catalogue")
         print(f"  {len(s.search)} entrées de recherche · {paid} pages exigeant un service payant "
               f"(alternatives affichées)")
         if pruned:

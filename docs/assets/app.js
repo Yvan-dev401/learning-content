@@ -229,17 +229,32 @@
     var reset = bar.querySelector(".filters__reset");
     var active = new Set();
 
-    function tagsOf(el) {
-      return (el.getAttribute("data-tags") || "").split(/\s+/).filter(Boolean);
+    // Chaque bouton appartient à une facette (type, sujet, tags). L'attribut de l'élément
+    // qui porte les valeurs s'en déduit : data-type, data-topics, data-tags.
+    var facetOf = {};
+    buttons.forEach(function (b) {
+      var row = b.closest("[data-facet]");
+      facetOf[b.getAttribute("data-facet-value")] = row ? row.getAttribute("data-facet") : "tags";
+    });
+
+    function valuesOf(el, facet) {
+      return (el.getAttribute("data-" + facet) || "").split(/\s+/).filter(Boolean);
     }
 
     function apply(pushState) {
       var shown = 0;
+      // Au sein d'une facette les valeurs s'additionnent (OU) ; entre facettes elles se
+      // croisent (ET). « Atelier » + « RAG » + « gratuit » donne bien l'intersection.
+      var wanted = {};
+      active.forEach(function (v) {
+        var f = facetOf[v] || "tags";
+        (wanted[f] = wanted[f] || []).push(v);
+      });
       items.forEach(function (el) {
-        // Un élément doit porter TOUS les tags actifs : cumuler les filtres restreint.
-        var tags = tagsOf(el);
-        var ok = true;
-        active.forEach(function (t) { if (tags.indexOf(t) < 0) ok = false; });
+        var ok = Object.keys(wanted).every(function (f) {
+          var have = valuesOf(el, f);
+          return wanted[f].every(function (v) { return have.indexOf(v) >= 0; });
+        });
         el.classList.toggle("is-filtered-out", !ok);
         if (ok) shown++;
       });
@@ -251,7 +266,8 @@
         card.classList.toggle("is-filtered-out", visible === 0);
       });
       buttons.forEach(function (b) {
-        b.setAttribute("aria-pressed", active.has(b.getAttribute("data-tag")) ? "true" : "false");
+        b.setAttribute("aria-pressed",
+          active.has(b.getAttribute("data-facet-value")) ? "true" : "false");
       });
       if (status) {
         status.textContent = active.size
@@ -270,7 +286,7 @@
 
     buttons.forEach(function (b) {
       b.addEventListener("click", function () {
-        var t = b.getAttribute("data-tag");
+        var t = b.getAttribute("data-facet-value");
         if (active.has(t)) active.delete(t); else active.add(t);
         apply(true);
       });
@@ -279,7 +295,7 @@
       reset.addEventListener("click", function () { active.clear(); apply(true); });
     }
 
-    var known = new Set(buttons.map(function (b) { return b.getAttribute("data-tag"); }));
+    var known = new Set(buttons.map(function (b) { return b.getAttribute("data-facet-value"); }));
     (new URL(window.location.href).searchParams.get("tag") || "")
       .split(",").filter(Boolean).forEach(function (t) { if (known.has(t)) active.add(t); });
     apply(false);

@@ -1,12 +1,23 @@
 # Attribution
 
-Ce dépôt réunit le contenu de deux projets open source distincts, sous deux licences
-différentes. Aucun des deux n'est affilié à ce dépôt.
+Ce dépôt réunit le contenu de trois projets open source distincts, sous trois licences
+différentes. Aucun des trois n'est affilié à ce dépôt.
 
 | Section du site | Dépôt d'origine | Licence |
 |---|---|---|
 | Le cours (22 leçons, parcours 0 à 6) | [microsoft/generative-ai-for-beginners](https://github.com/microsoft/generative-ai-for-beginners) | MIT — [`LICENSE-UPSTREAM`](LICENSE-UPSTREAM) |
 | Les ateliers pratiques (139 projets) | [Shubhamsaboo/awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | Apache-2.0 — [`LICENSE-UPSTREAM-APPS`](LICENSE-UPSTREAM-APPS) |
+| Les prompts système (40 outils) | [x1xhlol/system-prompts-and-models-of-ai-tools](https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools) | GPL-3.0 — [`LICENSE-UPSTREAM-PROMPTS`](LICENSE-UPSTREAM-PROMPTS) |
+
+**Ce dépôt est une compilation à licences mixtes.** Chaque partie reste sous la licence de sa
+source ; les répertoires ci-dessous indiquent où se trouve quoi.
+
+| Chemin | Licence |
+|---|---|
+| `content/<leçon>/`, `content/_annexes/`, `docs/lecons/`, `docs/assets/code/<leçon>/` | MIT |
+| `content/ateliers/`, `docs/ateliers/`, `docs/assets/code/ateliers/` | Apache-2.0 |
+| `docs/assets/prompts-systeme/`, `docs/prompts-systeme/` (texte des prompts) | GPL-3.0 |
+| `tools/`, `content/_*.json`, pages de sujets, catalogue, gabarits HTML | travail propre à ce dépôt |
 
 ---
 
@@ -14,7 +25,7 @@ différentes. Aucun des deux n'est affilié à ce dépôt.
 
 ## Origine du contenu
 
-L'ensemble du contenu pédagogique publié dans `content/`, `code/` et `docs/` provient du
+Le cours publié dans `content/<leçon>/`, `content/_annexes/` et `docs/lecons/` provient du
 dépôt :
 
 > **Generative AI for Beginners**
@@ -126,3 +137,67 @@ et services cités (OpenAI, Anthropic, Google, Qdrant, Tavily, Firecrawl, Eleven
 appartiennent à leurs détenteurs respectifs. Les indications de tarification et de paliers
 gratuits reflètent la situation constatée à la rédaction et peuvent changer : vérifiez
 toujours sur le site du service avant de vous engager.
+
+---
+
+# Les prompts système — system-prompts-and-models-of-ai-tools
+
+## Origine du contenu
+
+Les 40 fiches d'outils publiées dans `docs/prompts-systeme/`, et les fichiers reproduits dans
+`docs/assets/prompts-systeme/`, proviennent du dépôt :
+
+> **System Prompts and Models of AI Tools**
+> https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools
+> © Lucas Valbuena (x1xhlol) et contributeurs — licence **GNU GPL v3**
+
+La licence complète est reproduite dans
+[`LICENSE-UPSTREAM-PROMPTS`](LICENSE-UPSTREAM-PROMPTS).
+
+## Une mise en garde qui compte plus que la licence
+
+Ces textes sont les **prompts système de produits commerciaux**, obtenus par extraction et
+publiés par des tiers. Trois conséquences, qu'il faut avoir en tête avant de s'en servir :
+
+1. **Ce ne sont pas des documents officiels.** Aucun éditeur ne les a publiés ni validés.
+   Leur exactitude n'est pas vérifiable.
+2. **Ils vieillissent vite.** Un éditeur modifie son prompt système sans prévenir ; ce que
+   vous lisez ici peut dater de plusieurs versions.
+3. **La licence GPL-3.0 porte sur la compilation, pas sur les textes eux-mêmes.** L'auteur du
+   dépôt amont ne peut pas concéder de droits sur des écrits qui ne sont pas les siens :
+   chaque prompt appartient à l'éditeur du produit dont il est issu.
+
+Ils sont repris ici **à des fins d'étude** — ce sont les seuls exemples publics de prompt
+engineering écrit et éprouvé à l'échelle industrielle. Toute demande de retrait émanant d'un
+éditeur concerné serait honorée sans discussion.
+
+Cet avertissement figure sur la page d'accueil de la section et en tête de chaque fiche
+d'outil : personne ne peut tomber sur un de ces textes sans le lire.
+
+## Modifications apportées (clause 5 de la GPL-3.0)
+
+**Les fichiers de prompt sont reproduits à l'octet près**, sans la moindre retouche : ni
+traduction, ni reformatage, ni coupe. C'est la seule façon de les étudier utilement, et cela
+simplifie l'obligation de signalement — il n'y a rien à signaler sur le contenu importé.
+
+Ce qui est ajouté autour est du travail propre à ce dépôt :
+
+- le titre, l'éditeur, la description et les points « ce qu'on en retient », rédigés en
+  français (`content/_prompts_meta.json`) ;
+- les **constats mesurés** affichés sur chaque fiche (longueur, mode de structuration, nombre
+  d'outils déclarés, nombre d'interdictions), calculés par `tools/build.py` à partir des
+  fichiers eux-mêmes — donc vérifiables et non opinables ;
+- le rendu lisible des définitions d'outils JSON ;
+- les tags, les sujets et les renvois vers les leçons.
+
+Sont écartés à l'import : les images du dépôt amont, ses fichiers de projet
+(`README.md`, `LICENSE.md`, financement) et tout fichier de plus de 1 Mo. La liste des
+fichiers écartés est conservée dans `content/_prompts.json`.
+
+## Absence d'affiliation
+
+Ce dépôt n'est affilié ni à l'auteur du dépôt amont, ni à aucun des éditeurs dont les prompts
+sont reproduits (Anthropic, OpenAI, Google, Microsoft, Vercel, Cognition, Perplexity,
+Anysphere, Codeium, Replit, Amazon, Apple, JetBrains, ByteDance, Alibaba, Tencent, Proton,
+Notion, Sourcegraph et les autres). Toutes les marques citées appartiennent à leurs
+détenteurs respectifs.

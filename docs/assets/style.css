@@ -651,6 +651,102 @@ button { font: inherit; color: inherit; }
 .alttable__pages { font-size: .85rem; }
 .alttable__more, .alttable__none { color: var(--text-faint); }
 
+/* ------------------------------------------------- portes d'entrée (accueil) */
+
+.doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .9rem; margin: 0 0 2rem; }
+.door {
+  display: flex; flex-direction: column; gap: .15rem;
+  padding: 1.15rem 1.25rem; text-decoration: none; color: inherit;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.door:hover { border-color: var(--accent); }
+.door__icon { font-size: 1.6rem; line-height: 1.2; }
+.door__verb { font-size: 1.15rem; font-weight: 680; letter-spacing: -.015em; color: var(--text); }
+.door:hover .door__verb { color: var(--accent); }
+.door__what { font-size: .84rem; font-weight: 600; color: var(--accent); }
+.door__why { font-size: .87rem; color: var(--text-muted); margin-top: .25rem; }
+
+.statline { margin: .6rem 0 0; font-size: .85rem; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------- sujets et familles */
+
+.tag--topic { background: color-mix(in srgb, #0f9d76 14%, var(--bg-elevated)); border-color: color-mix(in srgb, #0f9d76 30%, var(--border)); }
+.tag--type  { background: var(--bg-sunken); }
+.tags--topics { margin-top: .3rem; }
+
+.lcard__kind, .lcard__ctx {
+  display: inline-block; margin-right: .5rem; font-size: .74rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint);
+}
+.lcard__kind { color: var(--accent); }
+
+.tcard__count { margin-right: .6rem; font-variant-numeric: tabular-nums; }
+
+.topicsec { margin-bottom: 2.5rem; }
+.topicsec h2 {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem;
+  margin: 0 0 1rem; padding-top: .6rem; font-size: 1.4rem;
+  letter-spacing: -.02em; border-top: 1px solid var(--border);
+}
+.topicsec__count {
+  padding: .1rem .5rem; font-size: .74rem; font-weight: 600;
+  color: var(--text-muted); background: var(--bg-sunken);
+  border: 1px solid var(--border); border-radius: 999px;
+}
+.othertopics { margin-top: 2.5rem; padding-top: .8rem; border-top: 1px solid var(--border); }
+.othertopics h2 { margin: 0 0 .8rem; font-size: 1.1rem; }
+
+.related { margin-top: 2.5rem; }
+.related h2 { margin: 0 0 .4rem; padding-top: .6rem; font-size: 1.5rem; letter-spacing: -.02em; border-top: 1px solid var(--border); }
+.related__intro { margin: 0 0 .9rem; color: var(--text-muted); }
+.related__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: .6rem; }
+.related__item a {
+  display: grid; grid-template-columns: 1.5rem 1fr; gap: .1rem .6rem; align-items: baseline;
+  padding: .7rem .9rem; text-decoration: none; color: inherit;
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.related__item a:hover { border-color: var(--accent); }
+.related__kind { font-size: 1rem; }
+.related__title { font-weight: 650; font-size: .93rem; color: var(--accent); }
+.related__summary { grid-column: 2; font-size: .84rem; color: var(--text-muted); }
+
+/* --------------------------------------------------------- prompts système */
+
+.alts--warn {
+  background: color-mix(in srgb, #d97706 12%, var(--bg-elevated));
+  border-color: color-mix(in srgb, #d97706 34%, var(--border));
+}
+
+.obs { margin: 0 0 1.75rem; }
+.obs h2 { margin: 0 0 .3rem; padding-top: .6rem; font-size: 1.3rem; border-top: 1px solid var(--border); }
+.obs__note { margin: 0 0 .5rem; font-size: .82rem; color: var(--text-faint); }
+.obs ul { margin: 0; padding-left: 1.2rem; font-size: .93rem; }
+.obs li { margin-bottom: .3rem; }
+
+.promptfiles { margin-top: 2.5rem; }
+.promptfiles h2 { margin: 0 0 1rem; padding-top: .6rem; font-size: 1.5rem; letter-spacing: -.02em; border-top: 1px solid var(--border); }
+.promptfiles h3 { margin: 1.8rem 0 .2rem; font-size: 1.05rem; font-family: var(--mono); overflow-wrap: anywhere; }
+.promptfile__meta { margin: 0 0 .6rem; font-size: .82rem; color: var(--text-faint); }
+/* Un prompt système fait souvent plusieurs milliers de lignes : on le borne en hauteur
+   pour que la page reste parcourable, le bloc restant défilable. */
+.promptfiles .codeblock pre { max-height: 34rem; overflow: auto; }
+
+.tooldefs { margin-bottom: 1.2rem; }
+.tooldef { margin-bottom: .4rem; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.tooldef__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem .8rem; cursor: pointer; list-style: none; }
+.tooldef__head::-webkit-details-marker { display: none; }
+.tooldef__head::before { content: "▸"; margin-right: .4rem; color: var(--text-faint); }
+.tooldef[open] > .tooldef__head::before { content: "▾"; }
+.tooldef__name { font-size: .88rem; font-weight: 650; overflow-wrap: anywhere; }
+.tooldef__count { font-size: .76rem; color: var(--text-faint); white-space: nowrap; }
+.tooldef__body { padding: 0 .9rem .8rem; }
+.tooldef__desc { margin: 0 0 .5rem; font-size: .88rem; color: var(--text-muted); white-space: pre-wrap; }
+.tooldef__params { margin: 0; padding-left: 1.1rem; font-size: .85rem; }
+.tooldef__params li { margin-bottom: .25rem; }
+.tooldefs__type { font-family: var(--mono); font-size: .78rem; color: var(--text-faint); }
+.tooldefs__req { font-size: .72rem; font-weight: 600; color: var(--accent); }
+
 /* ------------------------------------------------------------------ pied */
 
 .footer {

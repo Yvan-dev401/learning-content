@@ -107,18 +107,70 @@ def main() -> int:
             if not (DOCS / "assets" / "code" / "ateliers" / pid / rel).exists():
                 problems.append(f"code d'atelier non publié : {pid}/{rel}")
 
+    # Prompts système : une page par outil, et chaque fichier réellement publié.
+    prompts = json.loads((CONTENT / "_prompts.json").read_text(encoding="utf-8")) \
+        if (CONTENT / "_prompts.json").is_file() else {"tools": {}}
+    prompts_meta = json.loads((CONTENT / "_prompts_meta.json").read_text(encoding="utf-8")) \
+        if (CONTENT / "_prompts_meta.json").is_file() else {"tools": {}}
+    for tid, tool in prompts["tools"].items():
+        if not (DOCS / "prompts-systeme" / tid / "index.html").exists():
+            problems.append(f"prompt système absent du site : {tid}")
+        if tid not in prompts_meta["tools"]:
+            problems.append(f"outil sans habillage français : {tid}")
+        for f in tool["files"]:
+            if not (DOCS / "assets" / "prompts-systeme" / tid / f["name"]).exists():
+                problems.append(f"fichier de prompt non publié : {tid}/{f['name']}")
+    for tid in prompts_meta["tools"]:
+        if tid not in prompts["tools"]:
+            problems.append(f"outil décrit mais absent du manifeste : {tid}")
+
+    # Sujets : vocabulaire connu, page produite, et aucun sujet vide (page inutile).
+    topics = json.loads((CONTENT / "_topics.json").read_text(encoding="utf-8"))["topics"] \
+        if (CONTENT / "_topics.json").is_file() else {}
+    declared = [(f"leçon {k}", t) for k, v in meta["lessons"].items() for t in v.get("topics", [])]
+    declared += [(f"catégorie {k}", t) for k, v in apps_meta["categories"].items()
+                 for t in v.get("topics", [])]
+    declared += [(f"outil {k}", t) for k, v in prompts_meta["tools"].items()
+                 for t in v.get("topics", [])]
+    for where, t in declared:
+        if t not in topics:
+            problems.append(f"sujet inconnu dans {where} : {t}")
+    for tid in topics:
+        if not (DOCS / "sujets" / tid / "index.html").exists():
+            problems.append(f"sujet absent du site : {tid}")
+
+    # Couverture : un sujet vide n'a pas de raison d'exister ; un sujet porté par une
+    # seule famille est signalé sans être bloquant — c'est un signal éditorial.
+    coverage: dict[str, dict[str, int]] = {}
+    for page in DOCS.rglob("catalogue/index.html"):
+        html_txt = page.read_text(encoding="utf-8")
+        for m in re.finditer(r'data-type="([^"]*)"[^>]*data-topics="([^"]*)"', html_txt):
+            ctype, tlist = m.group(1), m.group(2).split()
+            for t in tlist:
+                coverage.setdefault(t, {}).setdefault(ctype, 0)
+                coverage[t][ctype] += 1
+    thin = []
+    for tid in topics:
+        fams = coverage.get(tid, {})
+        if not fams:
+            problems.append(f"sujet sans aucun contenu : {tid}")
+        elif len(fams) < 2:
+            thin.append(f"{tid} ({', '.join(f'{k}×{v}' for k, v in fams.items())})")
+
     # Cohérence des tags : tout tag posé à la main doit exister au vocabulaire.
     vocab = set(meta.get("tags", {}).get("values", {}))
     groups = set(meta.get("tags", {}).get("groups", {}))
     for t, v in meta.get("tags", {}).get("values", {}).items():
         if v["group"] not in groups:
             problems.append(f"tag « {t} » rattaché à un groupe inconnu : {v['group']}")
-    declared = [(f"leçon {k}", t) for k, v in meta["lessons"].items() for t in v.get("tags", [])]
-    declared += [(f"catégorie {k}", t) for k, v in apps_meta["categories"].items()
-                 for t in v.get("defaults", {}).values()]
-    declared += [(f"atelier {k}", t) for k, v in apps_meta["projects"].items()
-                 for t in v.get("tags", [])]
-    for where, t in declared:
+    declared_tags = [(f"leçon {k}", t) for k, v in meta["lessons"].items() for t in v.get("tags", [])]
+    declared_tags += [(f"catégorie {k}", t) for k, v in apps_meta["categories"].items()
+                      for t in v.get("defaults", {}).values()]
+    declared_tags += [(f"atelier {k}", t) for k, v in apps_meta["projects"].items()
+                      for t in v.get("tags", [])]
+    declared_tags += [(f"outil {k}", t) for k, v in prompts_meta["tools"].items()
+                      for t in v.get("tags", [])]
+    for where, t in declared_tags:
         if t not in vocab:
             problems.append(f"tag inconnu dans {where} : {t}")
 
@@ -155,7 +207,10 @@ def main() -> int:
     print(f"Liens internes vérifiés : {checked}")
     print(f"Leçons publiées : {len(lessons)} · parcours : {len(meta['tracks'])}")
     print(f"Ateliers publiés : {len(apps['projects'])} · catégories : {len(apps['categories'])}")
+    print(f"Prompts système publiés : {len(prompts['tools'])} · sujets : {len(topics)}")
     print(f"Services décrits : {len(services['services'])} · tags au vocabulaire : {len(vocab)}")
+    if thin:
+        print(f"Sujets portés par une seule famille ({len(thin)}) : {', '.join(thin)}")
     if orphans:
         print(f"Images non référencées ({len(orphans)}) : {', '.join(orphans[:8])}"
               + (" …" if len(orphans) > 8 else ""))
