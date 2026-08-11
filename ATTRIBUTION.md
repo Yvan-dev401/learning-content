@@ -187,6 +187,11 @@ Ce qui est ajouté autour est du travail propre à ce dépôt :
 - les **constats mesurés** affichés sur chaque fiche (longueur, mode de structuration, nombre
   d'outils déclarés, nombre d'interdictions), calculés par `tools/build.py` à partir des
   fichiers eux-mêmes — donc vérifiables et non opinables ;
+- le **découpage à l'écran** du texte en sections repliables, et le « plan du prompt » qui en
+  montre la construction — un affichage, jamais une modification du fichier ;
+- le **glossaire des types de section** (`content/_prompt_sections.json`), qui explique ce que
+  fait habituellement une section portant tel nom — jamais ce que son auteur avait en tête ;
+- la page **« Comment lire un prompt système »** ;
 - le rendu lisible des définitions d'outils JSON ;
 - les tags, les sujets et les renvois vers les leçons.
 

@@ -21,9 +21,27 @@
         "Une section entière pousse à paralléliser les appels d'outils — la latence est traitée comme un problème de prompt, pas seulement d'infrastructure.",
         "Comparer les versions successives montre ce que l'équipe a dû ajouter après coup : c'est la trace des échecs rencontrés en production."
       ],
-      "topics": ["prompt-engineering", "code-assistants", "outils-mcp", "agents"],
-      "tags": ["incontournable", "intermediaire"],
-      "lessons": ["05-advanced-prompts", "11-integrating-with-function-calling"]
+      "topics": [
+        "prompt-engineering",
+        "code-assistants",
+        "outils-mcp",
+        "agents"
+      ],
+      "tags": [
+        "incontournable",
+        "intermediaire"
+      ],
+      "lessons": [
+        "05-advanced-prompts",
+        "11-integrating-with-function-calling"
+      ],
+      "role": "Faire d'un modèle généraliste un binôme de développement : il doit lire le dépôt, proposer des modifications ciblées et appeler les bons outils sans qu'on le lui dise.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Des éditions de fichiers appliquées directement, des commandes proposées, et des réponses volontairement brèves — la concision est une consigne, pas un hasard.",
+      "analysis": [
+        "Cursor est l'exemple le plus net de <strong>prompt structuré par balises</strong>. Chaque domaine de consigne vit dans son bloc — communication, appel d'outils, modification de code, style — si bien que le modèle sait toujours dans quel registre il se trouve. C'est directement transposable : délimiter vos consignes par des balises coûte trois minutes et supprime une classe entière d'ambiguïtés.",
+        "Le dépôt en contient sept versions successives. Les comparer est l'exercice le plus formateur du site : ce qui a été ajouté au fil des versions est la trace des échecs rencontrés en production. On y voit apparaître des consignes de plus en plus précises sur la parallélisation des appels d'outils, signe que la latence était devenue le problème numéro un."
+      ]
     },
     "anthropic-claude-code": {
       "title": "Claude Code",
@@ -34,9 +52,28 @@
         "Les descriptions d'outils sont longues et donnent des exemples d'usage — c'est là que se joue le bon appel d'outil, pas dans le prompt principal.",
         "Beaucoup de place est consacrée à ce qu'il ne faut pas faire sans confirmation : un modèle de gestion des actions irréversibles."
       ],
-      "topics": ["code-assistants", "outils-mcp", "agents", "securite"],
-      "tags": ["incontournable", "intermediaire", "emploi"],
-      "lessons": ["11-integrating-with-function-calling", "17-ai-agents"]
+      "topics": [
+        "code-assistants",
+        "outils-mcp",
+        "agents",
+        "securite"
+      ],
+      "tags": [
+        "incontournable",
+        "intermediaire",
+        "emploi"
+      ],
+      "lessons": [
+        "11-integrating-with-function-calling",
+        "17-ai-agents"
+      ],
+      "role": "Cadrer un agent qui travaille dans un terminal : lire, écrire, exécuter, en demandant confirmation avant l'irréversible.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Des appels d'outils enchaînés, un compte rendu court, et un refus d'agir tant qu'une action destructrice n'a pas été validée.",
+      "analysis": [
+        "Ce qui frappe ici est la <strong>séparation nette entre le prompt et le catalogue d'outils</strong>. Le premier dit comment se comporter, le second ce qu'il est possible de faire. Les descriptions d'outils sont longues, avec des exemples d'usage — c'est là que se joue le bon appel, pas dans le prompt principal.",
+        "Une part importante du texte porte sur les actions irréversibles : ce qu'il ne faut pas faire sans confirmation. Pour un agent qui a accès à un terminal, c'est la section qui compte le plus."
+      ]
     },
     "anthropic": {
       "title": "Modèles Claude (assistants grand public)",
@@ -46,9 +83,21 @@
         "Ce sont les plus longs du dépôt : à cette échelle, le prompt système devient un document de politique produit autant qu'une consigne technique.",
         "Une grande partie traite de cas limites et de ton, pas de fonctionnalités — ce qui coûte le plus cher à cadrer, ce sont les situations rares."
       ],
-      "topics": ["prompt-engineering", "securite"],
-      "tags": ["tres-demande", "avance"],
-      "lessons": ["05-advanced-prompts", "03-using-generative-ai-responsibly"]
+      "topics": [
+        "prompt-engineering",
+        "securite"
+      ],
+      "tags": [
+        "tres-demande",
+        "avance"
+      ],
+      "lessons": [
+        "05-advanced-prompts",
+        "03-using-generative-ai-responsibly"
+      ],
+      "role": "Définir le comportement général d'un assistant grand public : ton, refus, sujets sensibles, format des réponses.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Le style même des réponses de l'assistant — c'est ce document qui décide qu'il est prudent sur la santé, direct sur la technique, et qu'il refuse certaines demandes."
     },
     "anthropic-claude-for-chrome": {
       "title": "Claude pour Chrome",
@@ -58,9 +107,26 @@
         "Un agent qui touche au navigateur de l'utilisateur demande des garde-fous très explicites sur ce qu'il peut cliquer, saisir ou envoyer.",
         "Le contenu de la page est une entrée non fiable : le prompt doit anticiper qu'elle tente de le détourner."
       ],
-      "topics": ["agents", "securite", "outils-mcp"],
-      "tags": ["tres-demande", "avance"],
-      "lessons": ["13-securing-ai-applications", "17-ai-agents"]
+      "topics": [
+        "agents",
+        "securite",
+        "outils-mcp"
+      ],
+      "tags": [
+        "tres-demande",
+        "avance"
+      ],
+      "lessons": [
+        "13-securing-ai-applications",
+        "17-ai-agents"
+      ],
+      "role": "Encadrer un agent qui lit la page affichée et peut agir dessus.",
+      "when": "À chaque requête faite depuis le navigateur, accompagné du contenu de la page affichée.",
+      "output": "Des actions dans l'onglet — clics, saisies, extraction — précédées de vérifications, et un refus net dès que la page tente de détourner l'agent.",
+      "analysis": [
+        "Un agent qui agit dans le navigateur de l'utilisateur pose un problème que les agents de code n'ont pas : <strong>le contenu de la page est une entrée non fiable</strong>. Le prompt doit anticiper qu'elle tente de le détourner.",
+        "À lire en parallèle de la leçon 13 : c'est de l'injection de prompt traitée en conditions réelles."
+      ]
     },
     "devin-ai": {
       "title": "Devin",
@@ -70,9 +136,26 @@
         "Le prompt commence par expliquer au modèle comment le produit lui-même fonctionne : le modèle a besoin d'un modèle mental de son propre environnement.",
         "Une section entière fixe le format de sortie et les règles de citation du code — la traçabilité est traitée comme une exigence, pas un bonus."
       ],
-      "topics": ["agents", "code-assistants", "prompt-engineering"],
-      "tags": ["incontournable", "intermediaire"],
-      "lessons": ["17-ai-agents", "05-advanced-prompts"]
+      "topics": [
+        "agents",
+        "code-assistants",
+        "prompt-engineering"
+      ],
+      "tags": [
+        "incontournable",
+        "intermediaire"
+      ],
+      "lessons": [
+        "17-ai-agents",
+        "05-advanced-prompts"
+      ],
+      "role": "Faire tenir un agent sur une tâche de développement longue, en autonomie, sans perdre le fil ni inventer ses sources.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Un rapport structuré avec citations du code, plutôt qu'une réponse libre.",
+      "analysis": [
+        "Devin commence par expliquer au modèle <strong>comment le produit lui-même fonctionne</strong>. C'est contre-intuitif et pourtant décisif : un agent a besoin d'un modèle mental de son propre environnement pour prendre des décisions sensées.",
+        "Le format de sortie et les règles de citation du code occupent une section entière. La traçabilité est traitée comme une exigence produit, pas comme un raffinement."
+      ]
     },
     "v0-prompts-and-tools": {
       "title": "v0",
@@ -83,9 +166,27 @@
         "Le prompt encourage le modèle à poser des questions plutôt qu'à supposer, ce qui est rare et très instructif.",
         "Ses définitions d'outils montrent comment décrire proprement une capacité de génération d'interface."
       ],
-      "topics": ["interfaces", "code-assistants", "outils-mcp", "memoire"],
-      "tags": ["incontournable", "intermediaire"],
-      "lessons": ["12-designing-ux-for-ai-applications", "11-integrating-with-function-calling"]
+      "topics": [
+        "interfaces",
+        "code-assistants",
+        "outils-mcp",
+        "memoire"
+      ],
+      "tags": [
+        "incontournable",
+        "intermediaire"
+      ],
+      "lessons": [
+        "12-designing-ux-for-ai-applications",
+        "11-integrating-with-function-calling"
+      ],
+      "role": "Transformer une description en interface React fonctionnelle, avec une pile technique imposée.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Du code de composant prêt à coller, une prévisualisation, et parfois une question de clarification au lieu d'une supposition.",
+      "analysis": [
+        "Une section entière est consacrée à la <strong>gestion du contexte</strong> : quand récupérer le contenu complet d'un fichier plutôt que de deviner à partir d'un extrait. Peu de prompts publics traitent ce sujet aussi explicitement.",
+        "v0 encourage aussi le modèle à <strong>poser une question</strong> plutôt qu'à supposer. C'est rare, et c'est l'un des meilleurs remèdes aux réponses à côté de la demande."
+      ]
     },
     "manus-agent-tools-prompt": {
       "title": "Manus",
@@ -95,9 +196,25 @@
         "La boucle de l'agent est décrite explicitement, étape par étape : c'est la structure d'un agent, écrite en toutes lettres.",
         "Les capacités et les limites du système sont énumérées avant les consignes — le modèle sait ce qu'il peut promettre."
       ],
-      "topics": ["agents", "outils-mcp", "prompt-engineering"],
-      "tags": ["incontournable", "intermediaire"],
-      "lessons": ["17-ai-agents"]
+      "topics": [
+        "agents",
+        "outils-mcp",
+        "prompt-engineering"
+      ],
+      "tags": [
+        "incontournable",
+        "intermediaire"
+      ],
+      "lessons": [
+        "17-ai-agents"
+      ],
+      "role": "Piloter un agent généraliste sur des tâches longues, du plan au livrable.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Une suite d'étapes visibles, des fichiers produits, et un rendu final quand le critère d'arrêt est atteint.",
+      "analysis": [
+        "La <strong>boucle de l'agent est décrite explicitement</strong>, étape par étape. Pour qui veut comprendre ce qu'est un agent sans lire de code, c'est le document le plus clair du corpus.",
+        "Les capacités et les limites du système sont énumérées avant les consignes : le modèle sait ce qu'il peut promettre à l'utilisateur, ce qui évite une bonne part des promesses intenables."
+      ]
     },
     "windsurf": {
       "title": "Windsurf",
@@ -106,9 +223,24 @@
       "learn": [
         "Comparé à Cursor sur le même métier, il éclaire ce qui relève du choix d'équipe et ce qui relève de la contrainte réelle du problème."
       ],
-      "topics": ["code-assistants", "agents", "prompt-engineering"],
-      "tags": ["tres-demande", "intermediaire"],
-      "lessons": ["05-advanced-prompts"]
+      "topics": [
+        "code-assistants",
+        "agents",
+        "prompt-engineering"
+      ],
+      "tags": [
+        "tres-demande",
+        "intermediaire"
+      ],
+      "lessons": [
+        "05-advanced-prompts"
+      ],
+      "role": "Cadrer un éditeur agentique : même métier que Cursor, choix d'équipe différents.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Des modifications de code appliquées et un fil d'exécution que l'utilisateur peut suivre.",
+      "analysis": [
+        "Windsurf et Cursor font le même métier. Lire les deux à la suite sépare ce qui relève du <strong>choix d'équipe</strong> de ce qui relève de la contrainte réelle du problème — un exercice que peu de domaines permettent aussi directement."
+      ]
     },
     "replit": {
       "title": "Replit Agent",
@@ -117,9 +249,20 @@
       "learn": [
         "L'agent dispose d'un environnement d'exécution complet : le prompt doit cadrer l'installation de dépendances et le lancement de serveurs."
       ],
-      "topics": ["code-assistants", "agents"],
-      "tags": ["utile", "intermediaire"],
-      "lessons": ["17-ai-agents"]
+      "topics": [
+        "code-assistants",
+        "agents"
+      ],
+      "tags": [
+        "utile",
+        "intermediaire"
+      ],
+      "lessons": [
+        "17-ai-agents"
+      ],
+      "role": "Encadrer un agent qui dispose d'un environnement d'exécution complet.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Une application qui tourne : dépendances installées, serveur lancé, aperçu disponible."
     },
     "lovable": {
       "title": "Lovable",
@@ -128,9 +271,20 @@
       "learn": [
         "Le prompt impose une pile technique et des conventions précises : restreindre l'espace des solutions est ce qui rend la génération fiable."
       ],
-      "topics": ["code-assistants", "interfaces"],
-      "tags": ["utile", "debutant"],
-      "lessons": ["10-building-low-code-ai-applications"]
+      "topics": [
+        "code-assistants",
+        "interfaces"
+      ],
+      "tags": [
+        "utile",
+        "debutant"
+      ],
+      "lessons": [
+        "10-building-low-code-ai-applications"
+      ],
+      "role": "Générer une application web complète en imposant une pile et des conventions.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Un projet fonctionnel plutôt que des extraits — au prix d'une liberté technique réduite."
     },
     "same-dev": {
       "title": "Same.dev",
@@ -139,9 +293,20 @@
       "learn": [
         "Montre comment cadrer une tâche de reproduction fidèle, où l'écart au modèle de référence est le critère de réussite."
       ],
-      "topics": ["code-assistants", "interfaces"],
-      "tags": ["utile", "intermediaire"],
-      "lessons": ["12-designing-ux-for-ai-applications"]
+      "topics": [
+        "code-assistants",
+        "interfaces"
+      ],
+      "tags": [
+        "utile",
+        "intermediaire"
+      ],
+      "lessons": [
+        "12-designing-ux-for-ai-applications"
+      ],
+      "role": "Reproduire fidèlement une interface existante.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Du code dont le critère de réussite est l'écart au modèle de référence."
     },
     "open-source-prompts-bolt": {
       "title": "Bolt",
@@ -150,9 +315,20 @@
       "learn": [
         "Les contraintes de l'environnement (pas de binaires natifs, pas de compilation lourde) sont énoncées au modèle : le prompt encode les limites de la plateforme."
       ],
-      "topics": ["code-assistants", "interfaces"],
-      "tags": ["utile", "debutant"],
-      "lessons": ["06-text-generation-apps"]
+      "topics": [
+        "code-assistants",
+        "interfaces"
+      ],
+      "tags": [
+        "utile",
+        "debutant"
+      ],
+      "lessons": [
+        "06-text-generation-apps"
+      ],
+      "role": "Générer une application web exécutable dans le navigateur, sans serveur.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Un projet qui démarre dans l'onglet, contraint par ce que le navigateur sait faire."
     },
     "open-source-prompts-cline": {
       "title": "Cline",
@@ -162,9 +338,27 @@
         "Le prompt est lisible et vérifiable puisque le projet est ouvert : c'est le meilleur point de départ pour écrire le sien.",
         "Le déroulé outil par outil, une action à la fois, est un choix de conception explicite et facile à reproduire."
       ],
-      "topics": ["code-assistants", "agents", "outils-mcp", "modeles-ouverts"],
-      "tags": ["incontournable", "intermediaire"],
-      "lessons": ["17-ai-agents", "11-integrating-with-function-calling"]
+      "topics": [
+        "code-assistants",
+        "agents",
+        "outils-mcp",
+        "modeles-ouverts"
+      ],
+      "tags": [
+        "incontournable",
+        "intermediaire"
+      ],
+      "lessons": [
+        "17-ai-agents",
+        "11-integrating-with-function-calling"
+      ],
+      "role": "Cadrer un agent de développement open source, un outil à la fois.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Une action par tour, annoncée puis exécutée, jusqu'à la conclusion explicite de la tâche.",
+      "analysis": [
+        "Cline étant open source, son prompt est <strong>vérifiable</strong> : on peut confronter le texte au code qui l'utilise. C'est le meilleur point de départ pour écrire le sien.",
+        "Le choix d'exécuter <strong>un outil à la fois</strong>, annoncé puis exécuté, est une décision de conception explicite. Moins rapide que la parallélisation de Cursor, mais beaucoup plus facile à suivre et à déboguer."
+      ]
     },
     "open-source-prompts-roocode": {
       "title": "Roo Code",
@@ -173,9 +367,21 @@
       "learn": [
         "L'idée de « modes » (architecte, codeur, relecteur) montre comment un même agent change de personnalité selon la phase du travail."
       ],
-      "topics": ["code-assistants", "agents", "modeles-ouverts"],
-      "tags": ["utile", "intermediaire"],
-      "lessons": ["17-ai-agents"]
+      "topics": [
+        "code-assistants",
+        "agents",
+        "modeles-ouverts"
+      ],
+      "tags": [
+        "utile",
+        "intermediaire"
+      ],
+      "lessons": [
+        "17-ai-agents"
+      ],
+      "role": "Faire changer de rôle un même agent selon la phase du travail.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Un comportement différent selon le mode actif — architecte, codeur ou relecteur."
     },
     "open-source-prompts-codex-cli": {
       "title": "Codex CLI",
@@ -184,9 +390,24 @@
       "learn": [
         "Deux versions du même prompt à quelques mois d'écart : la comparaison est l'exercice le plus formateur du dépôt."
       ],
-      "topics": ["code-assistants", "agents", "modeles-ouverts"],
-      "tags": ["tres-demande", "intermediaire"],
-      "lessons": ["05-advanced-prompts"]
+      "topics": [
+        "code-assistants",
+        "agents",
+        "modeles-ouverts"
+      ],
+      "tags": [
+        "tres-demande",
+        "intermediaire"
+      ],
+      "lessons": [
+        "05-advanced-prompts"
+      ],
+      "role": "Cadrer un agent de développement en ligne de commande.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Des modifications appliquées au dépôt et un résumé de ce qui a été fait.",
+      "analysis": [
+        "Deux versions du même prompt à quelques mois d'écart, toutes deux datées. Les mettre côte à côte montre concrètement comment un prompt système <strong>vieillit et se corrige</strong>."
+      ]
     },
     "open-source-prompts-gemini-cli": {
       "title": "Gemini CLI",
@@ -195,9 +416,21 @@
       "learn": [
         "Un prompt court comparé aux autres : la preuve qu'un agent utilisable ne demande pas forcément dix mille mots de consignes."
       ],
-      "topics": ["code-assistants", "agents", "modeles-ouverts"],
-      "tags": ["utile", "debutant"],
-      "lessons": ["17-ai-agents"]
+      "topics": [
+        "code-assistants",
+        "agents",
+        "modeles-ouverts"
+      ],
+      "tags": [
+        "utile",
+        "debutant"
+      ],
+      "lessons": [
+        "17-ai-agents"
+      ],
+      "role": "Cadrer un agent de terminal, avec un prompt volontairement court.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Des commandes et des éditions, avec beaucoup moins de garde-fous écrits que chez les concurrents."
     },
     "open-source-prompts-lumo": {
       "title": "Lumo",
@@ -206,9 +439,20 @@
       "learn": [
         "Le plus court du dépôt. Les engagements de confidentialité sont inscrits dans le prompt lui-même, pas seulement dans la politique produit."
       ],
-      "topics": ["securite", "modeles-ouverts"],
-      "tags": ["utile", "debutant"],
-      "lessons": ["13-securing-ai-applications"]
+      "topics": [
+        "securite",
+        "modeles-ouverts"
+      ],
+      "tags": [
+        "utile",
+        "debutant"
+      ],
+      "lessons": [
+        "13-securing-ai-applications"
+      ],
+      "role": "Définir un assistant dont la confidentialité est l'argument produit.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Des réponses classiques, mais des refus explicites dès qu'il s'agit de faire sortir des données."
     },
     "vscode-agent": {
       "title": "VS Code (mode agent)",
@@ -217,9 +461,24 @@
       "learn": [
         "La collection la plus fournie du dépôt pour un même produit : elle montre comment un éditeur décline un prompt par mode d'usage."
       ],
-      "topics": ["code-assistants", "agents", "outils-mcp"],
-      "tags": ["tres-demande", "intermediaire"],
-      "lessons": ["11-integrating-with-function-calling"]
+      "topics": [
+        "code-assistants",
+        "agents",
+        "outils-mcp"
+      ],
+      "tags": [
+        "tres-demande",
+        "intermediaire"
+      ],
+      "lessons": [
+        "11-integrating-with-function-calling"
+      ],
+      "role": "Décliner un même agent selon plusieurs modes de l'éditeur.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Selon le mode : une réponse dans le panneau, une édition appliquée, ou une suite d'actions.",
+      "analysis": [
+        "Neuf fichiers pour un même produit : c'est la collection la plus fournie du corpus. Elle montre comment un éditeur <strong>décline un prompt par mode d'usage</strong> plutôt que d'en écrire un seul qui tenterait de tout couvrir."
+      ]
     },
     "augment-code": {
       "title": "Augment Code",
@@ -228,9 +487,20 @@
       "learn": [
         "Le prompt s'attarde sur la récupération du bon contexte dans un dépôt immense — c'est du RAG appliqué au code."
       ],
-      "topics": ["code-assistants", "rag"],
-      "tags": ["utile", "avance"],
-      "lessons": ["15-rag-and-vector-databases"]
+      "topics": [
+        "code-assistants",
+        "rag"
+      ],
+      "tags": [
+        "utile",
+        "avance"
+      ],
+      "lessons": [
+        "15-rag-and-vector-databases"
+      ],
+      "role": "Retrouver le bon contexte dans une base de code trop grande pour tenir en mémoire.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Des réponses appuyées sur les fichiers réellement pertinents, retrouvés avant de répondre."
     },
     "amp": {
       "title": "Amp",
@@ -239,9 +509,20 @@
       "learn": [
         "Les fichiers YAML montrent comment un même agent est configuré différemment selon le modèle sous-jacent."
       ],
-      "topics": ["code-assistants", "cout-performance"],
-      "tags": ["utile", "avance"],
-      "lessons": ["02-exploring-and-comparing-different-llms"]
+      "topics": [
+        "code-assistants",
+        "cout-performance"
+      ],
+      "tags": [
+        "utile",
+        "avance"
+      ],
+      "lessons": [
+        "02-exploring-and-comparing-different-llms"
+      ],
+      "role": "Adapter un même agent au modèle qui l'exécute.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Un comportement homogène malgré des modèles sous-jacents différents."
     },
     "traycer-ai": {
       "title": "Traycer",
@@ -250,9 +531,20 @@
       "learn": [
         "Un mode « plan » distinct du mode « exécution » : séparer la planification de la réalisation est un motif d'architecture qui se réutilise partout."
       ],
-      "topics": ["agents", "code-assistants"],
-      "tags": ["utile", "intermediaire"],
-      "lessons": ["17-ai-agents"]
+      "topics": [
+        "agents",
+        "code-assistants"
+      ],
+      "tags": [
+        "utile",
+        "intermediaire"
+      ],
+      "lessons": [
+        "17-ai-agents"
+      ],
+      "role": "Séparer la planification de l'exécution.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Un plan à valider avant qu'une ligne de code ne soit écrite."
     },
     "kiro": {
       "title": "Kiro",
@@ -261,9 +553,20 @@
       "learn": [
         "Le prompt fait produire une spécification avant le code : une façon de rendre le résultat vérifiable."
       ],
-      "topics": ["code-assistants", "agents"],
-      "tags": ["utile", "intermediaire"],
-      "lessons": ["14-the-generative-ai-application-lifecycle"]
+      "topics": [
+        "code-assistants",
+        "agents"
+      ],
+      "tags": [
+        "utile",
+        "intermediaire"
+      ],
+      "lessons": [
+        "14-the-generative-ai-application-lifecycle"
+      ],
+      "role": "Faire produire une spécification avant le code.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Un document de spécification, puis une implémentation qu'on peut confronter à ce document."
     },
     "junie": {
       "title": "Junie",
@@ -272,9 +575,19 @@
       "learn": [
         "Très court : montre le minimum viable quand l'environnement fournit déjà l'essentiel du contexte."
       ],
-      "topics": ["code-assistants"],
-      "tags": ["survol", "debutant"],
-      "lessons": ["05-advanced-prompts"]
+      "topics": [
+        "code-assistants"
+      ],
+      "tags": [
+        "survol",
+        "debutant"
+      ],
+      "lessons": [
+        "05-advanced-prompts"
+      ],
+      "role": "Assister dans un environnement qui fournit déjà l'essentiel du contexte.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Des réponses courtes, l'éditeur se chargeant du reste."
     },
     "trae": {
       "title": "Trae",
@@ -283,9 +596,20 @@
       "learn": [
         "Utile pour comparer les conventions d'un acteur non occidental sur le même métier."
       ],
-      "topics": ["code-assistants", "agents"],
-      "tags": ["survol", "intermediaire"],
-      "lessons": ["05-advanced-prompts"]
+      "topics": [
+        "code-assistants",
+        "agents"
+      ],
+      "tags": [
+        "survol",
+        "intermediaire"
+      ],
+      "lessons": [
+        "05-advanced-prompts"
+      ],
+      "role": "Cadrer un éditeur agentique.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Des éditions de code et des commandes proposées."
     },
     "qoder": {
       "title": "Qoder",
@@ -294,9 +618,20 @@
       "learn": [
         "Trois fichiers pour trois modes : encore un exemple de déclinaison d'un prompt par contexte d'usage."
       ],
-      "topics": ["code-assistants", "agents"],
-      "tags": ["survol", "intermediaire"],
-      "lessons": ["17-ai-agents"]
+      "topics": [
+        "code-assistants",
+        "agents"
+      ],
+      "tags": [
+        "survol",
+        "intermediaire"
+      ],
+      "lessons": [
+        "17-ai-agents"
+      ],
+      "role": "Décliner un agent d'éditeur selon trois modes d'usage.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Un comportement différent selon le mode choisi."
     },
     "codebuddy-prompts": {
       "title": "CodeBuddy",
@@ -305,9 +640,19 @@
       "learn": [
         "Un prompt d'assistant de code classique, utile comme point de comparaison neutre."
       ],
-      "topics": ["code-assistants"],
-      "tags": ["survol", "intermediaire"],
-      "lessons": ["05-advanced-prompts"]
+      "topics": [
+        "code-assistants"
+      ],
+      "tags": [
+        "survol",
+        "intermediaire"
+      ],
+      "lessons": [
+        "05-advanced-prompts"
+      ],
+      "role": "Cadrer un assistant de développement classique.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Des suggestions et des explications de code."
     },
     "z-ai-code": {
       "title": "Z.ai Code",
@@ -316,9 +661,20 @@
       "learn": [
         "Court et direct : un bon contre-exemple aux prompts fleuves."
       ],
-      "topics": ["code-assistants", "modeles-ouverts"],
-      "tags": ["survol", "debutant"],
-      "lessons": ["16-open-source-models"]
+      "topics": [
+        "code-assistants",
+        "modeles-ouverts"
+      ],
+      "tags": [
+        "survol",
+        "debutant"
+      ],
+      "lessons": [
+        "16-open-source-models"
+      ],
+      "role": "Cadrer un assistant de code adossé aux modèles GLM.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Des réponses de code directes, sans cérémonie."
     },
     "xcode": {
       "title": "Xcode (Intelligence)",
@@ -328,9 +684,24 @@
         "L'exact opposé de Cursor : une action, un prompt de dix lignes. Quand la tâche est étroite, le prompt peut l'être aussi.",
         "Le meilleur exemple du dépôt pour comprendre qu'un prompt se dimensionne à sa tâche."
       ],
-      "topics": ["prompt-engineering", "code-assistants"],
-      "tags": ["incontournable", "debutant"],
-      "lessons": ["04-prompt-engineering-fundamentals"]
+      "topics": [
+        "prompt-engineering",
+        "code-assistants"
+      ],
+      "tags": [
+        "incontournable",
+        "debutant"
+      ],
+      "lessons": [
+        "04-prompt-engineering-fundamentals"
+      ],
+      "role": "Cadrer une action précise de l'éditeur — expliquer, documenter, prévisualiser.",
+      "when": "Au déclenchement de l'action correspondante dans l'éditeur, et seulement à ce moment-là.",
+      "output": "Une réponse étroite et prévisible : le prompt ne fait qu'une chose.",
+      "analysis": [
+        "Six prompts de quelques lignes chacun, un par action de l'éditeur. C'est l'exact opposé de Cursor, et c'est tout aussi instructif : <strong>quand la tâche est étroite, le prompt peut l'être aussi</strong>.",
+        "Le meilleur antidote du corpus à l'idée qu'un bon prompt est forcément un long prompt."
+      ]
     },
     "warp-dev": {
       "title": "Warp",
@@ -339,9 +710,20 @@
       "learn": [
         "Suggérer une commande shell engage la machine de l'utilisateur : le prompt en tire des règles de prudence explicites."
       ],
-      "topics": ["code-assistants", "securite"],
-      "tags": ["utile", "intermediaire"],
-      "lessons": ["13-securing-ai-applications"]
+      "topics": [
+        "code-assistants",
+        "securite"
+      ],
+      "tags": [
+        "utile",
+        "intermediaire"
+      ],
+      "lessons": [
+        "13-securing-ai-applications"
+      ],
+      "role": "Suggérer des commandes shell sans mettre la machine en danger.",
+      "when": "À chaque question posée dans le terminal.",
+      "output": "Une commande proposée, expliquée, et jamais exécutée sans validation."
     },
     "google-antigravity": {
       "title": "Antigravity",
@@ -350,9 +732,21 @@
       "learn": [
         "Deux prompts pour deux régimes de vitesse : la qualité de réponse est arbitrée dans le prompt, pas seulement par le choix du modèle."
       ],
-      "topics": ["code-assistants", "agents", "cout-performance"],
-      "tags": ["tres-demande", "intermediaire"],
-      "lessons": ["02-exploring-and-comparing-different-llms"]
+      "topics": [
+        "code-assistants",
+        "agents",
+        "cout-performance"
+      ],
+      "tags": [
+        "tres-demande",
+        "intermediaire"
+      ],
+      "lessons": [
+        "02-exploring-and-comparing-different-llms"
+      ],
+      "role": "Arbitrer entre vitesse et qualité selon le mode choisi.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
+      "output": "Une réponse rapide ou un plan détaillé, selon le prompt actif."
     },
     "google-gemini": {
       "title": "Gemini — AI Studio",
@@ -361,9 +755,20 @@
       "learn": [
         "Un prompt long destiné à un public non développeur : le vocabulaire employé est un objet d'étude en soi."
       ],
-      "topics": ["code-assistants", "interfaces"],
-      "tags": ["utile", "debutant"],
-      "lessons": ["10-building-low-code-ai-applications"]
+      "topics": [
+        "code-assistants",
+        "interfaces"
+      ],
+      "tags": [
+        "utile",
+        "debutant"
+      ],
+      "lessons": [
+        "10-building-low-code-ai-applications"
+      ],
+      "role": "Guider un public non développeur vers une application fonctionnelle.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Du code généré et expliqué dans un vocabulaire accessible."
     },
     "perplexity": {
       "title": "Perplexity",
@@ -373,9 +778,26 @@
         "Les règles de citation sont au cœur du prompt : c'est du RAG dont la contrainte principale est la vérifiabilité.",
         "À lire juste après la leçon 15 — on y voit ce qu'exige réellement une réponse sourcée."
       ],
-      "topics": ["rag", "prompt-engineering"],
-      "tags": ["incontournable", "intermediaire", "emploi"],
-      "lessons": ["15-rag-and-vector-databases", "08-building-search-applications"]
+      "topics": [
+        "rag",
+        "prompt-engineering"
+      ],
+      "tags": [
+        "incontournable",
+        "intermediaire",
+        "emploi"
+      ],
+      "lessons": [
+        "15-rag-and-vector-databases",
+        "08-building-search-applications"
+      ],
+      "role": "Produire une réponse sourcée à partir d'une recherche web.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Une réponse rédigée avec ses citations numérotées — la vérifiabilité prime sur la fluidité.",
+      "analysis": [
+        "Les <strong>règles de citation</strong> sont au cœur du prompt. C'est du RAG dont la contrainte principale n'est pas la pertinence mais la vérifiabilité : une réponse juste sans source y est considérée comme un échec.",
+        "À lire juste après la leçon 15 : on y voit ce qu'exige réellement une réponse sourcée, au-delà du schéma « je cherche, je résume »."
+      ]
     },
     "comet-assistant": {
       "title": "Comet",
@@ -384,9 +806,21 @@
       "learn": [
         "Un agent qui agit dans le navigateur : mêmes questions de confiance que Claude pour Chrome, réponses différentes."
       ],
-      "topics": ["agents", "securite", "rag"],
-      "tags": ["utile", "intermediaire"],
-      "lessons": ["13-securing-ai-applications"]
+      "topics": [
+        "agents",
+        "securite",
+        "rag"
+      ],
+      "tags": [
+        "utile",
+        "intermediaire"
+      ],
+      "lessons": [
+        "13-securing-ai-applications"
+      ],
+      "role": "Assister l'utilisateur à partir de ce qu'il a sous les yeux.",
+      "when": "À chaque requête faite depuis le navigateur, accompagné du contenu de la page affichée.",
+      "output": "Des réponses sur la page en cours, et des actions dans l'onglet."
     },
     "notionai": {
       "title": "Notion AI",
@@ -395,9 +829,20 @@
       "learn": [
         "L'IA est ici au service d'un produit existant : le prompt passe son temps à cadrer le format de sortie attendu par l'application."
       ],
-      "topics": ["prompt-engineering", "interfaces"],
-      "tags": ["utile", "debutant"],
-      "lessons": ["12-designing-ux-for-ai-applications"]
+      "topics": [
+        "prompt-engineering",
+        "interfaces"
+      ],
+      "tags": [
+        "utile",
+        "debutant"
+      ],
+      "lessons": [
+        "12-designing-ux-for-ai-applications"
+      ],
+      "role": "Mettre un modèle au service d'un espace de travail existant.",
+      "when": "Au déclenchement d'une action d'écriture dans une page Notion.",
+      "output": "Un contenu directement inséré dans la page, au format que l'application attend."
     },
     "dia": {
       "title": "Dia",
@@ -406,9 +851,20 @@
       "learn": [
         "Un ton et une personnalité très travaillés : le prompt système est aussi un outil de marque."
       ],
-      "topics": ["prompt-engineering", "interfaces"],
-      "tags": ["survol", "debutant"],
-      "lessons": ["12-designing-ux-for-ai-applications"]
+      "topics": [
+        "prompt-engineering",
+        "interfaces"
+      ],
+      "tags": [
+        "survol",
+        "debutant"
+      ],
+      "lessons": [
+        "12-designing-ux-for-ai-applications"
+      ],
+      "role": "Donner une personnalité à l'assistant d'un navigateur.",
+      "when": "À chaque requête faite depuis le navigateur, accompagné du contenu de la page affichée.",
+      "output": "Des réponses au ton très marqué — le prompt système sert ici la marque autant que la fonction."
     },
     "cluely": {
       "title": "Cluely",
@@ -417,9 +873,20 @@
       "learn": [
         "Répondre en temps réel impose des consignes de concision très strictes — la contrainte de latence se lit dans le texte."
       ],
-      "topics": ["prompt-engineering", "cout-performance"],
-      "tags": ["survol", "intermediaire"],
-      "lessons": ["04-prompt-engineering-fundamentals"]
+      "topics": [
+        "prompt-engineering",
+        "cout-performance"
+      ],
+      "tags": [
+        "survol",
+        "intermediaire"
+      ],
+      "lessons": [
+        "04-prompt-engineering-fundamentals"
+      ],
+      "role": "Répondre en temps réel à partir du contexte capté.",
+      "when": "En continu, pendant que l'utilisateur travaille ou parle.",
+      "output": "Des suggestions très courtes : la contrainte de latence se lit dans le texte."
     },
     "poke": {
       "title": "Poke",
@@ -428,9 +895,21 @@
       "learn": [
         "Le seul du dépôt à être franchement découpé en modules : une façon de garder un prompt maintenable quand il grossit."
       ],
-      "topics": ["prompt-engineering", "agents", "memoire"],
-      "tags": ["utile", "intermediaire"],
-      "lessons": ["07-building-chat-applications"]
+      "topics": [
+        "prompt-engineering",
+        "agents",
+        "memoire"
+      ],
+      "tags": [
+        "utile",
+        "intermediaire"
+      ],
+      "lessons": [
+        "07-building-chat-applications"
+      ],
+      "role": "Tenir un assistant personnel par messagerie sur la durée.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Des messages courts, adaptés à une conversation par SMS plutôt qu'à un chat de bureau."
     },
     "orchids-app": {
       "title": "Orchids",
@@ -439,9 +918,20 @@
       "learn": [
         "Un des prompts les plus longs pour une tâche pourtant étroite : intéressant à comparer à Xcode sur le rapport longueur/tâche."
       ],
-      "topics": ["code-assistants", "interfaces"],
-      "tags": ["survol", "intermediaire"],
-      "lessons": ["12-designing-ux-for-ai-applications"]
+      "topics": [
+        "code-assistants",
+        "interfaces"
+      ],
+      "tags": [
+        "survol",
+        "intermediaire"
+      ],
+      "lessons": [
+        "12-designing-ux-for-ai-applications"
+      ],
+      "role": "Générer un site web complet à partir d'une description.",
+      "when": "À chaque requête, en tête de contexte, avant votre message.",
+      "output": "Un site fonctionnel, contraint par les conventions imposées dans le prompt."
     },
     "leap-new": {
       "title": "Leap.new",
@@ -450,9 +940,20 @@
       "learn": [
         "Générer du déploiement engage des ressources réelles : le prompt encadre ce que l'agent a le droit de provisionner."
       ],
-      "topics": ["code-assistants", "securite"],
-      "tags": ["survol", "avance"],
-      "lessons": ["14-the-generative-ai-application-lifecycle"]
+      "topics": [
+        "code-assistants",
+        "securite"
+      ],
+      "tags": [
+        "survol",
+        "avance"
+      ],
+      "lessons": [
+        "14-the-generative-ai-application-lifecycle"
+      ],
+      "role": "Générer une application avec son infrastructure.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Du code et des ressources provisionnées — d'où un encadrement strict de ce qui peut être créé."
     },
     "emergent": {
       "title": "Emergent",
@@ -461,9 +962,20 @@
       "learn": [
         "Un exemple de plus de la façon dont ces produits cadrent une tâche longue en étapes vérifiables."
       ],
-      "topics": ["agents", "code-assistants"],
-      "tags": ["survol", "intermediaire"],
-      "lessons": ["17-ai-agents"]
+      "topics": [
+        "agents",
+        "code-assistants"
+      ],
+      "tags": [
+        "survol",
+        "intermediaire"
+      ],
+      "lessons": [
+        "17-ai-agents"
+      ],
+      "role": "Cadrer un agent qui construit une application de bout en bout.",
+      "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
+      "output": "Une application livrée par étapes vérifiables."
     }
   }
 }

@@ -124,6 +124,30 @@ def main() -> int:
         if tid not in prompts["tools"]:
             problems.append(f"outil décrit mais absent du manifeste : {tid}")
 
+    # Mise en situation : sans ces trois champs, la fiche redevient un mur de texte.
+    for tid, fr in prompts_meta["tools"].items():
+        for champ in ("role", "when", "output"):
+            if not fr.get(champ):
+                problems.append(f"outil sans « {champ} » : {tid}")
+    if not (DOCS / "prompts-systeme" / "guide" / "index.html").exists():
+        problems.append("guide de lecture des prompts absent du site")
+
+    # Glossaire des sections : alias résolus, leçons existantes, couverture mesurée.
+    gloss = json.loads((CONTENT / "_prompt_sections.json").read_text(encoding="utf-8"))["sections"] \
+        if (CONTENT / "_prompt_sections.json").is_file() else {}
+    for k, v in gloss.items():
+        if "alias" in v and v["alias"] not in gloss:
+            problems.append(f"alias de section cassé : {k} → {v['alias']}")
+        if v.get("lesson") and v["lesson"] not in meta["lessons"]:
+            problems.append(f"section « {k} » liée à une leçon inconnue : {v['lesson']}")
+
+    glossed = flat = 0
+    for page in sorted((DOCS / "prompts-systeme").glob("*/index.html")):
+        html_txt = page.read_text(encoding="utf-8")
+        glossed += html_txt.count("promptsec__role")
+        flat += len(re.findall(r'<details class="promptsec"', html_txt))
+    gloss_rate = f"{100 * glossed // flat} %" if flat else "n/a"
+
     # Sujets : vocabulaire connu, page produite, et aucun sujet vide (page inutile).
     topics = json.loads((CONTENT / "_topics.json").read_text(encoding="utf-8"))["topics"] \
         if (CONTENT / "_topics.json").is_file() else {}
@@ -208,6 +232,8 @@ def main() -> int:
     print(f"Leçons publiées : {len(lessons)} · parcours : {len(meta['tracks'])}")
     print(f"Ateliers publiés : {len(apps['projects'])} · catégories : {len(apps['categories'])}")
     print(f"Prompts système publiés : {len(prompts['tools'])} · sujets : {len(topics)}")
+    print(f"Sections de prompt : {flat} découpées, {glossed} expliquées par le glossaire "
+          f"({gloss_rate}) · {sum(1 for v in gloss.values() if 'title' in v)} types décrits")
     print(f"Services décrits : {len(services['services'])} · tags au vocabulaire : {len(vocab)}")
     if thin:
         print(f"Sujets portés par une seule famille ({len(thin)}) : {', '.join(thin)}")

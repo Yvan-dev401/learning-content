@@ -49,9 +49,12 @@
 <aside class="alts alts--warn"><p class="alts__lead"><span aria-hidden="true">⚠️</span>
   Texte extrait d'un produit commercial par un tiers : ni officiel, ni vérifiable, et
   possiblement périmé. Reproduit ici à des fins d'étude.</p></aside>
+<section class="situate"><h2 id="a-quoi-il-sert">À quoi sert ce prompt<a class="anchor" href="#a-quoi-il-sert" aria-label="Lien vers cette section">#</a></h2><dl class="situate__list"><dt>Son rôle</dt><dd>Cadrer un agent de terminal, avec un prompt volontairement court.</dd><dt>Quand il est envoyé</dt><dd>Au lancement d&#x27;une tâche, puis à chaque tour de la boucle de l&#x27;agent tant qu&#x27;il n&#x27;a pas conclu.</dd><dt>Ce qu'il produit</dt><dd>Des commandes et des éditions, avec beaucoup moins de garde-fous écrits que chez les concurrents.</dd></dl><p class="situate__guide">Première visite ? <a href="../../prompts-systeme/guide/index.html">Commencez par le guide</a> : ce qu'est un prompt système, quand il est envoyé et ce qu'il coûte.</p></section>
+
 <section class="feats"><h2 id="ce-quon-en-retient">Ce qu'on en retient<a class="anchor" href="#ce-quon-en-retient" aria-label="Lien vers cette section">#</a></h2><ul><li>Un prompt court comparé aux autres : la preuve qu'un agent utilisable ne demande pas forcément dix mille mots de consignes.</li></ul></section>
 <section class="obs"><h2 id="constats">Constats mesurés<a class="anchor" href="#constats" aria-label="Lien vers cette section">#</a></h2><p class="obs__note">Calculés sur les fichiers eux-mêmes, sans interprétation.</p><ul><li>Environ <strong>2 757 mots</strong> répartis sur 1 fichier(s).</li><li>Structuré par <strong>balises</strong> : 9 blocs délimités (<code>&lt;nom&gt;…&lt;/nom&gt;</code>).</li><li><strong>18 interdictions</strong> explicites (« never », « must not », « do not »…) — l'essentiel du cadrage passe par ce qu'il ne faut pas faire.</li></ul></section>
-<section class="promptfiles"><h2 id="le-texte">Le texte intégral<a class="anchor" href="#le-texte" aria-label="Lien vers cette section">#</a></h2><h3 id="fichier-google-gemini-cli-system-prompttxt">google-gemini-cli-system-prompt.txt<a class="anchor" href="#fichier-google-gemini-cli-system-prompttxt" aria-label="Lien vers cette section">#</a></h3><p class="promptfile__meta">19 ko · 189 lignes · <a href="../../assets/prompts-systeme/open-source-prompts-gemini-cli/google-gemini-cli-system-prompt.txt" download>télécharger</a></p><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">google-gemini-cli-system-prompt.txt</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>You are an interactive CLI agent specializing in software engineering tasks. Your primary goal is to help users safely and efficiently, adhering strictly to the following instructions and utilizing your available tools.
+<section class="outline"><h2 id="plan-du-prompt">Le plan du prompt<a class="anchor" href="#plan-du-prompt" aria-label="Lien vers cette section">#</a></h2><p class="outline__intro">La construction du prompt, avant son contenu. Les noms entre chevrons sont ceux de l'éditeur ; l'explication en regard vient de notre <a href="../../prompts-systeme/guide/index.html#glossaire">glossaire des sections</a> et vaut pour ce type de section en général.</p><div class="outline__file"><p class="outline__name">google-gemini-cli-system-prompt.txt<span class="outline__meta">3 sections, repérées par balises</span></p><ol class="outline__list"><li class="outline__item"><a href="#fichier-google-gemini-cli-system-prompttxt-preambule"><code>préambule</code></a><span class="outline__size">95 l.</span></li><li class="outline__item"><a href="#fichier-google-gemini-cli-system-prompttxt-example"><code>example</code></a> <span class="outline__fr">Exemple</span><span class="outline__times">×9</span><span class="outline__size">82 l.</span><span class="outline__role">Un cas concret montré au modèle plutôt qu&#x27;une règle abstraite. C&#x27;est le « few-shot » de la leçon 5, appliqué en production — souvent plus efficace qu&#x27;une consigne de plus.</span></li><li class="outline__item"><a href="#fichier-google-gemini-cli-system-prompttxt-preambule"><code>texte hors section</code></a><span class="outline__size">3 l.</span></li></ol></div></section>
+<section class="promptfiles codepanel"><h2 id="le-texte">Le texte, section par section<a class="anchor" href="#le-texte" aria-label="Lien vers cette section">#</a></h2><p class="promptfiles__note">Le texte est reproduit <strong>intégralement et sans modification</strong> ; seul son découpage à l'écran est de nous. Chaque bloc se déplie, et le fichier d'origine reste téléchargeable.</p><div class="tabs__panel" data-tab="fichier-google-gemini-cli-system-prompttxt"><h3 id="fichier-google-gemini-cli-system-prompttxt">google-gemini-cli-system-prompt.txt<a class="anchor" href="#fichier-google-gemini-cli-system-prompttxt" aria-label="Lien vers cette section">#</a></h3><p class="promptfile__meta">19 ko · 189 lignes · <a href="../../assets/prompts-systeme/open-source-prompts-gemini-cli/google-gemini-cli-system-prompt.txt" download>télécharger le fichier d'origine</a></p><details class="promptsec" id="fichier-google-gemini-cli-system-prompttxt-preambule" open><summary class="promptsec__head"><code class="promptsec__name">préambule</code><span class="promptsec__size">95 lignes</span></summary><div class="promptsec__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>You are an interactive CLI agent specializing in software engineering tasks. Your primary goal is to help users safely and efficiently, adhering strictly to the following instructions and utilizing your available tools.
 
 # Core Mandates
 
@@ -146,26 +149,23 @@ You are running outside of a sandbox container, directly on the user&#39;s syste
 
 
 # Examples (Illustrating Tone and Workflow)
-&lt;example&gt;
+</pre></div>
+</div></div></details><details class="promptsec" id="fichier-google-gemini-cli-system-prompttxt-example"><summary class="promptsec__head"><code class="promptsec__name">example</code><span class="promptsec__fr">Exemple</span><span class="promptsec__size">82 lignes</span></summary><div class="promptsec__body"><p class="promptsec__role">Un cas concret montré au modèle plutôt qu&#x27;une règle abstraite. C&#x27;est le « few-shot » de la leçon 5, appliqué en production — souvent plus efficace qu&#x27;une consigne de plus. <a href="../../lecons/05-advanced-prompts/index.html">Leçon 05</a></p><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span>&lt;example&gt;
 user: 1 + 2
 model: 3
 &lt;/example&gt;
-
 &lt;example&gt;
 user: is 13 a prime number?
 model: true
 &lt;/example&gt;
-
 &lt;example&gt;
 user: list files here.
 model: [tool_call: list_directory for path &#39;/path/to/project&#39;]
 &lt;/example&gt;
-
 &lt;example&gt;
 user: start the server implemented in server.js
 model: [tool_call: run_shell_command for &#39;node server.js &amp;&#39; because it must run in the background]
 &lt;/example&gt;
-
 &lt;example&gt;
 user: Refactor the auth logic in src/auth.py to use the requests library instead of urllib.
 model: Okay, I can refactor &#39;src/auth.py&#39;.
@@ -195,12 +195,10 @@ Refactoring complete. Running verification...
 All checks passed. This is a stable checkpoint.
 Would you like me to write a commit message and commit these changes?
 &lt;/example&gt;
-
 &lt;example&gt;
 user: Delete the temp directory.
 model: I can run `rm -rf /path/to/project/temp`. This will permanently delete the directory and all its contents.
 &lt;/example&gt;
-
 &lt;example&gt;
 user: Write tests for someFile.ts
 model:
@@ -213,7 +211,6 @@ Now I&#39;ll look for existing or related test files to understand current testi
 I&#39;ve written the tests. Now I&#39;ll run the project&#39;s test command to verify them.
 [tool_call: run_shell_command for &#39;npm run test&#39;]
 &lt;/example&gt;
-
 &lt;example&gt;
 user: How do I update the user&#39;s profile information in this system?
 model:
@@ -225,7 +222,6 @@ Okay, `/path/to/UserProfileService.java` seems like the most relevant file. I&#3
 (After reading the file)
 It appears the `updateUserProfile` method in `UserProfileService.java` is responsible for this. It expects a user ID and a `UserProfileDTO` object...
 &lt;/example&gt;
-
 &lt;example&gt;
 user: Where are all the &#39;app.config&#39; files in this project? I need to check their settings.
 model:
@@ -236,11 +232,11 @@ I found the following &#39;app.config&#39; files:
 - /path/to/moduleB/app.config
 To help you check their settings, I can read their contents. Which one would you like to start with, or should I read all of them?
 &lt;/example&gt;
-
-# Final Reminder
+</pre></div>
+</div></div></details><details class="promptsec" id="fichier-google-gemini-cli-system-prompttxt-texte-hors-section"><summary class="promptsec__head"><code class="promptsec__name">texte hors section</code><span class="promptsec__size">3 lignes</span></summary><div class="promptsec__body"><div class="codeblock"><div class="codeblock__bar"><span class="codeblock__lang">text</span><button class="codeblock__copy" type="button" aria-label="Copier le code">Copier</button></div><div class="highlight"><pre><span></span># Final Reminder
 Your core function is efficient and safe assistance. Balance extreme conciseness with the crucial need for clarity, especially regarding safety and potential system modifications. Always prioritize user control and project conventions. Never make assumptions about the contents of files; instead use &#39;read_file&#39; or &#39;read_many_files&#39; to ensure you aren&#39;t making broad assumptions. Finally, you are an agent - please keep going until the user&#39;s query is completely resolved.
 </pre></div>
-</div></section>
+</div></div></details></div></section>
 <section class="linkback"><h2 id="la-theorie">La théorie correspondante<a class="anchor" href="#la-theorie" aria-label="Lien vers cette section">#</a></h2><ul class="linklist"><li><a href="../../lecons/17-ai-agents/index.html">17 · Les agents IA</a></li></ul></section>
 <section class="related"><h2 id="sur-le-meme-sujet">Sur le même sujet<a class="anchor" href="#sur-le-meme-sujet" aria-label="Lien vers cette section">#</a></h2><p class="related__intro">Les mêmes notions, vues sous un autre angle :</p><ul class="related__list"><li class="related__item"><a href="../../ateliers/agent-skills/commit-archaeologist/index.html"><span class="related__kind" aria-hidden="true">🧪</span><span class="related__title">Archéologue des commits</span><span class="related__summary">Reconstitue l&#x27;histoire d&#x27;un fichier pour comprendre pourquoi il est ainsi.</span></a></li><li class="related__item"><a href="../../ateliers/agent-skills/project-graveyard/index.html"><span class="related__kind" aria-hidden="true">🧪</span><span class="related__title">Cimetière de projets</span><span class="related__summary">Repère le code mort et les chantiers abandonnés d&#x27;un dépôt.</span></a></li><li class="related__item"><a href="../../ateliers/agent-skills/self-improving-agent-skills/index.html"><span class="related__kind" aria-hidden="true">🧪</span><span class="related__title">Compétences auto-améliorantes</span><span class="related__summary">Des compétences qui se réécrivent à partir des retours reçus.</span></a></li><li class="related__item"><a href="../../lecons/21-meta/index.html"><span class="related__kind" aria-hidden="true">📘</span><span class="related__title">Construire avec les modèles Meta</span><span class="related__summary">La famille Llama : capacités, variantes multimodales et mise en œuvre.</span></a></li><li class="related__item"><a href="../../lecons/20-mistral/index.html"><span class="related__kind" aria-hidden="true">📘</span><span class="related__title">Construire avec les modèles Mistral</span><span class="related__summary">Les spécificités de la famille Mistral et les cas d&#x27;usage où elle brille.</span></a></li><li class="related__item"><a href="../../lecons/19-slm/index.html"><span class="related__kind" aria-hidden="true">📘</span><span class="related__title">Construire avec les petits modèles (SLM)</span><span class="related__summary">La famille Phi et les atouts des petits modèles : coût, latence, exécution locale.</span></a></li></ul></section>
 <section class="done" data-lesson-toggle="prompt:open-source-prompts-gemini-cli">
@@ -256,7 +252,7 @@ Your core function is efficient and safe assistance. Balance extreme conciseness
   dans system-prompts-and-models-of-ai-tools (GPL-3.0). Fichiers repris à l'octet près.</p>
 
   </main>
-  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#ce-quon-en-retient">Ce qu&#x27;on en retient</a></li><li class="toc__item toc__item--h2"><a href="#constats">Constats mesurés</a></li><li class="toc__item toc__item--h2"><a href="#le-texte">Le texte intégral</a></li><li class="toc__item toc__item--h3"><a href="#fichier-google-gemini-cli-system-prompttxt">google-gemini-cli-system-prompt.txt</a></li></ul></div></aside>
+  <aside class="toc" aria-label="Sommaire de la page"><div class="toc__inner"><p class="toc__title">Sur cette page</p><ul class="toc__list"><li class="toc__item toc__item--h2"><a href="#a-quoi-il-sert">À quoi sert ce prompt</a></li><li class="toc__item toc__item--h2"><a href="#ce-quon-en-retient">Ce qu&#x27;on en retient</a></li><li class="toc__item toc__item--h2"><a href="#constats">Constats mesurés</a></li><li class="toc__item toc__item--h2"><a href="#plan-du-prompt">Le plan du prompt</a></li><li class="toc__item toc__item--h2"><a href="#le-texte">Le texte, section par section</a></li></ul></div></aside>
 </div>
 <footer class="footer">
   <p>Contenu issu de <a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,

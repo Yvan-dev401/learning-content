@@ -11,7 +11,7 @@ pour être suivies comme un vrai parcours d'apprentissage :
 |---|---|---|
 | 📘 **Apprendre** | [Generative AI for Beginners](https://github.com/microsoft/generative-ai-for-beginners) (Microsoft) | 22 leçons en français, réparties en **7 parcours progressifs** |
 | 🧪 **Construire** | [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | **139 applications** complètes, code inclus, en 17 catégories |
-| 🔍 **Décortiquer** | [system-prompts-and-models-of-ai-tools](https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools) | Les prompts système de **40 outils** commerciaux, analysés |
+| 🔍 **Décortiquer** | [system-prompts-and-models-of-ai-tools](https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools) | Les prompts système de **40 outils** commerciaux, découpés et expliqués |
 
 Le cours explique, les ateliers font construire, les prompts montrent ce que fait
 l'industrie. **16 sujets transversaux** relient les trois : sur la page « RAG », on trouve au
@@ -52,6 +52,27 @@ Plus, sur chaque page : les **tags** (⭐ incontournable, 🟢 débutant, 💳 c
 bloc **« Sur le même sujet »** qui renvoie vers les autres familles, les **alternatives
 gratuites** aux services facturés, et le suivi de progression.
 
+### Les prompts système ne sont pas déversés bruts
+
+Un prompt système de 10 000 mots affiché d'un bloc n'apprend rien à personne. Chaque fiche
+est donc construite ainsi :
+
+- **À quoi sert ce prompt** — son rôle, quand il est envoyé, ce qu'il produit ;
+- **Ce que ce prompt apprend** — analyse rédigée, pour les outils les plus instructifs ;
+- **Constats mesurés** — longueur, mode de structuration, nombre d'outils et d'interdictions,
+  calculés sur les fichiers eux-mêmes ;
+- **Le plan du prompt** — sa construction avant son contenu, chaque section expliquée en
+  français quand son nom est répertorié ;
+- **Le texte, section par section** — intégral et intact, mais en blocs repliables et ancrés,
+  avec un onglet par fichier ;
+- les **définitions d'outils** rendues lisibles, précédées de ce qu'il faut savoir pour les lire.
+
+Une [page guide](docs/prompts-systeme/guide/) explique en amont ce qu'est un prompt système,
+quand il est envoyé, ce qu'il change, ce qu'il coûte en jetons, et comment se lit un
+`Tools.json`. Le glossaire (`content/_prompt_sections.json`) décrit **50 types de section** et
+en reconnaît 68 variantes de nommage ; une section qu'il ne connaît pas garde son nom brut,
+sans commentaire inventé.
+
 ## Organisation du dépôt
 
 ```
@@ -59,7 +80,8 @@ content/                     sources et métadonnées — la vérité du site
   _meta.json                 parcours, titres FR, durées, vocabulaire des tags, sujets par leçon
   _topics.json               les 16 sujets transversaux et leurs mots-clés de détection
   _apps_meta.json            habillage FR des 17 catégories et 139 ateliers
-  _prompts_meta.json         habillage FR des 40 outils : « ce qu'on en retient »
+  _prompts_meta.json         habillage FR des 40 outils : rôle, moment, résultat, analyse
+  _prompt_sections.json      glossaire des types de section de prompt
   _services.json             services payants, détection, alternatives gratuites
   _ingest.json, _apps.json, _prompts.json    manifestes produits par l'ingestion
   <leçon>/, _annexes/        Markdown français du cours

@@ -145,6 +145,7 @@ class Site:
         self.prompts = read_json(CONTENT / "_prompts.json", {"tools": {}, "skipped": []})
         self.prompts_meta = read_json(CONTENT / "_prompts_meta.json", {"tools": {}})
         self.topicdef = read_json(CONTENT / "_topics.json", {"topics": {}})["topics"]
+        self.sectiondef = read_json(CONTENT / "_prompt_sections.json", {"sections": {}})["sections"]
         self.tagdef = self.meta.get("tags", {"groups": {}, "values": {}})
         self.tracks = self.meta["tracks"]
         self.lesson_meta = self.meta["lessons"]
@@ -1239,6 +1240,90 @@ def render_code_file(entry: dict, owner: str, renderer: Renderer, base: str) -> 
     return f'<details class="codefile" id="{entry["anchor"]}">{head}<div class="codefile__body">{body}</div></details>'
 
 
+TOOLS_NOTE = (
+    '<div class="toolsnote"><p><strong>Ce fichier n\'est pas un prompt : c\'est un catalogue '
+    'd\'outils.</strong> Il déclare les {n} actions que le modèle peut demander au produit '
+    'd\'exécuter — lire un fichier, lancer une commande, chercher sur le web. Pour chacune : un '
+    'nom, une description, et des paramètres typés.</p>'
+    '<p>Le point à retenir : <strong>c\'est la description qui décide du bon appel</strong>, pas '
+    'le prompt principal. Un outil mal décrit sera appelé au mauvais moment, quelles que soient '
+    'les consignes par ailleurs. '
+    '<a href="{base}prompts-systeme/guide/index.html#outils">Comment lire une définition d\'outil</a> '
+    '· <a href="{base}lecons/11-integrating-with-function-calling/index.html">Leçon 11</a></p></div>'
+)
+TAG_OPEN = re.compile(r"^<([a-z][a-z0-9_]*)>\s*$")
+TAG_CLOSE = re.compile(r"^</([a-z][a-z0-9_]*)>\s*$")
+MD_HEAD = re.compile(r"^(#{1,3})\s+(.{2,80})$")
+
+
+def normalize_section(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def split_prompt(text: str) -> tuple[str, list[dict]]:
+    """Découpe un prompt en sections de premier niveau.
+
+    Trois régimes, dans l'ordre : balises racine (ouvertes et fermées en colonne 0, sans
+    imbrication — sinon on découperait sur les `<example>` internes), titres Markdown, puis
+    rien. Le troisième cas n'est pas un échec : un cinquième des prompts n'a aucune
+    structure, et le prétendre serait mentir sur ce qu'on montre.
+
+    Renvoie (mode, sections) où chaque section est {name, body, lines}.
+    """
+    lines = text.splitlines()
+
+    sections, depth, cur, start = [], 0, None, 0
+    for i, line in enumerate(lines):
+        mo, mc = TAG_OPEN.match(line), TAG_CLOSE.match(line)
+        if mo:
+            if depth == 0:
+                if cur is None and lines[start:i] and any(l.strip() for l in lines[start:i]):
+                    sections.append({"name": "", "body": "\n".join(lines[start:i])})
+                cur, start = mo.group(1), i
+            depth += 1
+        elif mc:
+            depth -= 1
+            if depth == 0 and cur == mc.group(1):
+                sections.append({"name": cur, "body": "\n".join(lines[start:i + 1])})
+                cur, start = None, i + 1
+            depth = max(depth, 0)
+    if sections:
+        rest = "\n".join(lines[start:])
+        if rest.strip():
+            sections.append({"name": "", "body": rest})
+        mode = "balises"
+    else:
+        heads = [(i, MD_HEAD.match(l)) for i, l in enumerate(lines)]
+        heads = [(i, m) for i, m in heads if m]
+        if len(heads) >= 3:
+            if heads[0][0] > 0 and any(l.strip() for l in lines[: heads[0][0]]):
+                sections.append({"name": "", "body": "\n".join(lines[: heads[0][0]])})
+            for n, (i, m) in enumerate(heads):
+                end = heads[n + 1][0] if n + 1 < len(heads) else len(lines)
+                sections.append({"name": m.group(2).strip(),
+                                 "body": "\n".join(lines[i:end])})
+            mode = "titres"
+        else:
+            sections = [{"name": "", "body": text}]
+            mode = "brut"
+
+    # Plusieurs prompts alignent sept ou huit `<example>` de suite à la racine. Les lister
+    # un par un noie le plan sous du bruit : on regroupe les sections consécutives de même
+    # nom en une seule entrée, en gardant leur nombre.
+    grouped: list[dict] = []
+    for sec in sections:
+        if not sec["body"].strip():
+            continue
+        if grouped and grouped[-1]["name"] == sec["name"] and sec["name"]:
+            grouped[-1]["body"] += "\n" + sec["body"]
+            grouped[-1]["count"] += 1
+        else:
+            grouped.append({**sec, "count": 1})
+    for sec in grouped:
+        sec["lines"] = sec["body"].count("\n") + 1
+    return mode, grouped
+
+
 def tool_definitions_html(tools: list[dict]) -> str:
     """Rend un catalogue d'outils en liste lisible plutôt qu'en JSON brut : c'est la
     description des outils, pas leur sérialisation, qui a une valeur pédagogique."""
@@ -1923,6 +2008,8 @@ class Builder:
 <p class="langnote"><span aria-hidden="true">🌐</span> Les prompts sont reproduits
    <strong>en anglais et sans aucune modification</strong> — c'est leur intérêt. Le titre,
    le résumé et l'analyse qui les accompagnent sont en français.</p>
+<p><a class="btn btn--primary" href="{base}prompts-systeme/guide/index.html">
+   Commencer par le guide de lecture</a></p>
 <p class="statline">{len(s.prompt_order)} outils · {n_files} fichiers ·
    {n_defs} définitions d'outils · {sum(s.prompts["tools"][t]["chars"] for t in s.prompt_order) // 1000} k caractères</p>
 {filter_bar(s, base, target=".lcards > .lcard", noun="outil", facets=("topics", "tags"))}
@@ -1937,10 +2024,267 @@ class Builder:
                           kind="Prompts système", context="", summary=sec.get("tagline", ""),
                           md_text=sec.get("tagline", ""), toc=[], ctype="prompts")
 
+    def gloss(self, name: str) -> dict | None:
+        """Entrée de glossaire pour un nom de section, alias résolus."""
+        entry = self.site.sectiondef.get(normalize_section(name))
+        seen = 0
+        while entry and "alias" in entry and seen < 5:
+            entry = self.site.sectiondef.get(entry["alias"])
+            seen += 1
+        return entry if entry and "title" in entry else None
+
+    def prompt_outline_html(self, outline: list, base: str) -> str:
+        """« Le plan du prompt » : la construction du texte, lisible sans un mot d'anglais."""
+        if not outline:
+            return ""
+        blocks = []
+        for fname, mode, secs, anchor in outline:
+            if mode == "brut":
+                blocks.append(
+                    f'<div class="outline__file"><p class="outline__name">{esc(fname)}</p>'
+                    f'<p class="note">Ce prompt n\'est pas découpé en sections : c\'est un texte '
+                    f'continu de {secs[0]["lines"]} lignes. Ce n\'est pas un défaut d\'import — '
+                    f'un cinquième des prompts du corpus est écrit ainsi.</p></div>')
+                continue
+            rows = []
+            seen_free = False
+            for sec in secs:
+                g = self.gloss(sec["name"]) if sec["name"] else None
+                if sec["name"]:
+                    label = esc(sec["name"])
+                else:
+                    # Le premier bloc sans balise est un préambule ; les suivants sont du
+                    # texte intercalé entre deux sections, ce qui n'est pas la même chose.
+                    label = "préambule" if not seen_free else "texte hors section"
+                    seen_free = True
+                sid = f'{anchor}-{slugify(sec["name"] or "preambule")}'
+                title = (f'<a href="#{sid}"><code>{label}</code></a>'
+                         + (f' <span class="outline__fr">{esc(g["title"])}</span>' if g else ""))
+                role = f'<span class="outline__role">{esc(g["role"])}</span>' if g else ""
+                times = (f'<span class="outline__times">×{sec["count"]}</span>'
+                         if sec.get("count", 1) > 1 else "")
+                rows.append(f'<li class="outline__item">{title}{times}'
+                            f'<span class="outline__size">{sec["lines"]} l.</span>{role}</li>')
+            label = "balises" if mode == "balises" else "titres"
+            blocks.append(
+                f'<div class="outline__file"><p class="outline__name">{esc(fname)}'
+                f'<span class="outline__meta">{len(secs)} sections, repérées par {label}</span></p>'
+                f'<ol class="outline__list">{"".join(rows)}</ol></div>')
+        return ('<section class="outline"><h2 id="plan-du-prompt">Le plan du prompt'
+                '<a class="anchor" href="#plan-du-prompt" aria-label="Lien vers cette section">#</a></h2>'
+                '<p class="outline__intro">La construction du prompt, avant son contenu. Les noms '
+                'entre chevrons sont ceux de l\'éditeur ; l\'explication en regard vient de notre '
+                f'<a href="{base}prompts-systeme/guide/index.html#glossaire">glossaire des sections</a> '
+                'et vaut pour ce type de section en général.</p>'
+                + "".join(blocks) + "</section>")
+
+    def prompt_sections_html(self, secs: list[dict], mode: str, anchor: str, base: str) -> str:
+        """Le texte, une section par bloc repliable — la première ouverte."""
+        if mode == "brut":
+            return code_block(secs[0]["body"], "text")
+        out, seen_free = [], False
+        for n, sec in enumerate(secs):
+            g = self.gloss(sec["name"]) if sec["name"] else None
+            if sec["name"]:
+                label = sec["name"]
+            else:
+                label = "préambule" if not seen_free else "texte hors section"
+                seen_free = True
+            sid = f'{anchor}-{slugify(label)}'
+            fr = f'<span class="promptsec__fr">{esc(g["title"])}</span>' if g else ""
+            note = ""
+            if g:
+                lesson = g.get("lesson")
+                link = (f' <a href="{base}lecons/{lesson}/index.html">'
+                        f'Leçon {self.site.lesson_meta[lesson]["num"]}</a>'
+                        if lesson in self.site.lesson_meta else "")
+                note = f'<p class="promptsec__role">{esc(g["role"])}{link}</p>'
+            out.append(
+                f'<details class="promptsec" id="{sid}"{" open" if n == 0 else ""}>'
+                f'<summary class="promptsec__head"><code class="promptsec__name">{esc(label)}</code>'
+                f'{fr}<span class="promptsec__size">{sec["lines"]} lignes</span></summary>'
+                f'<div class="promptsec__body">{note}{code_block(sec["body"], "text")}</div></details>')
+        return "".join(out)
+
+    def build_prompt_guide(self) -> None:
+        """La page qui manquait : ce qu'on regarde, et comment le regarder."""
+        s, base = self.site, "../../"
+        gloss_rows = "".join(
+            f'<tr><td><code>{esc(k)}</code></td><td>{esc(v["title"])}</td>'
+            f'<td>{esc(v["role"])}'
+            + (f' <a href="{base}lecons/{v["lesson"]}/index.html">'
+               f'Leçon {s.lesson_meta[v["lesson"]]["num"]}</a>'
+               if v.get("lesson") in s.lesson_meta else "")
+            + "</td></tr>"
+            for k, v in sorted(s.sectiondef.items()) if "title" in v
+        )
+        n_alias = sum(1 for v in s.sectiondef.values() if "alias" in v)
+        toc = [
+            {"id": "ce-que-cest", "text": "Ce qu'est un prompt système", "level": 2},
+            {"id": "quand", "text": "Quand il est envoyé", "level": 2},
+            {"id": "ce-quil-change", "text": "Ce qu'il change", "level": 2},
+            {"id": "ce-quil-coute", "text": "Ce qu'il coûte", "level": 2},
+            {"id": "comment-lire", "text": "Comment en lire un", "level": 2},
+            {"id": "outils", "text": "Lire une définition d'outil", "level": 2},
+            {"id": "glossaire", "text": "Glossaire des sections", "level": 2},
+            {"id": "statut", "text": "Ce qu'on a le droit d'en faire", "level": 2},
+        ]
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span>
+  <a href="{base}prompts-systeme/index.html">Prompts système</a> <span aria-hidden="true">›</span>
+  <span>Guide de lecture</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow"><span aria-hidden="true">🧭</span> Guide</p>
+  <h1 class="pagehead__title">Comment lire un prompt système</h1>
+  <p class="pagehead__summary">Avant d'ouvrir les 40 fiches : ce que vous allez regarder, à quoi
+     ça sert, et comment en tirer quelque chose pour vos propres projets.</p>
+</header>
+
+<article class="prose">
+<h2 id="ce-que-cest">Ce qu'est un prompt système<a class="anchor" href="#ce-que-cest">#</a></h2>
+<p>Quand vous écrivez à un assistant, votre message n'est pas le premier que le modèle reçoit.
+   L'éditeur en a glissé un avant, que vous ne voyez jamais : le <strong>prompt système</strong>.
+   Il dit au modèle qui il est, ce qu'il doit faire, comment répondre, ce qu'il ne doit jamais
+   faire, et quels outils il peut appeler.</p>
+<p>C'est du texte ordinaire, en langage naturel. Pas de code, pas de configuration : des
+   phrases. C'est précisément ce qui rend ces documents lisibles — et instructifs.</p>
+
+<h2 id="quand">Quand il est envoyé<a class="anchor" href="#quand">#</a></h2>
+<p><strong>À chaque requête, en tête de contexte.</strong> C'est le point le plus souvent mal
+   compris : le modèle n'« apprend » pas le prompt système une fois pour toutes. Il le relit
+   intégralement à chaque échange, parce qu'il ne garde aucun souvenir d'un appel à l'autre.</p>
+<p>Concrètement, l'ordre est toujours le même : prompt système, puis historique de la
+   conversation, puis votre message. Ce qui est proche de la question pèse davantage — d'où
+   les sections « rappels critiques » que plusieurs éditeurs placent tout à la fin.</p>
+
+<h2 id="ce-quil-change">Ce qu'il change<a class="anchor" href="#ce-quil-change">#</a></h2>
+<p>Tout ce qui fait la personnalité d'un produit. Le même modèle, avec deux prompts systèmes
+   différents, donne deux assistants qu'on ne reconnaîtrait pas comme parents :</p>
+<ul>
+  <li><strong>le ton et la longueur</strong> — bavard ou télégraphique ;</li>
+  <li><strong>le format</strong> — Markdown, listes, blocs de code, citations ;</li>
+  <li><strong>les refus</strong> — ce qu'il accepte de faire, et comment il décline le reste ;</li>
+  <li><strong>l'usage des outils</strong> — quand chercher, quand exécuter, quand demander
+      confirmation ;</li>
+  <li><strong>l'initiative</strong> — anticiper, ou s'en tenir strictement à la demande.</li>
+</ul>
+<p>Ce qu'il ne change pas : ce que le modèle <em>sait</em>. Un prompt système ne lui apprend
+   aucun fait nouveau — il ne fait que cadrer l'usage de ce qu'il sait déjà. Pour ajouter des
+   connaissances, il faut du <a href="{base}sujets/rag/index.html">RAG</a> ou du
+   <a href="{base}sujets/fine-tuning/index.html">fine-tuning</a>.</p>
+
+<h2 id="ce-quil-coute">Ce qu'il coûte<a class="anchor" href="#ce-quil-coute">#</a></h2>
+<p>Relu à chaque requête, il se paie à chaque requête. Un prompt de 10 000 mots, c'est de
+   l'ordre de 13 000 jetons ajoutés à <em>chaque</em> appel — avant même que l'utilisateur ait
+   parlé. À l'échelle de millions de requêtes, la facture est réelle, et la latence aussi.</p>
+<p>C'est pourquoi les éditeurs les taillent en permanence, et pourquoi certains chargent des
+   consignes <em>à la demande</em> plutôt que tout d'un bloc. Quand vous verrez une section
+   très courte à côté d'une section fleuve, souvenez-vous que quelqu'un a arbitré.</p>
+
+<h2 id="comment-lire">Comment en lire un<a class="anchor" href="#comment-lire">#</a></h2>
+<p>N'essayez pas de lire ces textes de bout en bout : ils ne sont pas écrits pour ça. Sur
+   chaque fiche du site, commencez par <strong>« Le plan du prompt »</strong>, qui montre sa
+   construction avant son contenu. Puis dépliez seulement les sections qui vous intéressent.</p>
+<p>Quatre choses valent le détour :</p>
+<ol>
+  <li><strong>La structure.</strong> Balises, titres, ou rien du tout ? Un prompt structuré est
+      un prompt qui a été relu et corrigé plusieurs fois.</li>
+  <li><strong>Les interdictions.</strong> Chaque « never » et chaque « do not » est la trace
+      d'un échec constaté en production. C'est la partie la plus instructive.</li>
+  <li><strong>Les exemples.</strong> Quand un éditeur montre un cas plutôt que d'énoncer une
+      règle, c'est que la règle seule ne suffisait pas.</li>
+  <li><strong>Les répétitions.</strong> Une consigne répétée en fin de texte est une consigne
+      que le modèle oubliait.</li>
+</ol>
+
+<h2 id="outils">Lire une définition d'outil<a class="anchor" href="#outils">#</a></h2>
+<p>Plusieurs outils publient, à côté du prompt, un fichier <code>Tools.json</code>. Ce n'est pas
+   un prompt : c'est le <strong>catalogue des actions</strong> que le modèle peut demander au
+   produit d'exécuter — lire un fichier, lancer une commande, chercher sur le web.</p>
+<p>Chaque entrée comporte trois choses :</p>
+<ul>
+  <li>un <strong>nom</strong>, que le modèle emploiera pour appeler l'outil ;</li>
+  <li>une <strong>description</strong> en langage naturel ;</li>
+  <li>des <strong>paramètres</strong> typés, dont certains obligatoires.</li>
+</ul>
+<p>Le point à retenir : <strong>c'est la description qui décide du bon appel</strong>, pas le
+   prompt principal. Le modèle choisit son outil en lisant ces descriptions ; si l'une est
+   vague, il l'appellera au mauvais moment quelles que soient les consignes par ailleurs. C'est
+   pour cette raison que les descriptions des produits sérieux sont longues et donnent des
+   exemples d'usage. La <a href="{base}lecons/11-integrating-with-function-calling/index.html">leçon 11</a>
+   couvre le mécanisme côté code.</p>
+
+<h2 id="glossaire">Glossaire des sections<a class="anchor" href="#glossaire">#</a></h2>
+<p>Les éditeurs réutilisent les mêmes noms de section d'un produit à l'autre. Voici ceux que le
+   site sait reconnaître : quand une section porte l'un de ces noms, son explication apparaît
+   automatiquement dans le plan du prompt et au-dessus du texte.</p>
+<p class="note">{sum(1 for v in s.sectiondef.values() if "title" in v)} types expliqués,
+   {n_alias} variantes de nommage reconnues. Une section absente de cette table garde son nom
+   brut, sans commentaire : mieux vaut ne rien dire que d'inventer une intention d'auteur.</p>
+<div class="glosstable">
+<table><thead><tr><th>Nom rencontré</th><th>Ce que c'est</th><th>À quoi ça sert</th></tr></thead>
+<tbody>{gloss_rows}</tbody></table>
+</div>
+
+<h2 id="statut">Ce qu'on a le droit d'en faire<a class="anchor" href="#statut">#</a></h2>
+<p>Ces textes n'ont été publiés par aucun éditeur. Ils ont été extraits de produits commerciaux
+   par des tiers, puis rassemblés dans un dépôt public. Trois conséquences :</p>
+<ul>
+  <li><strong>Ils ne sont pas officiels</strong> et leur exactitude n'est pas vérifiable.</li>
+  <li><strong>Ils vieillissent vite</strong> : un éditeur modifie son prompt sans prévenir.</li>
+  <li><strong>Ils appartiennent à leurs auteurs.</strong> Les étudier est une chose ; les
+      recopier dans un produit concurrent en est une autre.</li>
+</ul>
+<p>Lisez-les pour comprendre comment ces équipes s'y prennent, pas pour les reprendre tels
+   quels. <a href="{base}prompts-systeme/index.html">Voir les 40 outils</a></p>
+</article>
+"""
+        self.write("prompts-systeme/guide/index.html", layout(
+            site=s, base=base, title="Comment lire un prompt système — guide",
+            description="Ce qu'est un prompt système, quand il est envoyé, ce qu'il change, "
+                        "ce qu'il coûte, et comment lire une définition d'outil.",
+            body=body, sidebar=sidebar_html(s, base, None), toc=toc_html(toc),
+            body_class="page-lesson",
+        ))
+        self.index_search(
+            url="prompts-systeme/guide/index.html", title="Comment lire un prompt système",
+            kind="Guide", context="Prompts système",
+            summary="Ce qu'est un prompt système, quand il est envoyé, ce qu'il coûte.",
+            md_text="prompt système contexte jetons outils définition tool_calling glossaire "
+                    + " ".join(v.get("title", "") + " " + v.get("role", "")
+                               for v in s.sectiondef.values()),
+            toc=toc, ctype="prompts")
+
     def build_prompt(self, tid: str) -> None:
         s, base = self.site, "../../"
         p, item = s.prompt(tid), s.items[f"prompts/{tid}"]
         toc: list[dict] = []
+
+        fr = s.prompts_meta["tools"].get(tid, {})
+        situate = ""
+        if fr.get("role"):
+            situate = (
+                '<section class="situate"><h2 id="a-quoi-il-sert">À quoi sert ce prompt'
+                '<a class="anchor" href="#a-quoi-il-sert" aria-label="Lien vers cette section">#</a></h2>'
+                '<dl class="situate__list">'
+                f'<dt>Son rôle</dt><dd>{esc(fr["role"])}</dd>'
+                f'<dt>Quand il est envoyé</dt><dd>{esc(fr.get("when", ""))}</dd>'
+                f'<dt>Ce qu\'il produit</dt><dd>{esc(fr.get("output", ""))}</dd>'
+                '</dl>'
+                f'<p class="situate__guide">Première visite ? '
+                f'<a href="{base}prompts-systeme/guide/index.html">Commencez par le guide</a> : '
+                f'ce qu\'est un prompt système, quand il est envoyé et ce qu\'il coûte.</p>'
+                '</section>')
+            toc.append({"id": "a-quoi-il-sert", "text": "À quoi sert ce prompt", "level": 2})
+
+        analysis = ""
+        if fr.get("analysis"):
+            analysis = ('<section class="analysis"><h2 id="analyse">Ce que ce prompt apprend'
+                        '<a class="anchor" href="#analyse" aria-label="Lien vers cette section">#</a></h2>'
+                        + "".join(f"<p>{x}</p>" for x in fr["analysis"]) + "</section>")
+            toc.append({"id": "analyse", "text": "Ce que ce prompt apprend", "level": 2})
 
         learn = ""
         if p["learn"]:
@@ -1958,25 +2302,44 @@ class Builder:
                         + "<ul>" + "".join(f"<li>{x}</li>" for x in obs) + "</ul></section>")
             toc.append({"id": "constats", "text": "Constats mesurés", "level": 2})
 
-        blocks = []
-        for f in p["files"]:
+        outline, blocks, tabs = [], [], []
+        multi = len(p["files"]) > 1
+        for n, f in enumerate(p["files"]):
             anchor = "fichier-" + slugify(f["name"])
-            toc.append({"id": anchor, "text": f["name"], "level": 3})
+            tabs.append(
+                f'<button class="tabs__btn" role="tab" aria-selected="{"true" if n == 0 else "false"}" '
+                f'data-tab="{anchor}">{esc(f["name"])}</button>')
             dl = f'{base}assets/prompts-systeme/{tid}/{f["name"]}'
             head = (f'<h3 id="{anchor}">{esc(f["name"])}'
                     f'<a class="anchor" href="#{anchor}" aria-label="Lien vers cette section">#</a></h3>'
                     f'<p class="promptfile__meta">{human_size(f["size"])} · {f["lines"]} lignes · '
-                    f'<a href="{dl}" download>télécharger</a></p>')
+                    f'<a href="{dl}" download>télécharger le fichier d\'origine</a></p>')
+
             if f["kind"] == "outils" and f.get("tools"):
-                blocks.append(head + tool_definitions_html(f["tools"]))
+                body = TOOLS_NOTE.format(base=base, n=len(f["tools"])) + tool_definitions_html(f["tools"])
             else:
                 path = DOCS / "assets" / "prompts-systeme" / tid / f["name"]
                 text = path.read_text(encoding="utf-8", errors="replace")
-                blocks.append(head + code_block(text, "text", label=f["name"]))
-        files_html = ('<section class="promptfiles"><h2 id="le-texte">Le texte intégral'
+                mode, secs = split_prompt(text)
+                body = self.prompt_sections_html(secs, mode, anchor, base)
+                outline.append((f["name"], mode, secs, anchor))
+
+            hidden = "" if n == 0 or not multi else " hidden"
+            blocks.append(f'<div class="tabs__panel" data-tab="{anchor}"{hidden}>{head}{body}</div>')
+
+        plan_html = self.prompt_outline_html(outline, base)
+        if plan_html:
+            toc.append({"id": "plan-du-prompt", "text": "Le plan du prompt", "level": 2})
+
+        tabs_html = (f'<div class="tabs" role="tablist">{"".join(tabs)}</div>'
+                     if multi else "")
+        files_html = ('<section class="promptfiles codepanel"><h2 id="le-texte">Le texte, section par section'
                       '<a class="anchor" href="#le-texte" aria-label="Lien vers cette section">#</a></h2>'
-                      + "".join(blocks) + "</section>")
-        toc.insert(len(toc) - len(p["files"]), {"id": "le-texte", "text": "Le texte intégral", "level": 2})
+                      '<p class="promptfiles__note">Le texte est reproduit <strong>intégralement et sans '
+                      'modification</strong> ; seul son découpage à l\'écran est de nous. Chaque bloc se '
+                      'déplie, et le fichier d\'origine reste téléchargeable.</p>'
+                      + tabs_html + "".join(blocks) + "</section>")
+        toc.append({"id": "le-texte", "text": "Le texte, section par section", "level": 2})
 
         lessons = "".join(
             f'<li><a href="{base}lecons/{sl}/index.html">'
@@ -2014,8 +2377,11 @@ class Builder:
 <aside class="alts alts--warn"><p class="alts__lead"><span aria-hidden="true">⚠️</span>
   Texte extrait d'un produit commercial par un tiers : ni officiel, ni vérifiable, et
   possiblement périmé. Reproduit ici à des fins d'étude.</p></aside>
+{situate}
+{analysis}
 {learn}
 {obs_html}
+{plan_html}
 {files_html}
 {theory}
 {related_block(s, item["id"], base)}
@@ -2376,6 +2742,7 @@ class Builder:
                 self.build_app(pid)
         if s.prompt_order:
             self.build_prompts_index()
+            self.build_prompt_guide()
             for tid in s.prompt_order:
                 self.build_prompt(tid)
         self.build_topics_index()
