@@ -65,20 +65,23 @@ est donc construite ainsi :
   calculés sur les fichiers eux-mêmes ;
 - **Quel fichier, et où** — pour les 29 outils qui en publient plusieurs : un tableau
   fichier / surface du produit / modèle / taille, avec le fichier par lequel commencer ;
-- **La chronologie d'un tour** — ce qui part ensemble et ce qui s'enchaîne, parce que les
-  sections d'un prompt ne sont pas des étapes ;
-- **Le plan du prompt** — sa construction avant son contenu, chaque section expliquée en
-  français quand son nom est répertorié, et étiquetée : règle permanente, procédure, exemples,
-  contexte injecté ou catalogue d'outils ;
+- **Le déroulé, étape par étape** — les sections rangées dans l'ordre où elles entrent en jeu
+  (1 il apprend qui il est, 2 l'éditeur décrit votre machine, … 10 il rédige sa réponse), les
+  sections liées regroupées, les étapes absentes sautées, et à part celles qui ne s'enchaînent
+  avec rien. Un fichier qui contient les étapes 2 à 5 n'est pas un prompt mais **une requête
+  entière enregistrée** — le site le signale, parce que ces parties-là ne se copient pas ;
+- **L'ordre réel du fichier** — les sections telles qu'elles se suivent dans le texte, chacune
+  expliquée en français quand son nom est répertorié, avec son numéro d'étape ;
 - **Le texte, section par section** — intégral et intact, mais en blocs repliables et ancrés,
   avec un onglet par fichier et sa fiche de situation (surface, modèle, moment d'envoi) ;
 - les **définitions d'outils** rendues lisibles, précédées de ce qu'il faut savoir pour les lire.
 
 Une [page guide](docs/prompts-systeme/guide/) explique en amont ce qu'est un prompt système,
-quand il est envoyé, ce qu'il change, ce qu'il coûte en jetons, comment se lit un `Tools.json`,
-et pourquoi un même outil publie plusieurs fichiers (versions successives, surfaces distinctes,
+quand il est envoyé, ce qu'il change, ce qu'il coûte en jetons, les dix moments d'un échange,
+ce que le produit remplit tout seul (`<attached_files>` est le trombone du champ de saisie),
+comment se lit un `Tools.json`, et pourquoi un même outil publie plusieurs fichiers (versions successives, surfaces distinctes,
 variantes par modèle, prompt + outils, ou simple découpage à l'import). Le glossaire
-(`content/_prompt_sections.json`) décrit **51 types de section** et en reconnaît 68 variantes de
+(`content/_prompt_sections.json`) décrit **54 types de section** et en reconnaît 68 variantes de
 nommage ; `content/_prompt_files.json` situe les **103 fichiers** un par un. Une section qu'il
 ne connaît pas garde son nom brut, sans commentaire inventé.
 
@@ -90,7 +93,7 @@ content/                     sources et métadonnées — la vérité du site
   _topics.json               les 16 sujets transversaux et leurs mots-clés de détection
   _apps_meta.json            habillage FR des 17 catégories et 139 ateliers
   _prompts_meta.json         habillage FR des 40 outils : rôle, moment, résultat, analyse, réemploi
-  _prompt_sections.json      glossaire des types de section de prompt (et leur nature)
+  _prompt_sections.json      glossaire des types de section et leur place dans le déroulé
   _prompt_files.json         les 103 fichiers situés : surface, modèle, moment, statut
   _services.json             services payants, détection, alternatives gratuites
   _ingest.json, _apps.json, _prompts.json    manifestes produits par l'ingestion

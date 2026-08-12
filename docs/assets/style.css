@@ -761,6 +761,12 @@ button { font: inherit; color: inherit; }
 .outline__times { font-size: .76rem; font-weight: 600; color: var(--text-faint); font-variant-numeric: tabular-nums; }
 .outline__size { font-size: .78rem; color: var(--text-faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .outline__role { grid-column: 1 / -1; font-size: .86rem; color: var(--text-muted); }
+/* En dessous de la grille, quatre colonnes ne tiennent plus : on repasse en ligne qui se
+   replie, la glose gardant sa ligne à elle. */
+@media (max-width: 900px) {
+  .outline__item { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .5rem; }
+  .outline__item .outline__role { flex-basis: 100%; }
+}
 
 /* le texte, section par section */
 .promptfiles__note { margin: 0 0 1rem; font-size: .9rem; color: var(--text-muted); max-width: var(--measure); }
@@ -792,16 +798,22 @@ button { font: inherit; color: inherit; }
 
 /* Pastille de nature : ce qu'une section devient une fois envoyée. Le gris est le cas
    « constat mesuré » — il ne doit pas ressembler à une catégorie déclarée. */
-.nat {
-  font-size: .72rem; font-weight: 650; white-space: nowrap; padding: .1rem .45rem;
-  border-radius: 999px; border: 1px solid var(--border-strong); color: var(--text-muted);
-  background: var(--bg-sunken);
+/* Pastille d'étape : le moment où la section entre en jeu, relié au déroulé.
+   Le gris est le cas « non classé » — il ne doit pas ressembler à une étape déclarée. */
+.step {
+  display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 650;
+  white-space: nowrap; padding: .1rem .5rem .1rem .25rem; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  background: var(--accent-soft); color: var(--accent);
 }
-.nat--procedure { color: var(--accent); background: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent) 32%, var(--border)); }
-.nat--contexte { color: var(--success); background: var(--success-soft);
-  border-color: color-mix(in srgb, var(--success) 30%, var(--border)); }
-.nat--outils { color: var(--text); background: var(--bg-elevated); }
+.step__n {
+  display: grid; place-items: center; min-width: 1.05rem; height: 1.05rem; border-radius: 50%;
+  background: var(--accent); color: var(--accent-contrast); font-size: .68rem;
+}
+.step--hors, .step--compte {
+  padding-left: .5rem; color: var(--text-muted); background: var(--bg-sunken);
+  border-color: var(--border-strong);
+}
 
 /* « Quel fichier, et où ? » — le tableau comparatif en tête de fiche. */
 .filetable { margin: 0 0 1.75rem; }
@@ -844,24 +856,47 @@ button { font: inherit; color: inherit; }
 .filecard__list dt { font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-faint); }
 .filecard__list dd { margin: 0; font-size: .88rem; }
 
-/* La chronologie d'un tour : ce qui part ensemble, ce qui s'enchaîne. */
-.chrono { margin: 0 0 1.75rem; }
-.chrono h2 { margin: 0 0 .4rem; padding-top: .6rem; font-size: 1.4rem; border-top: 1px solid var(--border); }
-.chrono__lead { margin: 0 0 .9rem; max-width: var(--measure); }
-.chrono__steps { display: grid; gap: .5rem; margin: 0; padding: 0; list-style: none; }
-.chrono__step {
-  display: grid; grid-template-columns: 1.7rem 1fr; gap: .15rem .7rem; align-items: baseline;
-  padding: .55rem .8rem; background: var(--bg-elevated);
-  border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;
+/* Le déroulé : les sections rangées par moment, numérotées, les absents sautés. */
+.flow { margin: 0 0 1.75rem; }
+.flow h2 { margin: 0 0 .4rem; padding-top: .6rem; font-size: 1.5rem; letter-spacing: -.02em; border-top: 1px solid var(--border); }
+.flow__intro { margin: 0 0 1.1rem; color: var(--text-muted); max-width: var(--measure); }
+.flow__file { margin-bottom: 1.6rem; }
+.flow__name { margin: 0 0 .5rem; font-family: var(--mono); font-size: .88rem; font-weight: 650; }
+.flow__warn {
+  margin: 0 0 .8rem; padding: .7rem .9rem; font-size: .88rem; max-width: var(--measure);
+  background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
 }
-.chrono__n {
-  grid-row: span 2; align-self: start; display: grid; place-items: center;
-  width: 1.7rem; height: 1.7rem; border-radius: 50%; font-size: .8rem; font-weight: 700;
-  background: var(--accent-soft); color: var(--accent);
+.flow__list { display: grid; gap: .45rem; margin: 0; padding: 0; list-style: none; }
+.flow__step {
+  display: grid; grid-template-columns: 1.7rem 1fr; gap: .1rem .7rem; align-items: baseline;
+  padding: .55rem .8rem; background: var(--bg-elevated); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;
 }
-.chrono__title { font-size: .95rem; }
-.chrono__desc { font-size: .88rem; color: var(--text-muted); }
-.chrono__note { margin: .9rem 0 0; font-size: .9rem; max-width: var(--measure); }
+.flow__n {
+  grid-row: span 3; align-self: start; display: grid; place-items: center;
+  width: 1.7rem; height: 1.7rem; border-radius: 50%; font-size: .82rem; font-weight: 700;
+  background: var(--accent); color: var(--accent-contrast); font-variant-numeric: tabular-nums;
+}
+.flow__title { font-size: .95rem; }
+.flow__why { font-size: .84rem; color: var(--text-faint); }
+.flow__secs { margin: .45rem 0 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
+.flow__secs > li {
+  display: grid; grid-template-columns: 1fr auto; gap: .1rem .6rem; align-items: baseline;
+  padding-top: .35rem; border-top: 1px solid var(--border);
+}
+.flow__secs code { font-size: .85rem; overflow-wrap: anywhere; }
+.flow__size { font-size: .78rem; color: var(--text-faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.flow__role { grid-column: 1 / -1; font-size: .86rem; color: var(--text-muted); }
+.flow__cut {
+  display: flex; align-items: center; gap: .6rem; margin: .2rem 0; font-size: .78rem;
+  font-weight: 650; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint);
+}
+.flow__cut::before, .flow__cut::after { content: ""; flex: 1; border-top: 1px dashed var(--border-strong); }
+.flow__aside { margin-top: .8rem; padding: .7rem .9rem; background: var(--bg-sunken); border-radius: var(--radius); }
+.flow__asidehead { margin: 0; font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-faint); }
+.flow__asidenote { margin: .25rem 0 0; font-size: .86rem; color: var(--text-muted); max-width: var(--measure); }
+.flow__aside ul { margin: .5rem 0 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
+.flow__aside li { display: grid; grid-template-columns: 1fr auto; gap: .1rem .6rem; align-items: baseline; }
 
 /* « Le réutiliser chez vous » */
 .reuse { margin: 0 0 1.75rem; }

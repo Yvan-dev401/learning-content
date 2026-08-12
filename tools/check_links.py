@@ -163,24 +163,25 @@ def main() -> int:
     # Glossaire des sections : alias résolus, leçons existantes, couverture mesurée.
     gloss = json.loads((CONTENT / "_prompt_sections.json").read_text(encoding="utf-8"))["sections"] \
         if (CONTENT / "_prompt_sections.json").is_file() else {}
-    NATURES = {"regle", "procedure", "exemples", "contexte", "outils"}
+    MOMENTS = {"cadre", "machine", "vos-regles", "joint", "message", "outils",
+               "comprendre", "appeler", "agir", "repondre", "hors"}
     for k, v in gloss.items():
         if "alias" in v and v["alias"] not in gloss:
             problems.append(f"alias de section cassé : {k} → {v['alias']}")
         if v.get("lesson") and v["lesson"] not in meta["lessons"]:
             problems.append(f"section « {k} » liée à une leçon inconnue : {v['lesson']}")
-        if "title" in v and v.get("nature") not in NATURES:
-            problems.append(f"section sans nature valide : {k} → {v.get('nature')}")
+        if "title" in v and v.get("moment") not in MOMENTS:
+            problems.append(f"section sans moment valide : {k} → {v.get('moment')}")
 
-    glossed = flat = natured = 0
+    glossed = flat = numbered = 0
     for page in sorted((DOCS / "prompts-systeme").glob("*/index.html")):
         html_txt = page.read_text(encoding="utf-8")
         glossed += html_txt.count("promptsec__role")
         flat += len(re.findall(r'<details class="promptsec"', html_txt))
-        natured += len(re.findall(r'<span class="nat nat--(?!compte)', html_txt))
+        numbered += len(re.findall(r'<span class="step step--(?!compte|hors)', html_txt))
     gloss_rate = f"{100 * glossed // flat} %" if flat else "n/a"
     # Une pastille apparaît deux fois par section (plan + texte) : on ramène au nombre réel.
-    nat_rate = f"{100 * (natured // 2) // flat} %" if flat else "n/a"
+    step_rate = f"{100 * (numbered // 2) // flat} %" if flat else "n/a"
 
     # Sujets : vocabulaire connu, page produite, et aucun sujet vide (page inutile).
     topics = json.loads((CONTENT / "_topics.json").read_text(encoding="utf-8"))["topics"] \
@@ -268,8 +269,8 @@ def main() -> int:
     print(f"Prompts système publiés : {len(prompts['tools'])} · sujets : {len(topics)}")
     print(f"Sections de prompt : {flat} découpées, {glossed} expliquées par le glossaire "
           f"({gloss_rate}) · {sum(1 for v in gloss.values() if 'title' in v)} types décrits")
-    print(f"Fichiers de prompt situés : {len(filedef)} · sections avec une nature "
-          f"déclarée : {nat_rate}")
+    print(f"Fichiers de prompt situés : {len(filedef)} · sections placées dans le "
+          f"déroulé : {step_rate}")
     print(f"Services décrits : {len(services['services'])} · tags au vocabulaire : {len(vocab)}")
     if thin:
         print(f"Sujets portés par une seule famille ({len(thin)}) : {', '.join(thin)}")

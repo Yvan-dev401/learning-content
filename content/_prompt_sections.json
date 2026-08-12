@@ -1,11 +1,11 @@
 {
-  "_comment": "Glossaire des types de section rencontrés dans les prompts système. Les éditeurs réutilisent les mêmes noms : expliquer un type une fois annote des dizaines de sections chez tous les outils. Une section absente de ce glossaire garde son nom brut, sans commentaire inventé — c'est volontaire. La correspondance est faite sur le nom normalisé (minuscules, tirets bas et espaces unifiés). Le champ « nature » dit ce qu'est la section une fois envoyée : regle (vaut en permanence), procedure (des étapes à suivre dans l'ordre quand le cas se présente), exemples (des démonstrations, pas des consignes), contexte (rempli à l'exécution, différent à chaque session), outils (déclaration de ce que le modèle peut appeler). Vocabulaire fermé, vérifié par check_links.py.",
+  "_comment": "Glossaire des types de section rencontrés dans les prompts système. Les éditeurs réutilisent les mêmes noms : expliquer un type une fois annote des dizaines de sections chez tous les outils. Une section absente de ce glossaire garde son nom brut, sans commentaire inventé — c'est volontaire. La correspondance est faite sur le nom normalisé (minuscules, tirets bas et espaces unifiés). Le champ « moment » place la section dans le déroulé d'un échange : cadre, machine, vos-regles, joint, message, outils (ce qui compose la requête), puis comprendre, appeler, agir, repondre (ce que le modèle fait ensuite), ou « hors » pour ce qui ne sert que dans un cas particulier. Vocabulaire fermé, vérifié par check_links.py ; une section sans entrée ici n'est pas numérotée.",
   "sections": {
     "identity": {
       "title": "Identité",
       "role": "Dit au modèle qui il est censé être : nom du produit, rôle, périmètre. C'est presque toujours la première section, parce que tout le reste en découle.",
       "lesson": "04-prompt-engineering-fundamentals",
-      "nature": "regle"
+      "moment": "cadre"
     },
     "core-identity": {
       "alias": "identity"
@@ -17,13 +17,13 @@
       "title": "Vue d'ensemble",
       "role": "Résume en quelques lignes ce que le produit fait et dans quel cadre. Sert de repère au modèle avant les règles détaillées.",
       "lesson": "04-prompt-engineering-fundamentals",
-      "nature": "regle"
+      "moment": "cadre"
     },
     "communication": {
       "title": "Communication",
       "role": "Fixe le ton, la longueur et le format des réponses. C'est la section qui décide si l'assistant paraît bavard ou net — et souvent la plus longue après les outils.",
       "lesson": "04-prompt-engineering-fundamentals",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "communication-style": {
       "alias": "communication"
@@ -41,13 +41,13 @@
       "title": "Appel d'outils",
       "role": "Fixe quand appeler un outil plutôt que répondre de tête, et comment enchaîner les appels. C'est ce qui décide de la fiabilité d'un agent : un modèle qui appelle mal ses outils échoue même avec un bon raisonnement.",
       "lesson": "11-integrating-with-function-calling",
-      "nature": "procedure"
+      "moment": "appeler"
     },
     "tools": {
       "title": "Catalogue d'outils",
       "role": "La liste des outils disponibles, déclarée dans le prompt lui-même plutôt que dans un fichier séparé : un nom, une description et des paramètres par outil. C'est la description qui décide du bon appel, pas les consignes générales.",
       "lesson": "11-integrating-with-function-calling",
-      "nature": "outils"
+      "moment": "outils"
     },
     "tool-name": {
       "alias": "tool-calling"
@@ -56,7 +56,7 @@
       "title": "Utiliser un outil MCP",
       "role": "Décrit l'appel d'un outil exposé par un serveur Model Context Protocol — le format standardisé qui remplace les intégrations sur mesure.",
       "lesson": "11-integrating-with-function-calling",
-      "nature": "procedure"
+      "moment": "appeler"
     },
     "access-mcp-resource": {
       "alias": "use-mcp-tool"
@@ -65,7 +65,7 @@
       "title": "Paralléliser les appels",
       "role": "Pousse le modèle à lancer plusieurs outils en même temps plutôt qu'en file. La latence est ici traitée comme un problème de prompt, pas seulement d'infrastructure.",
       "lesson": "11-integrating-with-function-calling",
-      "nature": "procedure"
+      "moment": "appeler"
     },
     "use-parallel-tool-calls": {
       "alias": "maximize-parallel-tool-calls"
@@ -74,7 +74,7 @@
       "title": "Contexte fourni",
       "role": "Décrit ce que le système injecte automatiquement dans la conversation — fichiers ouverts, sélection, historique — pour que le modèle sache sur quoi il travaille.",
       "lesson": "05-advanced-prompts",
-      "nature": "contexte"
+      "moment": "machine"
     },
     "user-context": {
       "alias": "context"
@@ -83,7 +83,7 @@
       "title": "Informations sur l'utilisateur",
       "role": "Données injectées sur la personne ou sa session : fuseau, langue, préférences. Un rappel utile que le prompt système n'est pas figé — une partie est calculée à chaque requête.",
       "lesson": "07-building-chat-applications",
-      "nature": "contexte"
+      "moment": "machine"
     },
     "user-information": {
       "alias": "user-info"
@@ -92,19 +92,19 @@
       "title": "Requête de l'utilisateur",
       "role": "Marque l'endroit où la demande réelle sera insérée. Délimiter l'entrée utilisateur est une protection élémentaire contre l'injection de prompt.",
       "lesson": "13-securing-ai-applications",
-      "nature": "contexte"
+      "moment": "message"
     },
     "user-rules": {
       "title": "Règles de l'utilisateur",
       "role": "Consignes que l'utilisateur a lui-même définies, insérées dans le prompt. Leur place dans le texte décide de leur priorité face aux règles de l'éditeur.",
       "lesson": "05-advanced-prompts",
-      "nature": "contexte"
+      "moment": "vos-regles"
     },
     "environment-info": {
       "title": "Environnement",
       "role": "Système d'exploitation, chemins, version des outils, état du dépôt. Sans ça, un agent de code propose des commandes qui ne passent pas.",
       "lesson": "17-ai-agents",
-      "nature": "contexte"
+      "moment": "machine"
     },
     "env": {
       "alias": "environment-info"
@@ -116,13 +116,13 @@
       "title": "Date de connaissance",
       "role": "Rappelle au modèle jusqu'où vont ses connaissances et quelle est la date du jour. Évite qu'il affirme comme actuel un état du monde périmé.",
       "lesson": "03-using-generative-ai-responsibly",
-      "nature": "contexte"
+      "moment": "machine"
     },
     "instructions": {
       "title": "Consignes générales",
       "role": "Le bloc de règles principal. Sa longueur est un bon indicateur de la maturité du produit : il grossit à mesure que l'équipe découvre des cas d'échec.",
       "lesson": "04-prompt-engineering-fundamentals",
-      "nature": "regle"
+      "moment": "cadre"
     },
     "behavior-instructions": {
       "alias": "instructions"
@@ -140,7 +140,7 @@
       "title": "Rappels critiques",
       "role": "Répétition, en fin de prompt, des règles que le modèle oublie le plus. La position n'est pas un hasard : ce qui est proche de la question pèse davantage.",
       "lesson": "05-advanced-prompts",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "summary-of-most-important-instructions": {
       "alias": "critical-reminders"
@@ -149,7 +149,7 @@
       "title": "Exemple",
       "role": "Un cas concret montré au modèle plutôt qu'une règle abstraite. C'est le « few-shot » de la leçon 5, appliqué en production — souvent plus efficace qu'une consigne de plus.",
       "lesson": "05-advanced-prompts",
-      "nature": "exemples"
+      "moment": "hors"
     },
     "examples": {
       "alias": "example"
@@ -170,7 +170,7 @@
       "title": "Modifier du code",
       "role": "Comment éditer un fichier : lire avant d'écrire, portée minimale, ne pas casser l'existant. Le cœur de métier d'un assistant de code.",
       "lesson": "17-ai-agents",
-      "nature": "procedure"
+      "moment": "agir"
     },
     "making-edits": {
       "alias": "making-code-changes"
@@ -185,7 +185,7 @@
       "title": "Format du code",
       "role": "Conventions d'affichage du code dans la réponse : blocs, langage, numéros de ligne. Détail en apparence, mais c'est ce qui rend une réponse copiable ou non.",
       "lesson": "12-designing-ux-for-ai-applications",
-      "nature": "regle"
+      "moment": "agir"
     },
     "displaying-code": {
       "alias": "code-formatting-info"
@@ -197,13 +197,13 @@
       "title": "Citer le code",
       "role": "Impose de référencer fichier et ligne quand on parle d'un bout de code. La traçabilité traitée comme une exigence, pas un bonus.",
       "lesson": "15-rag-and-vector-databases",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "read-file": {
       "title": "Lire un fichier",
       "role": "Définit l'outil de lecture et ses limites — nombre de lignes, découpage. Une section technique, mais qui révèle comment le produit gère un contexte trop petit.",
       "lesson": "11-integrating-with-function-calling",
-      "nature": "outils"
+      "moment": "outils"
     },
     "list-files": {
       "alias": "read-file"
@@ -218,13 +218,13 @@
       "title": "Exécuter une commande",
       "role": "L'outil le plus puissant et le plus dangereux d'un agent. Regardez les précautions qui l'entourent : c'est là que se lit la politique de sécurité du produit.",
       "lesson": "13-securing-ai-applications",
-      "nature": "outils"
+      "moment": "outils"
     },
     "search-and-reading": {
       "title": "Chercher et lire",
       "role": "Quand se documenter avant de répondre plutôt que d'improviser. C'est du RAG décidé par l'agent lui-même.",
       "lesson": "15-rag-and-vector-databases",
-      "nature": "procedure"
+      "moment": "comprendre"
     },
     "search-instructions": {
       "alias": "search-and-reading"
@@ -236,7 +236,7 @@
       "title": "Comprendre avant d'agir",
       "role": "Pousse le modèle à rassembler le contexte nécessaire avant de proposer quelque chose. L'antidote aux réponses confiantes et fausses.",
       "lesson": "05-advanced-prompts",
-      "nature": "procedure"
+      "moment": "comprendre"
     },
     "preliminary-tasks": {
       "alias": "maximize-context-understanding"
@@ -245,7 +245,7 @@
       "title": "Planification",
       "role": "Fait produire un plan avant l'exécution. Séparer les deux rend le travail vérifiable — un motif qui se réutilise bien au-delà des agents de code.",
       "lesson": "17-ai-agents",
-      "nature": "procedure"
+      "moment": "comprendre"
     },
     "planning-and-task-management": {
       "alias": "planning"
@@ -266,25 +266,25 @@
       "title": "Changer de mode",
       "role": "Permet à l'agent de basculer de rôle — architecte, codeur, relecteur. Un même modèle, plusieurs personnalités selon la phase du travail.",
       "lesson": "17-ai-agents",
-      "nature": "procedure"
+      "moment": "appeler"
     },
     "attempt-completion": {
       "title": "Conclure la tâche",
       "role": "Comment l'agent déclare avoir fini et rend son résultat. Sans critère d'arrêt explicite, un agent tourne en rond.",
       "lesson": "17-ai-agents",
-      "nature": "procedure"
+      "moment": "repondre"
     },
     "ask-followup-question": {
       "title": "Poser une question",
       "role": "Autorise le modèle à demander une précision plutôt qu'à supposer. Rare, et pourtant l'un des meilleurs remèdes aux réponses à côté.",
       "lesson": "12-designing-ux-for-ai-applications",
-      "nature": "procedure"
+      "moment": "comprendre"
     },
     "debugging": {
       "title": "Débogage",
       "role": "Comment se comporter quand ça échoue : diagnostiquer avant de corriger, ne pas empiler les rustines.",
       "lesson": "17-ai-agents",
-      "nature": "procedure"
+      "moment": "agir"
     },
     "recovering-from-difficulties": {
       "alias": "debugging"
@@ -293,13 +293,13 @@
       "title": "Tests",
       "role": "Quand écrire ou lancer des tests. Une consigne de prompt qui change directement la qualité de ce que produit l'agent.",
       "lesson": "14-the-generative-ai-application-lifecycle",
-      "nature": "procedure"
+      "moment": "agir"
     },
     "memory-system": {
       "title": "Mémoire",
       "role": "Ce que le produit retient d'une session à l'autre, où il le range et quand il le relit. La couche qui transforme un assistant en compagnon de travail.",
       "lesson": "07-building-chat-applications",
-      "nature": "regle"
+      "moment": "hors"
     },
     "memories": {
       "alias": "memory-system"
@@ -308,7 +308,7 @@
       "title": "Résumé du contexte",
       "role": "Comment compacter une conversation devenue trop longue sans perdre l'essentiel. La réponse pratique à une fenêtre de contexte finie.",
       "lesson": "07-building-chat-applications",
-      "nature": "procedure"
+      "moment": "hors"
     },
     "persistent-storage-for-artifacts": {
       "alias": "memory-system"
@@ -317,61 +317,61 @@
       "title": "Contenus nuisibles",
       "role": "Ce que le modèle doit refuser de produire. Souvent formulé en interdictions explicites — d'où le décompte affiché dans les constats mesurés.",
       "lesson": "03-using-generative-ai-responsibly",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "refusal-handling": {
       "title": "Gérer les refus",
       "role": "Comment refuser : expliquer, proposer une alternative, ne pas moraliser. Un refus mal formulé coûte autant qu'une mauvaise réponse.",
       "lesson": "03-using-generative-ai-responsibly",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "user-wellbeing": {
       "title": "Bien-être de l'utilisateur",
       "role": "Consignes sur les sujets sensibles — détresse, santé mentale. Le prompt système devient ici un document de politique produit.",
       "lesson": "03-using-generative-ai-responsibly",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "legal-and-financial-advice": {
       "title": "Conseil juridique et financier",
       "role": "Cadre les domaines où une réponse erronée engage l'utilisateur. Beaucoup de produits y consacrent une section entière.",
       "lesson": "03-using-generative-ai-responsibly",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "evenhandedness": {
       "title": "Impartialité",
       "role": "Consignes sur les sujets clivants : présenter les positions sans en épouser une. Difficile à formuler, et très révélateur des choix de l'éditeur.",
       "lesson": "03-using-generative-ai-responsibly",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "mandatory-copyright-requirements": {
       "title": "Droit d'auteur",
       "role": "Interdit de reproduire de longs extraits protégés. Une contrainte juridique traduite en règle de génération.",
       "lesson": "03-using-generative-ai-responsibly",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "critical-security-rules": {
       "title": "Règles de sécurité",
       "role": "Ce que l'agent ne doit jamais faire, quoi qu'on lui demande : secrets, commandes destructrices, exfiltration. À lire juste après la leçon 13.",
       "lesson": "13-securing-ai-applications",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "user-privacy": {
       "title": "Confidentialité",
       "role": "Ce qui peut sortir de la machine de l'utilisateur, et ce qui ne le peut pas. Central dès que l'agent lit des fichiers ou des e-mails.",
       "lesson": "13-securing-ai-applications",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "service-policies": {
       "title": "Politiques du service",
       "role": "Règles propres à l'éditeur : ce que l'assistant peut dire du produit, des concurrents, des tarifs.",
       "lesson": "03-using-generative-ai-responsibly",
-      "nature": "regle"
+      "moment": "repondre"
     },
     "computer-use": {
       "title": "Pilotage de la machine",
       "role": "L'agent clique, saisit, navigue à la place de l'utilisateur. Les garde-fous y sont beaucoup plus stricts qu'ailleurs — et c'est justifié.",
       "lesson": "13-securing-ai-applications",
-      "nature": "outils"
+      "moment": "outils"
     },
     "browser-tabs-usage": {
       "alias": "computer-use"
@@ -386,7 +386,7 @@
       "title": "Artefacts",
       "role": "Décrit les contenus autonomes que le produit sait afficher à part de la conversation — page, composant, document.",
       "lesson": "12-designing-ux-for-ai-applications",
-      "nature": "regle"
+      "moment": "cadre"
     },
     "mcp-app-suggestions": {
       "alias": "artifact-info"
@@ -395,7 +395,7 @@
       "title": "Développement web",
       "role": "Pile technique imposée et conventions à respecter. Restreindre l'espace des solutions est ce qui rend la génération de code fiable.",
       "lesson": "12-designing-ux-for-ai-applications",
-      "nature": "regle"
+      "moment": "agir"
     },
     "coding-guidelines": {
       "alias": "web-application-development"
@@ -404,49 +404,49 @@
       "title": "Règles de design",
       "role": "Contraintes visuelles imposées au modèle : espacement, couleurs, composants. Ce qui évite qu'une interface générée ait l'air générée.",
       "lesson": "12-designing-ux-for-ai-applications",
-      "nature": "regle"
+      "moment": "agir"
     },
     "package-management": {
       "title": "Gestion des dépendances",
       "role": "Ce que l'agent a le droit d'installer, et comment. Une dépendance ajoutée à la légère est une dette pour le projet.",
       "lesson": "17-ai-agents",
-      "nature": "regle"
+      "moment": "agir"
     },
     "limitations": {
       "title": "Limites",
       "role": "Ce que le produit ne sait pas faire, énoncé au modèle pour qu'il ne le promette pas. Rare, et pourtant très utile.",
       "lesson": "12-designing-ux-for-ai-applications",
-      "nature": "regle"
+      "moment": "cadre"
     },
     "preferences": {
       "title": "Préférences",
       "role": "Réglages de l'utilisateur transmis au modèle — langue, style, verbosité.",
       "lesson": "07-building-chat-applications",
-      "nature": "contexte"
+      "moment": "vos-regles"
     },
     "fetch-instructions": {
       "title": "Récupérer des consignes",
       "role": "Le prompt renvoie vers d'autres consignes à charger à la demande, plutôt que de tout embarquer. Une façon de tenir dans la fenêtre de contexte.",
       "lesson": "07-building-chat-applications",
-      "nature": "procedure"
+      "moment": "comprendre"
     },
     "product-information": {
       "title": "Informations produit",
       "role": "Ce que l'assistant doit savoir du produit qu'il sert : fonctionnalités, offres, limites de compte.",
       "lesson": "04-prompt-engineering-fundamentals",
-      "nature": "contexte"
+      "moment": "cadre"
     },
     "proactiveness": {
       "title": "Initiative",
       "role": "Dose ce que le modèle fait sans qu'on le lui demande : anticiper, ou s'en tenir strictement à la consigne. Un curseur difficile à régler, et très visible à l'usage.",
       "lesson": "12-designing-ux-for-ai-applications",
-      "nature": "regle"
+      "moment": "comprendre"
     },
     "website-cloning": {
       "title": "Reproduction d'un site",
       "role": "Cadre une tâche de reproduction fidèle, où l'écart au modèle de référence est le critère de réussite plutôt que la créativité.",
       "lesson": "12-designing-ux-for-ai-applications",
-      "nature": "procedure"
+      "moment": "agir"
     },
     "error-handling": {
       "alias": "debugging"
@@ -510,6 +510,30 @@
     },
     "functions": {
       "alias": "tools"
+    },
+    "attached-files": {
+      "title": "Pièces jointes",
+      "role": "Le contenu des fichiers que vous avez joints dans le champ de saisie, recopié en clair dans la requête. C'est le trombone de l'interface vu du côté machine : vous ne rédigez jamais cette balise, vous la remplissez en glissant un fichier.",
+      "lesson": "04-prompt-engineering-fundamentals",
+      "moment": "joint"
+    },
+    "file-contents": {
+      "alias": "attached-files"
+    },
+    "attachments": {
+      "alias": "attached-files"
+    },
+    "additional-data": {
+      "title": "Données jointes à la requête",
+      "role": "L'enveloppe dans laquelle le produit range tout ce qu'il ajoute autour de votre message : fichiers joints, sélection de code, résultats de recherche. Le modèle est prévenu que ce contenu est « peut-être utile », pas qu'il est une consigne.",
+      "lesson": "04-prompt-engineering-fundamentals",
+      "moment": "joint"
+    },
+    "custom-instructions": {
+      "title": "Vos règles à vous",
+      "role": "Les consignes permanentes que vous avez réglées dans le produit (fichier de règles du projet, préférences). Elles s'ajoutent au prompt de l'éditeur sans le remplacer — et c'est pour cela qu'elles ne peuvent pas tout contredire.",
+      "lesson": "04-prompt-engineering-fundamentals",
+      "moment": "vos-regles"
     }
   }
 }

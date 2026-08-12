@@ -1258,17 +1258,35 @@ TOOLS_NOTE = (
     '<a href="{base}prompts-systeme/guide/index.html#outils">Comment lire une définition d\'outil</a> '
     '· <a href="{base}lecons/11-integrating-with-function-calling/index.html">Leçon 11</a></p></div>'
 )
-# Ce qu'une section devient une fois envoyée. Déclaré dans `_prompt_sections.json`, jamais
-# deviné : une section hors glossaire n'affiche pas de nature.
-NATURES = {
-    "regle": ("règle permanente", "Vaut tout le temps, sans ordre d'application."),
-    "procedure": ("procédure", "Des étapes à suivre dans l'ordre, mais seulement quand le cas "
-                               "décrit se présente."),
-    "exemples": ("exemples", "Des démonstrations, pas des consignes."),
-    "contexte": ("contexte injecté", "Rempli à l'exécution : le contenu change à chaque "
-                                     "session, il n'est pas écrit par l'éditeur."),
-    "outils": ("catalogue d'outils", "Déclare ce que le modèle peut appeler."),
+# Le déroulé d'un échange, en dix moments. C'est l'ordre dans lequel une section entre en jeu,
+# pas l'ordre du fichier — un prompt part d'un bloc. Déclaré dans `_prompt_sections.json`,
+# jamais deviné : une section hors glossaire n'est pas numérotée.
+MOMENTS = {
+    "cadre": (1, "Il apprend qui il est", "le cadre",
+              "Identité, produit, périmètre : le décor, planté avant tout le reste."),
+    "machine": (2, "L'éditeur lui décrit votre machine et votre projet", "votre machine",
+                "Système, chemins, arborescence : rempli par le produit, jamais écrit à la main."),
+    "vos-regles": (3, "Vos réglages permanents s'ajoutent", "vos règles",
+                   "Vos règles de projet et préférences, ajoutées à la suite des consignes de "
+                   "l'éditeur, sans les remplacer."),
+    "joint": (4, "Vos pièces jointes sont recopiées", "pièces jointes",
+              "Le contenu des fichiers joints dans le champ de saisie, recopié en clair."),
+    "message": (5, "Votre message arrive", "votre message",
+                "Ce que vous avez tapé, en dernier — donc à la place la plus forte."),
+    "outils": (6, "Il découvre les outils qu'il peut appeler", "les outils",
+               "Le catalogue des actions disponibles, envoyé avec la requête."),
+    "comprendre": (7, "Il cherche à comprendre avant d'agir", "comprendre",
+                   "Comment se documenter, jusqu'où chercher, quand poser une question."),
+    "appeler": (8, "Il décide d'appeler un outil", "appeler un outil",
+                "Quand appeler plutôt que répondre de tête, et comment enchaîner les appels."),
+    "agir": (9, "Il modifie le code", "modifier le code",
+             "Comment éditer, quoi installer, ce qu'il ne doit pas casser."),
+    "repondre": (10, "Il rédige sa réponse", "répondre",
+                 "Ton, format, citations, refus : tout ce qui décide de ce que vous lisez."),
 }
+HORS = ("hors", "N'intervient que dans un cas particulier")
+# Le partage entre ce qui compose la requête et ce que le modèle fait ensuite.
+ENVOI_MAX = 6
 NUM_RULE = re.compile(r"^\s{0,3}\d{1,2}[.)]\s+\S")
 
 
@@ -1277,20 +1295,24 @@ def numbered_rules(body: str) -> int:
     return sum(1 for line in body.splitlines() if NUM_RULE.match(line))
 
 
-def nature_badge(gloss: dict | None, body: str) -> str:
-    """Pastille disant ce que la section devient une fois envoyée.
+def step_badge(gloss: dict | None, body: str = "") -> str:
+    """Pastille « étape n° » reliant une section au déroulé.
 
-    Deux sources, dans cet ordre : la nature déclarée au glossaire, sinon un simple
-    dénombrement des points numérotés. Une section ni répertoriée ni numérotée n'affiche
-    rien — une pastille inventée vaudrait moins que pas de pastille du tout.
+    Une section hors glossaire n'est pas numérotée : à défaut, on affiche le seul repère
+    mesurable, le nombre de points numérotés qu'elle contient. Une pastille inventée vaudrait
+    moins que pas de pastille du tout.
     """
-    nat = (gloss or {}).get("nature")
-    if nat in NATURES:
-        label, why = NATURES[nat]
-        return f'<span class="nat nat--{nat}" title="{esc(why)}">{label}</span>'
+    moment = (gloss or {}).get("moment")
+    if moment in MOMENTS:
+        num, label, short, why = MOMENTS[moment]
+        return (f'<span class="step step--{moment}" title="{esc(label)} — {esc(why)}">'
+                f'<span class="step__n">{num}</span>{esc(short)}</span>')
+    if moment == HORS[0]:
+        return (f'<span class="step step--hors" title="Cette section ne sert que dans un cas '
+                f'particulier : elle n\'entre pas dans le déroulé.">hors déroulé</span>')
     n = numbered_rules(body)
     if n >= 3:
-        return (f'<span class="nat nat--compte" title="Constat mesuré sur le texte, sans '
+        return (f'<span class="step step--compte" title="Constat mesuré sur le texte, sans '
                 f'interprétation.">{n} points numérotés</span>')
     return ""
 
@@ -1298,6 +1320,7 @@ def nature_badge(gloss: dict | None, body: str) -> str:
 TAG_OPEN = re.compile(r"^<([a-z][a-z0-9_]*)>\s*$")
 TAG_CLOSE = re.compile(r"^</([a-z][a-z0-9_]*)>\s*$")
 MD_HEAD = re.compile(r"^(#{1,3})\s+(.{2,80})$")
+JSON_KEY = re.compile(r'^"(tools|functions|messages|system)"\s*:')
 
 
 def normalize_section(name: str) -> str:
@@ -1377,8 +1400,16 @@ def split_prompt(text: str) -> tuple[str, list[dict]]:
             mo = MD_HEAD.match(head)
             if mo:
                 label = mo.group(2).strip()
+            elif JSON_KEY.match(head):
+                # Plusieurs captures se terminent par la charge utile de l'appel d'API :
+                # `"tools": [ … ]`. Le nom vient du texte, pas d'une supposition.
+                label = JSON_KEY.match(head).group(1)
             else:
-                label = "préambule" if not seen_free else "texte hors section"
+                if not seen_free:
+                    label = "préambule"
+                    sec["moment"] = "cadre"
+                else:
+                    label = "texte hors section"
                 seen_free = True
         sec["label"] = label
         key = slugify(label) or "section"
@@ -2096,44 +2127,100 @@ class Builder:
             seen += 1
         return entry if entry and "title" in entry else None
 
-    def chrono_html(self, base: str) -> str:
-        """Ce qui part ensemble, et ce qui s'enchaîne — la confusion la plus fréquente."""
-        steps = [
-            ("Le prompt système, en entier",
-             "Toutes ses sections d'un seul bloc, dans l'ordre du fichier. Aucune n'est "
-             "envoyée « plus tard » : ce n'est pas un déroulé, c'est un mode d'emploi."),
-            ("Vos propres règles",
-             "Fichier de règles du projet, préférences, instructions permanentes : ajoutées "
-             "à la suite du prompt de l'éditeur, sans le remplacer."),
-            ("Le contexte injecté",
-             "Fichiers ouverts, système d'exploitation, arborescence du projet : rempli par "
-             "le produit à l'exécution. C'est ce que sont les sections du type "
-             "<code>user_info</code> ou <code>project_layout</code> — des trous, pas des consignes."),
-            ("Votre message",
-             "Il arrive en dernier, donc à la position la plus proche de la réponse : c'est "
-             "aussi pour cela que plusieurs éditeurs répètent leurs consignes critiques à la fin."),
-            ("La boucle d'outils",
-             "Appel d'outil, résultat, nouvel appel, jusqu'à la réponse finale. À chaque tour, "
-             "tout ce qui précède repart en entier — et se paie de nouveau."),
-        ]
-        items = "".join(
-            f'<li class="chrono__step"><span class="chrono__n" aria-hidden="true">{n}</span>'
-            f'<strong class="chrono__title">{t}</strong>'
-            f'<span class="chrono__desc">{d}</span></li>'
-            for n, (t, d) in enumerate(steps, 1))
-        return (
-            '<section class="chrono"><h2 id="chronologie">La chronologie d\'un tour'
-            '<a class="anchor" href="#chronologie" aria-label="Lien vers cette section">#</a></h2>'
-            '<p class="chrono__lead">Les sections d\'un prompt système <strong>ne sont pas des '
-            'étapes</strong> : elles partent toutes ensemble, en tête de contexte, à chaque '
-            'requête. Ce qui est chronologique, c\'est le tour de conversation.</p>'
-            f'<ol class="chrono__steps">{items}</ol>'
-            '<p class="chrono__note">Copier-coller ou procédure&nbsp;? Le texte se colle d\'un '
-            'seul tenant. En revanche, <em>à l\'intérieur</em>, certaines sections décrivent bien '
-            'une suite d\'étapes : elles portent la pastille <span class="nat nat--procedure">'
-            'procédure</span> dans le plan ci-dessous. '
-            f'<a href="{base}prompts-systeme/guide/index.html#chronologie">Le détail dans le '
-            'guide</a></p></section>')
+    def flow_html(self, outline: list, base: str) -> str:
+        """« Le déroulé » : les sections d'un fichier rangées par moment, et numérotées.
+
+        Le regroupement répond à une demande précise — rapprocher les sections liées, sauter
+        les numéros absents, écarter celles qui ne s'enchaînent pas. L'ordre est celui des
+        moments d'un échange, pas celui du fichier : la vue « ordre réel du fichier » reste
+        affichée juste en dessous, et l'écart entre les deux est dit en toutes lettres.
+        """
+        blocks = []
+        for fname, mode, secs, anchor in outline:
+            if mode == "brut":
+                continue
+            groups: dict[str, list] = {}
+            hors, inconnues = [], []
+            for sec in secs:
+                g = self.gloss(sec["label"])
+                moment = sec.get("moment") or (g or {}).get("moment")
+                if moment in MOMENTS:
+                    groups.setdefault(moment, []).append((sec, g))
+                elif moment == HORS[0]:
+                    hors.append((sec, g))
+                else:
+                    inconnues.append(sec)
+            if not groups:
+                continue
+
+            rows, coupure = [], False
+            for key, (num, label, _short, why) in MOMENTS.items():
+                if key not in groups:
+                    continue
+                if num > ENVOI_MAX and not coupure:
+                    rows.append('<li class="flow__cut"><span>la requête est partie&nbsp;; '
+                                'le modèle travaille</span></li>')
+                    coupure = True
+                items = "".join(
+                    f'<li><a href="#{anchor}-{sec["key"]}"><code>{esc(sec["label"])}</code></a>'
+                    f'<span class="flow__size">{sec["lines"]} l.</span>'
+                    + (f'<span class="flow__role">{esc(g["role"])}</span>' if g else
+                       '<span class="flow__role">Le texte d\'ouverture du fichier, avant toute '
+                       'section nommée.</span>')
+                    + "</li>"
+                    for sec, g in groups[key])
+                rows.append(
+                    f'<li class="flow__step"><span class="flow__n" aria-hidden="true">{num}</span>'
+                    f'<strong class="flow__title">{label}</strong>'
+                    f'<span class="flow__why">{why}</span>'
+                    f'<ul class="flow__secs">{items}</ul></li>')
+
+            extras = []
+            if hors:
+                extras.append(
+                    '<div class="flow__aside"><p class="flow__asidehead">N\'entre pas dans le '
+                    'déroulé</p><p class="flow__asidenote">Ces sections ne servent que dans un cas '
+                    'particulier : elles ne s\'enchaînent avec rien.</p><ul>'
+                    + "".join(
+                        f'<li><a href="#{anchor}-{sec["key"]}"><code>{esc(sec["label"])}</code></a>'
+                        f'<span class="flow__size">{sec["lines"]} l.</span>'
+                        + (f'<span class="flow__role">{esc(g["role"])}</span>' if g else "")
+                        + "</li>" for sec, g in hors)
+                    + "</ul></div>")
+            if inconnues:
+                total = sum(s["lines"] for s in inconnues)
+                extras.append(
+                    '<div class="flow__aside"><p class="flow__asidehead">Non classé</p>'
+                    f'<p class="flow__asidenote">{len(inconnues)} bloc(s), {total} lignes : soit '
+                    'du texte sans balise, soit un nom de section que le glossaire ne connaît '
+                    'pas. Plutôt que d\'inventer une place, on le dit.</p></div>')
+
+            # Un fichier qui contient le contexte, les réglages, les pièces jointes ou le
+            # message n'est plus un prompt : c'est une requête entière, enregistrée.
+            capture = any(MOMENTS[k][0] in (2, 3, 4, 5) for k in groups)
+            warn = ('<p class="flow__warn"><strong>Ce fichier n\'est pas qu\'un prompt : '
+                    'c\'est une requête entière, enregistrée.</strong> On y lit les réglages, '
+                    'les pièces jointes et le message de la personne qui l\'a extrait — étapes '
+                    '2 à 5 ci-dessus. Ces parties-là ne se copient pas : elles seraient les '
+                    'siennes, pas les vôtres. Seules les consignes de l\'éditeur (étapes 1, et '
+                    '7 à 10) sont réutilisables.</p>') if capture else ""
+
+            blocks.append(
+                f'<div class="flow__file"><p class="flow__name">{esc(fname)}</p>{warn}'
+                f'<ol class="flow__list">{"".join(rows)}</ol>{"".join(extras)}</div>')
+
+        if not blocks:
+            return ""
+        return ('<section class="flow"><h2 id="deroule">Le déroulé, étape par étape'
+                '<a class="anchor" href="#deroule" aria-label="Lien vers cette section">#</a></h2>'
+                '<p class="flow__intro">Les sections rangées <strong>dans l\'ordre où elles '
+                'entrent en jeu</strong>, celles qui vont ensemble regroupées, les étapes absentes '
+                'sautées. Attention : ce n\'est pas l\'ordre du fichier — un prompt part d\'un '
+                'seul bloc, et l\'éditeur range ses sections comme il veut. L\'ordre réel du '
+                'fichier est juste en dessous. '
+                f'<a href="{base}prompts-systeme/guide/index.html#chronologie">Les dix moments, '
+                'expliqués</a></p>'
+                + "".join(blocks) + "</section>")
 
     def file_card_html(self, tid: str, f: dict, base: str) -> str:
         """Situer un fichier avant d'en montrer le texte."""
@@ -2218,15 +2305,16 @@ class Builder:
                          if sec.get("count", 1) > 1 else "")
                 rows.append(f'<li class="outline__item">{title}{times}'
                             f'<span class="outline__size">{sec["lines"]} l.</span>'
-                            f'{nature_badge(g, sec["body"])}{role}</li>')
+                            f'{step_badge(g or sec, sec["body"])}{role}</li>')
             label = "balises" if mode == "balises" else "titres"
             blocks.append(
                 f'<div class="outline__file"><p class="outline__name">{esc(fname)}'
                 f'<span class="outline__meta">{len(secs)} sections, repérées par {label}</span></p>'
                 f'<ol class="outline__list">{"".join(rows)}</ol></div>')
-        return ('<section class="outline"><h2 id="plan-du-prompt">Le plan du prompt'
+        return ('<section class="outline"><h2 id="plan-du-prompt">L\'ordre réel du fichier'
                 '<a class="anchor" href="#plan-du-prompt" aria-label="Lien vers cette section">#</a></h2>'
-                '<p class="outline__intro">La construction du prompt, avant son contenu. Les noms '
+                '<p class="outline__intro">Les sections telles qu\'elles se suivent dans le '
+                'fichier, du début à la fin — c\'est ici qu\'on retrouve un passage précis. Les noms '
                 'entre chevrons sont ceux de l\'éditeur ; l\'explication en regard vient de notre '
                 f'<a href="{base}prompts-systeme/guide/index.html#glossaire">glossaire des sections</a> '
                 'et vaut pour ce type de section en général.</p>'
@@ -2252,7 +2340,7 @@ class Builder:
             out.append(
                 f'<details class="promptsec" id="{sid}"{" open" if n == 0 else ""}>'
                 f'<summary class="promptsec__head"><code class="promptsec__name">{esc(label)}</code>'
-                f'{fr}{nature_badge(g, sec["body"])}'
+                f'{fr}{step_badge(g or sec, sec["body"])}'
                 f'<span class="promptsec__size">{sec["lines"]} lignes</span></summary>'
                 f'<div class="promptsec__body">{note}{code_block(sec["body"], "text")}</div></details>')
         return "".join(out)
@@ -2262,7 +2350,7 @@ class Builder:
         s, base = self.site, "../../"
         gloss_rows = "".join(
             f'<tr><td><code>{esc(k)}</code></td><td>{esc(v["title"])}</td>'
-            f'<td>{nature_badge(v, "")}</td>'
+            f'<td>{step_badge(v)}</td>'
             f'<td>{esc(v["role"])}'
             + (f' <a href="{base}lecons/{v["lesson"]}/index.html">'
                f'Leçon {s.lesson_meta[v["lesson"]]["num"]}</a>'
@@ -2276,12 +2364,16 @@ class Builder:
             per_tool[key.split("/")[0]] = per_tool.get(key.split("/")[0], 0) + 1
         n_files, n_multi = len(s.filedef), sum(1 for v in per_tool.values() if v > 1)
         nat_rows = "".join(
-            f'<tr><td>{nature_badge({"nature": k}, "")}</td><td>{esc(why)}</td></tr>'
-            for k, (_, why) in NATURES.items())
+            f'<tr><td>{step_badge({"moment": k})}</td>'
+            f'<td><strong>{esc(label)}</strong> — {esc(why)}</td></tr>'
+            for k, (_, label, _s, why) in MOMENTS.items())
+        nat_rows += (f'<tr><td>{step_badge({"moment": HORS[0]})}</td>'
+                     f'<td>{esc(HORS[1])} : exemples, résumé de conversation, mémoire. '
+                     'Ces sections ne s\'enchaînent avec rien.</td></tr>')
         toc = [
             {"id": "ce-que-cest", "text": "Ce qu'est un prompt système", "level": 2},
             {"id": "quand", "text": "Quand il est envoyé", "level": 2},
-            {"id": "chronologie", "text": "La chronologie d'un tour", "level": 2},
+            {"id": "chronologie", "text": "Les dix moments d'un échange", "level": 2},
             {"id": "ce-quil-change", "text": "Ce qu'il change", "level": 2},
             {"id": "ce-quil-coute", "text": "Ce qu'il coûte", "level": 2},
             {"id": "comment-lire", "text": "Comment en lire un", "level": 2},
@@ -2320,33 +2412,46 @@ class Builder:
    conversation, puis votre message. Ce qui est proche de la question pèse davantage — d'où
    les sections « rappels critiques » que plusieurs éditeurs placent tout à la fin.</p>
 
-<h2 id="chronologie">La chronologie d'un tour<a class="anchor" href="#chronologie">#</a></h2>
-<p>C'est la question qui revient le plus souvent en découvrant ces fichiers : <em>les sections
-   sont-elles des étapes à suivre l'une après l'autre, ou faut-il tout coller ensemble ?</em>
-   La réponse est nette : <strong>tout part ensemble</strong>. Un prompt système est un seul
-   message, envoyé d'un bloc, avant la conversation. Son ordre interne est un ordre de lecture,
-   pas un déroulé dans le temps.</p>
-<p>Ce qui est réellement chronologique, c'est le tour de conversation :</p>
-<ol>
-  <li><strong>Le prompt système</strong>, en entier, toutes sections confondues.</li>
-  <li><strong>Vos propres règles</strong> — fichier de règles du projet, préférences —
-      ajoutées à la suite, sans remplacer les précédentes.</li>
-  <li><strong>Le contexte injecté</strong> par le produit : fichiers ouverts, système,
-      arborescence. Ces sections-là ne sont pas écrites par l'éditeur, elles sont
-      <em>remplies</em> à l'exécution.</li>
-  <li><strong>Votre message</strong>, en dernier — donc en position forte.</li>
-  <li><strong>La boucle d'outils</strong> : appel, résultat, nouvel appel. À chaque tour,
-      l'ensemble repart en entier, et se paie de nouveau.</li>
-</ol>
-<p>À l'intérieur du prompt, en revanche, toutes les sections n'ont pas le même statut. Le site
-   les distingue par une pastille, dans le plan de chaque fiche :</p>
+<h2 id="chronologie">Les dix moments d'un échange<a class="anchor" href="#chronologie">#</a></h2>
+<p>La question qui revient le plus souvent en découvrant ces fichiers : <em>les sections
+   sont-elles des étapes à faire l'une après l'autre, ou faut-il tout coller ensemble ?</em>
+   Les deux, en fait — et c'est ce qui embrouille.</p>
+<p><strong>Le fichier, lui, part d'un seul bloc.</strong> Rien n'est envoyé « plus tard », et
+   l'ordre dans lequel l'éditeur range ses sections n'a aucune importance pour le modèle.</p>
+<p><strong>Mais chaque section entre en jeu à un moment précis</strong> de l'échange. C'est ce
+   moment que le site numérote, sur chaque fiche, dans le bloc « Le déroulé, étape par étape » :
+   les sections liées y sont regroupées, les moments absents du fichier sont sautés, et celles
+   qui ne s'enchaînent avec rien sont mises de côté.</p>
 <div class="glosstable">
-<table><thead><tr><th>Pastille</th><th>Ce que ça veut dire</th></tr></thead>
+<table><thead><tr><th>Étape</th><th>Ce qui se passe</th></tr></thead>
 <tbody>{nat_rows}</tbody></table>
 </div>
-<p class="note">Cette pastille ne s'affiche que si le type de section est répertorié au
-   glossaire. À défaut, le site se contente d'un décompte mesuré — « 9 points numérotés » —
-   qui est un fait, pas une interprétation.</p>
+<p>Les six premières étapes composent la requête ; les quatre dernières décrivent ce que le
+   modèle fait une fois qu'elle est partie. Une section que le glossaire ne connaît pas n'est
+   pas numérotée : elle est comptée dans « non classé », sans commentaire inventé.</p>
+
+<h3 id="rempli-tout-seul">Ce que le produit remplit tout seul</h3>
+<p>Les étapes 2 à 5 méritent une mise au point, parce qu'elles ressemblent à des consignes sans
+   en être. <strong>Vous ne rédigez jamais ces balises : vous les remplissez sans le savoir</strong>,
+   en utilisant l'interface.</p>
+<ul>
+  <li><code>&lt;user_info&gt;</code>, <code>&lt;project_layout&gt;</code> — votre système, vos
+      chemins, l'arborescence du projet. Remplis par l'éditeur à l'ouverture de la session.</li>
+  <li><code>&lt;custom_instructions&gt;</code>, <code>&lt;user_rules&gt;</code> — vos réglages
+      permanents, ceux que vous avez saisis une fois dans le produit.</li>
+  <li><code>&lt;attached_files&gt;</code>, <code>&lt;file_contents&gt;</code> — <strong>le
+      trombone du champ de saisie</strong>. Quand vous glissez un fichier dans la discussion, le
+      produit en recopie le contenu ici, en clair. C'est exactement la même chose vue de l'autre
+      côté ; il n'y a rien à activer.</li>
+  <li><code>&lt;user_query&gt;</code> — le message que vous venez de taper.</li>
+</ul>
+<p>D'où une conséquence pratique : quand un fichier du site contient ces sections, ce n'est plus
+   un prompt système, c'est <strong>une requête entière enregistrée</strong> — avec la machine,
+   les réglages, la pièce jointe et les messages de la personne qui l'a extraite. Le
+   <code>Chat Prompt.txt</code> de Cursor en est l'exemple parfait : on y lit son fichier
+   <code>api.py</code>, sa règle « réponds toujours en espagnol » et ses deux messages. Ces
+   parties-là ne se copient pas — elles seraient les siennes, pas les vôtres. Les fiches
+   concernées le signalent en tête du déroulé.</p>
 
 <h2 id="ce-quil-change">Ce qu'il change<a class="anchor" href="#ce-quil-change">#</a></h2>
 <p>Tout ce qui fait la personnalité d'un produit. Le même modèle, avec deux prompts systèmes
@@ -2438,7 +2543,7 @@ class Builder:
    {n_alias} variantes de nommage reconnues. Une section absente de cette table garde son nom
    brut, sans commentaire : mieux vaut ne rien dire que d'inventer une intention d'auteur.</p>
 <div class="glosstable">
-<table><thead><tr><th>Nom rencontré</th><th>Ce que c'est</th><th>Nature</th>
+<table><thead><tr><th>Nom rencontré</th><th>Ce que c'est</th><th>Étape</th>
 <th>À quoi ça sert</th></tr></thead>
 <tbody>{gloss_rows}</tbody></table>
 </div>
@@ -2561,12 +2666,13 @@ class Builder:
         if table_html:
             toc.append({"id": "quel-fichier", "text": "Quel fichier, et où ?", "level": 2})
 
-        chrono = self.chrono_html(base)
-        toc.append({"id": "chronologie", "text": "La chronologie d'un tour", "level": 2})
+        flow = self.flow_html(outline, base)
+        if flow:
+            toc.append({"id": "deroule", "text": "Le déroulé, étape par étape", "level": 2})
 
         plan_html = self.prompt_outline_html(outline, base)
         if plan_html:
-            toc.append({"id": "plan-du-prompt", "text": "Le plan du prompt", "level": 2})
+            toc.append({"id": "plan-du-prompt", "text": "L'ordre réel du fichier", "level": 2})
 
         tabs_html = (f'<div class="tabs" role="tablist">{"".join(tabs)}</div>'
                      if multi else "")
@@ -2620,7 +2726,7 @@ class Builder:
 {reuse}
 {obs_html}
 {table_html}
-{chrono}
+{flow}
 {plan_html}
 {files_html}
 {theory}
