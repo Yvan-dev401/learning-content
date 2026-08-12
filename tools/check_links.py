@@ -124,29 +124,63 @@ def main() -> int:
         if tid not in prompts["tools"]:
             problems.append(f"outil décrit mais absent du manifeste : {tid}")
 
-    # Mise en situation : sans ces trois champs, la fiche redevient un mur de texte.
+    # Mise en situation : sans ces champs, la fiche redevient un mur de texte.
     for tid, fr in prompts_meta["tools"].items():
-        for champ in ("role", "when", "output"):
+        for champ in ("role", "when", "output", "reuse"):
             if not fr.get(champ):
                 problems.append(f"outil sans « {champ} » : {tid}")
+
+    # Chaque fichier publié doit être situé, et aucune fiche ne doit décrire un fichier
+    # absent : c'est la seule garantie que le tableau « Quel fichier, et où ? » est complet.
+    filedef_all = json.loads((CONTENT / "_prompt_files.json").read_text(encoding="utf-8")) \
+        if (CONTENT / "_prompt_files.json").is_file() else {"files": {}, "status_labels": {}}
+    filedef, statuses = filedef_all["files"], filedef_all.get("status_labels", {})
+    published = {f"{tid}/{f['name']}" for tid, tool in prompts["tools"].items()
+                 for f in tool["files"]}
+    for key in sorted(published - set(filedef)):
+        problems.append(f"fichier de prompt non situé : {key}")
+    for key in sorted(set(filedef) - published):
+        problems.append(f"fiche de fichier orpheline : {key}")
+    firsts: dict[str, int] = {}
+    for key, fr in filedef.items():
+        tid = key.split("/")[0]
+        for champ in ("title", "surface", "when", "read", "status"):
+            if not fr.get(champ):
+                problems.append(f"fichier sans « {champ} » : {key}")
+        if fr.get("status") and fr["status"] not in statuses:
+            problems.append(f"statut de fichier hors vocabulaire : {key} → {fr['status']}")
+        if fr.get("first"):
+            firsts[tid] = firsts.get(tid, 0) + 1
+    for tid, tool in prompts["tools"].items():
+        if firsts.get(tid, 0) != 1:
+            problems.append(f"outil sans « à lire en premier » unique : {tid} "
+                            f"({firsts.get(tid, 0)})")
+        if len(tool["files"]) > 1 and not prompts_meta["tools"].get(tid, {}).get("files_note"):
+            problems.append(f"outil à plusieurs fichiers sans cadrage « files_note » : {tid}")
     if not (DOCS / "prompts-systeme" / "guide" / "index.html").exists():
         problems.append("guide de lecture des prompts absent du site")
 
     # Glossaire des sections : alias résolus, leçons existantes, couverture mesurée.
     gloss = json.loads((CONTENT / "_prompt_sections.json").read_text(encoding="utf-8"))["sections"] \
         if (CONTENT / "_prompt_sections.json").is_file() else {}
+    NATURES = {"regle", "procedure", "exemples", "contexte", "outils"}
     for k, v in gloss.items():
         if "alias" in v and v["alias"] not in gloss:
             problems.append(f"alias de section cassé : {k} → {v['alias']}")
         if v.get("lesson") and v["lesson"] not in meta["lessons"]:
             problems.append(f"section « {k} » liée à une leçon inconnue : {v['lesson']}")
+        if "title" in v and v.get("nature") not in NATURES:
+            problems.append(f"section sans nature valide : {k} → {v.get('nature')}")
 
-    glossed = flat = 0
+    glossed = flat = natured = 0
     for page in sorted((DOCS / "prompts-systeme").glob("*/index.html")):
         html_txt = page.read_text(encoding="utf-8")
         glossed += html_txt.count("promptsec__role")
         flat += len(re.findall(r'<details class="promptsec"', html_txt))
+        natured += len(re.findall(r'<span class="nat nat--(?!compte)', html_txt))
     gloss_rate = f"{100 * glossed // flat} %" if flat else "n/a"
+    # Une pastille apparaît deux fois par section (plan + texte) : on ramène au nombre réel.
+    nat_rate = f"{100 * (natured // 2) // flat} %" if flat else "n/a"
 
     # Sujets : vocabulaire connu, page produite, et aucun sujet vide (page inutile).
     topics = json.loads((CONTENT / "_topics.json").read_text(encoding="utf-8"))["topics"] \
@@ -234,6 +268,8 @@ def main() -> int:
     print(f"Prompts système publiés : {len(prompts['tools'])} · sujets : {len(topics)}")
     print(f"Sections de prompt : {flat} découpées, {glossed} expliquées par le glossaire "
           f"({gloss_rate}) · {sum(1 for v in gloss.values() if 'title' in v)} types décrits")
+    print(f"Fichiers de prompt situés : {len(filedef)} · sections avec une nature "
+          f"déclarée : {nat_rate}")
     print(f"Services décrits : {len(services['services'])} · tags au vocabulaire : {len(vocab)}")
     if thin:
         print(f"Sujets portés par une seule famille ({len(thin)}) : {', '.join(thin)}")

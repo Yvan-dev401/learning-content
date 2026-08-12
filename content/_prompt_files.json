@@ -1,0 +1,878 @@
+{
+  "_comment": "Une entrée par fichier de prompt publié, clé « <outil>/<nom de fichier> ». Sert à répondre à deux questions que le nom de fichier seul ne tranche pas : à quelle partie du produit ce fichier correspond, et pourquoi le lire plutôt que son voisin. Les champs « surface » et « model » sont tirés du fichier lui-même (première ligne, nom de fichier) ; quand le texte ne dit rien, on l'écrit plutôt que de supposer. « status » appartient à un vocabulaire fermé vérifié par check_links.py : actuel, version-ancienne, surface, variante-modele, outils, fragment, gabarit. « first » marque le fichier par lequel commencer, un seul par outil.",
+  "status_labels": {
+    "actuel": "prompt principal",
+    "version-ancienne": "version antérieure",
+    "surface": "autre surface du produit",
+    "variante-modele": "variante par modèle",
+    "outils": "catalogue d'outils",
+    "fragment": "morceau d'un même prompt",
+    "gabarit": "gabarit à trous"
+  },
+  "files": {
+    "amp/claude-4-sonnet.yaml": {
+      "title": "La requête complète, version Claude",
+      "surface": "Agent Amp, dans l'éditeur et en ligne de commande",
+      "model": "Claude Sonnet 4 (nommé dans le fichier)",
+      "when": "À chaque requête de l'agent : ce fichier n'est pas un extrait de prompt mais la capture d'un appel entier vers l'API.",
+      "read": "Le seul fichier du corpus qui montre une requête complète — prompt système, outils et paramètres au même endroit. C'est la vue la plus proche de ce qui part réellement sur le réseau.",
+      "status": "actuel",
+      "first": true
+    },
+    "amp/gpt-5.yaml": {
+      "title": "La même requête, version GPT-5",
+      "surface": "Agent Amp, dans l'éditeur et en ligne de commande",
+      "model": "GPT-5 (champ « model » du fichier)",
+      "when": "Même moment que la version Claude : c'est le même agent, exécuté avec l'autre modèle.",
+      "read": "À lire en regard du fichier Claude : les consignes sont largement les mêmes, les écarts montrent ce qu'un éditeur ajuste modèle par modèle.",
+      "status": "variante-modele"
+    },
+    "anthropic/Claude Code 2.0.txt": {
+      "title": "Claude Code, version 2.0.0",
+      "surface": "Claude Code, l'agent en terminal",
+      "model": "Le fichier ne nomme pas de modèle ; il annonce la version 2.0.0 du produit, datée du 29 septembre 2025.",
+      "when": "Au lancement d'une session dans le terminal, puis à chaque tour de la boucle de l'agent.",
+      "read": "À comparer avec la fiche Claude Code, qui contient un état antérieur du même prompt : deux photos du même texte à deux moments.",
+      "status": "actuel",
+      "first": true
+    },
+    "anthropic/Claude Sonnet 5.txt": {
+      "title": "Claude Sonnet 5, applications de discussion",
+      "surface": "Applications Claude : web, bureau et mobile",
+      "model": "Claude Sonnet 5 (le texte le dit explicitement)",
+      "when": "En tête de chaque conversation dans l'application, avant votre premier message.",
+      "read": "Le prompt d'un assistant grand public, pas d'un agent de code : ton, refus, gestion des sujets sensibles. Un autre métier que les prompts d'éditeurs.",
+      "status": "variante-modele"
+    },
+    "anthropic/Claude Sonnet 5 Tools.txt": {
+      "title": "Les outils de Claude Sonnet 5",
+      "surface": "Applications Claude : web, bureau et mobile",
+      "model": "Claude Sonnet 5",
+      "when": "Envoyé avec le prompt ci-dessus, dans la même requête.",
+      "read": "Des descriptions d'outils rédigées en prose plutôt qu'en JSON : utile pour voir qu'un catalogue d'outils reste, au fond, du texte.",
+      "status": "outils"
+    },
+    "anthropic/Claude Sonnet 4.6.txt": {
+      "title": "Claude Sonnet 4.6",
+      "surface": "Applications Claude : web, bureau et mobile",
+      "model": "Claude Sonnet 4.6 (nommé dans la section product_information)",
+      "when": "En tête de chaque conversation, pour les sessions servies par ce modèle.",
+      "read": "La version qui précède Sonnet 5 : les différences entre les deux fichiers sont le journal des ajustements d'une génération à l'autre.",
+      "status": "variante-modele"
+    },
+    "anthropic/Claude Fable 5.txt": {
+      "title": "Claude Fable 5",
+      "surface": "Applications Claude : web, bureau et mobile",
+      "model": "Claude Fable 5",
+      "when": "En tête de chaque conversation, pour les sessions servies par ce modèle.",
+      "read": "Le plus long fichier du corpus (près de 120 ko). Sa taille est en soi l'information : ce qu'un éditeur juge nécessaire de répéter à chaque requête.",
+      "status": "variante-modele"
+    },
+    "anthropic/Sonnet 4.5 Prompt.txt": {
+      "title": "Claude Sonnet 4.5",
+      "surface": "Applications Claude : web, bureau et mobile",
+      "model": "Claude Sonnet 4.5 (le texte est daté du 29 septembre 2025)",
+      "when": "En tête de chaque conversation, à l'époque où ce modèle était servi.",
+      "read": "Écrit à la troisième personne (« l'assistant est Claude »), là où les versions suivantes tutoient le modèle : un changement de style d'écriture visible d'un fichier à l'autre.",
+      "status": "version-ancienne"
+    },
+    "anthropic-claude-code/Prompt.txt": {
+      "title": "Le prompt de l'agent",
+      "surface": "Claude Code, dans un terminal",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Au lancement d'une tâche, puis renvoyé à chaque tour de la boucle tant que l'agent n'a pas conclu.",
+      "read": "Commencez par là : c'est le texte qui décrit le comportement. Le catalogue d'outils ne se comprend qu'ensuite.",
+      "status": "actuel",
+      "first": true
+    },
+    "anthropic-claude-code/Tools.json": {
+      "title": "Le catalogue d'outils",
+      "surface": "Claude Code, dans un terminal",
+      "model": "Sans objet : un catalogue d'outils ne dépend pas du modèle.",
+      "when": "Envoyé dans la même requête que le prompt, dans un champ séparé de l'API — jamais collé dans le texte.",
+      "read": "C'est ici que se joue le bon appel d'outil : chaque description est un mini-prompt qui dit quand utiliser l'outil et quand s'en abstenir.",
+      "status": "outils"
+    },
+    "anthropic-claude-for-chrome/Prompt.txt": {
+      "title": "Le prompt de l'extension",
+      "surface": "Claude pour Chrome, dans un onglet du navigateur",
+      "model": "Le fichier dit seulement « l'assistant est Claude ».",
+      "when": "Au début d'une session de navigation assistée, avant la première action sur la page.",
+      "read": "Un agent qui clique dans vos onglets : la moitié du texte porte sur ce qu'il ne doit jamais faire. Le meilleur exemple de garde-fous du corpus.",
+      "status": "actuel",
+      "first": true
+    },
+    "anthropic-claude-for-chrome/Tools.json": {
+      "title": "Les outils du navigateur",
+      "surface": "Claude pour Chrome, dans un onglet du navigateur",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt, à chaque requête.",
+      "read": "Souris, clavier, capture d'écran, gestion des onglets : voir ces primitives écrites noir sur blanc rend concret ce qu'« agent qui utilise un navigateur » veut dire.",
+      "status": "outils"
+    },
+    "augment-code/claude-4-sonnet-agent-prompts.txt": {
+      "title": "L'agent, version Claude",
+      "surface": "Extension Augment, dans l'éditeur",
+      "model": "Claude Sonnet 4 (d'après le nom de fichier ; le texte ne le nomme pas)",
+      "when": "À l'ouverture d'une tâche dans l'éditeur, avec le contexte fourni par le moteur d'indexation d'Augment.",
+      "read": "Court et net : la charpente d'un prompt d'agent en 160 lignes, sans le fatras des gros fichiers.",
+      "status": "actuel",
+      "first": true
+    },
+    "augment-code/claude-4-sonnet-tools.json": {
+      "title": "Les outils, version Claude",
+      "surface": "Extension Augment, dans l'éditeur",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt correspondant.",
+      "read": "L'outil d'édition « str-replace-editor » y est décrit en détail : un bon exemple de description qui vaut mode d'emploi.",
+      "status": "outils"
+    },
+    "augment-code/gpt-5-agent-prompts.txt": {
+      "title": "L'agent, version GPT-5",
+      "surface": "Extension Augment, dans l'éditeur",
+      "model": "GPT-5 (d'après le nom de fichier)",
+      "when": "Même moment que la version Claude, pour les sessions servies par ce modèle.",
+      "read": "Un tiers plus long que la version Claude pour le même produit : la différence est ce qu'il faut expliciter à ce modèle-là.",
+      "status": "variante-modele"
+    },
+    "augment-code/gpt-5-tools.json": {
+      "title": "Les outils, version GPT-5",
+      "surface": "Extension Augment, dans l'éditeur",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt GPT-5.",
+      "read": "Même catalogue que la version Claude, mais au format « function » d'OpenAI : les deux fichiers montrent le même besoin dans deux conventions d'API.",
+      "status": "outils"
+    },
+    "cluely/Default Prompt.txt": {
+      "title": "Le mode par défaut",
+      "surface": "Fenêtre flottante de Cluely, par-dessus l'écran",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque déclenchement de l'assistant, avec une capture de l'écran en cours.",
+      "read": "95 lignes seulement, et l'essentiel y est : identité, format de réponse, interdits. Un bon premier prompt à lire en entier.",
+      "status": "actuel",
+      "first": true
+    },
+    "cluely/Enterprise Prompt.txt": {
+      "title": "Le mode entreprise",
+      "surface": "Même fenêtre, offre entreprise — assistance en réunion en direct",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Pendant une réunion, en continu, sur ce qui est dit et affiché.",
+      "read": "Cinq fois plus long que le mode par défaut pour le même produit : voir ce qu'ajoute une offre entreprise est instructif en soi.",
+      "status": "surface"
+    },
+    "codebuddy-prompts/Chat Prompt.txt": {
+      "title": "Le gabarit de contexte",
+      "surface": "Volet de discussion de CodeBuddy",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Rempli à chaque message : fichiers ouverts, onglets, heure, répertoire courant.",
+      "read": "Ce n'est pas un prompt mais le moule du contexte, avec ses trous ({visible_files}, {datetime}). Rare et précieux : on voit ce que le produit injecte automatiquement.",
+      "status": "gabarit"
+    },
+    "codebuddy-prompts/Craft Prompt.txt": {
+      "title": "Le mode Craft",
+      "surface": "Mode Craft de CodeBuddy, celui qui modifie le code",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À l'ouverture d'une tâche en mode Craft.",
+      "read": "Le vrai prompt du produit, 678 lignes. À lire après le gabarit de contexte, qui en explique la première ligne.",
+      "status": "actuel",
+      "first": true
+    },
+    "comet-assistant/System Prompt.txt": {
+      "title": "L'assistant du navigateur",
+      "surface": "Comet, le navigateur de Perplexity",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque question posée dans le navigateur, avec la page courante en contexte.",
+      "read": "Un assistant de recherche doublé d'un pilote de navigateur : les deux métiers cohabitent dans le même texte, et la couture se voit.",
+      "status": "actuel",
+      "first": true
+    },
+    "comet-assistant/tools.json": {
+      "title": "Les outils de navigation",
+      "surface": "Comet, le navigateur de Perplexity",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Navigation, clic, extraction : le vocabulaire minimal d'un agent qui manipule des pages web.",
+      "status": "outils"
+    },
+    "cursor-prompts/Agent Prompt 2025-09-03.txt": {
+      "title": "L'agent de l'éditeur, état du 3 septembre 2025",
+      "surface": "Panneau Agent de Cursor, dans l'éditeur",
+      "model": "GPT-5 (annoncé en première ligne)",
+      "when": "À l'ouverture d'une conversation avec l'agent, puis à chaque message, avec les fichiers ouverts et la position du curseur joints automatiquement.",
+      "read": "Le plus récent des états de ce prompt : commencez par lui, puis remontez le temps avec les autres.",
+      "status": "actuel",
+      "first": true
+    },
+    "cursor-prompts/Agent Prompt 2.0.txt": {
+      "title": "L'agent, version 2.0",
+      "surface": "Panneau Agent de Cursor, dans l'éditeur",
+      "model": "Le fichier ne nomme pas de modèle ; il annonce une coupure de connaissances en juin 2024.",
+      "when": "Même moment que ci-dessus, à l'époque de cette version.",
+      "read": "Capturé dans un autre format : les outils sont déclarés dans le texte même (« namespace functions »), avec leurs commentaires d'usage. Montre qu'un catalogue d'outils peut aussi voyager en clair.",
+      "status": "version-ancienne"
+    },
+    "cursor-prompts/Agent Prompt v1.2.txt": {
+      "title": "L'agent, version 1.2",
+      "surface": "Panneau Agent de Cursor, dans l'éditeur",
+      "model": "GPT-4.1 (annoncé en première ligne)",
+      "when": "Même moment, à l'époque de cette version.",
+      "read": "La version la mieux structurée pour apprendre : dix sections nettes, dont deux qui ne sont pas écrites par Cursor mais remplies à l'exécution (user_info, project_layout). C'est le fichier sur lequel s'appuie la chronologie ci-dessous.",
+      "status": "version-ancienne"
+    },
+    "cursor-prompts/Agent Prompt v1.0.txt": {
+      "title": "L'agent, version 1.0",
+      "surface": "Panneau Agent de Cursor, dans l'éditeur",
+      "model": "Claude Sonnet 4 (annoncé en première ligne)",
+      "when": "Même moment, à l'époque de cette version.",
+      "read": "83 lignes : le point de départ. Comparé aux 568 lignes de la v1.2, il donne la mesure de ce que la production a fait ajouter.",
+      "status": "version-ancienne"
+    },
+    "cursor-prompts/Agent CLI Prompt 2025-08-07.txt": {
+      "title": "L'agent en ligne de commande",
+      "surface": "Cursor CLI, dans un terminal — pas dans l'éditeur",
+      "model": "GPT-5 (annoncé en première ligne)",
+      "when": "Au lancement de la commande, hors de toute fenêtre d'éditeur.",
+      "read": "Même produit, autre surface : sans éditeur autour, le prompt doit décrire lui-même le contexte que l'interface fournissait gratuitement.",
+      "status": "surface"
+    },
+    "cursor-prompts/Chat Prompt.txt": {
+      "title": "Le volet de discussion",
+      "surface": "Volet de chat de Cursor, à côté du code — il répond, il n'agit pas",
+      "model": "GPT-4o (annoncé en première ligne)",
+      "when": "À l'ouverture d'une discussion, avec le fichier courant joint.",
+      "read": "La différence avec l'agent tient en une phrase : ici, le modèle n'est pas prié de continuer jusqu'à résolution complète. Comparer les deux premières lignes des deux fichiers suffit à comprendre ce qui sépare un chat d'un agent.",
+      "status": "surface"
+    },
+    "cursor-prompts/Agent Tools v1.0.json": {
+      "title": "Le catalogue d'outils, version 1.0",
+      "surface": "Panneau Agent de Cursor",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt de l'agent, dans un champ séparé.",
+      "read": "Correspond à l'époque de la v1.0 : les outils décrits ici sont ceux que le prompt de l'agent suppose disponibles.",
+      "status": "outils"
+    },
+    "devin-ai/Prompt.txt": {
+      "title": "L'ingénieur autonome",
+      "surface": "Devin, dans son propre environnement (machine virtuelle, éditeur, terminal, navigateur)",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À l'attribution d'une tâche, puis pendant toute son exécution — qui peut durer des heures.",
+      "read": "Le prompt d'un agent qui travaille seul et longtemps : quand demander de l'aide, quand s'arrêter, comment rendre compte. Un autre problème que celui d'un assistant d'éditeur.",
+      "status": "actuel",
+      "first": true
+    },
+    "devin-ai/DeepWiki Prompt.txt": {
+      "title": "DeepWiki, les questions sur un dépôt",
+      "surface": "DeepWiki, le service de questions-réponses sur une base de code — pas l'agent",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque question posée sur un dépôt indexé.",
+      "read": "63 lignes contre 402 : quand la tâche se réduit à répondre, le prompt fond. La comparaison est la leçon.",
+      "status": "surface"
+    },
+    "dia/Prompt.txt": {
+      "title": "L'assistant du navigateur Dia",
+      "surface": "Barre de discussion du navigateur Dia",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque message, avec les onglets ouverts en contexte.",
+      "read": "Un assistant de navigateur grand public : beaucoup de consignes de ton, peu d'outils. Le contraire d'un prompt d'agent.",
+      "status": "actuel",
+      "first": true
+    },
+    "emergent/Prompt.txt": {
+      "title": "Le prompt d'E1",
+      "surface": "Emergent, plateforme de génération d'applications",
+      "model": "Le fichier ne nomme aucun modèle ; l'agent s'appelle E1.",
+      "when": "À l'ouverture d'un projet, puis à chaque itération sur l'application générée.",
+      "read": "Un prompt de génération d'application complète : périmètre, choix techniques imposés, critères de « fini ».",
+      "status": "actuel",
+      "first": true
+    },
+    "emergent/Tools.json": {
+      "title": "Les outils d'E1",
+      "surface": "Emergent, plateforme de génération d'applications",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Écriture de fichiers en lot, exécution : les primitives d'un agent qui construit un projet entier.",
+      "status": "outils"
+    },
+    "google-antigravity/Fast Prompt.txt": {
+      "title": "Le mode rapide",
+      "surface": "Antigravity, mode Fast — l'agent qui exécute",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Quand vous demandez une modification directe, sans passer par une phase de plan.",
+      "read": "Le mode par défaut : commencez par lui, le mode planification s'en déduit.",
+      "status": "actuel",
+      "first": true
+    },
+    "google-antigravity/planning-mode.txt": {
+      "title": "Le mode planification",
+      "surface": "Antigravity, mode Planning — l'agent qui propose avant d'agir",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Quand la tâche est jugée assez lourde pour mériter un plan validé avant exécution.",
+      "read": "Même identité, même produit, mais une consigne centrale inversée : ne rien modifier tant que le plan n'est pas accepté. Deux modes, deux prompts — c'est la réponse à « où s'applique celui-ci ? ».",
+      "status": "surface"
+    },
+    "google-gemini/AI Studio vibe-coder.txt": {
+      "title": "Le générateur d'applications d'AI Studio",
+      "surface": "Google AI Studio, onglet de génération d'applications web",
+      "model": "Le fichier ne nomme aucun modèle ; il parle de l'API Gemini.",
+      "when": "À chaque demande de génération ou de modification d'application.",
+      "read": "1 644 lignes dont une immense part de règles de style React et d'interface : un prompt qui sert autant de charte technique que de consigne de comportement.",
+      "status": "actuel",
+      "first": true
+    },
+    "junie/Prompt.txt": {
+      "title": "Le prompt de Junie",
+      "surface": "Junie, l'agent des environnements JetBrains",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À l'ouverture d'une tâche dans l'environnement de développement.",
+      "read": "120 lignes : l'un des prompts d'agent les plus courts du corpus, utile pour voir le strict nécessaire.",
+      "status": "actuel",
+      "first": true
+    },
+    "kiro/Vibe_Prompt.txt": {
+      "title": "Le mode Do (« vibe »)",
+      "surface": "Kiro, mode conversationnel — la réponse directe",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Quand le classificateur a rangé votre demande en « Do mode », c'est-à-dire dans la majorité des cas.",
+      "read": "Commencez par lui : c'est le mode par défaut, et le plus court des deux.",
+      "status": "actuel",
+      "first": true
+    },
+    "kiro/Spec_Prompt.txt": {
+      "title": "Le mode Spec",
+      "surface": "Kiro, mode spécification — exigences, conception, tâches",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Quand le classificateur a rangé votre demande en « Spec mode » : une demande de planification ou de spécification.",
+      "read": "Deux fois plus long que le mode Do, et organisé en phases. À lire après le classificateur, qui explique comment on y arrive.",
+      "status": "surface"
+    },
+    "kiro/Mode_Clasifier_Prompt.txt": {
+      "title": "Le classificateur de mode",
+      "surface": "En amont des deux autres : il ne répond pas à l'utilisateur, il choisit le prompt suivant",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Avant tout : à chaque message, pour décider lequel des deux prompts sera utilisé.",
+      "read": "64 lignes qui montrent une vraie chaîne : un appel de modèle sert d'aiguillage vers un autre appel. C'est l'exemple le plus clair du corpus qu'un produit enchaîne plusieurs prompts au lieu d'en avoir un seul.",
+      "status": "surface"
+    },
+    "leap-new/Prompts.txt": {
+      "title": "Le prompt de Leap",
+      "surface": "Leap, générateur d'API et de services",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À l'ouverture d'un projet, puis à chaque demande de modification.",
+      "read": "Très spécialisé (TypeScript, Encore.ts) : montre à quel point un prompt peut se réduire à imposer une pile technique.",
+      "status": "actuel",
+      "first": true
+    },
+    "leap-new/tools.json": {
+      "title": "Les outils de Leap",
+      "surface": "Leap, générateur d'API et de services",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Un outil unique et massif (« create_artifact ») qui produit tout le projet d'un coup : une autre philosophie que les agents qui éditent fichier par fichier.",
+      "status": "outils"
+    },
+    "lovable/Agent Prompt.txt": {
+      "title": "Le prompt de Lovable",
+      "surface": "Lovable, éditeur d'applications web dans le navigateur",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque message dans la discussion qui accompagne l'aperçu de l'application.",
+      "read": "Un agent qui édite en direct pendant que l'utilisateur regarde : la contrainte de temps réel se lit dans les consignes.",
+      "status": "actuel",
+      "first": true
+    },
+    "lovable/Agent Tools.json": {
+      "title": "Les outils de Lovable",
+      "surface": "Lovable, éditeur d'applications web",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Les outils sont préfixés « lov- » : un exemple de nommage qui évite toute collision avec les outils du modèle.",
+      "status": "outils"
+    },
+    "manus-agent-tools-prompt/Prompt.txt": {
+      "title": "Les capacités de Manus",
+      "surface": "Manus, agent autonome dans son propre environnement",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "En tête de session.",
+      "read": "Rédigé comme une fiche produit à la première personne. Commencez par là pour savoir de quoi l'agent est capable, avant de lire comment il boucle.",
+      "status": "actuel",
+      "first": true
+    },
+    "manus-agent-tools-prompt/Agent loop.txt": {
+      "title": "La boucle de l'agent",
+      "surface": "Manus, agent autonome",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Même prompt que le reste : ce fichier est un morceau du texte, isolé par celui qui l'a extrait.",
+      "read": "33 lignes qui décrivent le cycle analyser → choisir un outil → attendre le résultat → recommencer. La description la plus nette d'une boucle d'agent dans tout le corpus.",
+      "status": "fragment"
+    },
+    "manus-agent-tools-prompt/Modules.txt": {
+      "title": "Les modules",
+      "surface": "Manus, agent autonome",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Même prompt, autre morceau.",
+      "read": "Le découpage interne du produit (planification, connaissances, sources) tel que le modèle doit se le représenter.",
+      "status": "fragment"
+    },
+    "manus-agent-tools-prompt/tools.json": {
+      "title": "Les outils de Manus",
+      "surface": "Manus, agent autonome",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Notifier l'utilisateur y est un outil à part entière : parler et agir sont traités de la même façon.",
+      "status": "outils"
+    },
+    "notionai/Prompt.txt": {
+      "title": "Le prompt de Notion AI",
+      "surface": "Notion, en vue de discussion autonome ou en barre latérale d'une page",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque message, avec la page courante en contexte quand vous êtes dans la barre latérale.",
+      "read": "Le prompt dit lui-même qu'il sert deux surfaces différentes : un bon exemple de texte unique qui doit s'adapter à son contexte d'affichage.",
+      "status": "actuel",
+      "first": true
+    },
+    "notionai/tools.json": {
+      "title": "Les outils de Notion AI",
+      "surface": "Notion, discussion et barre latérale",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Lecture et écriture d'entités Notion par URL : voir comment un produit expose son propre modèle de données à un agent.",
+      "status": "outils"
+    },
+    "open-source-prompts-bolt/Prompt.txt": {
+      "title": "Le prompt de Bolt",
+      "surface": "bolt.new, générateur d'applications dans le navigateur",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque demande de génération ou de modification.",
+      "read": "La section « contraintes système » est le morceau à voir : tout tourne dans le navigateur, donc pas de binaire natif, pas de compilation. Des contraintes d'exécution écrites en langue naturelle.",
+      "status": "actuel",
+      "first": true
+    },
+    "open-source-prompts-cline/Prompt.txt": {
+      "title": "Le prompt de Cline",
+      "surface": "Cline, extension d'éditeur (projet ouvert)",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À l'ouverture d'une tâche, puis à chaque tour.",
+      "read": "607 lignes dont une grande part décrit les outils en texte, avec des exemples d'appel : le projet est ouvert, donc ce fichier est vérifiable, ce qui est rare ici.",
+      "status": "actuel",
+      "first": true
+    },
+    "open-source-prompts-codex-cli/openai-codex-cli-system-prompt-20250820.txt": {
+      "title": "Codex CLI, état du 20 août 2025",
+      "surface": "Codex CLI, dans un terminal",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Au lancement de la commande, puis à chaque tour de la boucle.",
+      "read": "La version longue et datée : commencez par elle.",
+      "status": "actuel",
+      "first": true
+    },
+    "open-source-prompts-codex-cli/Prompt.txt": {
+      "title": "Codex CLI, version courte",
+      "surface": "Codex CLI, dans un terminal",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Même surface, à une date antérieure.",
+      "read": "46 lignes contre 342 : la comparaison des deux fichiers du même dossier montre ce qu'un an d'usage ajoute à un prompt.",
+      "status": "version-ancienne"
+    },
+    "open-source-prompts-gemini-cli/google-gemini-cli-system-prompt.txt": {
+      "title": "Le prompt de Gemini CLI",
+      "surface": "Gemini CLI, dans un terminal",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Au lancement de la commande, puis à chaque tour.",
+      "read": "Le projet est ouvert : c'est l'un des rares fichiers du corpus qu'on peut confronter au code source qui l'envoie.",
+      "status": "actuel",
+      "first": true
+    },
+    "open-source-prompts-lumo/Prompt.txt": {
+      "title": "Le prompt de Lumo",
+      "surface": "Lumo, l'assistant de Proton, dans le navigateur et l'application",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "En tête de chaque conversation.",
+      "read": "Un assistant vendu sur la confidentialité : les consignes sur ce qu'il ne conserve pas sont le cœur du texte.",
+      "status": "actuel",
+      "first": true
+    },
+    "open-source-prompts-roocode/Prompt.txt": {
+      "title": "Le prompt de Roo Code",
+      "surface": "Roo Code, extension d'éditeur (projet ouvert)",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À l'ouverture d'une tâche, puis à chaque tour.",
+      "read": "Issu du même arbre que Cline : les deux fichiers se ressemblent assez pour qu'on lise les écarts comme des choix de produit.",
+      "status": "actuel",
+      "first": true
+    },
+    "orchids-app/System Prompt.txt": {
+      "title": "Le prompt principal",
+      "surface": "Orchids, générateur de sites en Next.js",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque demande de création ou de modification.",
+      "read": "1 014 lignes très prescriptives sur la pile technique : à lire pour voir jusqu'où un éditeur cadre le code produit.",
+      "status": "actuel",
+      "first": true
+    },
+    "orchids-app/Decision-making prompt.txt": {
+      "title": "L'aiguilleur",
+      "surface": "En amont du prompt principal : il ne rédige rien, il choisit l'outil à appeler",
+      "model": "Le fichier ne nomme pas de modèle ; il annonce une coupure de connaissances en juin 2024.",
+      "when": "Au tout début du traitement d'une demande, pour décider s'il faut cloner un site existant ou partir de zéro.",
+      "read": "Comme chez Kiro : un petit prompt d'aiguillage précède le gros. Une architecture qu'on ne devine jamais depuis l'interface.",
+      "status": "surface"
+    },
+    "perplexity/Prompt.txt": {
+      "title": "Le prompt de recherche",
+      "surface": "Perplexity, la réponse sourcée d'une recherche",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Après la recherche : le prompt est envoyé avec les résultats déjà récupérés, pour les rédiger.",
+      "read": "L'exemple le plus clair de génération augmentée par la recherche vue depuis le prompt : les sources arrivent dans le contexte, et le texte dit comment les citer.",
+      "status": "actuel",
+      "first": true
+    },
+    "poke/Poke_p1.txt": {
+      "title": "Le prompt principal (1/6)",
+      "surface": "Poke, l'assistant par messages (iMessage, WhatsApp, SMS)",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "En tête de chaque conversation par message.",
+      "read": "Le premier morceau : identité, ton, cadre général. C'est par lui qu'on commence.",
+      "status": "fragment",
+      "first": true
+    },
+    "poke/Poke_p2.txt": {
+      "title": "Les limites de WhatsApp (2/6)",
+      "surface": "Poke, sur WhatsApp spécifiquement",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Même prompt, morceau suivant.",
+      "read": "Une contrainte commerciale (la fenêtre de 24 heures de WhatsApp) traduite en consigne pour le modèle. Rare et très concret.",
+      "status": "fragment"
+    },
+    "poke/Poke_p3.txt": {
+      "title": "Gérer la frustration (3/6)",
+      "surface": "Poke, l'assistant par messages",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Même prompt, morceau suivant.",
+      "read": "Le passage le plus discutable du corpus : il demande de maintenir « l'illusion d'une entité unique » et de ne rien révéler de l'architecture. À lire justement pour ça.",
+      "status": "fragment"
+    },
+    "poke/Poke_p4.txt": {
+      "title": "Les intégrations (4/6)",
+      "surface": "Poke, l'assistant par messages",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Même prompt, morceau suivant.",
+      "read": "Notion, Linear, Vercel, Intercom, Sentry : comment un produit annonce au modèle ce que l'utilisateur a branché.",
+      "status": "fragment"
+    },
+    "poke/Poke_p5.txt": {
+      "title": "Le format des liens (5/6)",
+      "surface": "Poke, l'assistant par messages",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Même prompt, morceau suivant.",
+      "read": "24 lignes de conventions de nommage de liens. Un rappel que beaucoup d'un prompt système n'est que du formatage.",
+      "status": "fragment"
+    },
+    "poke/Poke_p6.txt": {
+      "title": "Mémoire et contexte (6/6)",
+      "surface": "Poke, l'assistant par messages",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Même prompt, dernier morceau.",
+      "read": "Explique ce qui se passe quand la conversation devient trop longue : un résumé est injecté, invisible pour l'utilisateur. La gestion de la mémoire, dite en clair.",
+      "status": "fragment"
+    },
+    "poke/Poke agent.txt": {
+      "title": "Le moteur d'exécution",
+      "surface": "Un second modèle, derrière Poke : il agit mais ne parle jamais à l'utilisateur",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Quand Poke lui délègue une tâche — donc pas à chaque message.",
+      "read": "Ce fichier n'est pas un morceau des six autres : c'est un autre agent, avec un autre prompt. Deux modèles, deux rôles, une seule voix côté utilisateur.",
+      "status": "surface"
+    },
+    "qoder/prompt.txt": {
+      "title": "Le prompt principal",
+      "surface": "Qoder, l'environnement de développement",
+      "model": "Le fichier ne nomme aucun modèle ; il interdit même de dire lequel est utilisé.",
+      "when": "À l'ouverture d'une conversation dans l'éditeur.",
+      "read": "La base commune : les deux modes Quest s'y greffent.",
+      "status": "actuel",
+      "first": true
+    },
+    "qoder/Quest Action.txt": {
+      "title": "Le mode Quest — exécution",
+      "surface": "Qoder, mode Quest, phase d'exécution",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Une fois la conception validée, quand l'agent passe à la réalisation.",
+      "read": "À lire juste après le mode conception : ensemble, les deux fichiers montrent un produit qui sépare explicitement penser et faire.",
+      "status": "surface"
+    },
+    "qoder/Quest Design.txt": {
+      "title": "Le mode Quest — conception",
+      "surface": "Qoder, mode Quest, phase de conception",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Au début d'une tâche lancée en mode Quest, avant toute modification de code.",
+      "read": "Deux fois plus long que la phase d'exécution : concevoir demande plus de cadrage que réaliser.",
+      "status": "surface"
+    },
+    "replit/Prompt.txt": {
+      "title": "Le prompt de l'assistant",
+      "surface": "Replit, l'environnement de développement en ligne",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque message dans le volet d'assistance.",
+      "read": "137 lignes seulement : un prompt court qui délègue presque tout à ses outils. À lire en regard du catalogue.",
+      "status": "actuel",
+      "first": true
+    },
+    "replit/Tools.json": {
+      "title": "Les outils de Replit",
+      "surface": "Replit, l'environnement de développement en ligne",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Trois fois plus gros que le prompt lui-même : la démonstration que l'essentiel peut vivre dans les descriptions d'outils.",
+      "status": "outils"
+    },
+    "same-dev/Prompt.txt": {
+      "title": "Le prompt de Same",
+      "surface": "Same, environnement de développement en ligne (same.new)",
+      "model": "GPT-4.1 (annoncé dans le texte)",
+      "when": "À l'ouverture d'un projet, puis à chaque message.",
+      "read": "Se présente comme « assistant et gestionnaire d'agents » : un prompt qui prévoit d'en piloter d'autres.",
+      "status": "actuel",
+      "first": true
+    },
+    "same-dev/Tools.json": {
+      "title": "Les outils de Same",
+      "surface": "Same, environnement de développement en ligne",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Création de projet à partir de gabarits, déploiement : les outils d'une plateforme, pas seulement d'un éditeur.",
+      "status": "outils"
+    },
+    "trae/Builder Prompt.txt": {
+      "title": "Le mode Builder",
+      "surface": "Trae AI, mode Builder — celui qui écrit le code",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À l'ouverture d'une tâche en mode Builder.",
+      "read": "Le mode principal : commencez par lui, le mode chat en est la version allégée.",
+      "status": "actuel",
+      "first": true
+    },
+    "trae/Chat Prompt.txt": {
+      "title": "Le mode Chat",
+      "surface": "Trae AI, volet de discussion — il répond, il ne construit pas",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À l'ouverture d'une discussion.",
+      "read": "Deux fois plus court que le mode Builder pour le même produit : la différence de longueur mesure la différence de responsabilité.",
+      "status": "surface"
+    },
+    "trae/Builder Tools.json": {
+      "title": "Les outils du mode Builder",
+      "surface": "Trae AI, mode Builder",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt Builder.",
+      "read": "Contient un outil de liste de tâches : l'agent gère son propre plan de travail comme une ressource.",
+      "status": "outils"
+    },
+    "traycer-ai/plan_mode_prompts": {
+      "title": "Le mode Plan",
+      "surface": "Traycer, phase de conception — le fichier n'a pas d'extension dans le dépôt d'origine",
+      "model": "Le fichier ne nomme aucun modèle, mais interdit de dire qui l'a créé.",
+      "when": "Au début d'une demande, pour produire un plan de haut niveau.",
+      "read": "Commencez par lui : chez Traycer, le plan précède toujours les phases.",
+      "status": "actuel",
+      "first": true
+    },
+    "traycer-ai/plan_mode_tools.json": {
+      "title": "Les outils du mode Plan",
+      "surface": "Traycer, phase de conception",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt de plan.",
+      "read": "Uniquement des outils de lecture : en phase de plan, l'agent n'a pas le droit d'écrire. L'interdiction est dans le catalogue, pas dans le texte.",
+      "status": "outils"
+    },
+    "traycer-ai/phase_mode_prompts.txt": {
+      "title": "Le mode Phase",
+      "surface": "Traycer, découpage du plan en phases exécutables",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Une fois le plan établi, pour le découper en étapes.",
+      "read": "46 lignes : le prompt le plus court du corpus. Une tâche étroite tient en une page.",
+      "status": "surface"
+    },
+    "traycer-ai/phase_mode_tools.json": {
+      "title": "Les outils du mode Phase",
+      "surface": "Traycer, découpage en phases",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt de phase.",
+      "read": "À comparer aux outils du mode Plan : ce qui change entre les deux dit ce que chaque phase a le droit de faire.",
+      "status": "outils"
+    },
+    "v0-prompts-and-tools/Prompt.txt": {
+      "title": "Le prompt de v0",
+      "surface": "v0, l'assistant de Vercel, dans le navigateur",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque message dans un projet v0.",
+      "read": "989 lignes, dont une grande partie sur la façon de poser des questions à l'utilisateur plutôt que de deviner. Une leçon de conception d'agent.",
+      "status": "actuel",
+      "first": true
+    },
+    "v0-prompts-and-tools/Tools.json": {
+      "title": "Les outils de v0",
+      "surface": "v0, l'assistant de Vercel",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Chaque description commence par un bloc « quand l'utiliser » : le modèle de description d'outil à copier.",
+      "status": "outils"
+    },
+    "vscode-agent/Prompt.txt": {
+      "title": "Le préambule du mode agent",
+      "surface": "VS Code, mode agent de Copilot Chat",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "En tête de chaque requête du mode agent, avant les consignes propres au modèle.",
+      "read": "Commencez par lui : c'est la couche commune, celle que tous les fichiers par modèle complètent.",
+      "status": "actuel",
+      "first": true
+    },
+    "vscode-agent/gpt-5.txt": {
+      "title": "Variante GPT-5",
+      "surface": "VS Code, Copilot Chat servi par ce modèle",
+      "model": "GPT-5 (d'après le nom de fichier ; le texte, lui, se présente toujours comme « GitHub Copilot »)",
+      "when": "À chaque requête servie par ce modèle.",
+      "read": "La plus longue des variantes (233 lignes). Comparée à celle de GPT-4o (95 lignes), elle montre ce qu'un modèle plus capable a paradoxalement besoin qu'on lui précise.",
+      "status": "variante-modele"
+    },
+    "vscode-agent/gpt-5-mini.txt": {
+      "title": "Variante GPT-5 mini",
+      "surface": "VS Code, Copilot Chat servi par ce modèle",
+      "model": "GPT-5 mini (d'après le nom de fichier)",
+      "when": "À chaque requête servie par ce modèle.",
+      "read": "Presque identique à la variante GPT-5 : les rares écarts entre un modèle et sa version réduite sont l'information.",
+      "status": "variante-modele"
+    },
+    "vscode-agent/gpt-4.1.txt": {
+      "title": "Variante GPT-4.1",
+      "surface": "VS Code, Copilot Chat servi par ce modèle",
+      "model": "GPT-4.1 (d'après le nom de fichier)",
+      "when": "À chaque requête servie par ce modèle.",
+      "read": "Une étape intermédiaire entre les variantes GPT-4o et GPT-5.",
+      "status": "variante-modele"
+    },
+    "vscode-agent/gpt-4o.txt": {
+      "title": "Variante GPT-4o",
+      "surface": "VS Code, Copilot Chat servi par ce modèle",
+      "model": "GPT-4o (d'après le nom de fichier)",
+      "when": "À chaque requête servie par ce modèle.",
+      "read": "La plus courte des six variantes : le point de comparaison naturel.",
+      "status": "variante-modele"
+    },
+    "vscode-agent/claude-sonnet-4.txt": {
+      "title": "Variante Claude Sonnet 4",
+      "surface": "VS Code, Copilot Chat servi par ce modèle",
+      "model": "Claude Sonnet 4 (d'après le nom de fichier)",
+      "when": "À chaque requête servie par ce modèle.",
+      "read": "Même produit, autre famille de modèles : les consignes de format changent là où le modèle a d'autres habitudes.",
+      "status": "variante-modele"
+    },
+    "vscode-agent/gemini-2.5-pro.txt": {
+      "title": "Variante Gemini 2.5 Pro",
+      "surface": "VS Code, Copilot Chat servi par ce modèle",
+      "model": "Gemini 2.5 Pro (d'après le nom de fichier)",
+      "when": "À chaque requête servie par ce modèle.",
+      "read": "À un octet près la même longueur que la variante Claude : les deux fichiers sont quasi jumeaux, ce qui rend leurs différences faciles à isoler.",
+      "status": "variante-modele"
+    },
+    "vscode-agent/chat-titles.txt": {
+      "title": "Le nom des conversations",
+      "surface": "VS Code, en arrière-plan : le titre affiché dans la liste des discussions",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Après quelques échanges, dans un appel séparé dont vous ne voyez jamais la réponse — sauf sous forme de titre.",
+      "read": "12 lignes. Le plus petit prompt du site, et la preuve qu'un produit lance des appels de modèle pour des broutilles d'interface.",
+      "status": "surface"
+    },
+    "vscode-agent/nes-tab-completion.txt": {
+      "title": "La complétion à la frappe",
+      "surface": "VS Code, suggestion en ligne dans l'éditeur — pas dans le volet de discussion",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Pendant que vous tapez, sur la zone de code marquée par des balises.",
+      "read": "Une tout autre discipline : pas de conversation, juste une portion de code à compléter entre deux marqueurs. Le contre-exemple utile à tous les autres fichiers.",
+      "status": "surface"
+    },
+    "warp-dev/Prompt.txt": {
+      "title": "Le mode Agent de Warp",
+      "surface": "Warp, le terminal — l'agent vit dans votre invite de commande",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "À chaque demande formulée dans le terminal.",
+      "read": "Un agent dont l'interface est la ligne de commande : les consignes sur les commandes dangereuses et leur confirmation y prennent toute la place.",
+      "status": "actuel",
+      "first": true
+    },
+    "windsurf/Prompt Wave 11.txt": {
+      "title": "Cascade, version Wave 11",
+      "surface": "Windsurf, l'agent Cascade dans l'éditeur",
+      "model": "Le fichier ne nomme pas de modèle ; il annonce une coupure de connaissances en juin 2024.",
+      "when": "À l'ouverture d'une conversation avec Cascade.",
+      "read": "125 lignes : court, parce que l'essentiel est déporté dans le fichier d'outils qui l'accompagne.",
+      "status": "actuel",
+      "first": true
+    },
+    "windsurf/Tools Wave 11.txt": {
+      "title": "Les outils de Cascade",
+      "surface": "Windsurf, l'agent Cascade",
+      "model": "Sans objet.",
+      "when": "Envoyé avec le prompt.",
+      "read": "Un catalogue d'outils écrit en commentaires TypeScript plutôt qu'en JSON : trois fois plus gros que le prompt lui-même.",
+      "status": "outils"
+    },
+    "xcode/System.txt": {
+      "title": "Le prompt système",
+      "surface": "Xcode, l'assistant de codage intégré",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "En tête de chaque échange, avec le fichier ouvert en contexte.",
+      "read": "Le seul vrai prompt du dossier : les cinq autres fichiers sont des gabarits de messages utilisateur. Commencez par lui.",
+      "status": "actuel",
+      "first": true
+    },
+    "xcode/ExplainAction.txt": {
+      "title": "Gabarit « Expliquer »",
+      "surface": "Xcode, entrée « Explain » du menu contextuel sur une sélection de code",
+      "model": "Sans objet.",
+      "when": "Au clic sur l'entrée de menu : les trous ({{filename}}, {{selected}}) sont remplis, et le tout part comme message utilisateur.",
+      "read": "15 lignes qui répondent à la question « où s'applique ce fichier ? » de la façon la plus littérale : à une entrée de menu.",
+      "status": "gabarit"
+    },
+    "xcode/DocumentAction.txt": {
+      "title": "Gabarit « Documenter »",
+      "surface": "Xcode, entrée « Document » du menu contextuel",
+      "model": "Sans objet.",
+      "when": "Au clic sur l'entrée de menu, sur le code sélectionné.",
+      "read": "Même moule que le gabarit « Expliquer », une consigne finale différente. C'est toute la mécanique des actions d'Xcode.",
+      "status": "gabarit"
+    },
+    "xcode/MessageAction.txt": {
+      "title": "Gabarit « Question libre »",
+      "surface": "Xcode, quand vous écrivez vous-même votre demande",
+      "model": "Sans objet.",
+      "when": "À chaque message que vous tapez : votre texte remplit le trou {{message}}, le reste est ajouté autour sans que vous le voyiez.",
+      "read": "Le fichier le plus court du corpus, et le plus révélateur : votre question n'est jamais envoyée seule.",
+      "status": "gabarit"
+    },
+    "xcode/PlaygroundAction.txt": {
+      "title": "Gabarit « Playground »",
+      "surface": "Xcode, entrée « Playground » du menu contextuel",
+      "model": "Sans objet.",
+      "when": "Au clic sur l'entrée de menu, pour obtenir un exemple d'utilisation du code sélectionné.",
+      "read": "Une action de produit qui tient en une phrase ajoutée à un gabarit commun.",
+      "status": "gabarit"
+    },
+    "xcode/PreviewAction.txt": {
+      "title": "Gabarit « Aperçu SwiftUI »",
+      "surface": "Xcode, génération d'un aperçu pour une vue SwiftUI",
+      "model": "Sans objet.",
+      "when": "Au clic sur l'entrée de menu, sur une vue sélectionnée.",
+      "read": "Le plus étoffé des cinq gabarits : quand la tâche est technique, la consigne s'allonge, même dans un gabarit.",
+      "status": "gabarit"
+    },
+    "z-ai-code/prompt.txt": {
+      "title": "Le prompt de Z.ai Code",
+      "surface": "Z.ai Code, dans un terminal",
+      "model": "Le fichier ne nomme aucun modèle.",
+      "when": "Au lancement de la commande, puis à chaque tour.",
+      "read": "La parenté avec les autres agents de terminal saute aux yeux dès les premières lignes : un genre s'est standardisé.",
+      "status": "actuel",
+      "first": true
+    }
+  }
+}

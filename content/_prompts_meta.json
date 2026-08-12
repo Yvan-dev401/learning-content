@@ -1,5 +1,5 @@
 {
-  "_comment": "Habillage français des prompts système. Le texte des prompts n'est jamais modifié ni traduit ; ce fichier ajoute la couche pédagogique. Les points « apprend » décrivent ce qu'on peut retenir d'un prompt pour ses propres projets. Les observations objectives (longueur, structure, nombre d'outils) sont calculées par build.py, pas écrites ici.",
+  "_comment": "Habillage français des prompts système. Le texte des prompts n'est jamais modifié ni traduit ; ce fichier ajoute la couche pédagogique. Les points « apprend » décrivent ce qu'on peut retenir d'un prompt pour ses propres projets. Les observations objectives (longueur, structure, nombre d'outils) sont calculées par build.py, pas écrites ici. Le champ « files_note » cadre la famille de fichiers d'un outil ; le détail fichier par fichier vit dans _prompt_files.json. Le champ « reuse » dit ce qui se transpose dans ses propres prompts et ce qui ne se transpose pas.",
   "source": {
     "repo": "x1xhlol/system-prompts-and-models-of-ai-tools",
     "url": "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools",
@@ -41,6 +41,13 @@
       "analysis": [
         "Cursor est l'exemple le plus net de <strong>prompt structuré par balises</strong>. Chaque domaine de consigne vit dans son bloc — communication, appel d'outils, modification de code, style — si bien que le modèle sait toujours dans quel registre il se trouve. C'est directement transposable : délimiter vos consignes par des balises coûte trois minutes et supprime une classe entière d'ambiguïtés.",
         "Le dépôt en contient sept versions successives. Les comparer est l'exercice le plus formateur du site : ce qui a été ajouté au fil des versions est la trace des échecs rencontrés en production. On y voit apparaître des consignes de plus en plus précises sur la parallélisation des appels d'outils, signe que la latence était devenue le problème numéro un."
+      ],
+      "files_note": "Sept fichiers, deux familles mêlées : <strong>quatre états successifs</strong> du prompt de l'agent (v1.0 → v1.2 → 2.0 → 3 septembre 2025) et <strong>trois surfaces distinctes</strong> du produit — l'agent de l'éditeur, la ligne de commande, le volet de discussion. Ce ne sont donc jamais des textes à choisir : c'est Cursor qui envoie l'un ou l'autre selon l'endroit où vous êtes.",
+      "reuse": [
+        "<strong>À copier :</strong> le découpage par balises (<code>&lt;communication&gt;</code>, <code>&lt;tool_calling&gt;</code>…). Trois minutes de travail, et une classe entière d'ambiguïtés disparaît.",
+        "<strong>À copier :</strong> la consigne « ne rends pas la main tant que la demande n'est pas résolue », qui transforme un assistant bavard en agent qui va au bout.",
+        "<strong>À ne pas copier :</strong> les sections <code>user_info</code> et <code>project_layout</code> — ce sont des trous remplis par l'éditeur, pas des consignes. Recopiées telles quelles, elles décrivent la machine de quelqu'un d'autre.",
+        "<strong>Par où commencer :</strong> la version 1.0 (83 lignes) comme squelette, puis piochez dans la 1.2 ce qui manque à votre cas."
       ]
     },
     "anthropic-claude-code": {
@@ -73,6 +80,12 @@
       "analysis": [
         "Ce qui frappe ici est la <strong>séparation nette entre le prompt et le catalogue d'outils</strong>. Le premier dit comment se comporter, le second ce qu'il est possible de faire. Les descriptions d'outils sont longues, avec des exemples d'usage — c'est là que se joue le bon appel, pas dans le prompt principal.",
         "Une part importante du texte porte sur les actions irréversibles : ce qu'il ne faut pas faire sans confirmation. Pour un agent qui a accès à un terminal, c'est la section qui compte le plus."
+      ],
+      "files_note": "Deux fichiers, la découpe la plus courante du corpus : le <strong>prompt</strong> dit comment se comporter, le <strong>catalogue d'outils</strong> dit ce qu'il est possible de faire. Ils partent dans la même requête, mais dans deux champs différents de l'API.",
+      "reuse": [
+        "<strong>À copier :</strong> la séparation prompt / outils. Décrivez chaque outil dans sa propre description, pas dans le prompt principal.",
+        "<strong>À copier :</strong> la règle de confirmation avant toute action irréversible — la seule protection qui tienne quand un modèle a accès à un terminal.",
+        "<strong>À ne pas copier :</strong> les noms d'outils, qui n'existent que dans ce produit."
       ]
     },
     "anthropic": {
@@ -97,7 +110,13 @@
       ],
       "role": "Définir le comportement général d'un assistant grand public : ton, refus, sujets sensibles, format des réponses.",
       "when": "À chaque requête, en tête de contexte, avant votre message.",
-      "output": "Le style même des réponses de l'assistant — c'est ce document qui décide qu'il est prudent sur la santé, direct sur la technique, et qu'il refuse certaines demandes."
+      "output": "Le style même des réponses de l'assistant — c'est ce document qui décide qu'il est prudent sur la santé, direct sur la technique, et qu'il refuse certaines demandes.",
+      "files_note": "Six fichiers, presque tous des <strong>variantes par modèle</strong> du même prompt de discussion (Sonnet 4.5, 4.6, 5, Fable 5), plus le prompt de Claude Code 2.0 qui relève, lui, d'un autre produit. Les variantes se lisent en parallèle : ce qui bouge d'un modèle au suivant est l'information.",
+      "reuse": [
+        "<strong>À copier :</strong> la section « informations produit », qui donne au modèle de quoi répondre aux questions sur lui-même sans inventer.",
+        "<strong>À ne pas copier :</strong> tout ce qui relève de la politique d'un éditeur grand public — c'est du droit et du service client, pas de la technique.",
+        "<strong>Par où commencer :</strong> lisez deux variantes à la suite (Sonnet 4.6 puis Sonnet 5) plutôt qu'une seule en entier."
+      ]
     },
     "anthropic-claude-for-chrome": {
       "title": "Claude pour Chrome",
@@ -126,6 +145,12 @@
       "analysis": [
         "Un agent qui agit dans le navigateur de l'utilisateur pose un problème que les agents de code n'ont pas : <strong>le contenu de la page est une entrée non fiable</strong>. Le prompt doit anticiper qu'elle tente de le détourner.",
         "À lire en parallèle de la leçon 13 : c'est de l'injection de prompt traitée en conditions réelles."
+      ],
+      "files_note": "Deux fichiers : le prompt de l'extension et son catalogue d'outils. Le second est particulièrement parlant ici, puisqu'il énumère ce qu'un agent a le droit de faire dans votre navigateur.",
+      "reuse": [
+        "<strong>À copier :</strong> la liste explicite des actions interdites, et l'obligation de demander avant d'agir sur des données sensibles.",
+        "<strong>À copier :</strong> le principe « décrire ce qu'on voit avant d'agir », qui rend les erreurs visibles au lieu de les enchaîner.",
+        "<strong>À ne pas copier :</strong> les outils de navigateur, propres à l'extension."
       ]
     },
     "devin-ai": {
@@ -155,6 +180,12 @@
       "analysis": [
         "Devin commence par expliquer au modèle <strong>comment le produit lui-même fonctionne</strong>. C'est contre-intuitif et pourtant décisif : un agent a besoin d'un modèle mental de son propre environnement pour prendre des décisions sensées.",
         "Le format de sortie et les règles de citation du code occupent une section entière. La traçabilité est traitée comme une exigence produit, pas comme un raffinement."
+      ],
+      "files_note": "Deux fichiers pour <strong>deux produits distincts</strong> : l'agent autonome d'un côté, le service de questions-réponses DeepWiki de l'autre. Ils ne s'appliquent pas au même endroit et n'ont ni la même longueur ni le même métier.",
+      "reuse": [
+        "<strong>À copier :</strong> les critères d'arrêt — quand demander de l'aide, quand considérer que c'est fini. Ce sont eux qui empêchent un agent long de tourner en rond.",
+        "<strong>À copier :</strong> l'obligation de rendre compte régulièrement pendant une tâche longue.",
+        "<strong>À ne pas copier :</strong> l'environnement supposé (machine virtuelle complète), qui n'existe que chez Devin."
       ]
     },
     "v0-prompts-and-tools": {
@@ -186,6 +217,12 @@
       "analysis": [
         "Une section entière est consacrée à la <strong>gestion du contexte</strong> : quand récupérer le contenu complet d'un fichier plutôt que de deviner à partir d'un extrait. Peu de prompts publics traitent ce sujet aussi explicitement.",
         "v0 encourage aussi le modèle à <strong>poser une question</strong> plutôt qu'à supposer. C'est rare, et c'est l'un des meilleurs remèdes aux réponses à côté de la demande."
+      ],
+      "files_note": "Deux fichiers : prompt et catalogue d'outils, envoyés ensemble.",
+      "reuse": [
+        "<strong>À copier :</strong> le bloc « quand poser une question » — un agent qui demande vaut mieux qu'un agent qui devine.",
+        "<strong>À copier :</strong> les descriptions d'outils qui commencent toutes par « quand l'utiliser ».",
+        "<strong>À ne pas copier :</strong> les conventions propres à l'écosystème Vercel."
       ]
     },
     "manus-agent-tools-prompt": {
@@ -214,6 +251,12 @@
       "analysis": [
         "La <strong>boucle de l'agent est décrite explicitement</strong>, étape par étape. Pour qui veut comprendre ce qu'est un agent sans lire de code, c'est le document le plus clair du corpus.",
         "Les capacités et les limites du système sont énumérées avant les consignes : le modèle sait ce qu'il peut promettre à l'utilisateur, ce qui évite une bonne part des promesses intenables."
+      ],
+      "files_note": "Quatre fichiers, dont trois sont des <strong>morceaux d'un même texte</strong>, découpés par celui qui les a extraits : la fiche de capacités, la boucle de l'agent, les modules. Le quatrième est le catalogue d'outils.",
+      "reuse": [
+        "<strong>À copier :</strong> la boucle en quatre temps du fichier « Agent loop » — c'est le squelette de n'importe quel agent, en 33 lignes.",
+        "<strong>À copier :</strong> l'idée qu'informer l'utilisateur est un outil comme un autre, donc explicitement décidé.",
+        "<strong>À ne pas copier :</strong> la liste des modules, qui décrit l'architecture interne de ce produit."
       ]
     },
     "windsurf": {
@@ -240,6 +283,11 @@
       "output": "Des modifications de code appliquées et un fil d'exécution que l'utilisateur peut suivre.",
       "analysis": [
         "Windsurf et Cursor font le même métier. Lire les deux à la suite sépare ce qui relève du <strong>choix d'équipe</strong> de ce qui relève de la contrainte réelle du problème — un exercice que peu de domaines permettent aussi directement."
+      ],
+      "files_note": "Deux fichiers de la même livraison (« Wave 11 ») : le prompt de Cascade et son catalogue d'outils — ce dernier écrit en commentaires TypeScript, pas en JSON.",
+      "reuse": [
+        "<strong>À copier :</strong> l'équilibre choisi ici — un prompt court, et tout le détail dans les descriptions d'outils.",
+        "<strong>À ne pas copier :</strong> le format en commentaires TypeScript, qui n'a d'intérêt que dans leur chaîne à eux."
       ]
     },
     "replit": {
@@ -262,7 +310,12 @@
       ],
       "role": "Encadrer un agent qui dispose d'un environnement d'exécution complet.",
       "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
-      "output": "Une application qui tourne : dépendances installées, serveur lancé, aperçu disponible."
+      "output": "Une application qui tourne : dépendances installées, serveur lancé, aperçu disponible.",
+      "files_note": "Deux fichiers : un prompt court et un catalogue d'outils trois fois plus gros que lui. Le déséquilibre est la leçon.",
+      "reuse": [
+        "<strong>À copier :</strong> la démonstration qu'un prompt de 137 lignes suffit si les outils sont bien décrits.",
+        "<strong>À ne pas copier :</strong> les outils liés à l'infrastructure Replit (redémarrage de service, gestion des paquets)."
+      ]
     },
     "lovable": {
       "title": "Lovable",
@@ -284,7 +337,13 @@
       ],
       "role": "Générer une application web complète en imposant une pile et des conventions.",
       "when": "À chaque requête, en tête de contexte, avant votre message.",
-      "output": "Un projet fonctionnel plutôt que des extraits — au prix d'une liberté technique réduite."
+      "output": "Un projet fonctionnel plutôt que des extraits — au prix d'une liberté technique réduite.",
+      "files_note": "Deux fichiers : prompt et catalogue d'outils, envoyés ensemble.",
+      "reuse": [
+        "<strong>À copier :</strong> les consignes de réponse en direct — dire ce qu'on va faire avant de le faire, quand l'utilisateur regarde l'écran changer.",
+        "<strong>À copier :</strong> le préfixe systématique sur les noms d'outils, qui évite toute collision.",
+        "<strong>À ne pas copier :</strong> la pile technique imposée."
+      ]
     },
     "same-dev": {
       "title": "Same.dev",
@@ -306,7 +365,12 @@
       ],
       "role": "Reproduire fidèlement une interface existante.",
       "when": "À chaque requête, en tête de contexte, avant votre message.",
-      "output": "Du code dont le critère de réussite est l'écart au modèle de référence."
+      "output": "Du code dont le critère de réussite est l'écart au modèle de référence.",
+      "files_note": "Deux fichiers : prompt et catalogue d'outils, envoyés ensemble.",
+      "reuse": [
+        "<strong>À copier :</strong> la posture de « gestionnaire d'agents » : le prompt prévoit de déléguer, pas seulement d'exécuter.",
+        "<strong>À ne pas copier :</strong> les gabarits de projet propres à la plateforme."
+      ]
     },
     "open-source-prompts-bolt": {
       "title": "Bolt",
@@ -328,7 +392,11 @@
       ],
       "role": "Générer une application web exécutable dans le navigateur, sans serveur.",
       "when": "À chaque requête, en tête de contexte, avant votre message.",
-      "output": "Un projet qui démarre dans l'onglet, contraint par ce que le navigateur sait faire."
+      "output": "Un projet qui démarre dans l'onglet, contraint par ce que le navigateur sait faire.",
+      "reuse": [
+        "<strong>À copier :</strong> la section « contraintes système » : énoncer noir sur blanc ce que l'environnement ne permet pas évite des dizaines de propositions inapplicables.",
+        "<strong>À ne pas copier :</strong> les contraintes elles-mêmes, qui décrivent un navigateur, pas votre machine."
+      ]
     },
     "open-source-prompts-cline": {
       "title": "Cline",
@@ -358,6 +426,11 @@
       "analysis": [
         "Cline étant open source, son prompt est <strong>vérifiable</strong> : on peut confronter le texte au code qui l'utilise. C'est le meilleur point de départ pour écrire le sien.",
         "Le choix d'exécuter <strong>un outil à la fois</strong>, annoncé puis exécuté, est une décision de conception explicite. Moins rapide que la parallélisation de Cursor, mais beaucoup plus facile à suivre et à déboguer."
+      ],
+      "reuse": [
+        "<strong>À copier :</strong> les exemples d'appel d'outil montrés en entier dans le texte — la façon la plus fiable d'obtenir le bon format.",
+        "<strong>À copier :</strong> le principe « un outil à la fois, puis on attend le résultat », qui évite les enchaînements hasardeux.",
+        "<strong>Bon à savoir :</strong> le projet est ouvert, ce prompt est donc vérifiable dans son code source — cas rare ici."
       ]
     },
     "open-source-prompts-roocode": {
@@ -381,7 +454,11 @@
       ],
       "role": "Faire changer de rôle un même agent selon la phase du travail.",
       "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
-      "output": "Un comportement différent selon le mode actif — architecte, codeur ou relecteur."
+      "output": "Un comportement différent selon le mode actif — architecte, codeur ou relecteur.",
+      "reuse": [
+        "<strong>À copier :</strong> la consigne de modifications minimales, qui limite les réécritures gratuites.",
+        "<strong>Par où commencer :</strong> lisez-le après celui de Cline, dont il descend : les écarts se repèrent alors tout seuls."
+      ]
     },
     "open-source-prompts-codex-cli": {
       "title": "Codex CLI",
@@ -407,6 +484,11 @@
       "output": "Des modifications appliquées au dépôt et un résumé de ce qui a été fait.",
       "analysis": [
         "Deux versions du même prompt à quelques mois d'écart, toutes deux datées. Les mettre côte à côte montre concrètement comment un prompt système <strong>vieillit et se corrige</strong>."
+      ],
+      "files_note": "Deux fichiers pour la même ligne de commande, à <strong>deux dates différentes</strong> : une version courte de 46 lignes, et l'état daté du 20 août 2025, sept fois plus long.",
+      "reuse": [
+        "<strong>À copier :</strong> les niveaux d'autorisation (ce qui se fait sans demander, ce qui exige un accord).",
+        "<strong>Par où commencer :</strong> la version courte de 46 lignes, avant la version datée d'août 2025."
       ]
     },
     "open-source-prompts-gemini-cli": {
@@ -430,7 +512,11 @@
       ],
       "role": "Cadrer un agent de terminal, avec un prompt volontairement court.",
       "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
-      "output": "Des commandes et des éditions, avec beaucoup moins de garde-fous écrits que chez les concurrents."
+      "output": "Des commandes et des éditions, avec beaucoup moins de garde-fous écrits que chez les concurrents.",
+      "reuse": [
+        "<strong>À copier :</strong> les conventions d'écriture imposées avant toute modification — lire le style existant plutôt que d'imposer le sien.",
+        "<strong>Bon à savoir :</strong> projet ouvert, prompt vérifiable dans le code source."
+      ]
     },
     "open-source-prompts-lumo": {
       "title": "Lumo",
@@ -452,7 +538,11 @@
       ],
       "role": "Définir un assistant dont la confidentialité est l'argument produit.",
       "when": "À chaque requête, en tête de contexte, avant votre message.",
-      "output": "Des réponses classiques, mais des refus explicites dès qu'il s'agit de faire sortir des données."
+      "output": "Des réponses classiques, mais des refus explicites dès qu'il s'agit de faire sortir des données.",
+      "reuse": [
+        "<strong>À copier :</strong> la façon d'annoncer clairement ce que l'assistant ne conserve pas — une promesse formulée pour l'utilisateur, pas pour le modèle.",
+        "<strong>À ne pas copier :</strong> les engagements de confidentialité, qui n'ont de sens qu'adossés à une infrastructure."
+      ]
     },
     "vscode-agent": {
       "title": "VS Code (mode agent)",
@@ -478,6 +568,12 @@
       "output": "Selon le mode : une réponse dans le panneau, une édition appliquée, ou une suite d'actions.",
       "analysis": [
         "Neuf fichiers pour un même produit : c'est la collection la plus fournie du corpus. Elle montre comment un éditeur <strong>décline un prompt par mode d'usage</strong> plutôt que d'en écrire un seul qui tenterait de tout couvrir."
+      ],
+      "files_note": "Neuf fichiers, trois familles : un <strong>préambule commun</strong> au mode agent, <strong>six variantes par modèle</strong> du prompt de discussion (gpt-4o, gpt-4.1, gpt-5, gpt-5-mini, claude-sonnet-4, gemini-2.5-pro), et deux fonctions annexes qui n'ont rien à voir avec la discussion — le titre des conversations et la complétion à la frappe.",
+      "reuse": [
+        "<strong>À copier :</strong> l'idée d'un préambule commun complété par une couche par modèle — utile dès qu'on sert plusieurs modèles avec un seul produit.",
+        "<strong>À copier :</strong> le prompt de titre de conversation, douze lignes réutilisables presque telles quelles.",
+        "<strong>À ne pas copier :</strong> les renvois aux politiques de contenu de l'éditeur."
       ]
     },
     "augment-code": {
@@ -500,7 +596,13 @@
       ],
       "role": "Retrouver le bon contexte dans une base de code trop grande pour tenir en mémoire.",
       "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
-      "output": "Des réponses appuyées sur les fichiers réellement pertinents, retrouvés avant de répondre."
+      "output": "Des réponses appuyées sur les fichiers réellement pertinents, retrouvés avant de répondre.",
+      "files_note": "Quatre fichiers : le même agent en <strong>deux variantes de modèle</strong> (Claude Sonnet 4 et GPT-5), chacune avec son prompt et son catalogue d'outils. Le tableau se lit donc en deux colonnes.",
+      "reuse": [
+        "<strong>À copier :</strong> la structure en 160 lignes du fichier Claude — l'un des meilleurs squelettes de prompt d'agent du corpus.",
+        "<strong>À copier :</strong> la description de l'outil d'édition, qui vaut mode d'emploi complet.",
+        "<strong>À ne pas copier :</strong> les références au moteur de contexte propriétaire."
+      ]
     },
     "amp": {
       "title": "Amp",
@@ -522,7 +624,12 @@
       ],
       "role": "Adapter un même agent au modèle qui l'exécute.",
       "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
-      "output": "Un comportement homogène malgré des modèles sous-jacents différents."
+      "output": "Un comportement homogène malgré des modèles sous-jacents différents.",
+      "files_note": "Deux fichiers, et ils ne ressemblent à aucun autre du site : ce sont des <strong>captures de requêtes entières</strong> au format YAML — prompt système, outils et paramètres du modèle dans un seul document, une fois pour Claude, une fois pour GPT-5.",
+      "reuse": [
+        "<strong>À copier :</strong> rien de particulier — l'intérêt de ces fichiers est ailleurs : ils montrent à quoi ressemble une requête complète, ce qu'aucun autre fichier du site ne fait.",
+        "<strong>Par où commencer :</strong> repérez d'abord le bloc <code>system</code>, puis la liste des outils, puis les paramètres du modèle."
+      ]
     },
     "traycer-ai": {
       "title": "Traycer",
@@ -544,7 +651,12 @@
       ],
       "role": "Séparer la planification de l'exécution.",
       "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
-      "output": "Un plan à valider avant qu'une ligne de code ne soit écrite."
+      "output": "Un plan à valider avant qu'une ligne de code ne soit écrite.",
+      "files_note": "Quatre fichiers pour <strong>deux modes qui s'enchaînent</strong> : d'abord le plan, ensuite les phases. Chaque mode a son prompt et son catalogue d'outils — et c'est le catalogue, pas le texte, qui interdit d'écrire pendant la phase de plan.",
+      "reuse": [
+        "<strong>À copier :</strong> la séparation plan / exécution, et surtout la façon de l'imposer — en retirant les outils d'écriture pendant la phase de plan plutôt qu'en le demandant poliment.",
+        "<strong>À copier :</strong> la brièveté : 46 lignes suffisent quand la tâche est étroite."
+      ]
     },
     "kiro": {
       "title": "Kiro",
@@ -566,7 +678,13 @@
       ],
       "role": "Faire produire une spécification avant le code.",
       "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
-      "output": "Un document de spécification, puis une implémentation qu'on peut confronter à ce document."
+      "output": "Un document de spécification, puis une implémentation qu'on peut confronter à ce document.",
+      "files_note": "Trois fichiers qui forment une <strong>chaîne</strong> : un classificateur lit votre message et décide s'il s'agit d'une demande « Do » ou « Spec » ; le prompt correspondant est alors envoyé. Un appel de modèle en aiguille un autre.",
+      "reuse": [
+        "<strong>À copier :</strong> le prompt classificateur — un petit appel de modèle qui aiguille vers le bon prompt coûte peu et simplifie tout le reste.",
+        "<strong>À copier :</strong> le découpage exigences → conception → tâches du mode Spec.",
+        "<strong>À ne pas copier :</strong> les noms de modes, propres au produit."
+      ]
     },
     "junie": {
       "title": "Junie",
@@ -587,7 +705,11 @@
       ],
       "role": "Assister dans un environnement qui fournit déjà l'essentiel du contexte.",
       "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
-      "output": "Des réponses courtes, l'éditeur se chargeant du reste."
+      "output": "Des réponses courtes, l'éditeur se chargeant du reste.",
+      "reuse": [
+        "<strong>À copier :</strong> la concision — 120 lignes pour un agent complet, c'est un objectif atteignable.",
+        "<strong>À ne pas copier :</strong> les renvois à l'environnement JetBrains."
+      ]
     },
     "trae": {
       "title": "Trae",
@@ -609,7 +731,12 @@
       ],
       "role": "Cadrer un éditeur agentique.",
       "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
-      "output": "Des éditions de code et des commandes proposées."
+      "output": "Des éditions de code et des commandes proposées.",
+      "files_note": "Trois fichiers : le mode Builder (avec son catalogue d'outils) et le mode Chat. Deux surfaces du même produit, deux niveaux de responsabilité.",
+      "reuse": [
+        "<strong>À copier :</strong> l'outil de liste de tâches : faire tenir son plan de travail au modèle lui-même est une idée transposable partout.",
+        "<strong>À copier :</strong> l'écart de longueur assumé entre mode chat et mode agent."
+      ]
     },
     "qoder": {
       "title": "Qoder",
@@ -631,7 +758,12 @@
       ],
       "role": "Décliner un agent d'éditeur selon trois modes d'usage.",
       "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
-      "output": "Un comportement différent selon le mode choisi."
+      "output": "Un comportement différent selon le mode choisi.",
+      "files_note": "Trois fichiers : un prompt principal, puis les deux phases du mode Quest — conception d'abord, exécution ensuite.",
+      "reuse": [
+        "<strong>À copier :</strong> la séparation conception / exécution en deux prompts distincts.",
+        "<strong>À ne pas copier :</strong> l'interdiction faite au modèle de dire quel modèle il est — c'est une décision commerciale, pas une bonne pratique."
+      ]
     },
     "codebuddy-prompts": {
       "title": "CodeBuddy",
@@ -652,7 +784,12 @@
       ],
       "role": "Cadrer un assistant de développement classique.",
       "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
-      "output": "Des suggestions et des explications de code."
+      "output": "Des suggestions et des explications de code.",
+      "files_note": "Deux fichiers de nature très différente : le prompt du mode Craft, et un <strong>gabarit de contexte</strong> à trous ({visible_files}, {datetime}) que le produit remplit à chaque message. Le second explique la première ligne du premier.",
+      "reuse": [
+        "<strong>À copier :</strong> le gabarit de contexte lui-même : lister explicitement ce qu'on injecte (fichiers ouverts, heure, répertoire) évite d'en oublier et rend les erreurs analysables.",
+        "<strong>À ne pas copier :</strong> les noms de variables entre accolades, qui n'ont de sens que dans leur moteur de modèles."
+      ]
     },
     "z-ai-code": {
       "title": "Z.ai Code",
@@ -674,7 +811,11 @@
       ],
       "role": "Cadrer un assistant de code adossé aux modèles GLM.",
       "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
-      "output": "Des réponses de code directes, sans cérémonie."
+      "output": "Des réponses de code directes, sans cérémonie.",
+      "reuse": [
+        "<strong>À copier :</strong> la structure standard des agents de terminal, dont ce fichier est un bon représentant.",
+        "<strong>Par où commencer :</strong> comparez-le à Claude Code : la parenté est frappante et instructive."
+      ]
     },
     "xcode": {
       "title": "Xcode (Intelligence)",
@@ -701,6 +842,12 @@
       "analysis": [
         "Six prompts de quelques lignes chacun, un par action de l'éditeur. C'est l'exact opposé de Cursor, et c'est tout aussi instructif : <strong>quand la tâche est étroite, le prompt peut l'être aussi</strong>.",
         "Le meilleur antidote du corpus à l'idée qu'un bon prompt est forcément un long prompt."
+      ],
+      "files_note": "Six fichiers : <strong>un seul est un prompt système</strong>. Les cinq autres sont des gabarits de messages utilisateur, un par entrée du menu contextuel — Expliquer, Documenter, Aperçu, Playground, et la question libre que vous tapez vous-même.",
+      "reuse": [
+        "<strong>À copier :</strong> l'idée des gabarits d'action : une entrée de menu = un gabarit, avec le même en-tête de contexte pour toutes.",
+        "<strong>À copier :</strong> l'en-tête commun (fichier, contenu, sélection) réutilisé par les cinq actions — un seul moule, cinq consignes finales.",
+        "<strong>À ne pas copier :</strong> les trous <code>{{filename}}</code>, à remplacer par ceux de votre propre système."
       ]
     },
     "warp-dev": {
@@ -723,7 +870,11 @@
       ],
       "role": "Suggérer des commandes shell sans mettre la machine en danger.",
       "when": "À chaque question posée dans le terminal.",
-      "output": "Une commande proposée, expliquée, et jamais exécutée sans validation."
+      "output": "Une commande proposée, expliquée, et jamais exécutée sans validation.",
+      "reuse": [
+        "<strong>À copier :</strong> le traitement des commandes dangereuses : les nommer, et exiger une confirmation explicite.",
+        "<strong>À ne pas copier :</strong> les particularités du terminal de Warp."
+      ]
     },
     "google-antigravity": {
       "title": "Antigravity",
@@ -746,7 +897,11 @@
       ],
       "role": "Arbitrer entre vitesse et qualité selon le mode choisi.",
       "when": "À l'ouverture d'une conversation dans l'éditeur, avant votre premier message — puis renvoyé à chaque échange, avec le contexte du fichier en cours.",
-      "output": "Une réponse rapide ou un plan détaillé, selon le prompt actif."
+      "output": "Une réponse rapide ou un plan détaillé, selon le prompt actif.",
+      "files_note": "Deux fichiers pour <strong>deux modes</strong> du même agent : le mode rapide, qui exécute, et le mode planification, qui propose avant d'agir.",
+      "reuse": [
+        "<strong>À copier :</strong> deux prompts pour deux modes plutôt qu'un prompt avec des « si ». La consigne centrale du mode planification est l'inverse de celle du mode rapide — impossible à tenir dans un seul texte."
+      ]
     },
     "google-gemini": {
       "title": "Gemini — AI Studio",
@@ -768,7 +923,11 @@
       ],
       "role": "Guider un public non développeur vers une application fonctionnelle.",
       "when": "À chaque requête, en tête de contexte, avant votre message.",
-      "output": "Du code généré et expliqué dans un vocabulaire accessible."
+      "output": "Du code généré et expliqué dans un vocabulaire accessible.",
+      "reuse": [
+        "<strong>À copier :</strong> l'idée d'une charte technique intégrée au prompt quand le code produit doit respecter un style précis.",
+        "<strong>À ne pas copier :</strong> les 1 600 lignes telles quelles : c'est le coût en jetons d'une charte de cette taille, à chaque requête."
+      ]
     },
     "perplexity": {
       "title": "Perplexity",
@@ -797,6 +956,10 @@
       "analysis": [
         "Les <strong>règles de citation</strong> sont au cœur du prompt. C'est du RAG dont la contrainte principale n'est pas la pertinence mais la vérifiabilité : une réponse juste sans source y est considérée comme un échec.",
         "À lire juste après la leçon 15 : on y voit ce qu'exige réellement une réponse sourcée, au-delà du schéma « je cherche, je résume »."
+      ],
+      "reuse": [
+        "<strong>À copier :</strong> les règles de citation — dire précisément comment renvoyer aux sources est ce qui sépare une réponse vérifiable d'une réponse plausible.",
+        "<strong>À copier :</strong> la consigne de ne rien affirmer qui ne figure pas dans les résultats fournis."
       ]
     },
     "comet-assistant": {
@@ -820,7 +983,11 @@
       ],
       "role": "Assister l'utilisateur à partir de ce qu'il a sous les yeux.",
       "when": "À chaque requête faite depuis le navigateur, accompagné du contenu de la page affichée.",
-      "output": "Des réponses sur la page en cours, et des actions dans l'onglet."
+      "output": "Des réponses sur la page en cours, et des actions dans l'onglet.",
+      "files_note": "Deux fichiers : le prompt de l'assistant et ses outils de navigation.",
+      "reuse": [
+        "<strong>À copier :</strong> la cohabitation recherche + navigation dans un même texte, avec des règles distinctes pour chaque registre."
+      ]
     },
     "notionai": {
       "title": "Notion AI",
@@ -842,7 +1009,12 @@
       ],
       "role": "Mettre un modèle au service d'un espace de travail existant.",
       "when": "Au déclenchement d'une action d'écriture dans une page Notion.",
-      "output": "Un contenu directement inséré dans la page, au format que l'application attend."
+      "output": "Un contenu directement inséré dans la page, au format que l'application attend.",
+      "files_note": "Deux fichiers : prompt et catalogue d'outils. Le prompt précise lui-même qu'il sert deux surfaces — la vue de discussion et la barre latérale d'une page.",
+      "reuse": [
+        "<strong>À copier :</strong> la façon d'adapter un même prompt à deux surfaces d'affichage sans le dupliquer.",
+        "<strong>À ne pas copier :</strong> les outils qui manipulent des entités Notion par URL."
+      ]
     },
     "dia": {
       "title": "Dia",
@@ -864,7 +1036,10 @@
       ],
       "role": "Donner une personnalité à l'assistant d'un navigateur.",
       "when": "À chaque requête faite depuis le navigateur, accompagné du contenu de la page affichée.",
-      "output": "Des réponses au ton très marqué — le prompt système sert ici la marque autant que la fonction."
+      "output": "Des réponses au ton très marqué — le prompt système sert ici la marque autant que la fonction.",
+      "reuse": [
+        "<strong>À copier :</strong> les consignes de ton pour un public non technique — un registre rarement traité dans les autres prompts du site."
+      ]
     },
     "cluely": {
       "title": "Cluely",
@@ -886,7 +1061,12 @@
       ],
       "role": "Répondre en temps réel à partir du contexte capté.",
       "when": "En continu, pendant que l'utilisateur travaille ou parle.",
-      "output": "Des suggestions très courtes : la contrainte de latence se lit dans le texte."
+      "output": "Des suggestions très courtes : la contrainte de latence se lit dans le texte.",
+      "files_note": "Deux fichiers pour <strong>deux offres commerciales</strong> : le mode par défaut, et le mode entreprise dédié aux réunions en direct, cinq fois plus long.",
+      "reuse": [
+        "<strong>À copier :</strong> le mode par défaut en entier : 95 lignes, et tout y est. Un excellent modèle de premier prompt.",
+        "<strong>À ne pas copier :</strong> ce que la version entreprise ajoute, qui relève du positionnement commercial."
+      ]
     },
     "poke": {
       "title": "Poke",
@@ -909,7 +1089,13 @@
       ],
       "role": "Tenir un assistant personnel par messagerie sur la durée.",
       "when": "À chaque requête, en tête de contexte, avant votre message.",
-      "output": "Des messages courts, adaptés à une conversation par SMS plutôt qu'à un chat de bureau."
+      "output": "Des messages courts, adaptés à une conversation par SMS plutôt qu'à un chat de bureau.",
+      "files_note": "Sept fichiers, et c'est le cas le plus trompeur du corpus : <strong>six d'entre eux sont un seul et même prompt</strong>, découpé en morceaux numérotés par celui qui l'a extrait. Le septième est un autre agent — le moteur d'exécution, qui agit sans jamais parler à l'utilisateur.",
+      "reuse": [
+        "<strong>À copier :</strong> la description de la mémoire (fichier 6) : dire au modèle qu'un résumé sera injecté, et comment le traiter.",
+        "<strong>À copier :</strong> la traduction d'une contrainte externe — la fenêtre de 24 heures de WhatsApp — en consigne exploitable.",
+        "<strong>À ne pas copier :</strong> l'injonction à masquer l'architecture et à maintenir « l'illusion d'une entité unique » : c'est un choix contestable, montré ici pour être discuté."
+      ]
     },
     "orchids-app": {
       "title": "Orchids",
@@ -931,7 +1117,11 @@
       ],
       "role": "Générer un site web complet à partir d'une description.",
       "when": "À chaque requête, en tête de contexte, avant votre message.",
-      "output": "Un site fonctionnel, contraint par les conventions imposées dans le prompt."
+      "output": "Un site fonctionnel, contraint par les conventions imposées dans le prompt.",
+      "files_note": "Deux fichiers qui s'enchaînent : un petit prompt d'<strong>aiguillage</strong> décide de la marche à suivre, puis le prompt principal fait le travail.",
+      "reuse": [
+        "<strong>À copier :</strong> le prompt d'aiguillage en amont, qui évite de charger le gros prompt quand la demande ne le nécessite pas."
+      ]
     },
     "leap-new": {
       "title": "Leap.new",
@@ -953,7 +1143,12 @@
       ],
       "role": "Générer une application avec son infrastructure.",
       "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
-      "output": "Du code et des ressources provisionnées — d'où un encadrement strict de ce qui peut être créé."
+      "output": "Du code et des ressources provisionnées — d'où un encadrement strict de ce qui peut être créé.",
+      "files_note": "Deux fichiers : prompt et catalogue d'outils.",
+      "reuse": [
+        "<strong>À copier :</strong> la façon d'imposer une pile technique sans ambiguïté, quand c'est le but.",
+        "<strong>À ne pas copier :</strong> l'outil unique qui produit tout le projet d'un coup, sauf si votre produit fonctionne ainsi."
+      ]
     },
     "emergent": {
       "title": "Emergent",
@@ -975,7 +1170,11 @@
       ],
       "role": "Cadrer un agent qui construit une application de bout en bout.",
       "when": "Au lancement d'une tâche, puis à chaque tour de la boucle de l'agent tant qu'il n'a pas conclu.",
-      "output": "Une application livrée par étapes vérifiables."
+      "output": "Une application livrée par étapes vérifiables.",
+      "files_note": "Deux fichiers : prompt et catalogue d'outils.",
+      "reuse": [
+        "<strong>À copier :</strong> les critères de « fini » : dire ce qui fait qu'une application est livrable évite les rendus à moitié faits."
+      ]
     }
   }
 }

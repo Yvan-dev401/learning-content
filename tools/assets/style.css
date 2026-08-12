@@ -753,7 +753,7 @@ button { font: inherit; color: inherit; }
 .outline__meta { font-family: var(--font); font-size: .78rem; font-weight: 400; color: var(--text-faint); }
 .outline__list { margin: 0; padding-left: 1.6rem; }
 .outline__item {
-  display: grid; grid-template-columns: 1fr auto auto; gap: .1rem .6rem;
+  display: grid; grid-template-columns: 1fr auto auto auto; gap: .1rem .6rem;
   align-items: baseline; padding: .35rem 0; border-bottom: 1px solid var(--border);
 }
 .outline__item code { font-size: .85rem; }
@@ -789,6 +789,86 @@ button { font: inherit; color: inherit; }
 }
 .toolsnote p { margin: 0 0 .5rem; }
 .toolsnote p:last-child { margin-bottom: 0; }
+
+/* Pastille de nature : ce qu'une section devient une fois envoyée. Le gris est le cas
+   « constat mesuré » — il ne doit pas ressembler à une catégorie déclarée. */
+.nat {
+  font-size: .72rem; font-weight: 650; white-space: nowrap; padding: .1rem .45rem;
+  border-radius: 999px; border: 1px solid var(--border-strong); color: var(--text-muted);
+  background: var(--bg-sunken);
+}
+.nat--procedure { color: var(--accent); background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--border)); }
+.nat--contexte { color: var(--success); background: var(--success-soft);
+  border-color: color-mix(in srgb, var(--success) 30%, var(--border)); }
+.nat--outils { color: var(--text); background: var(--bg-elevated); }
+
+/* « Quel fichier, et où ? » — le tableau comparatif en tête de fiche. */
+.filetable { margin: 0 0 1.75rem; }
+.filetable h2 { margin: 0 0 .5rem; padding-top: .6rem; font-size: 1.4rem; border-top: 1px solid var(--border); }
+.filetable__intro { margin: 0 0 .9rem; max-width: var(--measure); }
+.filetable__wrap { overflow-x: auto; }
+.filetable table { width: 100%; min-width: 36rem; border-collapse: collapse; font-size: .87rem; }
+.filetable th, .filetable td { padding: .5rem .7rem; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+.filetable th { background: var(--bg-sunken); font-weight: 650; white-space: nowrap; }
+.filerow__name code { font-size: .8rem; white-space: nowrap; }
+.filerow--first > td { background: var(--accent-soft); }
+.filerow__first {
+  margin-left: .4rem; font-size: .7rem; font-weight: 700; white-space: nowrap;
+  text-transform: uppercase; letter-spacing: .05em; color: var(--accent);
+}
+.filerow__what { display: block; margin-top: .2rem; font-size: .8rem; color: var(--text-muted); }
+.filerow__size { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--text-faint); }
+.filetable__warn {
+  margin: .9rem 0 0; padding: .7rem .9rem; font-size: .88rem; max-width: var(--measure);
+  background: var(--bg-sunken); border-left: 3px solid var(--border-strong); border-radius: 0 6px 6px 0;
+}
+.fstatus {
+  display: inline-block; font-size: .72rem; font-weight: 650; white-space: nowrap;
+  padding: .1rem .45rem; border-radius: 999px; border: 1px solid var(--border-strong);
+  background: var(--bg-sunken); color: var(--text-muted);
+}
+.fstatus--actuel { color: var(--accent); background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--border)); }
+.fstatus--fragment, .fstatus--gabarit { color: var(--success); background: var(--success-soft);
+  border-color: color-mix(in srgb, var(--success) 30%, var(--border)); }
+
+/* La même information, répétée au-dessus du texte de chaque fichier. */
+.filecard {
+  margin: 0 0 1rem; padding: .75rem .9rem; background: var(--bg-sunken);
+  border: 1px solid var(--border); border-radius: var(--radius);
+}
+.filecard__head { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 0 0 .5rem; }
+.filecard__title { font-size: .95rem; font-weight: 700; }
+.filecard__list { display: grid; grid-template-columns: 10rem 1fr; gap: .3rem .9rem; margin: 0; }
+.filecard__list dt { font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-faint); }
+.filecard__list dd { margin: 0; font-size: .88rem; }
+
+/* La chronologie d'un tour : ce qui part ensemble, ce qui s'enchaîne. */
+.chrono { margin: 0 0 1.75rem; }
+.chrono h2 { margin: 0 0 .4rem; padding-top: .6rem; font-size: 1.4rem; border-top: 1px solid var(--border); }
+.chrono__lead { margin: 0 0 .9rem; max-width: var(--measure); }
+.chrono__steps { display: grid; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.chrono__step {
+  display: grid; grid-template-columns: 1.7rem 1fr; gap: .15rem .7rem; align-items: baseline;
+  padding: .55rem .8rem; background: var(--bg-elevated);
+  border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0;
+}
+.chrono__n {
+  grid-row: span 2; align-self: start; display: grid; place-items: center;
+  width: 1.7rem; height: 1.7rem; border-radius: 50%; font-size: .8rem; font-weight: 700;
+  background: var(--accent-soft); color: var(--accent);
+}
+.chrono__title { font-size: .95rem; }
+.chrono__desc { font-size: .88rem; color: var(--text-muted); }
+.chrono__note { margin: .9rem 0 0; font-size: .9rem; max-width: var(--measure); }
+
+/* « Le réutiliser chez vous » */
+.reuse { margin: 0 0 1.75rem; }
+.reuse h2 { margin: 0 0 .3rem; padding-top: .6rem; font-size: 1.4rem; border-top: 1px solid var(--border); }
+.reuse__lead { margin: 0 0 .6rem; font-size: .9rem; color: var(--text-muted); max-width: var(--measure); }
+.reuse ul { margin: 0; padding-left: 1.2rem; font-size: .93rem; max-width: var(--measure); }
+.reuse li { margin-bottom: .35rem; }
 
 .glosstable table { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; font-size: .88rem; }
 .glosstable th, .glosstable td { padding: .5rem .7rem; border: 1px solid var(--border); text-align: left; vertical-align: top; }

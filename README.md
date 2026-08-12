@@ -20,7 +20,7 @@ même endroit les 2 leçons, les 31 ateliers et les 3 prompts qui en parlent.
 | | |
 |---|---|
 | **Contenus** | 201 (22 leçons + 139 ateliers + 40 prompts système) |
-| **Pages** | 342 pages HTML |
+| **Pages** | 343 pages HTML |
 | **Code** | ~1 300 fichiers d'exemple, lisibles et téléchargeables |
 | **Prompts** | 103 fichiers, 2,3 M caractères, 185 définitions d'outils |
 | **Langue** | français (les textes techniques restent en langue d'origine) |
@@ -59,19 +59,28 @@ est donc construite ainsi :
 
 - **À quoi sert ce prompt** — son rôle, quand il est envoyé, ce qu'il produit ;
 - **Ce que ce prompt apprend** — analyse rédigée, pour les outils les plus instructifs ;
+- **Le réutiliser chez vous** — ce qui se transpose dans ses propres prompts, et ce qui ne se
+  transpose pas parce que cela n'existe que dans ce produit ;
 - **Constats mesurés** — longueur, mode de structuration, nombre d'outils et d'interdictions,
   calculés sur les fichiers eux-mêmes ;
+- **Quel fichier, et où** — pour les 29 outils qui en publient plusieurs : un tableau
+  fichier / surface du produit / modèle / taille, avec le fichier par lequel commencer ;
+- **La chronologie d'un tour** — ce qui part ensemble et ce qui s'enchaîne, parce que les
+  sections d'un prompt ne sont pas des étapes ;
 - **Le plan du prompt** — sa construction avant son contenu, chaque section expliquée en
-  français quand son nom est répertorié ;
+  français quand son nom est répertorié, et étiquetée : règle permanente, procédure, exemples,
+  contexte injecté ou catalogue d'outils ;
 - **Le texte, section par section** — intégral et intact, mais en blocs repliables et ancrés,
-  avec un onglet par fichier ;
+  avec un onglet par fichier et sa fiche de situation (surface, modèle, moment d'envoi) ;
 - les **définitions d'outils** rendues lisibles, précédées de ce qu'il faut savoir pour les lire.
 
 Une [page guide](docs/prompts-systeme/guide/) explique en amont ce qu'est un prompt système,
-quand il est envoyé, ce qu'il change, ce qu'il coûte en jetons, et comment se lit un
-`Tools.json`. Le glossaire (`content/_prompt_sections.json`) décrit **50 types de section** et
-en reconnaît 68 variantes de nommage ; une section qu'il ne connaît pas garde son nom brut,
-sans commentaire inventé.
+quand il est envoyé, ce qu'il change, ce qu'il coûte en jetons, comment se lit un `Tools.json`,
+et pourquoi un même outil publie plusieurs fichiers (versions successives, surfaces distinctes,
+variantes par modèle, prompt + outils, ou simple découpage à l'import). Le glossaire
+(`content/_prompt_sections.json`) décrit **51 types de section** et en reconnaît 68 variantes de
+nommage ; `content/_prompt_files.json` situe les **103 fichiers** un par un. Une section qu'il
+ne connaît pas garde son nom brut, sans commentaire inventé.
 
 ## Organisation du dépôt
 
@@ -80,8 +89,9 @@ content/                     sources et métadonnées — la vérité du site
   _meta.json                 parcours, titres FR, durées, vocabulaire des tags, sujets par leçon
   _topics.json               les 16 sujets transversaux et leurs mots-clés de détection
   _apps_meta.json            habillage FR des 17 catégories et 139 ateliers
-  _prompts_meta.json         habillage FR des 40 outils : rôle, moment, résultat, analyse
-  _prompt_sections.json      glossaire des types de section de prompt
+  _prompts_meta.json         habillage FR des 40 outils : rôle, moment, résultat, analyse, réemploi
+  _prompt_sections.json      glossaire des types de section de prompt (et leur nature)
+  _prompt_files.json         les 103 fichiers situés : surface, modèle, moment, statut
   _services.json             services payants, détection, alternatives gratuites
   _ingest.json, _apps.json, _prompts.json    manifestes produits par l'ingestion
   <leçon>/, _annexes/        Markdown français du cours

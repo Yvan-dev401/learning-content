@@ -146,6 +146,9 @@ class Site:
         self.prompts_meta = read_json(CONTENT / "_prompts_meta.json", {"tools": {}})
         self.topicdef = read_json(CONTENT / "_topics.json", {"topics": {}})["topics"]
         self.sectiondef = read_json(CONTENT / "_prompt_sections.json", {"sections": {}})["sections"]
+        filedef = read_json(CONTENT / "_prompt_files.json", {"files": {}, "status_labels": {}})
+        self.filedef = filedef["files"]
+        self.status_labels = filedef.get("status_labels", {})
         self.tagdef = self.meta.get("tags", {"groups": {}, "values": {}})
         self.tracks = self.meta["tracks"]
         self.lesson_meta = self.meta["lessons"]
@@ -363,6 +366,10 @@ class Site:
             "topics": self.topics_of.get(owner, []),
             "url": f"prompts-systeme/{tid}/index.html",
         }
+
+    def prompt_file(self, tid: str, name: str) -> dict:
+        """Fiche française d'un fichier de prompt, vide si le fichier n'est pas répertorié."""
+        return self.filedef.get(f"{tid}/{name}", {})
 
     def prompt_observations(self, tid: str) -> list[str]:
         """Constats mesurés sur les fichiers, par opposition à l'analyse rédigée.
@@ -1251,6 +1258,43 @@ TOOLS_NOTE = (
     '<a href="{base}prompts-systeme/guide/index.html#outils">Comment lire une définition d\'outil</a> '
     '· <a href="{base}lecons/11-integrating-with-function-calling/index.html">Leçon 11</a></p></div>'
 )
+# Ce qu'une section devient une fois envoyée. Déclaré dans `_prompt_sections.json`, jamais
+# deviné : une section hors glossaire n'affiche pas de nature.
+NATURES = {
+    "regle": ("règle permanente", "Vaut tout le temps, sans ordre d'application."),
+    "procedure": ("procédure", "Des étapes à suivre dans l'ordre, mais seulement quand le cas "
+                               "décrit se présente."),
+    "exemples": ("exemples", "Des démonstrations, pas des consignes."),
+    "contexte": ("contexte injecté", "Rempli à l'exécution : le contenu change à chaque "
+                                     "session, il n'est pas écrit par l'éditeur."),
+    "outils": ("catalogue d'outils", "Déclare ce que le modèle peut appeler."),
+}
+NUM_RULE = re.compile(r"^\s{0,3}\d{1,2}[.)]\s+\S")
+
+
+def numbered_rules(body: str) -> int:
+    """Nombre de points numérotés en tête de ligne. Un constat, pas une interprétation."""
+    return sum(1 for line in body.splitlines() if NUM_RULE.match(line))
+
+
+def nature_badge(gloss: dict | None, body: str) -> str:
+    """Pastille disant ce que la section devient une fois envoyée.
+
+    Deux sources, dans cet ordre : la nature déclarée au glossaire, sinon un simple
+    dénombrement des points numérotés. Une section ni répertoriée ni numérotée n'affiche
+    rien — une pastille inventée vaudrait moins que pas de pastille du tout.
+    """
+    nat = (gloss or {}).get("nature")
+    if nat in NATURES:
+        label, why = NATURES[nat]
+        return f'<span class="nat nat--{nat}" title="{esc(why)}">{label}</span>'
+    n = numbered_rules(body)
+    if n >= 3:
+        return (f'<span class="nat nat--compte" title="Constat mesuré sur le texte, sans '
+                f'interprétation.">{n} points numérotés</span>')
+    return ""
+
+
 TAG_OPEN = re.compile(r"^<([a-z][a-z0-9_]*)>\s*$")
 TAG_CLOSE = re.compile(r"^</([a-z][a-z0-9_]*)>\s*$")
 MD_HEAD = re.compile(r"^(#{1,3})\s+(.{2,80})$")
@@ -1319,8 +1363,27 @@ def split_prompt(text: str) -> tuple[str, list[dict]]:
             grouped[-1]["count"] += 1
         else:
             grouped.append({**sec, "count": 1})
+    # Étiquette et identifiant, calculés une fois pour toutes : le plan et le texte doivent
+    # nommer et ancrer chaque section de la même façon, sinon les liens du plan tombent à côté.
+    used: dict[str, int] = {}
+    seen_free = False
     for sec in grouped:
         sec["lines"] = sec["body"].count("\n") + 1
+        label = sec["name"]
+        if not label:
+            # Un bloc sans balise commence parfois par son propre titre Markdown : le lecteur
+            # a alors un nom sous les yeux, autant s'en servir plutôt que d'écrire « texte ».
+            head = next((l for l in sec["body"].splitlines() if l.strip()), "")
+            mo = MD_HEAD.match(head)
+            if mo:
+                label = mo.group(2).strip()
+            else:
+                label = "préambule" if not seen_free else "texte hors section"
+                seen_free = True
+        sec["label"] = label
+        key = slugify(label) or "section"
+        used[key] = used.get(key, 0) + 1
+        sec["key"] = key if used[key] == 1 else f"{key}-{used[key]}"
     return mode, grouped
 
 
@@ -2033,6 +2096,103 @@ class Builder:
             seen += 1
         return entry if entry and "title" in entry else None
 
+    def chrono_html(self, base: str) -> str:
+        """Ce qui part ensemble, et ce qui s'enchaîne — la confusion la plus fréquente."""
+        steps = [
+            ("Le prompt système, en entier",
+             "Toutes ses sections d'un seul bloc, dans l'ordre du fichier. Aucune n'est "
+             "envoyée « plus tard » : ce n'est pas un déroulé, c'est un mode d'emploi."),
+            ("Vos propres règles",
+             "Fichier de règles du projet, préférences, instructions permanentes : ajoutées "
+             "à la suite du prompt de l'éditeur, sans le remplacer."),
+            ("Le contexte injecté",
+             "Fichiers ouverts, système d'exploitation, arborescence du projet : rempli par "
+             "le produit à l'exécution. C'est ce que sont les sections du type "
+             "<code>user_info</code> ou <code>project_layout</code> — des trous, pas des consignes."),
+            ("Votre message",
+             "Il arrive en dernier, donc à la position la plus proche de la réponse : c'est "
+             "aussi pour cela que plusieurs éditeurs répètent leurs consignes critiques à la fin."),
+            ("La boucle d'outils",
+             "Appel d'outil, résultat, nouvel appel, jusqu'à la réponse finale. À chaque tour, "
+             "tout ce qui précède repart en entier — et se paie de nouveau."),
+        ]
+        items = "".join(
+            f'<li class="chrono__step"><span class="chrono__n" aria-hidden="true">{n}</span>'
+            f'<strong class="chrono__title">{t}</strong>'
+            f'<span class="chrono__desc">{d}</span></li>'
+            for n, (t, d) in enumerate(steps, 1))
+        return (
+            '<section class="chrono"><h2 id="chronologie">La chronologie d\'un tour'
+            '<a class="anchor" href="#chronologie" aria-label="Lien vers cette section">#</a></h2>'
+            '<p class="chrono__lead">Les sections d\'un prompt système <strong>ne sont pas des '
+            'étapes</strong> : elles partent toutes ensemble, en tête de contexte, à chaque '
+            'requête. Ce qui est chronologique, c\'est le tour de conversation.</p>'
+            f'<ol class="chrono__steps">{items}</ol>'
+            '<p class="chrono__note">Copier-coller ou procédure&nbsp;? Le texte se colle d\'un '
+            'seul tenant. En revanche, <em>à l\'intérieur</em>, certaines sections décrivent bien '
+            'une suite d\'étapes : elles portent la pastille <span class="nat nat--procedure">'
+            'procédure</span> dans le plan ci-dessous. '
+            f'<a href="{base}prompts-systeme/guide/index.html#chronologie">Le détail dans le '
+            'guide</a></p></section>')
+
+    def file_card_html(self, tid: str, f: dict, base: str) -> str:
+        """Situer un fichier avant d'en montrer le texte."""
+        fr = self.site.prompt_file(tid, f["name"])
+        if not fr:
+            return ""
+        label = self.site.status_labels.get(fr.get("status", ""), "")
+        badge = (f'<span class="fstatus fstatus--{esc(fr["status"])}">{esc(label)}</span>'
+                 if label else "")
+        rows = "".join(
+            f"<dt>{k}</dt><dd>{esc(v)}</dd>"
+            for k, v in (("Où ça s'applique", fr.get("surface", "")),
+                         ("Quel modèle", fr.get("model", "")),
+                         ("Quand il est envoyé", fr.get("when", "")),
+                         ("Pourquoi celui-ci", fr.get("read", ""))) if v)
+        return (f'<div class="filecard"><p class="filecard__head">'
+                f'<span class="filecard__title">{esc(fr.get("title", f["name"]))}</span>'
+                f'{badge}</p><dl class="filecard__list">{rows}</dl></div>')
+
+    def file_table_html(self, tid: str, files: list[dict], base: str) -> str:
+        """« Quel fichier, et où ? » — la vue qui manquait aux outils à plusieurs fichiers."""
+        fr_tool = self.site.prompts_meta["tools"].get(tid, {})
+        rows = []
+        for f in files:
+            fr = self.site.prompt_file(tid, f["name"])
+            anchor = "fichier-" + slugify(f["name"])
+            label = self.site.status_labels.get(fr.get("status", ""), "")
+            badge = (f'<span class="fstatus fstatus--{esc(fr["status"])}">{esc(label)}</span>'
+                     if label else "")
+            star = ('<span class="filerow__first">à lire en premier</span>'
+                    if fr.get("first") else "")
+            # Le tableau doit rester lisible : on n'y garde que le nom du modèle, la
+            # précision (« annoncé en première ligne », « sans objet ») reste sur la fiche.
+            model = fr.get("model", "")
+            short = model.split(" (")[0].rstrip(".")
+            if short.startswith(("Le fichier", "Sans objet")) or not short:
+                short = "—"
+            cls = ' class="filerow--first"' if fr.get("first") else ""
+            rows.append(
+                f'<tr{cls}>'
+                f'<td class="filerow__name"><a href="#{anchor}"><code>{esc(f["name"])}</code></a>'
+                f'{star}<span class="filerow__what">{esc(fr.get("title", ""))} {badge}</span></td>'
+                f'<td>{esc(fr.get("surface", "—"))}</td>'
+                f'<td>{esc(short)}</td>'
+                f'<td class="filerow__size">{human_size(f["size"])}</td></tr>')
+        note = (f'<p class="filetable__intro">{fr_tool["files_note"]}</p>'
+                if fr_tool.get("files_note") else "")
+        return (
+            '<section class="filetable"><h2 id="quel-fichier">Quel fichier, et où&nbsp;?'
+            '<a class="anchor" href="#quel-fichier" aria-label="Lien vers cette section">#</a></h2>'
+            + note +
+            '<div class="filetable__wrap"><table><thead><tr><th>Fichier</th>'
+            '<th>Où ça s\'applique</th><th>Quel modèle</th><th>Taille</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div>'
+            '<p class="filetable__warn"><strong>Ces textes ne se collent nulle part dans le '
+            'produit.</strong> Ce ne sont pas des réglages à activer : ce sont les consignes que '
+            'l\'éditeur envoie lui-même, à votre insu, selon l\'endroit où vous êtes. On les lit '
+            'pour apprendre à écrire les siens.</p></section>')
+
     def prompt_outline_html(self, outline: list, base: str) -> str:
         """« Le plan du prompt » : la construction du texte, lisible sans un mot d'anglais."""
         if not outline:
@@ -2047,24 +2207,18 @@ class Builder:
                     f'un cinquième des prompts du corpus est écrit ainsi.</p></div>')
                 continue
             rows = []
-            seen_free = False
             for sec in secs:
-                g = self.gloss(sec["name"]) if sec["name"] else None
-                if sec["name"]:
-                    label = esc(sec["name"])
-                else:
-                    # Le premier bloc sans balise est un préambule ; les suivants sont du
-                    # texte intercalé entre deux sections, ce qui n'est pas la même chose.
-                    label = "préambule" if not seen_free else "texte hors section"
-                    seen_free = True
-                sid = f'{anchor}-{slugify(sec["name"] or "preambule")}'
+                g = self.gloss(sec["label"])
+                label = esc(sec["label"])
+                sid = f'{anchor}-{sec["key"]}'
                 title = (f'<a href="#{sid}"><code>{label}</code></a>'
                          + (f' <span class="outline__fr">{esc(g["title"])}</span>' if g else ""))
                 role = f'<span class="outline__role">{esc(g["role"])}</span>' if g else ""
                 times = (f'<span class="outline__times">×{sec["count"]}</span>'
                          if sec.get("count", 1) > 1 else "")
                 rows.append(f'<li class="outline__item">{title}{times}'
-                            f'<span class="outline__size">{sec["lines"]} l.</span>{role}</li>')
+                            f'<span class="outline__size">{sec["lines"]} l.</span>'
+                            f'{nature_badge(g, sec["body"])}{role}</li>')
             label = "balises" if mode == "balises" else "titres"
             blocks.append(
                 f'<div class="outline__file"><p class="outline__name">{esc(fname)}'
@@ -2082,15 +2236,11 @@ class Builder:
         """Le texte, une section par bloc repliable — la première ouverte."""
         if mode == "brut":
             return code_block(secs[0]["body"], "text")
-        out, seen_free = [], False
+        out = []
         for n, sec in enumerate(secs):
-            g = self.gloss(sec["name"]) if sec["name"] else None
-            if sec["name"]:
-                label = sec["name"]
-            else:
-                label = "préambule" if not seen_free else "texte hors section"
-                seen_free = True
-            sid = f'{anchor}-{slugify(label)}'
+            g = self.gloss(sec["label"])
+            label = sec["label"]
+            sid = f'{anchor}-{sec["key"]}'
             fr = f'<span class="promptsec__fr">{esc(g["title"])}</span>' if g else ""
             note = ""
             if g:
@@ -2102,7 +2252,8 @@ class Builder:
             out.append(
                 f'<details class="promptsec" id="{sid}"{" open" if n == 0 else ""}>'
                 f'<summary class="promptsec__head"><code class="promptsec__name">{esc(label)}</code>'
-                f'{fr}<span class="promptsec__size">{sec["lines"]} lignes</span></summary>'
+                f'{fr}{nature_badge(g, sec["body"])}'
+                f'<span class="promptsec__size">{sec["lines"]} lignes</span></summary>'
                 f'<div class="promptsec__body">{note}{code_block(sec["body"], "text")}</div></details>')
         return "".join(out)
 
@@ -2111,6 +2262,7 @@ class Builder:
         s, base = self.site, "../../"
         gloss_rows = "".join(
             f'<tr><td><code>{esc(k)}</code></td><td>{esc(v["title"])}</td>'
+            f'<td>{nature_badge(v, "")}</td>'
             f'<td>{esc(v["role"])}'
             + (f' <a href="{base}lecons/{v["lesson"]}/index.html">'
                f'Leçon {s.lesson_meta[v["lesson"]]["num"]}</a>'
@@ -2119,12 +2271,21 @@ class Builder:
             for k, v in sorted(s.sectiondef.items()) if "title" in v
         )
         n_alias = sum(1 for v in s.sectiondef.values() if "alias" in v)
+        per_tool: dict[str, int] = {}
+        for key in s.filedef:
+            per_tool[key.split("/")[0]] = per_tool.get(key.split("/")[0], 0) + 1
+        n_files, n_multi = len(s.filedef), sum(1 for v in per_tool.values() if v > 1)
+        nat_rows = "".join(
+            f'<tr><td>{nature_badge({"nature": k}, "")}</td><td>{esc(why)}</td></tr>'
+            for k, (_, why) in NATURES.items())
         toc = [
             {"id": "ce-que-cest", "text": "Ce qu'est un prompt système", "level": 2},
             {"id": "quand", "text": "Quand il est envoyé", "level": 2},
+            {"id": "chronologie", "text": "La chronologie d'un tour", "level": 2},
             {"id": "ce-quil-change", "text": "Ce qu'il change", "level": 2},
             {"id": "ce-quil-coute", "text": "Ce qu'il coûte", "level": 2},
             {"id": "comment-lire", "text": "Comment en lire un", "level": 2},
+            {"id": "plusieurs-fichiers", "text": "Plusieurs fichiers pour un même outil", "level": 2},
             {"id": "outils", "text": "Lire une définition d'outil", "level": 2},
             {"id": "glossaire", "text": "Glossaire des sections", "level": 2},
             {"id": "statut", "text": "Ce qu'on a le droit d'en faire", "level": 2},
@@ -2158,6 +2319,34 @@ class Builder:
 <p>Concrètement, l'ordre est toujours le même : prompt système, puis historique de la
    conversation, puis votre message. Ce qui est proche de la question pèse davantage — d'où
    les sections « rappels critiques » que plusieurs éditeurs placent tout à la fin.</p>
+
+<h2 id="chronologie">La chronologie d'un tour<a class="anchor" href="#chronologie">#</a></h2>
+<p>C'est la question qui revient le plus souvent en découvrant ces fichiers : <em>les sections
+   sont-elles des étapes à suivre l'une après l'autre, ou faut-il tout coller ensemble ?</em>
+   La réponse est nette : <strong>tout part ensemble</strong>. Un prompt système est un seul
+   message, envoyé d'un bloc, avant la conversation. Son ordre interne est un ordre de lecture,
+   pas un déroulé dans le temps.</p>
+<p>Ce qui est réellement chronologique, c'est le tour de conversation :</p>
+<ol>
+  <li><strong>Le prompt système</strong>, en entier, toutes sections confondues.</li>
+  <li><strong>Vos propres règles</strong> — fichier de règles du projet, préférences —
+      ajoutées à la suite, sans remplacer les précédentes.</li>
+  <li><strong>Le contexte injecté</strong> par le produit : fichiers ouverts, système,
+      arborescence. Ces sections-là ne sont pas écrites par l'éditeur, elles sont
+      <em>remplies</em> à l'exécution.</li>
+  <li><strong>Votre message</strong>, en dernier — donc en position forte.</li>
+  <li><strong>La boucle d'outils</strong> : appel, résultat, nouvel appel. À chaque tour,
+      l'ensemble repart en entier, et se paie de nouveau.</li>
+</ol>
+<p>À l'intérieur du prompt, en revanche, toutes les sections n'ont pas le même statut. Le site
+   les distingue par une pastille, dans le plan de chaque fiche :</p>
+<div class="glosstable">
+<table><thead><tr><th>Pastille</th><th>Ce que ça veut dire</th></tr></thead>
+<tbody>{nat_rows}</tbody></table>
+</div>
+<p class="note">Cette pastille ne s'affiche que si le type de section est répertorié au
+   glossaire. À défaut, le site se contente d'un décompte mesuré — « 9 points numérotés » —
+   qui est un fait, pas une interprétation.</p>
 
 <h2 id="ce-quil-change">Ce qu'il change<a class="anchor" href="#ce-quil-change">#</a></h2>
 <p>Tout ce qui fait la personnalité d'un produit. Le même modèle, avec deux prompts systèmes
@@ -2199,6 +2388,31 @@ class Builder:
       que le modèle oubliait.</li>
 </ol>
 
+<h2 id="plusieurs-fichiers">Plusieurs fichiers pour un même outil<a class="anchor" href="#plusieurs-fichiers">#</a></h2>
+<p>Sur {n_multi} des 40 outils, le dépôt contient plusieurs fichiers — {n_files} en tout. Le nom
+   du fichier ne dit pas lequel regarde quoi, et c'est là que la confusion commence. Il y a en
+   réalité cinq cas, et chaque fiche du site les distingue par une pastille :</p>
+<ul>
+  <li><strong>Des versions successives.</strong> Cursor en a quatre pour son agent
+      (v1.0, v1.2, 2.0, puis un état daté). Ce ne sont pas des variantes à choisir : ce sont
+      des photos du même texte à des moments différents. Les comparer est l'exercice le plus
+      formateur du site.</li>
+  <li><strong>Des surfaces différentes du produit.</strong> Chez Cursor toujours, le volet de
+      discussion, l'agent de l'éditeur et la ligne de commande ont chacun leur prompt. Vous
+      n'en choisissez aucun : c'est l'endroit où vous êtes qui décide.</li>
+  <li><strong>Des variantes par modèle.</strong> VS Code en publie six, une par modèle servi.
+      Le produit est le même ; le texte est ajusté au modèle qui le recevra.</li>
+  <li><strong>Un prompt et son catalogue d'outils.</strong> La découpe la plus fréquente : les
+      deux partent dans la même requête, mais dans deux champs différents de l'API.</li>
+  <li><strong>Des morceaux d'un même texte</strong>, découpés par celui qui les a extraits.
+      Les six fichiers numérotés de Poke sont un seul prompt, pas six.</li>
+</ul>
+<p>D'où la mise en garde qui vaut pour tout le site : <strong>ces fichiers ne se collent nulle
+   part</strong>. Ce ne sont pas des réglages à activer dans Cursor ou dans VS Code, mais les
+   consignes que ces produits envoient déjà, à votre insu. On les lit pour apprendre à écrire
+   les siens — chaque fiche dit, outil par outil, ce qui se transpose et ce qui ne se
+   transpose pas.</p>
+
 <h2 id="outils">Lire une définition d'outil<a class="anchor" href="#outils">#</a></h2>
 <p>Plusieurs outils publient, à côté du prompt, un fichier <code>Tools.json</code>. Ce n'est pas
    un prompt : c'est le <strong>catalogue des actions</strong> que le modèle peut demander au
@@ -2224,7 +2438,8 @@ class Builder:
    {n_alias} variantes de nommage reconnues. Une section absente de cette table garde son nom
    brut, sans commentaire : mieux vaut ne rien dire que d'inventer une intention d'auteur.</p>
 <div class="glosstable">
-<table><thead><tr><th>Nom rencontré</th><th>Ce que c'est</th><th>À quoi ça sert</th></tr></thead>
+<table><thead><tr><th>Nom rencontré</th><th>Ce que c'est</th><th>Nature</th>
+<th>À quoi ça sert</th></tr></thead>
 <tbody>{gloss_rows}</tbody></table>
 </div>
 
@@ -2253,6 +2468,7 @@ class Builder:
             kind="Guide", context="Prompts système",
             summary="Ce qu'est un prompt système, quand il est envoyé, ce qu'il coûte.",
             md_text="prompt système contexte jetons outils définition tool_calling glossaire "
+                    "chronologie ordre étapes copier-coller versions surfaces variantes modèle "
                     + " ".join(v.get("title", "") + " " + v.get("role", "")
                                for v in s.sectiondef.values()),
             toc=toc, ctype="prompts")
@@ -2293,6 +2509,15 @@ class Builder:
                      + "<ul>" + "".join(f"<li>{x}</li>" for x in p["learn"]) + "</ul></section>")
             toc.append({"id": "ce-quon-en-retient", "text": "Ce qu'on en retient", "level": 2})
 
+        reuse = ""
+        if fr.get("reuse"):
+            reuse = ('<section class="reuse"><h2 id="reutiliser">Le réutiliser chez vous'
+                     '<a class="anchor" href="#reutiliser" aria-label="Lien vers cette section">#</a></h2>'
+                     '<p class="reuse__lead">Ce qui se transpose dans vos propres prompts, et ce '
+                     'qui ne se transpose pas parce que cela n\'existe que dans ce produit.</p>'
+                     "<ul>" + "".join(f"<li>{x}</li>" for x in fr["reuse"]) + "</ul></section>")
+            toc.append({"id": "reutiliser", "text": "Le réutiliser chez vous", "level": 2})
+
         obs = s.prompt_observations(tid)
         obs_html = ""
         if obs:
@@ -2303,8 +2528,11 @@ class Builder:
             toc.append({"id": "constats", "text": "Constats mesurés", "level": 2})
 
         outline, blocks, tabs = [], [], []
-        multi = len(p["files"]) > 1
-        for n, f in enumerate(p["files"]):
+        # Le fichier « à lire en premier » ouvre les onglets : sans cela, c'est l'ordre
+        # alphabétique du dépôt qui décide de ce qu'on voit en arrivant.
+        files = sorted(p["files"], key=lambda f: not s.prompt_file(tid, f["name"]).get("first"))
+        multi = len(files) > 1
+        for n, f in enumerate(files):
             anchor = "fichier-" + slugify(f["name"])
             tabs.append(
                 f'<button class="tabs__btn" role="tab" aria-selected="{"true" if n == 0 else "false"}" '
@@ -2324,8 +2552,17 @@ class Builder:
                 body = self.prompt_sections_html(secs, mode, anchor, base)
                 outline.append((f["name"], mode, secs, anchor))
 
+            card = self.file_card_html(tid, f, base)
             hidden = "" if n == 0 or not multi else " hidden"
-            blocks.append(f'<div class="tabs__panel" data-tab="{anchor}"{hidden}>{head}{body}</div>')
+            blocks.append(
+                f'<div class="tabs__panel" data-tab="{anchor}"{hidden}>{head}{card}{body}</div>')
+
+        table_html = self.file_table_html(tid, files, base) if multi else ""
+        if table_html:
+            toc.append({"id": "quel-fichier", "text": "Quel fichier, et où ?", "level": 2})
+
+        chrono = self.chrono_html(base)
+        toc.append({"id": "chronologie", "text": "La chronologie d'un tour", "level": 2})
 
         plan_html = self.prompt_outline_html(outline, base)
         if plan_html:
@@ -2380,7 +2617,10 @@ class Builder:
 {situate}
 {analysis}
 {learn}
+{reuse}
 {obs_html}
+{table_html}
+{chrono}
 {plan_html}
 {files_html}
 {theory}
