@@ -116,6 +116,14 @@ def copy_code_tree(src_dir: Path, dest_dir: Path, *,
             continue
         if skip_markdown and rel.suffix.lower() == ".md":
             continue
+        # Git refuse de suivre les fichiers `.env*` — les projets copiés embarquent leur
+        # propre .gitignore, qui les exclut. Un fichier qui ne peut pas être commité ne peut
+        # pas être publié : autant l'écarter ici et le dire, plutôt que d'annoncer sur le
+        # site un fichier introuvable après clonage.
+        if rel.name.startswith(".env"):
+            skipped.append({"path": str(rel), "reason": "non publiable (.gitignore du projet)",
+                            "size": path.stat().st_size})
+            continue
         if rel.suffix.lower() in IMAGE_EXT:
             skipped.append({"path": str(rel), "reason": "image", "size": path.stat().st_size})
             continue

@@ -1,0 +1,72 @@
+{
+  "_comment": "Les dépôts GitHub dont le contenu du site est extrait. Cette liste est la référence : avant d'intégrer un nouveau dépôt, on vérifie ici qu'il n'y est pas déjà. Les URL et les licences répètent ce que déclarent _meta.json, _apps_meta.json et _prompts_meta.json — check_links.py vérifie qu'elles concordent. Les quantités ne sont PAS écrites ici : build.py les calcule depuis les manifestes d'ingestion, pour qu'elles ne puissent pas mentir.",
+  "page": {
+    "title": "D'où vient le contenu",
+    "tagline": "Les trois dépôts GitHub extraits, ce qui en a été pris, et ce qui ne l'a pas été.",
+    "intro": "Ce site ne produit aucun contenu de cours : il réorganise celui de trois projets open source. Chacun garde sa licence et ses auteurs. La liste ci-dessous est <strong>exhaustive</strong> — si un dépôt n'y figure pas, son contenu n'est pas sur ce site."
+  },
+  "sources": [
+    {
+      "id": "cours",
+      "repo": "microsoft/generative-ai-for-beginners",
+      "url": "https://github.com/microsoft/generative-ai-for-beginners",
+      "owner": "Microsoft",
+      "license": "MIT",
+      "license_file": "LICENSE-UPSTREAM",
+      "what": "Le cours complet, dans sa traduction française officielle.",
+      "taken": [
+        "Le texte des leçons et des pages annexes, depuis <code>translations/fr/**/*.md</code> — la traduction officielle produite par Co-op Translator.",
+        "Les illustrations, depuis <code>translated_images/fr/</code> puis, en repli, les dossiers <code>images/</code> de chaque leçon.",
+        "Le code d'exemple des leçons : Python, TypeScript, JavaScript, .NET et les notebooks."
+      ],
+      "left": "Quelques fichiers de données trop volumineux pour un dépôt Git (index d'embeddings de près de 50 Mo) : la leçon renvoie au dépôt d'origine pour les récupérer.",
+      "section_label": "Commencer le cours",
+      "section_url": "parcours/demarrer/index.html"
+    },
+    {
+      "id": "ateliers",
+      "repo": "Shubhamsaboo/awesome-llm-apps",
+      "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "owner": "Shubham Saboo",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE-UPSTREAM-APPS",
+      "what": "Des applications complètes à faire tourner, code compris.",
+      "taken": [
+        "Le <code>README</code> de chaque projet, avec ses liens réécrits vers les pages du site.",
+        "Tout le code source de chaque projet, lisible en ligne et téléchargeable.",
+        "Les captures d'écran et schémas des projets."
+      ],
+      "left": "Les fichiers binaires (icônes, archives) et les images de plus de 2 Mo, qui restent affichées depuis le dépôt d'origine plutôt que recopiées.",
+      "section_label": "Parcourir les ateliers",
+      "section_url": "ateliers/index.html"
+    },
+    {
+      "id": "prompts",
+      "repo": "x1xhlol/system-prompts-and-models-of-ai-tools",
+      "url": "https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools",
+      "owner": "x1xhlol",
+      "license": "GPL-3.0",
+      "license_file": "LICENSE-UPSTREAM-PROMPTS",
+      "what": "Les prompts système d'outils d'IA commerciaux, reproduits à l'octet près.",
+      "taken": [
+        "Le texte intégral de chaque fichier de prompt, sans aucune modification.",
+        "Les catalogues d'outils au format JSON, rendus lisibles."
+      ],
+      "left": "Les fichiers hors périmètre d'un dépôt de prompts : README du dépôt lui-même, captures d'écran.",
+      "section_label": "Voir les 40 outils décortiqués",
+      "warning": "Ces textes ont été extraits de produits commerciaux par des tiers, pas publiés par leurs éditeurs : ni officiels, ni vérifiables, et possiblement périmés.",
+      "section_url": "prompts-systeme/index.html"
+    }
+  ],
+  "add": {
+    "title": "Ajouter un dépôt",
+    "intro": "La liste ci-dessus est complète : comparer l'URL suffit à savoir si un dépôt est déjà intégré. Pour en ajouter un quatrième, quatre pièces sont nécessaires.",
+    "steps": [
+      "Un script <code>tools/ingest_&lt;source&gt;.py</code> qui clone le dépôt et produit un manifeste dans <code>content/</code>.",
+      "Un adaptateur d'une vingtaine de lignes dans <code>Site.register_items()</code>, pour que le contenu entre dans le catalogue, les sujets et la recherche.",
+      "Une entrée dans <code>COLLECTIONS</code> (<code>tools/build.py</code>) : icône, libellé, verbe, URL.",
+      "Un fichier de métadonnées françaises, et une entrée dans ce fichier <code>content/_sources.json</code>."
+    ],
+    "note": "La licence du dépôt compte autant que son contenu : ce site est une compilation à licences mixtes, chaque partie restant sous la sienne."
+  }
+}

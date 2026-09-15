@@ -20,7 +20,7 @@ même endroit les 2 leçons, les 31 ateliers et les 3 prompts qui en parlent.
 | | |
 |---|---|
 | **Contenus** | 201 (22 leçons + 139 ateliers + 40 prompts système) |
-| **Pages** | 343 pages HTML |
+| **Pages** | 344 pages HTML |
 | **Code** | ~1 300 fichiers d'exemple, lisibles et téléchargeables |
 | **Prompts** | 103 fichiers, 2,3 M caractères, 185 définitions d'outils |
 | **Langue** | français (les textes techniques restent en langue d'origine) |
@@ -47,6 +47,13 @@ cherchez :
 - **Par catalogue** (`/catalogue/`) — les 201 contenus, filtrables en combinant
   **type × sujet × tags**. L'URL obtenue est partageable.
 - **Par recherche** — plein texte sur tout le site (raccourci `/`).
+
+L'accueil commence par un bouton **« Commencer ici »** et par le bloc **« Comment ce site
+s'articule »**, qui énonce la seule règle de dépendance qui compte : le cours se suit dans
+l'ordre, les ateliers et les prompts se consultent au besoin et se rattachent aux leçons.
+Une page **[« D'où vient le contenu »](docs/sources/)** liste les dépôts GitHub extraits — ce
+qui a été pris dans chacun, ce qui ne l'a pas été, et comment en ajouter un ; chaque leçon,
+atelier et fiche de prompt porte sa ligne de provenance.
 
 Plus, sur chaque page : les **tags** (⭐ incontournable, 🟢 débutant, 💳 compte payant…), un
 bloc **« Sur le même sujet »** qui renvoie vers les autres familles, les **alternatives
@@ -96,6 +103,7 @@ content/                     sources et métadonnées — la vérité du site
   _prompt_sections.json      glossaire des types de section et leur place dans le déroulé
   _prompt_files.json         les 103 fichiers situés : surface, modèle, moment, statut
   _services.json             services payants, détection, alternatives gratuites
+  _sources.json              les dépôts GitHub extraits, ce qui en est pris ou écarté
   _ingest.json, _apps.json, _prompts.json    manifestes produits par l'ingestion
   <leçon>/, _annexes/        Markdown français du cours
   ateliers/<cat>/<projet>/   README des ateliers (anglais, liens réécrits)
@@ -124,7 +132,8 @@ recherche ne connaissent que cette forme. Une nouvelle source demande donc :
 1. un `tools/ingest_<source>.py` qui produise un manifeste dans `content/` ;
 2. un adaptateur d'une vingtaine de lignes dans `register_items()` ;
 3. une entrée dans `COLLECTIONS` (`tools/build.py`) ;
-4. un fichier de métadonnées françaises.
+4. un fichier de métadonnées françaises, et une entrée dans `content/_sources.json`
+   pour que le dépôt apparaisse sur la page « D'où vient le contenu ».
 
 Rien à toucher dans les pages transversales : elles suivent.
 

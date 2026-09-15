@@ -145,6 +145,8 @@ class Site:
         self.prompts = read_json(CONTENT / "_prompts.json", {"tools": {}, "skipped": []})
         self.prompts_meta = read_json(CONTENT / "_prompts_meta.json", {"tools": {}})
         self.topicdef = read_json(CONTENT / "_topics.json", {"topics": {}})["topics"]
+        self.sourcedef = read_json(CONTENT / "_sources.json",
+                                   {"page": {}, "sources": [], "add": {}})
         self.sectiondef = read_json(CONTENT / "_prompt_sections.json", {"sections": {}})["sections"]
         filedef = read_json(CONTENT / "_prompt_files.json", {"files": {}, "status_labels": {}})
         self.filedef = filedef["files"]
@@ -345,6 +347,44 @@ class Site:
                 if slug in self.apps_meta["categories"].get(c, {}).get("lessons", [])]
 
     # -- prompts système ---------------------------------------------------
+
+    # -- sources -----------------------------------------------------------
+
+    def source(self, sid: str) -> dict:
+        """Le dépôt d'origine d'une famille de contenu."""
+        for src in self.sourcedef.get("sources", []):
+            if src["id"] == sid:
+                return src
+        return {}
+
+    def source_facts(self, sid: str) -> tuple[list[str], int]:
+        """Ce que le dépôt a réellement fourni : compté sur les manifestes, jamais saisi.
+
+        Renvoie (constats, nombre de fichiers écartés à l'import).
+        """
+        if sid == "cours":
+            code = sum(len(v.get("code", [])) for v in self.ingest["lessons"].values())
+            facts = [f"{len(self.lesson_meta)} leçons réparties en {len(self.tracks)} parcours",
+                     f"{len(self.ingest.get('annexes', {}))} pages annexes",
+                     f"{code} fichiers de code",
+                     f"{self.ingest.get('images', 0)} illustrations"]
+            return facts, len(self.ingest.get("skipped", []))
+        if sid == "ateliers":
+            code = sum(len(p.get("code", [])) for p in self.apps["projects"].values())
+            facts = [f"{len(self.apps['projects'])} ateliers en "
+                     f"{len(self.apps['categories'])} catégories",
+                     f"{code} fichiers de code",
+                     f"{self.apps.get('images', 0)} captures et schémas"]
+            return facts, len(self.apps.get("skipped", []))
+        if sid == "prompts":
+            files = sum(len(t["files"]) for t in self.prompts["tools"].values())
+            chars = sum(t["chars"] for t in self.prompts["tools"].values())
+            defs = sum(t["tool_defs"] for t in self.prompts["tools"].values())
+            facts = [f"{len(self.prompts['tools'])} outils, {files} fichiers de prompt",
+                     f"{chars // 1000} k caractères reproduits à l'octet près",
+                     f"{defs} définitions d'outils"]
+            return facts, len(self.prompts.get("skipped", []))
+        return [], 0
 
     def prompt(self, tid: str) -> dict:
         """Vue fusionnée d'un outil : fichiers extraits + habillage français."""
@@ -873,9 +913,12 @@ def layout(*, site: Site, base: str, title: str, description: str, body: str,
   {toc}
 </div>
 <footer class="footer">
-  <p>Contenu issu de <a href="{UPSTREAM}" target="_blank" rel="noopener noreferrer">microsoft/generative-ai-for-beginners</a>,
-     sous licence MIT — traduction française officielle du dépôt. Ce site en est une réorganisation pédagogique.</p>
-  <p class="footer__meta">© {year} Microsoft pour le contenu du cours · mise en forme et navigation : Softscar Learning Content</p>
+  <p class="footer__sources">{GH_ICON} Contenu extrait de {len(site.sourcedef.get("sources", []))} dépôts GitHub :
+     {" · ".join(f'<a href="{s["url"]}" target="_blank" rel="noopener noreferrer"><code>{esc(s["repo"])}</code></a> ({esc(s["license"])})' for s in site.sourcedef.get("sources", []))}</p>
+  <p><a href="{base}sources/index.html">D'où vient le contenu</a> — ce qui a été pris dans chaque
+     dépôt, ce qui ne l'a pas été, et comment en ajouter un. Ce site en est une réorganisation
+     pédagogique ; chaque partie reste sous la licence de sa source.</p>
+  <p class="footer__meta">© {year} les auteurs respectifs pour les contenus · mise en forme et navigation : Softscar Learning Content</p>
 </footer>
 <script src="{base}assets/app.js" defer></script>
 </body>
@@ -974,10 +1017,37 @@ def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | 
         f'<span class="sidebar__label">Alternatives gratuites</span></a></li>'
         f'<li class="sidebar__item sidebar__item--cat"><a href="{base}tags/index.html">'
         f'<span class="sidebar__num" aria-hidden="true">🏷️</span>'
-        f'<span class="sidebar__label">Légende des tags</span></a></li></ul></section>'
+        f'<span class="sidebar__label">Légende des tags</span></a></li>'
+        f'<li class="sidebar__item sidebar__item--cat"><a href="{base}sources/index.html">'
+        f'<span class="sidebar__num" aria-hidden="true">🐙</span>'
+        f'<span class="sidebar__label">D\'où vient le contenu</span></a></li></ul></section>'
     )
     out.append("</div></nav>")
     return "".join(out)
+
+
+GH_ICON = (
+    '<svg class="gh" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" '
+    'focusable="false" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1'
+    '-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 '
+    '3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64'
+    '-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 '
+    '2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21'
+    '-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 '
+    '1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 '
+    '8-8z"></path></svg>'
+)
+
+
+def source_line(site: Site, sid: str, base: str) -> str:
+    """D'où vient ce qu'on est en train de lire. Posé en bas de chaque page de contenu."""
+    src = site.source(sid)
+    if not src:
+        return ""
+    return (f'<p class="provenance">{GH_ICON} Contenu issu du dépôt '
+            f'<a href="{src["url"]}" target="_blank" rel="noopener noreferrer">'
+            f'<code>{esc(src["repo"])}</code></a> · licence {esc(src["license"])} · '
+            f'<a href="{base}sources/index.html">d\'où vient le contenu du site</a></p>')
 
 
 def tag_chips(site: Site, tags: list[str], base: str = "", *, link: bool = False) -> str:
@@ -1535,21 +1605,65 @@ class Builder:
             for c in s.cat_order
         )
         n_rag = len(s.apps["categories"].get("rag-tutorials", {}).get("projects", []))
-        doors = "".join(
-            f'<a class="door door--{cid}" href="{c["url"]}">'
-            f'<span class="door__icon" aria-hidden="true">{c["icon"]}</span>'
-            f'<span class="door__verb">{esc(c["verb"])}</span>'
-            f'<span class="door__what">{esc(label)}</span>'
-            f'<span class="door__why">{esc(why)}</span></a>'
-            for cid, c, label, why in [
-                ("cours", COLLECTIONS["cours"], f"{total} leçons en 7 parcours",
-                 "Les concepts, dans l'ordre. Commencez ici si vous débutez."),
-                ("ateliers", COLLECTIONS["ateliers"], f"{len(s.app_order)} applications complètes",
-                 "Du code qui tourne, à lire et à détourner."),
-                ("prompts", COLLECTIONS["prompts"], f"{len(s.prompt_order)} outils décortiqués",
-                 "Les consignes internes de produits réels — du prompt engineering grandeur nature."),
-            ]
-        )
+        # Le point qui manquait : dire si les trois familles dépendent les unes des autres.
+        # Les chiffres de rattachement sont comptés, jamais écrits à la main.
+        cat_lessons = sum(1 for c in s.apps_meta["categories"].values() if c.get("lessons"))
+        tool_lessons = sum(1 for v in s.prompts_meta["tools"].values() if v.get("lessons"))
+        artic_rows = [
+            ("cours", COLLECTIONS["cours"], f"{total} leçons en {len(s.tracks)} parcours",
+             "À suivre dans l'ordre",
+             "C'est la colonne vertébrale du site, et le seul contenu séquentiel : chaque "
+             "parcours s'appuie sur le précédent.", "parcours/demarrer/index.html"),
+            ("ateliers", COLLECTIONS["ateliers"], f"{len(s.app_order)} applications complètes",
+             "Indépendants les uns des autres",
+             f"Chacun est rattaché à une leçon — {cat_lessons} catégories sur "
+             f"{len(s.cat_order)} déclarent la leur. À ouvrir après avoir lu la leçon "
+             "correspondante, pas avant.", "ateliers/index.html"),
+            ("prompts", COLLECTIONS["prompts"], f"{len(s.prompt_order)} outils décortiqués",
+             "À lire quand vous voulez",
+             f"Aucun ordre, aucun prérequis strict : {tool_lessons} outils sur "
+             f"{len(s.prompt_order)} renvoient aux leçons qui les éclairent, surtout les "
+             "leçons 04, 05 et 11.", "prompts-systeme/guide/index.html"),
+        ]
+        artic = "".join(
+            f'<li class="artic__item artic__item--{cid}">'
+            f'<span class="artic__n" aria-hidden="true">{n}</span>'
+            f'<h3 class="artic__title"><span aria-hidden="true">{c["icon"]}</span> '
+            f'Les {esc(c["plural"].lower())}</h3>'
+            f'<p class="artic__count">{esc(count)}</p>'
+            f'<p class="artic__rule">{esc(rule)}</p>'
+            f'<p class="artic__why">{esc(why)}</p>'
+            f'<a class="artic__go" href="{url}">Y aller →</a></li>'
+            for n, (cid, c, count, rule, why, url) in enumerate(artic_rows, 1))
+
+        first_track = s.tracks[0]
+        first_slug = first_track["lessons"][0]
+        first_lesson = s.lesson_meta[first_slug]
+        second_track = s.tracks[1] if len(s.tracks) > 1 else first_track
+        first_cat = s.category(s.cat_order[0]) if s.cat_order else None
+        week = [
+            (f'lecons/{first_slug}/index.html',
+             f'Leçon {first_lesson["num"]} — {first_lesson["title"]}',
+             f'≈ {first_lesson["minutes"]} min · installer ce qu\'il faut et rien de plus.'),
+            (f'parcours/{second_track["id"]}/index.html',
+             f'Parcours {second_track["num"]} — {second_track["title"]}',
+             f'{len(second_track["lessons"])} leçons : les notions sur lesquelles tout le reste '
+             'repose.'),
+        ]
+        if first_cat:
+            week.append((first_cat["url"],
+                         f'Un atelier de la catégorie « {first_cat["title"]} »',
+                         f'{len(first_cat["projects"])} projets au choix : du code qui tourne, '
+                         'à lire et à modifier.'))
+        week.append(("prompts-systeme/guide/index.html",
+                     "Le guide « Comment lire un prompt système »",
+                     "Avant d'ouvrir les 40 fiches : ce que vous allez regarder, et comment."))
+        week_html = "".join(
+            f'<li class="week__step"><span class="week__n" aria-hidden="true">{n}</span>'
+            f'<a class="week__link" href="{url}">{esc(title)}</a>'
+            f'<span class="week__why">{esc(why)}</span></li>'
+            for n, (url, title, why) in enumerate(week, 1))
+
         topic_chips_home = "".join(
             f'<a class="chipcat" href="sujets/{tid}/index.html">'
             f'<span aria-hidden="true">{t["icon"]}</span> {esc(t["title"])}'
@@ -1570,8 +1684,14 @@ class Builder:
   <p class="hero__eyebrow">{total} leçons · {len(s.app_order)} ateliers · {len(s.prompt_order)} prompts système · en français</p>
   <h1 class="hero__title">{esc(meta["title"])}</h1>
   <p class="hero__tagline">{esc(meta["tagline"])}</p>
-  <p class="hero__intro">{meta["intro"]}</p>
-  <div class="doors">{doors}</div>
+  <p class="hero__cta">
+    <a class="btn btn--primary btn--lg" href="lecons/{first_slug}/index.html">
+      Commencer ici — leçon {first_lesson["num"]}</a>
+    <a class="btn" href="catalogue/index.html">Je cherche quelque chose de précis</a>
+  </p>
+  <p class="hero__sources">{GH_ICON} Contenu extrait de
+     {len(s.sourcedef.get("sources", []))} dépôts GitHub —
+     <a href="sources/index.html">lesquels, et ce qui en a été pris</a></p>
   <div class="progress" data-global-progress>
     <div class="progress__bar"><span class="progress__fill"></span></div>
     <p class="progress__label">Progression : <strong class="progress__text">0 / {total}</strong> leçons terminées
@@ -1579,20 +1699,37 @@ class Builder:
   </div>
 </div>
 
+<section class="section section--artic">
+  <h2 class="section__title">Comment ce site s'articule</h2>
+  <p class="section__intro">Trois familles de contenu, et <strong>une seule se suit dans
+     l'ordre</strong>. Les deux autres se consultent au besoin : elles se rattachent au cours
+     sans le prolonger.</p>
+  <ol class="artic">{artic}</ol>
+  <p class="artic__note">Rien n'oblige à tout lire. Le cours donne l'ordre ; en bas de chaque
+     page, le bloc <em>« Sur le même sujet »</em> renvoie vers les ateliers et les prompts qui
+     traitent du même thème — c'est par là que les trois familles se rejoignent.</p>
+</section>
+
+<section class="section section--week">
+  <h2 class="section__title">Votre première semaine</h2>
+  <p class="section__intro">Si vous ne savez pas par où commencer, suivez ces quatre étapes dans
+     l'ordre. Cochez une leçon terminée : la progression reste dans votre navigateur, sans
+     inscription. La recherche en haut de page couvre tout le site.</p>
+  <ol class="week">{week_html}</ol>
+</section>
+
 <section class="section">
   <h2 class="section__title">Les {len(s.tracks)} parcours</h2>
-  <p class="section__intro">Suivez-les dans l'ordre : chaque parcours s'appuie sur le précédent.
-     Vous pouvez aussi piocher directement la leçon qui vous intéresse — les tags indiquent
-     où le temps investi rapporte le plus.</p>
+  <p class="section__intro">Le cours en entier. Les tags indiquent où le temps investi rapporte
+     le plus.</p>
   {filter_bar(s, "", target=".tcard__lesson", noun="leçon")}
   <div class="tcards">{"".join(cards)}</div>
 </section>
 
 <section class="section">
   <h2 class="section__title">Par sujet</h2>
-  <p class="section__intro">Le cours, les ateliers et les prompts système parlent souvent des
-     mêmes choses. Chaque sujet les rassemble : la théorie, la mise en pratique, et ce qu'en
-     fait l'industrie.</p>
+  <p class="section__intro">Chaque sujet rassemble les trois familles : la théorie, la mise en
+     pratique, et ce qu'en fait l'industrie.</p>
   <div class="chipcats">{topic_chips_home}</div>
   <p><a class="btn" href="sujets/index.html">Voir les {len(s.topicdef)} sujets</a>
      <a class="btn" href="catalogue/index.html">Catalogue complet ({len(s.items)} contenus)</a></p>
@@ -1600,26 +1737,11 @@ class Builder:
 
 <section class="section">
   <h2 class="section__title">{len(s.app_order)} ateliers pratiques</h2>
-  <p class="section__intro">Le cours explique ; ces projets font construire. Applications
-     complètes issues du dépôt <em>awesome-llm-apps</em>, code compris — dont
-     {n_rag} implémentations du RAG.</p>
+  <p class="section__intro">Des applications complètes, code compris — dont {n_rag}
+     implémentations du RAG.</p>
   <div class="chipcats">{app_cats}</div>
   <p><a class="btn btn--primary" href="ateliers/index.html">Parcourir les ateliers</a>
      <a class="btn" href="annexes/alternatives-gratuites/index.html">Alternatives gratuites aux outils payants</a></p>
-</section>
-
-<section class="section">
-  <h2 class="section__title">Comment utiliser ce site</h2>
-  <div class="howto">
-    <div class="howto__item"><h3>Lisez la leçon</h3><p>Chaque page reprend l'intégralité du cours
-      d'origine, illustrations comprises, avec un sommaire pour naviguer dans les sections.</p></div>
-    <div class="howto__item"><h3>Ouvrez le code</h3><p>Les exemples Python, TypeScript, JavaScript et .NET
-      sont affichés en bas de chaque leçon, avec les notebooks rendus cellule par cellule.</p></div>
-    <div class="howto__item"><h3>Suivez votre avancée</h3><p>Cochez une leçon terminée : la progression
-      est conservée dans votre navigateur, aucune inscription n'est nécessaire.</p></div>
-    <div class="howto__item"><h3>Cherchez</h3><p>La recherche en haut de page couvre le texte de toutes
-      les leçons — utile pour retrouver une notion précise.</p></div>
-  </div>
 </section>
 
 <section class="section">
@@ -1748,6 +1870,7 @@ class Builder:
 {code}
 {practice}
 {related_block(s, slug, base)}
+{source_line(s, 'cours', base)}
 <section class="done" data-lesson-toggle="{slug}">
   <label class="done__label">
     <input class="done__box" type="checkbox">
@@ -1804,6 +1927,75 @@ class Builder:
         self.index_search(url=url, title=sub["title"], kind="Page",
                           context=f'Leçon {lm["num"]} — {lm["title"]}',
                           summary="", md_text=md_text, toc=toc)
+
+    def build_sources(self) -> None:
+        """« D'où vient le contenu » : les dépôts extraits, pour savoir ce qui est déjà pris."""
+        s, base = self.site, "../"
+        page = s.sourcedef.get("page", {})
+        cards = []
+        for src in s.sourcedef.get("sources", []):
+            facts, skipped = s.source_facts(src["id"])
+            warn = (f'<p class="srccard__warn"><span aria-hidden="true">⚠️</span> '
+                    f'{esc(src["warning"])}</p>') if src.get("warning") else ""
+            cards.append(
+                f'<article class="srccard" id="{src["id"]}">'
+                f'<p class="srccard__repo">{GH_ICON}'
+                f'<a href="{src["url"]}" target="_blank" rel="noopener noreferrer">'
+                f'<code>{esc(src["repo"])}</code></a>'
+                f'<span class="srccard__lic">{esc(src["license"])}</span></p>'
+                f'<p class="srccard__what">{esc(src["what"])} '
+                f'<span class="srccard__owner">par {esc(src["owner"])}</span></p>'
+                f'<div class="srccard__cols">'
+                f'<div><h3>Ce qui est repris</h3><ul class="srccard__facts">'
+                + "".join(f"<li>{esc(f)}</li>" for f in facts) + "</ul>"
+                + "<ul class=\"srccard__taken\">"
+                + "".join(f"<li>{x}</li>" for x in src.get("taken", [])) + "</ul></div>"
+                f'<div><h3>Ce qui est écarté</h3>'
+                f'<p class="srccard__left">{esc(src.get("left", ""))}</p>'
+                f'<p class="srccard__skipped">{skipped} fichier(s) écarté(s) à l\'import, '
+                f'listés dans le manifeste d\'ingestion.</p>{warn}</div></div>'
+                f'<p class="srccard__go"><a class="btn" href="{base}{src["section_url"]}">'
+                f'{esc(src["section_label"])} →</a> '
+                f'<span class="srccard__licfile">Licence complète : '
+                f'<code>{esc(src["license_file"])}</code> à la racine du dépôt.</span></p>'
+                "</article>")
+
+        add = s.sourcedef.get("add", {})
+        steps = "".join(f"<li>{x}</li>" for x in add.get("steps", []))
+        add_html = (
+            f'<section class="srcadd"><h2 id="ajouter">{esc(add.get("title", ""))}'
+            f'<a class="anchor" href="#ajouter" aria-label="Lien vers cette section">#</a></h2>'
+            f'<p>{esc(add.get("intro", ""))}</p><ol class="srcadd__steps">{steps}</ol>'
+            f'<p class="note">{esc(add.get("note", ""))}</p></section>') if add else ""
+
+        toc = [{"id": "depots", "text": "Les dépôts extraits", "level": 2},
+               {"id": "ajouter", "text": add.get("title", "Ajouter un dépôt"), "level": 2}]
+        body = f"""
+<nav class="crumbs" aria-label="Fil d'Ariane">
+  <a href="{base}index.html">Accueil</a> <span aria-hidden="true">›</span><span>Sources</span>
+</nav>
+<header class="pagehead">
+  <p class="pagehead__eyebrow">{GH_ICON} Sources</p>
+  <h1 class="pagehead__title">{esc(page.get("title", "D'où vient le contenu"))}</h1>
+  <p class="pagehead__summary">{esc(page.get("tagline", ""))}</p>
+</header>
+<p class="srcintro">{page.get("intro", "")}</p>
+<h2 id="depots">Les {len(s.sourcedef.get("sources", []))} dépôts extraits
+  <a class="anchor" href="#depots" aria-label="Lien vers cette section">#</a></h2>
+<div class="srccards">{"".join(cards)}</div>
+{add_html}
+"""
+        self.write("sources/index.html", layout(
+            site=s, base=base, title="D'où vient le contenu — sources du site",
+            description=page.get("tagline", ""), body=body,
+            sidebar=sidebar_html(s, base, None), toc=toc_html(toc), body_class="page-lesson",
+        ))
+        self.index_search(
+            url="sources/index.html", title=page.get("title", "Sources"), kind="Sources",
+            context="", summary=page.get("tagline", ""),
+            md_text="sources dépôts github extraction licence "
+                    + " ".join(x["repo"] for x in s.sourcedef.get("sources", [])),
+            toc=toc)
 
     def build_annexes(self) -> None:
         s = self.site
@@ -2019,6 +2211,7 @@ class Builder:
 {code}
 {theory}
 {related_block(s, owner, base)}
+{source_line(s, 'ateliers', base)}
 <section class="done" data-lesson-toggle="atelier:{pid}">
   <label class="done__label">
     <input class="done__box" type="checkbox">
@@ -2731,6 +2924,7 @@ class Builder:
 {files_html}
 {theory}
 {related_block(s, item["id"], base)}
+{source_line(s, 'prompts', base)}
 <section class="done" data-lesson-toggle="prompt:{tid}">
   <label class="done__label">
     <input class="done__box" type="checkbox">
@@ -3096,6 +3290,7 @@ class Builder:
             self.build_topic(tid)
         self.build_catalogue()
         self.build_annexes()
+        self.build_sources()
         self.build_alternatives_page()
         self.build_tags_page()
         self.build_404()

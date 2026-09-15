@@ -20,6 +20,10 @@ DOCS = ROOT / "docs"
 CONTENT = ROOT / "content"
 
 ATTR_RE = re.compile(r"""\b(?:href|src)=["']([^"']+)["']""", re.IGNORECASE)
+# Le code affiché sur le site contient lui-même des `href=` et des `src=`. Coloré par
+# Pygments, il varie d'une version à l'autre du paquet : sans ce retrait, un simple
+# changement de version fait apparaître des dizaines de liens fantômes.
+CODE_BLOCK_RE = re.compile(r"<pre\b.*?</pre>", re.IGNORECASE | re.DOTALL)
 ID_RE = re.compile(r"""\bid=["']([^"']+)["']""")
 MIN_LESSON_BYTES = 3000
 
@@ -44,7 +48,7 @@ def main() -> int:
     checked = 0
 
     for page in pages:
-        html = cache[page]
+        html = CODE_BLOCK_RE.sub("", cache[page])
         rel_page = page.relative_to(DOCS)
         for raw in ATTR_RE.findall(html):
             target = raw.strip()
@@ -183,6 +187,35 @@ def main() -> int:
     # Une pastille apparaît deux fois par section (plan + texte) : on ramène au nombre réel.
     step_rate = f"{100 * (numbered // 2) // flat} %" if flat else "n/a"
 
+    # Sources : la page qui dit d'où vient le contenu doit rester exhaustive. Un dépôt
+    # ajouté sans entrée ici deviendrait invisible — et on ne saurait plus ce qui est déjà pris.
+    sources = json.loads((CONTENT / "_sources.json").read_text(encoding="utf-8")) \
+        if (CONTENT / "_sources.json").is_file() else {"sources": []}
+    if not (DOCS / "sources" / "index.html").exists():
+        problems.append("page des sources absente du site")
+    listed = {s["repo"]: s for s in sources["sources"]}
+    declared = {
+        "cours": meta.get("source", {}),
+        "ateliers": apps_meta.get("source", {}),
+        "prompts": prompts_meta.get("source", {}),
+    }
+    for sid, decl in declared.items():
+        if not decl:
+            continue
+        entry = next((s for s in sources["sources"] if s["id"] == sid), None)
+        if not entry:
+            problems.append(f"dépôt non listé sur la page des sources : {decl.get('repo')}")
+            continue
+        for champ in ("repo", "url", "license"):
+            if entry.get(champ) != decl.get(champ):
+                problems.append(f"source « {sid} » : {champ} incohérent entre "
+                                f"_sources.json et les métadonnées")
+    for repo, entry in listed.items():
+        if repo not in {d.get("repo") for d in declared.values()}:
+            problems.append(f"dépôt listé sans contenu correspondant : {repo}")
+        if entry.get("license_file") and not (ROOT / entry["license_file"]).is_file():
+            problems.append(f"fichier de licence absent : {entry['license_file']}")
+
     # Sujets : vocabulaire connu, page produite, et aucun sujet vide (page inutile).
     topics = json.loads((CONTENT / "_topics.json").read_text(encoding="utf-8"))["topics"] \
         if (CONTENT / "_topics.json").is_file() else {}
@@ -267,6 +300,7 @@ def main() -> int:
     print(f"Leçons publiées : {len(lessons)} · parcours : {len(meta['tracks'])}")
     print(f"Ateliers publiés : {len(apps['projects'])} · catégories : {len(apps['categories'])}")
     print(f"Prompts système publiés : {len(prompts['tools'])} · sujets : {len(topics)}")
+    print(f"Dépôts sources listés : {len(sources['sources'])}")
     print(f"Sections de prompt : {flat} découpées, {glossed} expliquées par le glossaire "
           f"({gloss_rate}) · {sum(1 for v in gloss.values() if 'title' in v)} types décrits")
     print(f"Fichiers de prompt situés : {len(filedef)} · sections placées dans le "
