@@ -78,6 +78,17 @@
     });
   }
 
+  /* Sections repliables du sommaire. L'état de départ est posé à la génération (la section
+     de la page courante reste ouverte) ; le repliement n'a d'effet visuel que sous 900px. */
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest(".sidebar__toggle");
+    if (!btn) return;
+    var section = btn.closest(".sidebar__track");
+    if (!section) return;
+    var collapsed = section.classList.toggle("is-collapsed");
+    btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  });
+
   /* ------------------------------------------------- copie des blocs */
 
   document.addEventListener("click", function (e) {

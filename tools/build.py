@@ -872,6 +872,10 @@ def notebook_outputs(cell: dict, max_lines: int = 30) -> str:
 def layout(*, site: Site, base: str, title: str, description: str, body: str,
            sidebar: str = "", toc: str = "", body_class: str = "") -> str:
     year = 2026
+    # Sans barre latérale, le bouton ☰ n'aurait rien à ouvrir : sur l'accueil, qui est déjà le
+    # plan du site, il ne s'affichait que pour ne rien faire.
+    menu = ('<button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" '
+            'aria-expanded="false">☰</button>') if sidebar else ""
     return f"""<!doctype html>
 <html lang="fr">
 <head>
@@ -894,7 +898,7 @@ def layout(*, site: Site, base: str, title: str, description: str, body: str,
 <body class="{body_class}" data-base="{base}">
 <a class="skip" href="#contenu">Aller au contenu</a>
 <header class="topbar">
-  <button class="topbar__menu" type="button" aria-label="Ouvrir le sommaire" aria-expanded="false">☰</button>
+  {menu}
   <a class="topbar__brand" href="{base}index.html"><span aria-hidden="true">🧠</span> IA Générative</a>
   <div class="search" role="search">
     <input class="search__input" type="search" placeholder="Rechercher sur tout le site…"
@@ -926,17 +930,36 @@ def layout(*, site: Site, base: str, title: str, description: str, body: str,
 """
 
 
+def section_head(icon: str, href: str, label: str, count: int, collapsed: bool) -> str:
+    """Titre de section du sommaire : lien à gauche, compteur et bascule à droite.
+
+    La bascule ne sert que sur mobile — sur ordinateur le sommaire reste déplié — mais elle
+    est rendue pour tout le monde : c'est la feuille de style qui décide de l'afficher.
+    """
+    return (f'<h2 class="sidebar__track-title">'
+            f'<span class="sidebar__icon" aria-hidden="true">{icon}</span>'
+            f'<a href="{href}">{esc(label)}</a>'
+            f'<button class="sidebar__toggle" type="button" '
+            f'aria-expanded="{"false" if collapsed else "true"}" '
+            f'aria-label="Déplier ou replier « {esc(label)} »">'
+            f'<span class="sidebar__secount">{count}</span>'
+            f'<span class="sidebar__chevron" aria-hidden="true">▾</span></button></h2>')
+
+
 def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | None = None,
                  current_cat: str | None = None) -> str:
+    """Le sommaire du site.
+
+    Sur mobile il s'ouvre en tiroir : replié par défaut, seule la section de la page courante
+    reste ouverte, sinon il faudrait faire défiler 75 liens pour en atteindre un.
+    """
     out = ['<nav class="sidebar" aria-label="Sommaire du cours"><div class="sidebar__inner">']
     out.append(f'<a class="sidebar__home" href="{base}index.html">Accueil</a>')
     for track in site.tracks:
-        out.append('<section class="sidebar__track">')
-        out.append(
-            f'<h2 class="sidebar__track-title">'
-            f'<span class="sidebar__icon" aria-hidden="true">{track["icon"]}</span>'
-            f'<a href="{base}parcours/{track["id"]}/index.html">{esc(track["title"])}</a></h2>'
-        )
+        collapsed = current not in track["lessons"]
+        out.append(f'<section class="sidebar__track{" is-collapsed" if collapsed else ""}">')
+        out.append(section_head(track["icon"], f'{base}parcours/{track["id"]}/index.html',
+                                track["title"], len(track["lessons"]), collapsed))
         out.append('<ul class="sidebar__list">')
         for slug in track["lessons"]:
             lm = site.lesson_meta[slug]
@@ -961,11 +984,11 @@ def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | 
             out.append("</li>")
         out.append("</ul></section>")
     if site.cat_order:
-        out.append('<section class="sidebar__track sidebar__track--apps">')
-        out.append(
-            f'<h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🧪</span>'
-            f'<a href="{base}ateliers/index.html">Ateliers pratiques</a></h2>'
-        )
+        collapsed = current_cat is None
+        out.append('<section class="sidebar__track sidebar__track--apps'
+                   f'{" is-collapsed" if collapsed else ""}">')
+        out.append(section_head("🧪", f'{base}ateliers/index.html', "Ateliers pratiques",
+                                len(site.cat_order), collapsed))
         out.append('<ul class="sidebar__list">')
         for cat in site.cat_order:
             c = site.category(cat)
@@ -979,21 +1002,24 @@ def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | 
             )
         out.append("</ul></section>")
     if site.prompt_order:
-        out.append('<section class="sidebar__track">')
+        out.append('<section class="sidebar__track is-collapsed">')
+        out.append(section_head("🔍", f'{base}prompts-systeme/index.html', "Prompts système",
+                                len(site.prompt_order), True))
         out.append(
-            f'<h2 class="sidebar__track-title"><span class="sidebar__icon" aria-hidden="true">🔍</span>'
-            f'<a href="{base}prompts-systeme/index.html">Prompts système</a></h2>'
             f'<ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat">'
             f'<a href="{base}prompts-systeme/index.html">'
             f'<span class="sidebar__num" aria-hidden="true">📄</span>'
-            f'<span class="sidebar__label">Les {len(site.prompt_order)} outils</span></a></li></ul>'
+            f'<span class="sidebar__label">Les {len(site.prompt_order)} outils</span></a></li>'
+            f'<li class="sidebar__item sidebar__item--cat">'
+            f'<a href="{base}prompts-systeme/guide/index.html">'
+            f'<span class="sidebar__num" aria-hidden="true">🧭</span>'
+            f'<span class="sidebar__label">Guide de lecture</span></a></li></ul>'
         )
         out.append("</section>")
     out.append(
-        f'<section class="sidebar__track"><h2 class="sidebar__track-title">'
-        f'<span class="sidebar__icon" aria-hidden="true">🗺️</span>'
-        f'<a href="{base}sujets/index.html">Par sujet</a></h2>'
-        f'<ul class="sidebar__list">'
+        '<section class="sidebar__track is-collapsed">'
+        + section_head("🗺️", f'{base}sujets/index.html', "Par sujet", len(site.topicdef), True)
+        + '<ul class="sidebar__list">'
         + "".join(
             f'<li class="sidebar__item sidebar__item--cat"><a href="{base}sujets/{tid}/index.html">'
             f'<span class="sidebar__num" aria-hidden="true">{t["icon"]}</span>'
@@ -1003,15 +1029,15 @@ def sidebar_html(site: Site, base: str, current: str | None, current_sub: str | 
         )
         + "</ul></section>"
     )
+    # Les annexes restent dépliées : quatre raccourcis, c'est le plancher utile du tiroir.
     out.append(
-        f'<section class="sidebar__track"><h2 class="sidebar__track-title">'
-        f'<span class="sidebar__icon" aria-hidden="true">📎</span>'
-        f'<a href="{base}annexes/index.html">Annexes</a></h2>'
-        f'<ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat">'
+        '<section class="sidebar__track">'
+        + section_head("📎", f'{base}annexes/index.html', "Annexes", 4, False)
+        + f'<ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat">'
         f'<a href="{base}catalogue/index.html">'
         f'<span class="sidebar__num" aria-hidden="true">🗂️</span>'
-        f'<span class="sidebar__label">Catalogue complet</span></a></li></ul>'
-        f'<ul class="sidebar__list"><li class="sidebar__item sidebar__item--cat">'
+        f'<span class="sidebar__label">Catalogue complet</span></a></li>'
+        f'<li class="sidebar__item sidebar__item--cat">'
         f'<a href="{base}annexes/alternatives-gratuites/index.html">'
         f'<span class="sidebar__num" aria-hidden="true">🆓</span>'
         f'<span class="sidebar__label">Alternatives gratuites</span></a></li>'
