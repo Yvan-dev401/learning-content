@@ -1,0 +1,94 @@
+/* ==========================================================================
+   Feuille d'impression du PDF « Prompts système ».
+   Appliquée par-dessus style.css et highlight.css, uniquement par
+   tools/build_pdf.py — le site à l'écran n'est pas concerné.
+   ========================================================================== */
+
+@page {
+  size: A4;
+  margin: 16mm 14mm 18mm;
+}
+
+:root { color-scheme: light; }
+
+body {
+  margin: 0;
+  background: #ffffff;
+  font-size: 9.5pt;
+  line-height: 1.45;
+}
+
+/* Le document n'a ni barre supérieure, ni sommaire latéral : le contenu occupe
+   toute la largeur de la page. */
+.pdf { max-width: none; padding: 0; }
+.pdf__main { display: block; }
+
+/* ----------------------------------------------------------- couverture */
+
+.cover { break-after: page; padding-top: 24mm; }
+.cover__eyebrow { margin: 0 0 6mm; font-size: 10pt; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #4f46e5; }
+.cover__title { margin: 0 0 4mm; font-size: 30pt; line-height: 1.1; letter-spacing: -.02em; }
+.cover__tagline { margin: 0 0 10mm; font-size: 13pt; color: #5b5b6b; }
+.cover__facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3mm 6mm; margin: 0 0 10mm; padding: 0; list-style: none; }
+.cover__facts li { padding: 2.5mm 3mm; background: #f2f2f7; border-radius: 3mm; font-size: 10pt; }
+.cover__facts strong { display: block; font-size: 15pt; }
+.cover__warn { padding: 4mm; font-size: 9.5pt; background: #f7f7fb; border-left: 1.2mm solid #cfcfdd; }
+.cover__meta { margin-top: 10mm; font-size: 9pt; color: #8a8a99; }
+
+/* -------------------------------------------------------------- sommaire */
+
+.pdftoc { break-after: page; }
+.pdftoc h2 { font-size: 16pt; margin: 0 0 4mm; }
+.pdftoc ol { columns: 2; column-gap: 8mm; margin: 0; padding-left: 6mm; font-size: 9.5pt; }
+.pdftoc li { break-inside: avoid; margin-bottom: 1.2mm; }
+.pdftoc a { color: #17171c; text-decoration: none; }
+.pdftoc .pdftoc__editor { color: #8a8a99; }
+
+/* ------------------------------------------------------- corps du document */
+
+/* Chaque outil — et le guide — commencent sur une page neuve. */
+.pdfpart { break-before: page; }
+
+.pdfpart > .pagehead { border-bottom: .4mm solid #e3e3ec; padding-bottom: 3mm; margin-bottom: 5mm; }
+
+h1 { font-size: 20pt; }
+h2 { font-size: 13pt; break-after: avoid; }
+h3 { font-size: 11pt; break-after: avoid; }
+p, li { orphans: 2; widows: 2; }
+
+/* Tout ce qui se replie à l'écran doit être ouvert sur le papier. */
+details > summary { list-style: none; }
+.promptsec, .tooldef { break-inside: avoid-page; }
+.promptsec__head, .tooldef__head { cursor: auto; }
+
+/* Les onglets n'ont plus de sens : les fichiers se suivent. */
+.tabs, .codeblock__copy, .codefile__copy, .anchor, .done, .prevnext,
+.filters, .search, .skip, .sidebar, .toc, .topbar, .footer { display: none !important; }
+
+/* Le code doit tenir dans la largeur de page, sans barre de défilement. */
+pre, .codeblock pre, .codefile pre {
+  white-space: pre-wrap !important;
+  word-break: break-word;
+  overflow: visible !important;
+  font-size: 7.4pt;
+  line-height: 1.35;
+  max-height: none !important;
+}
+.codeblock, .codefile, .codepanel { break-inside: auto; }
+
+/* Blocs qu'il vaut mieux ne pas couper en deux. */
+.srccard, .filecard, .flow__step, .week__step, .artic__item,
+.filetable tr, .glosstable tr, .outline__item { break-inside: avoid; }
+
+.filetable table, .glosstable table { font-size: 8.5pt; }
+.filetable__wrap { overflow: visible !important; }
+.filetable table { min-width: 0 !important; }
+
+/* Les liens restent lisibles en noir ; seule l'URL compte, pas la couleur. */
+a { color: #1d1d6b; text-decoration: none; }
+
+/* Pastilles et puces : conserver les fonds à l'impression. */
+.tag, .step, .fstatus, .chip, .topic { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+/* Les flèches de dépliage sont une affordance d'écran : sur papier, tout est déjà ouvert. */
+.promptsec__head::before, .tooldef__head::before, .sidebar__chevron { display: none !important; }

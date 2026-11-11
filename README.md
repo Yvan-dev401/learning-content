@@ -149,6 +149,18 @@ python3 tools/build.py           # régénère docs/
 python3 tools/check_links.py     # 0 lien cassé, couverture des trois familles
 ```
 
+### Exporter les prompts système en PDF
+
+```bash
+python3 tools/build_pdf.py       # → dist/prompts-systeme.pdf (~1 100 pages, ~17 Mo)
+```
+
+Le script ne refait pas le rendu : il reprend les pages déjà publiées dans
+`docs/prompts-systeme/`, déplie tout ce qui se replie à l'écran, préfixe les ancres pour éviter
+les collisions entre les 40 fiches, réécrit les liens sortants en URL du site, puis imprime le
+tout par Chromium avec sommaire, signets et pieds de page numérotés. Le PDF n'est pas commité
+(`dist/` est ignoré) : il se régénère en une quinzaine de secondes.
+
 Les quatre étapes sont **idempotentes** : les relancer produit exactement le même résultat.
 Chaque script d'ingestion n'efface que ce qu'il produit, et `build.py` n'efface d'`assets/`
 que ce qu'il génère lui-même — une source n'écrase jamais le travail d'une autre.
